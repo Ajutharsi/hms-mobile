@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Dev-only: ApiService.baseUrl points at a plain http:// Laravel server, and
+  which host that is changes depending on how you're testing it (see the
+  comment on ApiService.baseUrl — 127.0.0.1, 10.0.2.2, or a LAN IP that
+  varies by network). Android 9+ blocks cleartext traffic by default, so
+  this allows it everywhere rather than hand-maintaining an IP allowlist.
+  Once there's a real https:// backend, delete this file and its manifest
+  reference (android:networkSecurityConfig) instead of narrowing it.
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true" />
+</network-security-config>

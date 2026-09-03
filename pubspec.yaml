@@ -1,0 +1,27 @@
+name: hms_mobile
+description: "HMS India mobile app — starts with login, talks to the Laravel Sanctum API."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  http: ^1.2.2
+  flutter_secure_storage: ^9.2.2
+  flutter_svg: ^2.0.10+1
+  provider: ^6.1.2
+  image_picker: ^1.1.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/illustrations/
