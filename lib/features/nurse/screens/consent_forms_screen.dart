@@ -69,8 +69,8 @@ class _ConsentFormsView extends StatelessWidget {
     final viewModel = context.watch<ConsentFormsViewModel>();
 
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('Consent Forms', style: TextStyle(fontWeight: FontWeight.w700))),
+      backgroundColor: kBg,
+      appBar: AppBar(backgroundColor: kBg, foregroundColor: kInk, elevation: 0, title: const Text('Consent Forms', style: TextStyle(fontWeight: FontWeight.w700))),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _newForm(context, viewModel),
         backgroundColor: kTealDark,
@@ -339,8 +339,8 @@ class _NewConsentFormScreenState extends State<_NewConsentFormScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('New Consent Form')),
+      backgroundColor: kBg,
+      appBar: AppBar(backgroundColor: kBg, foregroundColor: kInk, elevation: 0, title: const Text('New Consent Form')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
         child: Form(

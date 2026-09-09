@@ -30,8 +30,8 @@ class _FluidIntakeView extends StatelessWidget {
     final viewModel = context.watch<FluidIntakeViewModel>();
 
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('Fluid Intake', style: TextStyle(fontWeight: FontWeight.w700))),
+      backgroundColor: kBg,
+      appBar: AppBar(backgroundColor: kBg, foregroundColor: kInk, elevation: 0, title: const Text('Fluid Intake', style: TextStyle(fontWeight: FontWeight.w700))),
       body: RefreshIndicator(color: kTeal, onRefresh: viewModel.load, child: _buildBody(context, viewModel)),
     );
   }
@@ -188,8 +188,8 @@ class _FluidIntakeDetailView extends StatelessWidget {
     final viewModel = context.watch<FluidIntakeDetailViewModel>();
 
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: Text(patientName)),
+      backgroundColor: kBg,
+      appBar: AppBar(backgroundColor: kBg, foregroundColor: kInk, elevation: 0, title: Text(patientName)),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _logFluid(context, viewModel),
         backgroundColor: kTealDark,

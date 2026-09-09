@@ -44,8 +44,8 @@ class _InsuranceClaimsView extends StatelessWidget {
     final viewModel = context.watch<InsuranceClaimsViewModel>();
 
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('Insurance Claims', style: TextStyle(fontWeight: FontWeight.w700))),
+      backgroundColor: kBg,
+      appBar: AppBar(backgroundColor: kBg, foregroundColor: kInk, elevation: 0, title: const Text('Insurance Claims', style: TextStyle(fontWeight: FontWeight.w700))),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _newClaim(context, viewModel),
         backgroundColor: kTealDark,
@@ -367,8 +367,8 @@ class _ClaimFormScreenState extends State<_ClaimFormScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('New Insurance Claim')),
+      backgroundColor: kBg,
+      appBar: AppBar(backgroundColor: kBg, foregroundColor: kInk, elevation: 0, title: const Text('New Insurance Claim')),
       body: Form(
         key: _formKey,
         child: ListView(

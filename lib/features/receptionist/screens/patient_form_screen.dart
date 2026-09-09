@@ -145,8 +145,8 @@ class _PatientFormScreenState extends State<PatientFormScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: Text(_isEdit ? 'Edit Patient' : 'Add Patient', style: const TextStyle(fontWeight: FontWeight.w700))),
+      backgroundColor: kBg,
+      appBar: AppBar(backgroundColor: kBg, foregroundColor: kInk, elevation: 0, title: Text(_isEdit ? 'Edit Patient' : 'Add Patient', style: const TextStyle(fontWeight: FontWeight.w700))),
       body: Form(
         key: _formKey,
         child: ListView(

@@ -76,8 +76,8 @@ class _OtView extends StatelessWidget {
     final viewModel = context.watch<OtViewModel>();
 
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('Operation Theatre', style: TextStyle(fontWeight: FontWeight.w700))),
+      backgroundColor: kBg,
+      appBar: AppBar(backgroundColor: kBg, foregroundColor: kInk, elevation: 0, title: const Text('Operation Theatre', style: TextStyle(fontWeight: FontWeight.w700))),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _schedule(context, viewModel),
         backgroundColor: kTealDark,
@@ -380,8 +380,8 @@ class _ScheduleOtScreenState extends State<_ScheduleOtScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('Schedule Surgery')),
+      backgroundColor: kBg,
+      appBar: AppBar(backgroundColor: kBg, foregroundColor: kInk, elevation: 0, title: const Text('Schedule Surgery')),
       body: Form(
         key: _formKey,
         child: ListView(

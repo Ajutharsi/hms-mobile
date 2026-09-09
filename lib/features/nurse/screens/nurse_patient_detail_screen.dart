@@ -50,8 +50,8 @@ class _NursePatientDetailScreenState extends State<NursePatientDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('Patient')),
+      backgroundColor: kBg,
+      appBar: AppBar(backgroundColor: kBg, foregroundColor: kInk, elevation: 0, title: const Text('Patient')),
       body: RefreshIndicator(color: kTeal, onRefresh: _load, child: _buildBody()),
     );
   }

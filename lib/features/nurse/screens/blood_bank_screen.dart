@@ -77,8 +77,8 @@ class _BloodBankView extends StatelessWidget {
     final viewModel = context.watch<BloodBankViewModel>();
 
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('Blood Bank', style: TextStyle(fontWeight: FontWeight.w700))),
+      backgroundColor: kBg,
+      appBar: AppBar(backgroundColor: kBg, foregroundColor: kInk, elevation: 0, title: const Text('Blood Bank', style: TextStyle(fontWeight: FontWeight.w700))),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _addUnit(context, viewModel),
         backgroundColor: kTealDark,
@@ -419,8 +419,8 @@ class _AddUnitScreenState extends State<_AddUnitScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('Add Blood Unit')),
+      backgroundColor: kBg,
+      appBar: AppBar(backgroundColor: kBg, foregroundColor: kInk, elevation: 0, title: const Text('Add Blood Unit')),
       body: Form(
         key: _formKey,
         child: ListView(

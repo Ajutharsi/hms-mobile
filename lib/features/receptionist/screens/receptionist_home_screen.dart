@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/models/app_user.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/widgets/role_home_header.dart';
 import 'package:hms_mobile/features/auth/screens/login_screen.dart';
 import 'package:hms_mobile/features/nurse/screens/admissions_screen.dart';
 import 'package:hms_mobile/features/nurse/screens/consent_forms_screen.dart';
@@ -56,27 +57,11 @@ class _ReceptionistShell extends StatelessWidget {
     final viewModel = context.watch<ReceptionDashboardViewModel>();
 
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        foregroundColor: kInk,
-        elevation: 0,
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('Hi there,', style: TextStyle(fontSize: 12.5, color: kMuted, fontWeight: FontWeight.w400)),
-            Text(viewModel.user.firstName, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: kInk)),
-          ],
-        ),
-        actions: [
-          IconButton(
-            tooltip: 'Log out',
-            icon: viewModel.isLoggingOut
-                ? const SizedBox(height: 18, width: 18, child: CircularProgressIndicator(strokeWidth: 2, color: kTeal))
-                : const Icon(Icons.logout_rounded, color: kMuted),
-            onPressed: viewModel.isLoggingOut ? null : () => _logout(context, viewModel),
-          ),
-        ],
+      backgroundColor: kBg,
+      appBar: RoleHomeHeader(
+        firstName: viewModel.user.firstName,
+        isLoggingOut: viewModel.isLoggingOut,
+        onLogout: () => _logout(context, viewModel),
       ),
       drawer: const _ReceptionistDrawer(),
       body: SafeArea(

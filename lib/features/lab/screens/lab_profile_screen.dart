@@ -25,8 +25,8 @@ class _LabProfileView extends StatelessWidget {
     final viewModel = context.watch<LabProfileViewModel>();
 
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('My Profile', style: TextStyle(fontWeight: FontWeight.w700))),
+      backgroundColor: kBg,
+      appBar: AppBar(backgroundColor: kBg, foregroundColor: kInk, elevation: 0, title: const Text('My Profile', style: TextStyle(fontWeight: FontWeight.w700))),
       body: _buildBody(context, viewModel),
     );
   }

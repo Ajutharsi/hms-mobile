@@ -44,8 +44,8 @@ class _InvoiceDetailView extends StatelessWidget {
     final viewModel = context.watch<InvoiceDetailViewModel>();
 
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: Text(viewModel.invoice?.invoiceNo ?? 'Invoice')),
+      backgroundColor: kBg,
+      appBar: AppBar(backgroundColor: kBg, foregroundColor: kInk, elevation: 0, title: Text(viewModel.invoice?.invoiceNo ?? 'Invoice')),
       body: _buildBody(context, viewModel),
     );
   }

@@ -51,7 +51,7 @@ class _DispensingCreateViewState extends State<_DispensingCreateView> {
     final picked = await showModalBottomSheet<Drug>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.white,
+      backgroundColor: kBg,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (_) => SafeArea(
         child: SizedBox(
@@ -89,8 +89,8 @@ class _DispensingCreateViewState extends State<_DispensingCreateView> {
     final total = viewModel.lines.fold<double>(0, (sum, l) => sum + (l.drug.unitPrice * l.quantity));
 
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('New Dispensing', style: TextStyle(fontWeight: FontWeight.w700))),
+      backgroundColor: kBg,
+      appBar: AppBar(backgroundColor: kBg, foregroundColor: kInk, elevation: 0, title: const Text('New Dispensing', style: TextStyle(fontWeight: FontWeight.w700))),
       body: viewModel.isLoadingDrugs
           ? const Center(child: CircularProgressIndicator(color: kTeal))
           : ListView(

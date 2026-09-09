@@ -21,6 +21,7 @@ class AuthIllustrationPane extends StatelessWidget {
         children: [
           Positioned(top: -60, right: -80, child: _blob(220, const Color(0xFFD6E1FF))),
           Positioned(bottom: -90, left: -60, child: _blob(260, const Color(0xFFDCE6FF))),
+          Positioned(top: 40, left: -30, child: _blob(90, kCoral.withValues(alpha: 0.16))),
           Padding(
             padding: const EdgeInsets.all(56),
             child: Column(
@@ -102,6 +103,7 @@ class AuthCompactIllustration extends StatelessWidget {
           clipBehavior: Clip.none,
           children: [
             Positioned(top: -30, right: -30, child: _blob(110, const Color(0xFFD6E1FF))),
+            Positioned(bottom: -20, left: -20, child: _blob(70, kCoral.withValues(alpha: 0.16))),
             SizedBox(
               height: 160,
               child: Padding(

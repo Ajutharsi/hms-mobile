@@ -37,8 +37,8 @@ class _DispensingView extends StatelessWidget {
     final viewModel = context.watch<DispensingListViewModel>();
 
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('Dispensing', style: TextStyle(fontWeight: FontWeight.w700))),
+      backgroundColor: kBg,
+      appBar: AppBar(backgroundColor: kBg, foregroundColor: kInk, elevation: 0, title: const Text('Dispensing', style: TextStyle(fontWeight: FontWeight.w700))),
       floatingActionButton: canCreate
           ? FloatingActionButton.extended(
               onPressed: () => _create(context, viewModel),
@@ -162,8 +162,8 @@ class _DispensingDetailView extends StatelessWidget {
     final viewModel = context.watch<DispensingDetailViewModel>();
 
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: Text(viewModel.detail?.dispensingNo ?? 'Dispensing')),
+      backgroundColor: kBg,
+      appBar: AppBar(backgroundColor: kBg, foregroundColor: kInk, elevation: 0, title: Text(viewModel.detail?.dispensingNo ?? 'Dispensing')),
       body: _buildBody(viewModel),
     );
   }

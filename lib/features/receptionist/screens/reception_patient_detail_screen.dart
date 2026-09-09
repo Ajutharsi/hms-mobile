@@ -52,9 +52,9 @@ class _ReceptionPatientDetailScreenState extends State<ReceptionPatientDetailScr
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: kBg,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: kBg,
         foregroundColor: kInk,
         elevation: 0,
         title: const Text('Patient Details', style: TextStyle(fontWeight: FontWeight.w700)),

@@ -86,8 +86,8 @@ class _ReferralsView extends StatelessWidget {
     final viewModel = context.watch<ReferralsViewModel>();
 
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('Referrals', style: TextStyle(fontWeight: FontWeight.w700))),
+      backgroundColor: kBg,
+      appBar: AppBar(backgroundColor: kBg, foregroundColor: kInk, elevation: 0, title: const Text('Referrals', style: TextStyle(fontWeight: FontWeight.w700))),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _newReferral(context, viewModel),
         backgroundColor: kTealDark,
@@ -312,8 +312,8 @@ class _ReferralFormScreenState extends State<_ReferralFormScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('New Referral', style: TextStyle(fontWeight: FontWeight.w700))),
+      backgroundColor: kBg,
+      appBar: AppBar(backgroundColor: kBg, foregroundColor: kInk, elevation: 0, title: const Text('New Referral', style: TextStyle(fontWeight: FontWeight.w700))),
       body: _isLoadingDoctors
           ? const Center(child: CircularProgressIndicator(color: kTeal))
           : Form(

@@ -43,8 +43,8 @@ class _SchemeBillingView extends StatelessWidget {
     final viewModel = context.watch<SchemeBillingViewModel>();
 
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('Scheme Billing', style: TextStyle(fontWeight: FontWeight.w700))),
+      backgroundColor: kBg,
+      appBar: AppBar(backgroundColor: kBg, foregroundColor: kInk, elevation: 0, title: const Text('Scheme Billing', style: TextStyle(fontWeight: FontWeight.w700))),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _newBill(context, viewModel),
         backgroundColor: kTealDark,
@@ -244,8 +244,8 @@ class _SchemeBillFormScreenState extends State<_SchemeBillFormScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('New Scheme Bill')),
+      backgroundColor: kBg,
+      appBar: AppBar(backgroundColor: kBg, foregroundColor: kInk, elevation: 0, title: const Text('New Scheme Bill')),
       body: Form(
         key: _formKey,
         child: ListView(

@@ -26,8 +26,8 @@ class _PatientsView extends StatelessWidget {
     final viewModel = context.watch<NursePatientsViewModel>();
 
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('Patients', style: TextStyle(fontWeight: FontWeight.w700))),
+      backgroundColor: kBg,
+      appBar: AppBar(backgroundColor: kBg, foregroundColor: kInk, elevation: 0, title: const Text('Patients', style: TextStyle(fontWeight: FontWeight.w700))),
       body: Column(
         children: [
           Padding(

@@ -4,6 +4,9 @@ import 'package:provider/provider.dart';
 import 'package:hms_mobile/core/models/app_user.dart';
 import 'package:hms_mobile/features/patient/models/appointment.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/widgets/app_card.dart';
+import 'package:hms_mobile/core/widgets/pill_nav_bar.dart';
+import 'package:hms_mobile/core/widgets/role_home_header.dart';
 import 'package:hms_mobile/features/patient/viewmodels/home_view_model.dart';
 import 'package:hms_mobile/features/patient/viewmodels/invoices_view_model.dart';
 import 'package:hms_mobile/features/patient/viewmodels/lab_results_view_model.dart';
@@ -69,31 +72,11 @@ class _HomeShellState extends State<_HomeShell> {
     final firstName = homeViewModel.user.firstName;
 
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        foregroundColor: kInk,
-        elevation: 0,
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('Hi there,', style: TextStyle(fontSize: 12.5, color: kMuted, fontWeight: FontWeight.w400)),
-            Text(firstName, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: kInk)),
-          ],
-        ),
-        actions: [
-          IconButton(
-            tooltip: 'Log out',
-            icon: homeViewModel.isLoggingOut
-                ? const SizedBox(
-                    height: 18,
-                    width: 18,
-                    child: CircularProgressIndicator(strokeWidth: 2, color: kTeal),
-                  )
-                : const Icon(Icons.logout_rounded, color: kMuted),
-            onPressed: homeViewModel.isLoggingOut ? null : () => _logout(context, homeViewModel),
-          ),
-        ],
+      backgroundColor: kBg,
+      appBar: RoleHomeHeader(
+        firstName: firstName,
+        isLoggingOut: homeViewModel.isLoggingOut,
+        onLogout: () => _logout(context, homeViewModel),
       ),
       drawer: _PatientDrawer(
         onNavigateTab: (index) => setState(() => _tabIndex = index),
@@ -124,42 +107,16 @@ class _HomeShellState extends State<_HomeShell> {
           ],
         ),
       ),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _tabIndex,
-        onDestinationSelected: (index) => setState(() => _tabIndex = index),
-        indicatorColor: kMint,
-        labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
-        destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.dashboard_outlined, color: kMuted),
-            selectedIcon: Icon(Icons.dashboard, color: kTealDark),
-            label: 'Dashboard',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.event_outlined, color: kMuted),
-            selectedIcon: Icon(Icons.event, color: kTealDark),
-            label: 'Appointments',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.medication_outlined, color: kMuted),
-            selectedIcon: Icon(Icons.medication, color: kTealDark),
-            label: 'Prescriptions',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.biotech_outlined, color: kMuted),
-            selectedIcon: Icon(Icons.biotech, color: kTealDark),
-            label: 'Lab Results',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.receipt_long_outlined, color: kMuted),
-            selectedIcon: Icon(Icons.receipt_long, color: kTealDark),
-            label: 'Billing',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.person_outline, color: kMuted),
-            selectedIcon: Icon(Icons.person, color: kTealDark),
-            label: 'Profile',
-          ),
+      bottomNavigationBar: PillNavBar(
+        currentIndex: _tabIndex,
+        onTap: (index) => setState(() => _tabIndex = index),
+        items: const [
+          PillNavItem(icon: Icons.dashboard_outlined, selectedIcon: Icons.dashboard_rounded, label: 'Dashboard'),
+          PillNavItem(icon: Icons.event_outlined, selectedIcon: Icons.event_rounded, label: 'Appointments'),
+          PillNavItem(icon: Icons.medication_outlined, selectedIcon: Icons.medication_rounded, label: 'Prescriptions'),
+          PillNavItem(icon: Icons.biotech_outlined, selectedIcon: Icons.biotech_rounded, label: 'Lab Results'),
+          PillNavItem(icon: Icons.receipt_long_outlined, selectedIcon: Icons.receipt_long_rounded, label: 'Billing'),
+          PillNavItem(icon: Icons.person_outline, selectedIcon: Icons.person_rounded, label: 'Profile'),
         ],
       ),
     );
@@ -396,59 +353,62 @@ class _AppointmentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: kFieldFill,
-        borderRadius: BorderRadius.circular(14),
-      ),
+    final name = appointment.doctorName ?? 'Doctor';
+    final initials = name.trim().isEmpty ? '?' : name.trim()[0].toUpperCase();
+
+    return AppCard(
+      radius: 16,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Container(
+                width: 34,
+                height: 34,
+                decoration: BoxDecoration(color: kBg, borderRadius: BorderRadius.circular(10), border: Border.all(color: kBorder)),
+                alignment: Alignment.center,
+                child: Text(initials, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13, color: kTealDark)),
+              ),
+              const SizedBox(width: 10),
               Expanded(
-                child: Text(
-                  appointment.doctorName ?? 'Doctor',
-                  style: const TextStyle(fontSize: 15.5, fontWeight: FontWeight.w700, color: kInk),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(name, style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w700, color: kInk)),
+                    if ((appointment.doctorSpecialization ?? '').isNotEmpty)
+                      Text(appointment.doctorSpecialization!, style: const TextStyle(fontSize: 12, color: kMuted)),
+                  ],
                 ),
               ),
-              _StatusChip(status: appointment.status),
+              _StatusPillFor(status: appointment.status),
             ],
           ),
-          if ((appointment.doctorSpecialization ?? '').isNotEmpty) ...[
-            const SizedBox(height: 2),
-            Text(
-              appointment.doctorSpecialization!,
-              style: const TextStyle(fontSize: 12.5, color: kMuted),
-            ),
-          ],
-          const SizedBox(height: 10),
-          Row(
+          const SizedBox(height: 12),
+          Wrap(
+            spacing: 16,
+            runSpacing: 4,
             children: [
-              const Icon(Icons.calendar_today_outlined, size: 14, color: kMuted),
-              const SizedBox(width: 6),
-              Text(appointment.date, style: const TextStyle(fontSize: 13, color: kMuted)),
-              const SizedBox(width: 16),
-              const Icon(Icons.access_time_rounded, size: 14, color: kMuted),
-              const SizedBox(width: 6),
-              Text(appointment.time, style: const TextStyle(fontSize: 13, color: kMuted)),
-              if (appointment.tokenNumber != null) ...[
-                const SizedBox(width: 16),
-                const Icon(Icons.confirmation_number_outlined, size: 14, color: kMuted),
-                const SizedBox(width: 6),
-                Text('Token #${appointment.tokenNumber}', style: const TextStyle(fontSize: 13, color: kMuted)),
-              ],
+              _MetaBit(icon: Icons.calendar_today_outlined, text: appointment.date),
+              _MetaBit(icon: Icons.access_time_rounded, text: appointment.time),
+              if (appointment.tokenNumber != null) _MetaBit(icon: Icons.confirmation_number_outlined, text: 'Token #${appointment.tokenNumber}'),
             ],
           ),
           if (appointment.isScheduled) ...[
             const SizedBox(height: 12),
             Align(
               alignment: Alignment.centerRight,
-              child: TextButton(
+              child: OutlinedButton(
                 onPressed: onCancel,
-                style: TextButton.styleFrom(padding: EdgeInsets.zero, minimumSize: const Size(0, 32)),
-                child: const Text('Cancel', style: TextStyle(color: Color(0xFFB3261E), fontSize: 13, fontWeight: FontWeight.w600)),
+                style: OutlinedButton.styleFrom(
+                  side: const BorderSide(color: Color(0xFFB3261E)),
+                  foregroundColor: const Color(0xFFB3261E),
+                  minimumSize: const Size(0, 34),
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  textStyle: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700),
+                ),
+                child: const Text('Cancel'),
               ),
             ),
           ],
@@ -458,24 +418,37 @@ class _AppointmentCard extends StatelessWidget {
   }
 }
 
-class _StatusChip extends StatelessWidget {
+class _MetaBit extends StatelessWidget {
+  final IconData icon;
+  final String text;
+  const _MetaBit({required this.icon, required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, size: 13, color: kMuted),
+        const SizedBox(width: 5),
+        Text(text, style: kMonoStyle(fontSize: 12, fontWeight: FontWeight.w600, color: kMuted)),
+      ],
+    );
+  }
+}
+
+class _StatusPillFor extends StatelessWidget {
   final String status;
-  const _StatusChip({required this.status});
+  const _StatusPillFor({required this.status});
 
   @override
   Widget build(BuildContext context) {
     final (Color bg, Color fg, String label) = switch (status) {
-      'scheduled' => (const Color(0xFFE3F1EE), kTealDark, 'Scheduled'),
-      'completed' => (const Color(0xFFE6F4E6), const Color(0xFF2F7D5B), 'Completed'),
-      'cancelled' => (const Color(0xFFF1E9E9), const Color(0xFF8A6B6B), 'Cancelled'),
-      'no_show' => (const Color(0xFFFBEAE8), const Color(0xFFB3261E), 'No-show'),
+      'scheduled' => (kMint, kTealDark, 'Scheduled'),
+      'completed' => (kSuccessBg, kSuccessFg, 'Completed'),
+      'cancelled' => (kFieldFill, kMuted, 'Cancelled'),
+      'no_show' => (kDangerBg, kDangerFg, 'No-show'),
       _ => (kFieldFill, kMuted, status),
     };
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(8)),
-      child: Text(label, style: TextStyle(color: fg, fontSize: 11.5, fontWeight: FontWeight.w700)),
-    );
+    return StatusPill(label: label, bg: bg, fg: fg);
   }
 }

@@ -38,8 +38,8 @@ class _LabOrderDetailView extends StatelessWidget {
     final viewModel = context.watch<LabOrderDetailViewModel>();
 
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: Text(viewModel.order?.orderNo ?? 'Lab Order')),
+      backgroundColor: kBg,
+      appBar: AppBar(backgroundColor: kBg, foregroundColor: kInk, elevation: 0, title: Text(viewModel.order?.orderNo ?? 'Lab Order')),
       body: _buildBody(context, viewModel),
     );
   }

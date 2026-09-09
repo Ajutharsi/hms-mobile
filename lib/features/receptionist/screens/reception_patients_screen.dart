@@ -45,8 +45,8 @@ class _ReceptionPatientsViewState extends State<_ReceptionPatientsView> {
     final viewModel = context.watch<ReceptionPatientsViewModel>();
 
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('Patients', style: TextStyle(fontWeight: FontWeight.w700))),
+      backgroundColor: kBg,
+      appBar: AppBar(backgroundColor: kBg, foregroundColor: kInk, elevation: 0, title: const Text('Patients', style: TextStyle(fontWeight: FontWeight.w700))),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _addPatient(context, viewModel),
         backgroundColor: kTealDark,

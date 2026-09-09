@@ -29,7 +29,7 @@ class PatientPickerField extends StatelessWidget {
     final picked = await showModalBottomSheet<NursePatient>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.white,
+      backgroundColor: kBg,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (_) => const _PatientPickerSheet(),
     );

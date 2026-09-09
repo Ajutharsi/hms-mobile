@@ -32,8 +32,8 @@ class _FoodIntakeView extends StatelessWidget {
     final viewModel = context.watch<FoodIntakeViewModel>();
 
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('Food Intake', style: TextStyle(fontWeight: FontWeight.w700))),
+      backgroundColor: kBg,
+      appBar: AppBar(backgroundColor: kBg, foregroundColor: kInk, elevation: 0, title: const Text('Food Intake', style: TextStyle(fontWeight: FontWeight.w700))),
       body: RefreshIndicator(color: kTeal, onRefresh: viewModel.load, child: _buildBody(context, viewModel)),
     );
   }
@@ -176,8 +176,8 @@ class _FoodIntakeDetailView extends StatelessWidget {
     final viewModel = context.watch<FoodIntakeDetailViewModel>();
 
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: Text(patientName)),
+      backgroundColor: kBg,
+      appBar: AppBar(backgroundColor: kBg, foregroundColor: kInk, elevation: 0, title: Text(patientName)),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _logMeal(context, viewModel),
         backgroundColor: kTealDark,

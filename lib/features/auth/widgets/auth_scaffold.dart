@@ -21,7 +21,7 @@ class AuthScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: kBg,
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {

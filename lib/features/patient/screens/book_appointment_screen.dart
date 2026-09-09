@@ -52,9 +52,9 @@ class _BookAppointmentView extends StatelessWidget {
     final viewModel = context.watch<BookAppointmentViewModel>();
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: kBg,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: kBg,
         foregroundColor: kInk,
         elevation: 0,
         title: const Text('Book appointment', style: TextStyle(fontWeight: FontWeight.w700)),

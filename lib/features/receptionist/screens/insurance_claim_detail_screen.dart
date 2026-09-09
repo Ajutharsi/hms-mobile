@@ -70,9 +70,9 @@ class _DetailView extends StatelessWidget {
     final claim = viewModel.claim;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: kBg,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: kBg,
         foregroundColor: kInk,
         elevation: 0,
         title: Text(claim?.claimNo ?? 'Insurance Claim'),

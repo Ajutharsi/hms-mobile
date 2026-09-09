@@ -66,9 +66,9 @@ class _DetailView extends StatelessWidget {
     final bill = viewModel.bill;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: kBg,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: kBg,
         foregroundColor: kInk,
         elevation: 0,
         title: Text(bill?.schemeBillNo ?? 'Scheme Bill'),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/widgets/primary_button.dart';
 import 'package:hms_mobile/features/auth/viewmodels/forgot_password_view_model.dart';
 import 'package:hms_mobile/features/auth/widgets/auth_scaffold.dart';
 
@@ -79,26 +80,10 @@ class _ForgotPasswordForm extends StatelessWidget {
             validator: viewModel.validateEmail,
           ),
           const SizedBox(height: 26),
-          SizedBox(
-            width: double.infinity,
-            height: 50,
-            child: FilledButton(
-              onPressed: viewModel.isLoading ? null : viewModel.submit,
-              style: FilledButton.styleFrom(
-                backgroundColor: kTealDark,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-              ),
-              child: viewModel.isLoading
-                  ? const SizedBox(
-                      height: 20,
-                      width: 20,
-                      child: CircularProgressIndicator(strokeWidth: 2.4, color: Colors.white),
-                    )
-                  : const Text(
-                      'Send reset link',
-                      style: TextStyle(fontSize: 15.5, fontWeight: FontWeight.w600),
-                    ),
-            ),
+          PrimaryButton(
+            label: 'Send reset link',
+            isLoading: viewModel.isLoading,
+            onPressed: viewModel.submit,
           ),
         ],
       ),
@@ -150,7 +135,7 @@ class _SentConfirmation extends StatelessWidget {
             onPressed: () => Navigator.of(context).pop(),
             style: OutlinedButton.styleFrom(
               side: const BorderSide(color: kTeal),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              shape: const StadiumBorder(),
             ),
             child: const Text(
               'Back to sign in',

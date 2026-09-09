@@ -59,9 +59,9 @@ class _RadiologyDetailView extends StatelessWidget {
     final viewModel = context.watch<RadiologyDetailViewModel>();
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: kBg,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: kBg,
         foregroundColor: kInk,
         elevation: 0,
         title: Text(viewModel.order?.orderNo ?? 'Radiology Order'),

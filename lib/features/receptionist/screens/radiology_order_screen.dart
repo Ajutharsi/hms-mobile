@@ -121,8 +121,8 @@ class _RadiologyOrderScreenState extends State<RadiologyOrderScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('New Radiology Order', style: TextStyle(fontWeight: FontWeight.w700))),
+      backgroundColor: kBg,
+      appBar: AppBar(backgroundColor: kBg, foregroundColor: kInk, elevation: 0, title: const Text('New Radiology Order', style: TextStyle(fontWeight: FontWeight.w700))),
       body: _isLoadingDoctors
           ? const Center(child: CircularProgressIndicator(color: kTeal))
           : Form(

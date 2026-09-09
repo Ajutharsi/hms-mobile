@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/widgets/app_card.dart';
 import 'package:hms_mobile/features/patient/models/appointment.dart';
 import 'package:hms_mobile/features/patient/viewmodels/home_view_model.dart';
 import 'package:hms_mobile/features/patient/viewmodels/profile_view_model.dart';
@@ -25,6 +27,7 @@ class DashboardTabBody extends StatelessWidget {
     final homeViewModel = context.watch<HomeViewModel>();
     final profileViewModel = context.watch<ProfileViewModel>();
     final profile = profileViewModel.profile;
+    final nextAppointment = homeViewModel.appointments.where((a) => a.isScheduled).toList();
 
     return RefreshIndicator(
       color: kTeal,
@@ -36,6 +39,10 @@ class DashboardTabBody extends StatelessWidget {
         physics: const AlwaysScrollableScrollPhysics(),
         padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
         children: [
+          if (nextAppointment.isNotEmpty) ...[
+            _NextAppointmentHero(appointment: nextAppointment.first, onTap: () => onNavigateTab(1)),
+            const SizedBox(height: 22),
+          ],
           const Text('Quick actions', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: kMuted, letterSpacing: 0.3)),
           const SizedBox(height: 10),
           Row(
@@ -153,6 +160,75 @@ class DashboardTabBody extends StatelessWidget {
   }
 }
 
+class _NextAppointmentHero extends StatelessWidget {
+  final Appointment appointment;
+  final VoidCallback onTap;
+
+  const _NextAppointmentHero({required this.appointment, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      borderRadius: BorderRadius.circular(22),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(22),
+        onTap: onTap,
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(18),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(22),
+            gradient: const LinearGradient(colors: [kTeal, kTealDark], begin: Alignment.topLeft, end: Alignment.bottomRight),
+            boxShadow: [BoxShadow(color: kTealDark.withValues(alpha: 0.35), blurRadius: 22, offset: const Offset(0, 10))],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'NEXT APPOINTMENT',
+                style: kMonoStyle(fontSize: 10.5, fontWeight: FontWeight.w600, color: Colors.white.withValues(alpha: 0.8), letterSpacing: 1),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                appointment.doctorName ?? 'Doctor',
+                style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w700, color: Colors.white),
+              ),
+              if ((appointment.doctorSpecialization ?? '').isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(top: 2),
+                  child: Text(appointment.doctorSpecialization!, style: TextStyle(fontSize: 12.5, color: Colors.white.withValues(alpha: 0.85))),
+                ),
+              const SizedBox(height: 12),
+              Text(
+                [
+                  appointment.date,
+                  appointment.time,
+                  if (appointment.tokenNumber != null) 'Token #${appointment.tokenNumber}',
+                ].join('   ·   '),
+                style: kMonoStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.white),
+              ),
+              const SizedBox(height: 14),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                decoration: BoxDecoration(color: kCoral, borderRadius: BorderRadius.circular(999)),
+                child: const Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text('View details', style: TextStyle(color: Colors.white, fontSize: 12.5, fontWeight: FontWeight.w700)),
+                    SizedBox(width: 6),
+                    Icon(Icons.arrow_forward_rounded, color: Colors.white, size: 15),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class _QuickActionTile extends StatelessWidget {
   final IconData icon;
   final Color color;
@@ -172,30 +248,23 @@ class _QuickActionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return AppCard(
+      radius: 16,
       onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 10),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: kFieldFill),
-        ),
-        child: Column(
-          children: [
-            Container(
-              width: 38,
-              height: 38,
-              decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(11)),
-              child: Icon(icon, color: color, size: 19),
-            ),
-            const SizedBox(height: 8),
-            Text(label, textAlign: TextAlign.center, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: kInk)),
-            const SizedBox(height: 1),
-            Text(sublabel, textAlign: TextAlign.center, style: const TextStyle(fontSize: 10.5, color: kMuted)),
-          ],
-        ),
+      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 10),
+      child: Column(
+        children: [
+          Container(
+            width: 38,
+            height: 38,
+            decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(11)),
+            child: Icon(icon, color: color, size: 19),
+          ),
+          const SizedBox(height: 8),
+          Text(label, textAlign: TextAlign.center, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: kInk)),
+          const SizedBox(height: 1),
+          Text(sublabel, textAlign: TextAlign.center, style: const TextStyle(fontSize: 10.5, color: kMuted)),
+        ],
       ),
     );
   }
@@ -224,41 +293,33 @@ class _StatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return AppCard(
+      radius: 18,
       onTap: onTap,
-      borderRadius: BorderRadius.circular(18),
-      child: Container(
-        padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: kFieldFill),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Container(
-                  width: 30,
-                  height: 30,
-                  decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(9)),
-                  child: Icon(icon, color: color, size: 16),
-                ),
-                const Spacer(),
-                Text(trend, style: const TextStyle(fontSize: 10, color: kMuted)),
-              ],
-            ),
-            const Spacer(),
-            Text(
-              value,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(fontSize: valueFontSize ?? 20, fontWeight: FontWeight.w800, color: kInk),
-            ),
-            Text(label, style: const TextStyle(fontSize: 11, color: kMuted, fontWeight: FontWeight.w600)),
-          ],
-        ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 30,
+                height: 30,
+                decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(9)),
+                child: Icon(icon, color: color, size: 16),
+              ),
+              const Spacer(),
+              Text(trend, style: const TextStyle(fontSize: 10, color: kMuted)),
+            ],
+          ),
+          const Spacer(),
+          Text(
+            value,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: GoogleFonts.ibmPlexMono(fontSize: valueFontSize ?? 20, fontWeight: FontWeight.w700, color: kInk),
+          ),
+          Text(label, style: const TextStyle(fontSize: 11, color: kMuted, fontWeight: FontWeight.w600)),
+        ],
       ),
     );
   }
@@ -279,13 +340,7 @@ class _SectionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: kFieldFill),
-      ),
+    return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -366,15 +421,11 @@ class _StatusChip extends StatelessWidget {
       'scheduled' => (kMint, kTealDark, 'Scheduled'),
       'completed' => (kSuccessBg, kSuccessFg, 'Completed'),
       'cancelled' => (kFieldFill, kMuted, 'Cancelled'),
-      'no_show' => (const Color(0xFFFBEAE8), const Color(0xFFB3261E), 'No-show'),
+      'no_show' => (kDangerBg, kDangerFg, 'No-show'),
       _ => (kFieldFill, kMuted, status),
     };
 
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
-      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(8)),
-      child: Text(label, style: TextStyle(color: fg, fontSize: 11, fontWeight: FontWeight.w700)),
-    );
+    return StatusPill(label: label, bg: bg, fg: fg);
   }
 }
 

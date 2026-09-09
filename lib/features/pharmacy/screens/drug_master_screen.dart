@@ -57,7 +57,7 @@ class _DrugMasterViewState extends State<_DrugMasterView> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.white,
+      backgroundColor: kBg,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (_) => _StockHistorySheet(drug: drug, viewModel: viewModel),
     );
@@ -86,8 +86,8 @@ class _DrugMasterViewState extends State<_DrugMasterView> {
     final viewModel = context.watch<DrugMasterViewModel>();
 
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('Drug Master', style: TextStyle(fontWeight: FontWeight.w700))),
+      backgroundColor: kBg,
+      appBar: AppBar(backgroundColor: kBg, foregroundColor: kInk, elevation: 0, title: const Text('Drug Master', style: TextStyle(fontWeight: FontWeight.w700))),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _addOrEdit(context, viewModel),
         backgroundColor: kTealDark,

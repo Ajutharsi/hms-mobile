@@ -50,8 +50,8 @@ class _LabOrderCreateViewState extends State<_LabOrderCreateView> {
     final viewModel = context.watch<LabOrderCreateViewModel>();
 
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('New Lab Order', style: TextStyle(fontWeight: FontWeight.w700))),
+      backgroundColor: kBg,
+      appBar: AppBar(backgroundColor: kBg, foregroundColor: kInk, elevation: 0, title: const Text('New Lab Order', style: TextStyle(fontWeight: FontWeight.w700))),
       body: viewModel.isLoadingMeta
           ? const Center(child: CircularProgressIndicator(color: kTeal))
           : ListView(
