@@ -1,4 +1,4 @@
-package com.example.hms_mobile
+package com.hmsindia.mobile
 
 import io.flutter.embedding.android.FlutterActivity
 
