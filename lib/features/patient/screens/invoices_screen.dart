@@ -28,7 +28,7 @@ class InvoicesTabBody extends StatelessWidget {
           TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('Cancel')),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Send request', style: TextStyle(color: kCareDark, fontWeight: FontWeight.w700)),
+            child: Text('Send request', style: TextStyle(color: kCareDark, fontWeight: FontWeight.w700)),
           ),
         ],
       ),
@@ -47,6 +47,7 @@ class InvoicesTabBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final viewModel = context.watch<InvoicesViewModel>();
 
     return RefreshIndicator(
@@ -100,6 +101,7 @@ class _BalanceSummary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return CareHeaderBackground(
       radius: 22,
       padding: const EdgeInsets.all(18),
@@ -144,6 +146,7 @@ class _InvoiceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return CareCard(
       padding: EdgeInsets.zero,
       child: Theme(
@@ -202,7 +205,7 @@ class _InvoiceCard extends StatelessWidget {
                           ],
                         ),
                       )),
-                  const Divider(height: 16, color: kCareBorder),
+                  Divider(height: 16, color: kCareBorder),
                   _AmountRow(label: 'Total', value: invoice.total),
                   _AmountRow(label: 'Paid', value: invoice.paidAmount),
                   _AmountRow(label: 'Balance', value: invoice.balance, emphasize: true),
@@ -217,7 +220,7 @@ class _InvoiceCard extends StatelessWidget {
                 child: OutlinedButton.icon(
                   onPressed: isRequestingHelp ? null : onRequestHelp,
                   icon: isRequestingHelp
-                      ? const SizedBox(height: 16, width: 16, child: CircularProgressIndicator(strokeWidth: 2, color: kCare))
+                      ? SizedBox(height: 16, width: 16, child: CircularProgressIndicator(strokeWidth: 2, color: kCare))
                       : const Icon(Icons.support_agent_rounded, size: 19),
                   label: const Text('Request payment help', style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w700)),
                 ),
@@ -238,6 +241,7 @@ class _AmountRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return Padding(
       padding: const EdgeInsets.only(bottom: 4),
       child: Row(

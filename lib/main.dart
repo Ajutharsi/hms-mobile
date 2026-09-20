@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/navigation/role_home.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/theme_controller.dart';
 import 'package:hms_mobile/features/auth/screens/login_screen.dart';
 import 'package:hms_mobile/features/auth/viewmodels/session_view_model.dart';
 
@@ -15,6 +16,17 @@ class HmsApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // The colour the user picked in Appearance lives here, above
+    // MaterialApp, so changing it repaints every screen at once.
+    return ChangeNotifierProvider(
+      create: (_) => CareThemeController(),
+      child: Consumer<CareThemeController>(
+        builder: (context, theme, _) => _buildApp(context),
+      ),
+    );
+  }
+
+  Widget _buildApp(BuildContext context) {
     return MaterialApp(
       title: 'HMS India',
       debugShowCheckedModeBanner: false,

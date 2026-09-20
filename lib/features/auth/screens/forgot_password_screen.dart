@@ -11,6 +11,7 @@ class ForgotPasswordScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return ChangeNotifierProvider(
       create: (_) => ForgotPasswordViewModel(),
       child: const _ForgotPasswordView(),
@@ -23,6 +24,7 @@ class _ForgotPasswordView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final viewModel = context.watch<ForgotPasswordViewModel>();
 
     return AuthScaffold(
@@ -41,6 +43,7 @@ class _ForgotPasswordForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return Form(
       key: viewModel.formKey,
       child: Column(
@@ -113,6 +116,7 @@ class _SentConfirmation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -123,7 +127,7 @@ class _SentConfirmation extends StatelessWidget {
           height: 56,
           decoration: BoxDecoration(color: kCareSoft, borderRadius: BorderRadius.circular(16)),
           alignment: Alignment.center,
-          child: const Icon(Icons.mark_email_read_outlined, color: kCare, size: 28),
+          child: Icon(Icons.mark_email_read_outlined, color: kCare, size: 28),
         ),
         const SizedBox(height: 24),
         const Text(
@@ -150,10 +154,10 @@ class _SentConfirmation extends StatelessWidget {
           child: OutlinedButton(
             onPressed: () => Navigator.of(context).pop(),
             style: OutlinedButton.styleFrom(
-              side: const BorderSide(color: kCare),
+              side: BorderSide(color: kCare),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             ),
-            child: const Text(
+            child: Text(
               'Back to sign in',
               style: TextStyle(fontSize: 15.5, fontWeight: FontWeight.w600, color: kCare),
             ),

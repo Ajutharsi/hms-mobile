@@ -13,6 +13,7 @@ class PrescriptionsTabBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final viewModel = context.watch<PrescriptionsViewModel>();
 
     return RefreshIndicator(
@@ -49,6 +50,7 @@ class _PrescriptionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final doctor = prescription.doctorName ?? 'Doctor';
     return CareCard(
       padding: EdgeInsets.zero,
@@ -112,6 +114,7 @@ class _MedicineRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.all(12),

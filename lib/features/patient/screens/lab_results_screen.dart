@@ -12,6 +12,7 @@ class LabResultsTabBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final viewModel = context.watch<LabResultsViewModel>();
 
     return RefreshIndicator(
@@ -48,6 +49,7 @@ class _LabOrderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final hasAbnormal = order.isCompleted && order.items.any((item) => item.flag == 'high' || item.flag == 'low');
 
     return CareCard(
@@ -107,6 +109,7 @@ class _ResultRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final hasResult = (item.resultValue ?? '').isNotEmpty;
 
     final (Color flagBg, Color flagFg, String flagLabel) = switch (item.flag) {
@@ -142,7 +145,7 @@ class _ResultRow extends StatelessWidget {
               children: [
                 Text(
                   '${item.resultValue} ${item.unit ?? ''}'.trim(),
-                  style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w800, color: kCareDark),
+                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800, color: kCareDark),
                 ),
                 if ((item.normalRange ?? '').isNotEmpty && item.normalRange != 'N/A') ...[
                   const SizedBox(width: 10),

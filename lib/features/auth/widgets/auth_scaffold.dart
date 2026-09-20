@@ -21,9 +21,11 @@ class AuthScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: kCareBg,
-      body: LayoutBuilder(
+    watchCarePalette(context);
+    return CareTheme(
+      child: Scaffold(
+        backgroundColor: kCareBg,
+        body: LayoutBuilder(
           builder: (context, constraints) {
             final isWide = constraints.maxWidth >= kSplitBreakpoint;
 
@@ -36,28 +38,29 @@ class AuthScaffold extends StatelessWidget {
 
             return SafeArea(
               child: Row(
-              children: [
-                Expanded(
-                  flex: 5,
-                  child: AuthIllustrationPane(headline: illustrationHeadline, subtext: illustrationSubtext),
-                ),
-                Expanded(
-                  flex: 6,
-                  child: Center(
-                    child: SingleChildScrollView(
-                      padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 24),
-                      child: ConstrainedBox(
-                        constraints: const BoxConstraints(maxWidth: 420),
-                        child: formPane,
+                children: [
+                  Expanded(
+                    flex: 5,
+                    child: AuthIllustrationPane(headline: illustrationHeadline, subtext: illustrationSubtext),
+                  ),
+                  Expanded(
+                    flex: 6,
+                    child: Center(
+                      child: SingleChildScrollView(
+                        padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 24),
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(maxWidth: 420),
+                          child: formPane,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
               ),
             );
           },
         ),
+      ),
     );
   }
 }
@@ -72,6 +75,7 @@ class _CompactAuthLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final topInset = MediaQuery.of(context).padding.top;
     return SingleChildScrollView(
       child: Stack(
@@ -92,7 +96,7 @@ class _CompactAuthLayout extends StatelessWidget {
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: const [BoxShadow(color: Color(0x33000000), blurRadius: 16, offset: Offset(0, 6))],
                     ),
-                    child: const Icon(Icons.medical_services_rounded, color: kCare, size: 32),
+                    child: Icon(Icons.medical_services_rounded, color: kCare, size: 32),
                   ),
                   const SizedBox(height: 14),
                   const Text(

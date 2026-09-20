@@ -22,6 +22,7 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return ChangeNotifierProvider(
       create: (_) => LoginViewModel(),
       child: _LoginView(flashMessage: flashMessage),
@@ -62,6 +63,7 @@ class _LoginViewState extends State<_LoginView> {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final viewModel = context.watch<LoginViewModel>();
 
     return AuthScaffold(
@@ -127,7 +129,7 @@ class _LoginViewState extends State<_LoginView> {
                     MaterialPageRoute(builder: (_) => const ForgotPasswordScreen()),
                   );
                 },
-                child: const Text(
+                child: Text(
                   'Forgot password?',
                   style: TextStyle(color: kCare, fontSize: 13, fontWeight: FontWeight.w600),
                 ),
@@ -164,7 +166,7 @@ class _LoginViewState extends State<_LoginView> {
                     const TextSpan(text: 'New patient? '),
                     TextSpan(
                       text: 'Create an account',
-                      style: const TextStyle(color: kCare, fontWeight: FontWeight.w600),
+                      style: TextStyle(color: kCare, fontWeight: FontWeight.w600),
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
                           Navigator.of(context).push(

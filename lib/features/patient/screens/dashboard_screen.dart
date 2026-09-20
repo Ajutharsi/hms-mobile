@@ -22,6 +22,7 @@ class DashboardTabBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final homeViewModel = context.watch<HomeViewModel>();
     final profileViewModel = context.watch<ProfileViewModel>();
     final profile = profileViewModel.profile;
@@ -35,7 +36,7 @@ class DashboardTabBody extends StatelessWidget {
     return Stack(
       children: [
         _buildScroll(context, homeViewModel, profileViewModel, profile, upcoming),
-        Positioned(top: 0, left: 0, right: 0, height: topInset, child: const ColoredBox(color: kCare)),
+        Positioned(top: 0, left: 0, right: 0, height: topInset, child: ColoredBox(color: kCare)),
       ],
     );
   }
@@ -172,6 +173,7 @@ class _HomeHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final topInset = MediaQuery.of(context).padding.top;
     const statsOverlap = 46.0;
 
@@ -219,11 +221,11 @@ class _HomeHeader extends StatelessWidget {
                     height: 48,
                     padding: const EdgeInsets.symmetric(horizontal: 14),
                     decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14)),
-                    child: const Row(
+                    child: Row(
                       children: [
                         Icon(Icons.search_rounded, color: kCare),
-                        SizedBox(width: 10),
-                        Expanded(
+                        const SizedBox(width: 10),
+                        const Expanded(
                           child: Text('Find a doctor & book a visit', style: TextStyle(color: Color(0xFF9AA6A4), fontSize: 14)),
                         ),
                         Icon(Icons.tune_rounded, color: kCare, size: 20),
@@ -248,6 +250,7 @@ class _HeaderIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return Material(
       color: Colors.white.withValues(alpha: 0.18),
       shape: const CircleBorder(),
@@ -274,6 +277,7 @@ class _StatsStrip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return Container(
       height: 92,
       decoration: BoxDecoration(
@@ -284,7 +288,7 @@ class _StatsStrip extends StatelessWidget {
       child: Row(
         children: [
           for (var i = 0; i < stats.length; i++) ...[
-            if (i > 0) const VerticalDivider(width: 1, indent: 20, endIndent: 20, color: kCareBorder),
+            if (i > 0) VerticalDivider(width: 1, indent: 20, endIndent: 20, color: kCareBorder),
             Expanded(
               child: InkWell(
                 onTap: stats[i].onTap,
@@ -328,8 +332,9 @@ class _UpcomingStrip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     if (isLoading) {
-      return const SizedBox(height: 120, child: Center(child: CircularProgressIndicator(color: kCare)));
+      return SizedBox(height: 120, child: Center(child: CircularProgressIndicator(color: kCare)));
     }
 
     if (appointments.isEmpty) {
@@ -385,6 +390,7 @@ class _UpcomingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final doctor = appointment.doctorName ?? 'Doctor';
     return SizedBox(
       width: 172,

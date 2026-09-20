@@ -11,6 +11,7 @@ class BookAppointmentScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return ChangeNotifierProvider(
       create: (_) => BookAppointmentViewModel(),
       child: const CareTheme(child: _BookAppointmentView()),
@@ -36,13 +37,14 @@ class _BookAppointmentView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final viewModel = context.watch<BookAppointmentViewModel>();
     final today = DateUtils.dateOnly(DateTime.now());
 
     return Scaffold(
       appBar: carePageAppBar(context, 'Book Appointment'),
       body: viewModel.loadingDoctors
-          ? const Center(child: CircularProgressIndicator(color: kCare))
+          ? Center(child: CircularProgressIndicator(color: kCare))
           : ListView(
               padding: const EdgeInsets.fromLTRB(0, 18, 0, 24),
               children: [
@@ -168,6 +170,7 @@ class _DoctorCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
@@ -204,7 +207,7 @@ class _DoctorCard extends StatelessWidget {
               ],
             ),
             if (selected)
-              const Positioned(
+              Positioned(
                 top: -6,
                 right: -2,
                 child: Icon(Icons.check_circle_rounded, color: kCare, size: 22),
@@ -222,12 +225,13 @@ class _SlotsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     if (viewModel.selectedDoctor == null) {
       return const Text('Choose a doctor above to see available times.', style: TextStyle(color: kMuted, fontSize: 13.5));
     }
     if (viewModel.loadingSlots) {
-      return const Padding(
-        padding: EdgeInsets.symmetric(vertical: 12),
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 12),
         child: Center(child: CircularProgressIndicator(color: kCare)),
       );
     }

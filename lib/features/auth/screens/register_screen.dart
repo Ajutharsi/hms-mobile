@@ -13,6 +13,7 @@ class RegisterScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return ChangeNotifierProvider(
       create: (_) => RegisterViewModel(),
       child: const _RegisterView(),
@@ -40,6 +41,7 @@ class _RegisterViewState extends State<_RegisterView> {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final viewModel = context.watch<RegisterViewModel>();
 
     return AuthScaffold(
@@ -174,7 +176,7 @@ class _RegisterViewState extends State<_RegisterView> {
                     const TextSpan(text: 'Already have an account? '),
                     TextSpan(
                       text: 'Sign in',
-                      style: const TextStyle(color: kCare, fontWeight: FontWeight.w600),
+                      style: TextStyle(color: kCare, fontWeight: FontWeight.w600),
                       recognizer: TapGestureRecognizer()..onTap = () => Navigator.of(context).pop(),
                     ),
                   ],
@@ -203,6 +205,7 @@ class _GenderOption extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final isSelected = selected == value;
     return Expanded(
       child: GestureDetector(

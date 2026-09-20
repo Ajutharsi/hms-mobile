@@ -15,6 +15,7 @@ class ProfileTabBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final viewModel = context.watch<ProfileViewModel>();
 
     if (viewModel.isLoading && viewModel.profile == null) {
@@ -135,7 +136,7 @@ class ProfileTabBody extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10)),
                   child: Text(
                     viewModel.successMessage!,
-                    style: const TextStyle(
+                    style: TextStyle(
                         color: kCareDark,
                         fontSize: 13.5,
                         fontWeight: FontWeight.w600),
@@ -159,9 +160,9 @@ class ProfileTabBody extends StatelessWidget {
     final success = await viewModel.save();
     if (!context.mounted || !success) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
+      SnackBar(
           backgroundColor: kCareDark,
-          content: Text('Profile updated successfully!')),
+          content: const Text('Profile updated successfully!')),
     );
   }
 }
@@ -173,6 +174,7 @@ class _AvatarHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return Center(
       child: Column(
         children: [
@@ -180,7 +182,7 @@ class _AvatarHeader extends StatelessWidget {
             children: [
               Container(
                 padding: const EdgeInsets.all(3),
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                     shape: BoxShape.circle, gradient: kCareGradient),
                 child: CircleAvatar(
                   radius: 50,
@@ -196,7 +198,7 @@ class _AvatarHeader extends StatelessWidget {
                           profile.name.isNotEmpty
                               ? profile.name[0].toUpperCase()
                               : '?',
-                          style: const TextStyle(
+                          style: TextStyle(
                               fontSize: 32,
                               fontWeight: FontWeight.w700,
                               color: kCareDark),
@@ -238,7 +240,7 @@ class _AvatarHeader extends StatelessWidget {
                   color: kCareSoft, borderRadius: BorderRadius.circular(20)),
               child: Text(
                 'MRN: ${profile.mrn}',
-                style: const TextStyle(fontSize: 12, color: kCareDark, fontWeight: FontWeight.w700),
+                style: TextStyle(fontSize: 12, color: kCareDark, fontWeight: FontWeight.w700),
               ),
             ),
           ],

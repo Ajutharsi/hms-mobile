@@ -17,6 +17,7 @@ import 'package:hms_mobile/features/patient/screens/lab_results_screen.dart';
 import 'package:hms_mobile/features/auth/screens/login_screen.dart';
 import 'package:hms_mobile/features/patient/screens/prescriptions_screen.dart';
 import 'package:hms_mobile/features/patient/screens/profile_screen.dart';
+import 'package:hms_mobile/features/settings/screens/appearance_screen.dart';
 
 /// The patient's home shell — bottom nav (Home / Appointments / Lab /
 /// Profile) around a center "Book" button, plus a drawer that mirrors the
@@ -28,6 +29,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => HomeViewModel(user: user)),
@@ -107,6 +109,7 @@ class _HomeShellState extends State<_HomeShell> {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final homeViewModel = context.watch<HomeViewModel>();
 
     return Scaffold(
@@ -168,6 +171,7 @@ class _PatientDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     void go(PatientSection section) {
       Navigator.of(context).pop();
       onOpen(section);
@@ -221,6 +225,14 @@ class _PatientDrawer extends StatelessWidget {
                 _DrawerTile(icon: Icons.biotech_rounded, label: 'My Lab Results', onTap: () => go(PatientSection.lab)),
                 _DrawerTile(icon: Icons.receipt_long_rounded, label: 'My Bills', onTap: () => go(PatientSection.bills)),
                 _DrawerTile(icon: Icons.person_rounded, label: 'My Profile', onTap: () => go(PatientSection.profile)),
+                _DrawerTile(
+                  icon: Icons.palette_rounded,
+                  label: 'Appearance',
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    Navigator.of(context).push(MaterialPageRoute(builder: (_) => const AppearanceScreen()));
+                  },
+                ),
               ],
             ),
           ),
@@ -250,6 +262,7 @@ class _DrawerTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return ListTile(
       onTap: onTap,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
@@ -281,7 +294,7 @@ class _AppointmentsTabState extends State<_AppointmentsTab> {
           TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('No, keep it')),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Yes, cancel', style: TextStyle(color: kCarePinkFg, fontWeight: FontWeight.w700)),
+            child: Text('Yes, cancel', style: TextStyle(color: kCarePinkFg, fontWeight: FontWeight.w700)),
           ),
         ],
       ),
@@ -300,6 +313,7 @@ class _AppointmentsTabState extends State<_AppointmentsTab> {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final viewModel = context.watch<HomeViewModel>();
     // Soonest visit first; the API returns newest-booked first.
     final upcoming = viewModel.appointments.where((a) => a.isScheduled).toList()
@@ -368,6 +382,7 @@ class _SegmentButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return Expanded(
       child: GestureDetector(
         onTap: onTap,
@@ -396,6 +411,7 @@ class AppointmentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final doctor = appointment.doctorName ?? 'Doctor';
     return CareCard(
       child: Column(
@@ -441,7 +457,7 @@ class AppointmentCard extends StatelessWidget {
                 onPressed: onCancel,
                 style: OutlinedButton.styleFrom(
                   foregroundColor: kCarePinkFg,
-                  side: const BorderSide(color: kCarePinkBg, width: 1.4),
+                  side: BorderSide(color: kCarePinkBg, width: 1.4),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
                 child: const Text('Cancel appointment', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700)),

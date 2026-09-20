@@ -1,74 +1,102 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_palette.dart';
+import 'package:hms_mobile/core/theme/theme_controller.dart';
 
 /// "Care" design kit — the teal, curved-header look (modelled on the
 /// PatientCare Flutter UI kit) used by the patient app and the auth screens.
 /// Other roles still use the blue tokens in app_style.dart; they can move
 /// over to this kit one role at a time.
-const kCare = Color(0xFF1FA99A);
-const kCareDark = Color(0xFF15877B);
-const kCareDeep = Color(0xFF0E6B61);
-const kCareSoft = Color(0xFFE3F5F2);
-const kCareBg = Color(0xFFF4F8F8);
-const kCareBorder = Color(0xFFE2ECEA);
-const kCarePinkBg = Color(0xFFFDE8EF);
-const kCarePinkFg = Color(0xFFD6336C);
+// The colour tokens now read from the palette the user picked in
+// Appearance (see CareThemeController), so changing the colour repaints
+// every screen. They stay top-level names so call sites read the same.
+Color get kCare => CareColors.primary;
+Color get kCareDark => CareColors.dark;
+Color get kCareDeep => CareColors.deep;
+Color get kCareSoft => CareColors.soft;
+Color get kCareBg => CareColors.background;
+Color get kCareBorder => CareColors.border;
+Color get kCareOn => CareColors.onPrimary;
+Color get kCarePinkBg => CareColors.alertBg;
+Color get kCarePinkFg => CareColors.alertFg;
 
-const kCareShadow = [
-  BoxShadow(color: Color(0x0F0E6B61), blurRadius: 18, offset: Offset(0, 6)),
-];
+List<BoxShadow> get kCareShadow => CareColors.shadow;
 
-const kCareGradient = LinearGradient(
-  begin: Alignment.topLeft,
-  end: Alignment.bottomRight,
-  colors: [kCare, kCareDark],
-);
+LinearGradient get kCareGradient => CareColors.gradient;
 
-/// Teal theme for a subtree. Pushed routes sit above whatever Theme wraps
-/// the home shell, so every patient page wraps itself in this too.
+/// Hands the current palette down the tree. Widgets read it through
+/// [CarePaletteScope.of], which registers them as dependents — so even a
+/// cached `const` widget repaints when the colour changes.
+class CarePaletteScope extends InheritedWidget {
+  final CarePalette palette;
+
+  const CarePaletteScope({super.key, required this.palette, required super.child});
+
+  static CarePalette of(BuildContext context) => context.dependOnInheritedWidgetOfExactType<CarePaletteScope>()?.palette ?? CareColors.current;
+
+  @override
+  bool updateShouldNotify(CarePaletteScope oldWidget) => oldWidget.palette.seed != palette.seed;
+}
+
+/// Theme for a subtree, in the colour the user picked. Pushed routes sit
+/// above whatever Theme wraps the home shell, so every page wraps itself
+/// in this; it also watches the controller, so a colour change repaints
+/// whatever is on screen.
 class CareTheme extends StatelessWidget {
   final Widget child;
   const CareTheme({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {
+    final palette = context.watch<CareThemeController>().palette;
     final base = Theme.of(context);
-    return Theme(
-      data: base.copyWith(
-        colorScheme: ColorScheme.fromSeed(seedColor: kCare, primary: kCare),
-        scaffoldBackgroundColor: kCareBg,
-        progressIndicatorTheme: const ProgressIndicatorThemeData(color: kCare),
-        filledButtonTheme: FilledButtonThemeData(
-          style: FilledButton.styleFrom(
-            backgroundColor: kCare,
-            foregroundColor: Colors.white,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+
+    return CarePaletteScope(
+      palette: palette,
+      child: Theme(
+        data: base.copyWith(
+          colorScheme: ColorScheme.fromSeed(seedColor: palette.primary, primary: palette.primary),
+          scaffoldBackgroundColor: palette.background,
+          progressIndicatorTheme: ProgressIndicatorThemeData(color: palette.primary),
+          filledButtonTheme: FilledButtonThemeData(
+            style: FilledButton.styleFrom(
+              backgroundColor: palette.primary,
+              foregroundColor: palette.onPrimary,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+            ),
           ),
-        ),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: kCare,
-            foregroundColor: Colors.white,
-            elevation: 0,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: palette.primary,
+              foregroundColor: palette.onPrimary,
+              elevation: 0,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+            ),
           ),
-        ),
-        outlinedButtonTheme: OutlinedButtonThemeData(
-          style: OutlinedButton.styleFrom(
-            foregroundColor: kCareDark,
-            side: const BorderSide(color: kCare, width: 1.3),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+          outlinedButtonTheme: OutlinedButtonThemeData(
+            style: OutlinedButton.styleFrom(
+              foregroundColor: palette.dark,
+              side: BorderSide(color: palette.primary, width: 1.3),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+            ),
           ),
+          textButtonTheme: TextButtonThemeData(style: TextButton.styleFrom(foregroundColor: palette.dark)),
+          snackBarTheme: const SnackBarThemeData(behavior: SnackBarBehavior.floating),
+          dividerColor: palette.border,
         ),
-        textButtonTheme: TextButtonThemeData(style: TextButton.styleFrom(foregroundColor: kCareDark)),
-        snackBarTheme: const SnackBarThemeData(behavior: SnackBarBehavior.floating),
-        dividerColor: kCareBorder,
+        child: child,
       ),
-      child: child,
     );
   }
 }
+
+/// Registers the caller as a dependent of [CarePaletteScope] so it
+/// repaints when the user picks another colour. The kCare* getters read a
+/// global palette and carry no context of their own, so anything painting
+/// with them — kit widgets and screens alike — must call this in build().
+void watchCarePalette(BuildContext context) => CarePaletteScope.of(context);
 
 /// Faint circles and plus-marks drawn over the teal header — the kit's
 /// "medical pattern" background.
@@ -117,10 +145,11 @@ class CareHeaderBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return ClipRRect(
       borderRadius: BorderRadius.vertical(bottom: Radius.circular(radius)),
       child: Container(
-        decoration: const BoxDecoration(gradient: kCareGradient),
+        decoration: BoxDecoration(gradient: kCareGradient),
         child: CustomPaint(
           painter: _CarePatternPainter(),
           child: Padding(padding: padding, child: child),
@@ -150,6 +179,7 @@ class CarePageHeader extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final topInset = MediaQuery.of(context).padding.top;
     return CareHeaderBackground(
       radius: 24,
@@ -220,15 +250,14 @@ class CareAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final provider = image ?? ((imageUrl ?? '').isNotEmpty ? NetworkImage(imageUrl!) : null);
     final avatar = CircleAvatar(
       radius: radius,
       backgroundColor: kCareSoft,
       backgroundImage: provider,
       onBackgroundImageError: provider == null ? null : (_, __) {},
-      child: provider == null
-          ? Text(_initials, style: TextStyle(color: kCareDark, fontWeight: FontWeight.w700, fontSize: radius * 0.62))
-          : null,
+      child: provider == null ? Text(_initials, style: TextStyle(color: kCareDark, fontWeight: FontWeight.w700, fontSize: radius * 0.62)) : null,
     );
     if (!ring) return avatar;
     return Container(
@@ -255,6 +284,7 @@ class CareCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return Material(
       color: Colors.transparent,
       borderRadius: BorderRadius.circular(radius),
@@ -285,13 +315,14 @@ class CareSectionTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return Row(
       children: [
         Expanded(child: Text(title, style: const TextStyle(fontSize: 16.5, fontWeight: FontWeight.w700, color: kInk))),
         if (actionLabel != null)
           GestureDetector(
             onTap: onAction,
-            child: Text(actionLabel!, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: kCare)),
+            child: Text(actionLabel!, style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: kCare)),
           ),
       ],
     );
@@ -308,6 +339,7 @@ class CareIconBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return Container(
       width: size,
       height: size,
@@ -338,6 +370,7 @@ class CareOptionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return CareCard(
       onTap: onTap,
       padding: const EdgeInsets.all(12),
@@ -358,7 +391,7 @@ class CareOptionTile extends StatelessWidget {
               ],
             ),
           ),
-          trailing ?? const Icon(Icons.chevron_right_rounded, color: kCare),
+          trailing ?? Icon(Icons.chevron_right_rounded, color: kCare),
         ],
       ),
     );
@@ -394,6 +427,7 @@ class CareChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
       decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(20)),
@@ -427,16 +461,16 @@ class CareStateView extends StatelessWidget {
         message = null,
         loading = true;
 
-  factory CareStateView.error(String message) =>
-      CareStateView(icon: Icons.wifi_off_rounded, title: "Couldn't load", message: message);
+  factory CareStateView.error(String message) => CareStateView(icon: Icons.wifi_off_rounded, title: "Couldn't load", message: message);
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     if (loading) {
       return ListView(
         physics: const AlwaysScrollableScrollPhysics(),
-        children: const [
-          SizedBox(height: 140),
+        children: [
+          const SizedBox(height: 140),
           Center(child: CircularProgressIndicator(color: kCare)),
         ],
       );
@@ -450,7 +484,7 @@ class CareStateView extends StatelessWidget {
           child: Container(
             width: 84,
             height: 84,
-            decoration: const BoxDecoration(color: kCareSoft, shape: BoxShape.circle),
+            decoration: BoxDecoration(color: kCareSoft, shape: BoxShape.circle),
             child: Icon(icon, color: kCare, size: 38),
           ),
         ),
@@ -475,6 +509,7 @@ class CarePrimaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return SizedBox(
       width: double.infinity,
       height: 52,
@@ -510,7 +545,7 @@ InputDecoration careFieldDecoration(String label, {required String hint, require
     hintText: hint,
     floatingLabelBehavior: FloatingLabelBehavior.always,
     labelStyle: const TextStyle(color: kInk, fontSize: 13, fontWeight: FontWeight.w600),
-    floatingLabelStyle: const TextStyle(color: kCareDark, fontSize: 13, fontWeight: FontWeight.w700),
+    floatingLabelStyle: TextStyle(color: kCareDark, fontSize: 13, fontWeight: FontWeight.w700),
     hintStyle: const TextStyle(color: Color(0xFFAEB8B6), fontSize: 14.5),
     prefixIcon: Icon(icon, color: kCare, size: 20),
     filled: true,
@@ -536,6 +571,7 @@ class CareChoicePill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return GestureDetector(
       onTap: enabled ? onTap : null,
       child: AnimatedContainer(
@@ -588,6 +624,7 @@ class CareBottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     Widget item(int i) {
       final active = selectedIndex == i;
       final it = items[i];
