@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/core/services/auth_storage.dart';
 import 'package:hms_mobile/core/services/api_service.dart' show ApiException, guardNetworkErrors;
 import 'package:hms_mobile/core/services/nurse_api_service.dart';
@@ -15,6 +16,7 @@ class AdmissionsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return ChangeNotifierProvider(
       create: (_) => AdmissionsViewModel(),
       child: const _AdmissionsView(),
@@ -41,7 +43,7 @@ class _AdmissionsView extends StatelessWidget {
       totalCharges: double.tryParse(result['total_charges'] ?? '') ?? 0,
     );
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kTealDark : null, content: Text(error ?? 'Patient discharged.')));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kCareDark : null, content: Text(error ?? 'Patient discharged.')));
   }
 
   Future<void> _transfer(BuildContext context, AdmissionsViewModel viewModel, Admission admission) async {
@@ -55,18 +57,19 @@ class _AdmissionsView extends StatelessWidget {
       reason: (result['reason'] as String?)?.isEmpty == true ? null : result['reason'] as String?,
     );
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kTealDark : null, content: Text(error ?? 'Patient transferred.')));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kCareDark : null, content: Text(error ?? 'Patient transferred.')));
   }
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final viewModel = context.watch<AdmissionsViewModel>();
 
-    return Scaffold(
-      appBar: AppBar(title: const Text('Admissions')),
+    return CareTheme(child: Scaffold(
+      appBar: carePageAppBar(context, 'Admissions'),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _admitPatient(context, viewModel),
-        backgroundColor: kTealDark,
+        backgroundColor: kCareDark,
         foregroundColor: Colors.white,
         icon: const Icon(Icons.add, color: Colors.white),
         label: const Text('Admit patient', style: TextStyle(color: Colors.white)),
@@ -87,19 +90,19 @@ class _AdmissionsView extends StatelessWidget {
           ),
           Expanded(
             child: RefreshIndicator(
-              color: kTeal,
+              color: kCare,
               onRefresh: viewModel.load,
               child: _buildBody(context, viewModel),
             ),
           ),
         ],
       ),
-    );
+    ));
   }
 
   Widget _buildBody(BuildContext context, AdmissionsViewModel viewModel) {
     if (viewModel.isLoading && viewModel.admissions.isEmpty) {
-      return const Center(child: CircularProgressIndicator(color: kTeal));
+      return Center(child: CircularProgressIndicator(color: kCare));
     }
     if (viewModel.loadError != null && viewModel.admissions.isEmpty) {
       return ListView(padding: const EdgeInsets.all(24), children: [
@@ -142,12 +145,13 @@ class _FilterChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(20),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-        decoration: BoxDecoration(color: selected ? kTealDark : kFieldFill, borderRadius: BorderRadius.circular(20)),
+        decoration: BoxDecoration(color: selected ? kCareDark : kCareBg, borderRadius: BorderRadius.circular(20)),
         child: Text(label, style: TextStyle(color: selected ? Colors.white : kMuted, fontSize: 12.5, fontWeight: FontWeight.w600)),
       ),
     );
@@ -162,11 +166,12 @@ class _AdmissionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final admitted = admission.isAdmitted;
 
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kFieldFill)),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kCareBorder)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -174,10 +179,10 @@ class _AdmissionCard extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: 18,
-                backgroundColor: kMint,
+                backgroundColor: kCareSoft,
                 backgroundImage: admission.patientPhotoUrl != null ? NetworkImage(admission.patientPhotoUrl!) : null,
                 child: admission.patientPhotoUrl == null
-                    ? Text((admission.patientName ?? '?').isNotEmpty ? admission.patientName![0].toUpperCase() : '?', style: const TextStyle(color: kTealDark, fontWeight: FontWeight.w700))
+                    ? Text((admission.patientName ?? '?').isNotEmpty ? admission.patientName![0].toUpperCase() : '?', style: TextStyle(color: kCareDark, fontWeight: FontWeight.w700))
                     : null,
               ),
               const SizedBox(width: 10),
@@ -192,7 +197,7 @@ class _AdmissionCard extends StatelessWidget {
               ),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
-                decoration: BoxDecoration(color: admitted ? kSuccessBg : kFieldFill, borderRadius: BorderRadius.circular(8)),
+                decoration: BoxDecoration(color: admitted ? kSuccessBg : kCareBg, borderRadius: BorderRadius.circular(8)),
                 child: Text(admission.status, style: TextStyle(color: admitted ? kSuccessFg : kMuted, fontSize: 11, fontWeight: FontWeight.w700)),
               ),
             ],
@@ -217,7 +222,7 @@ class _AdmissionCard extends StatelessWidget {
                 const SizedBox(width: 4),
                 FilledButton(
                   onPressed: onDischarge,
-                  style: FilledButton.styleFrom(backgroundColor: kTealDark, minimumSize: const Size(0, 34), textStyle: const TextStyle(fontSize: 13)),
+                  style: FilledButton.styleFrom(backgroundColor: kCareDark, minimumSize: const Size(0, 34), textStyle: const TextStyle(fontSize: 13)),
                   child: const Text('Discharge'),
                 ),
               ],
@@ -236,6 +241,7 @@ class _InfoBit extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -269,6 +275,7 @@ class _DischargeDialogState extends State<_DischargeDialog> {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return AlertDialog(
       title: const Text('Discharge patient'),
       content: SingleChildScrollView(
@@ -298,7 +305,7 @@ class _DischargeDialogState extends State<_DischargeDialog> {
       actions: [
         TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Cancel')),
         FilledButton(
-          style: FilledButton.styleFrom(backgroundColor: kTealDark),
+          style: FilledButton.styleFrom(backgroundColor: kCareDark),
           onPressed: () => Navigator.of(context).pop({
             'discharge_date': '${_date.year}-${_date.month.toString().padLeft(2, '0')}-${_date.day.toString().padLeft(2, '0')}',
             'discharge_notes': _notesController.text.trim(),
@@ -374,10 +381,11 @@ class _TransferDialogState extends State<_TransferDialog> {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return AlertDialog(
       title: const Text('Transfer patient'),
       content: _isLoadingWards
-          ? const SizedBox(height: 80, child: Center(child: CircularProgressIndicator(color: kTeal)))
+          ? SizedBox(height: 80, child: Center(child: CircularProgressIndicator(color: kCare)))
           : SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -393,7 +401,7 @@ class _TransferDialogState extends State<_TransferDialog> {
                   ),
                   const SizedBox(height: 12),
                   if (_isLoadingBeds)
-                    const LinearProgressIndicator(color: kTeal)
+                    LinearProgressIndicator(color: kCare)
                   else
                     DropdownButtonFormField<Bed>(
                       initialValue: _selectedBed,
@@ -409,7 +417,7 @@ class _TransferDialogState extends State<_TransferDialog> {
       actions: [
         TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Cancel')),
         FilledButton(
-          style: FilledButton.styleFrom(backgroundColor: kTealDark),
+          style: FilledButton.styleFrom(backgroundColor: kCareDark),
           onPressed: _selectedWard == null || _selectedBed == null
               ? null
               : () => Navigator.of(context).pop({'ward_id': _selectedWard!.id, 'bed_id': _selectedBed!.id, 'reason': _reasonController.text.trim()}),

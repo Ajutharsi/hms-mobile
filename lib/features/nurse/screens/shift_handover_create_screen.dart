@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/nurse/models/shift_handover.dart';
 import 'package:hms_mobile/features/nurse/viewmodels/handover_create_view_model.dart';
 
@@ -14,6 +15,7 @@ class ShiftHandoverCreateScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return ChangeNotifierProvider(
       create: (_) => HandoverCreateViewModel(),
       child: const _CreateView(),
@@ -30,7 +32,7 @@ class _CreateView extends StatelessWidget {
     final id = await viewModel.submit();
     if (!context.mounted) return;
     if (id != null) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(backgroundColor: kTealDark, content: Text('Handover saved as draft.')));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: kCareDark, content: const Text('Handover saved as draft.')));
       Navigator.of(context).pop(id);
     } else if (viewModel.submitError != null) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(viewModel.submitError!)));
@@ -39,10 +41,11 @@ class _CreateView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final viewModel = context.watch<HandoverCreateViewModel>();
 
-    return Scaffold(
-      appBar: AppBar(title: const Text('New Handover')),
+    return CareTheme(child: Scaffold(
+      appBar: carePageAppBar(context, 'New Handover'),
       bottomNavigationBar: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
@@ -51,7 +54,7 @@ class _CreateView extends StatelessWidget {
             height: 48,
             child: FilledButton(
               onPressed: viewModel.isSubmitting ? null : () => _submit(context, viewModel),
-              style: FilledButton.styleFrom(backgroundColor: kTealDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+              style: FilledButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
               child: viewModel.isSubmitting
                   ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
                   : const Text('Save as draft', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
@@ -60,7 +63,7 @@ class _CreateView extends StatelessWidget {
         ),
       ),
       body: viewModel.isLoadingMeta
-          ? const Center(child: CircularProgressIndicator(color: kTeal))
+          ? Center(child: CircularProgressIndicator(color: kCare))
           : viewModel.metaError != null
               ? Center(child: Text(viewModel.metaError!, style: const TextStyle(color: kMuted)))
               : ListView(
@@ -130,7 +133,7 @@ class _CreateView extends StatelessWidget {
                         }
                       },
                       child: InputDecorator(
-                        decoration: authFieldDecoration('Handover date', hint: '', icon: Icons.calendar_today_outlined),
+                        decoration: careFieldDecoration('Handover date', hint: '', icon: Icons.calendar_today_outlined),
                         child: Text('${viewModel.handoverDate.year}-${viewModel.handoverDate.month.toString().padLeft(2, '0')}-${viewModel.handoverDate.day.toString().padLeft(2, '0')}'),
                       ),
                     ),
@@ -138,14 +141,14 @@ class _CreateView extends StatelessWidget {
                     TextField(
                       controller: viewModel.shiftSummaryController,
                       maxLines: 3,
-                      decoration: authFieldDecoration('Shift summary', hint: 'Optional', icon: Icons.notes_outlined),
+                      decoration: careFieldDecoration('Shift summary', hint: 'Optional', icon: Icons.notes_outlined),
                     ),
                     const SizedBox(height: 24),
                     _section('Patients (${viewModel.patients.length})'),
                     if (viewModel.wardId == null)
                       const Text('Pick a ward to load its admitted patients.', style: TextStyle(color: kMuted, fontSize: 13))
                     else if (viewModel.isLoadingPatients)
-                      const Center(child: Padding(padding: EdgeInsets.all(20), child: CircularProgressIndicator(color: kTeal)))
+                      Center(child: Padding(padding: const EdgeInsets.all(20), child: CircularProgressIndicator(color: kCare)))
                     else if (viewModel.patientsError != null)
                       Text(viewModel.patientsError!, style: const TextStyle(color: kMuted))
                     else if (viewModel.patients.isEmpty)
@@ -173,7 +176,7 @@ class _CreateView extends StatelessWidget {
                     ],
                   ],
                 ),
-    );
+    ));
   }
 
   Widget _section(String title) => Padding(
@@ -191,12 +194,13 @@ class _DropdownField<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return DropdownButtonFormField<T>(
       initialValue: value,
       items: items,
       onChanged: onChanged,
       isExpanded: true,
-      decoration: authFieldDecoration(label, hint: '', icon: Icons.arrow_drop_down_circle_outlined),
+      decoration: careFieldDecoration(label, hint: '', icon: Icons.arrow_drop_down_circle_outlined),
     );
   }
 }
@@ -208,10 +212,11 @@ class _TaskRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final task = viewModel.tasks[index];
     return Container(
       padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(color: kFieldFill, borderRadius: BorderRadius.circular(10)),
+      decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(10)),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -249,11 +254,12 @@ class _PatientEditCardState extends State<_PatientEditCard> {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final card = widget.card;
 
     return Container(
       padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14), border: Border.all(color: kFieldFill)),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14), border: Border.all(color: kCareBorder)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -334,7 +340,7 @@ class _PatientEditCardState extends State<_PatientEditCard> {
               children: [
                 Checkbox(
                   value: card.isHighPriority,
-                  activeColor: kTealDark,
+                  activeColor: kCareDark,
                   onChanged: (v) {
                     setState(() => card.isHighPriority = v ?? false);
                     widget.onChanged();
@@ -356,7 +362,7 @@ class _PatientEditCardState extends State<_PatientEditCard> {
         labelText: label,
         isDense: true,
         filled: true,
-        fillColor: kFieldFill,
+        fillColor: Colors.white,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide.none),
       ),
       onChanged: (v) {
@@ -377,6 +383,7 @@ class _MiniDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return DropdownButtonFormField<String>(
       initialValue: value,
       isExpanded: true,
@@ -384,7 +391,7 @@ class _MiniDropdown extends StatelessWidget {
         labelText: label,
         isDense: true,
         filled: true,
-        fillColor: kFieldFill,
+        fillColor: Colors.white,
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide.none),
       ),
       items: [

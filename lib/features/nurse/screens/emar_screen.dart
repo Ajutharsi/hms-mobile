@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/nurse/models/medication_order.dart';
 import 'package:hms_mobile/features/nurse/models/nurse_patient.dart';
 import 'package:hms_mobile/features/nurse/viewmodels/emar_view_model.dart';
@@ -12,6 +13,7 @@ class EmarScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return ChangeNotifierProvider(
       create: (_) => EmarViewModel(),
       child: const _EmarView(),
@@ -37,31 +39,32 @@ class _EmarView extends StatelessWidget {
     final error = await viewModel.administer(order.id, status: result['status']!, notes: result['notes']);
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(backgroundColor: error == null ? kTealDark : null, content: Text(error ?? 'Medication status updated.')),
+      SnackBar(backgroundColor: error == null ? kCareDark : null, content: Text(error ?? 'Medication status updated.')),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final viewModel = context.watch<EmarViewModel>();
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('eMAR', style: TextStyle(fontWeight: FontWeight.w700))),
+    return CareTheme(child: Scaffold(
+      backgroundColor: kCareBg,
+      appBar: carePageAppBar(context, 'eMAR'),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _newOrder(context, viewModel),
-        backgroundColor: kTealDark,
+        backgroundColor: kCareDark,
         foregroundColor: Colors.white,
         icon: const Icon(Icons.add, color: Colors.white),
         label: const Text('New order', style: TextStyle(color: Colors.white)),
       ),
-      body: RefreshIndicator(color: kTeal, onRefresh: viewModel.load, child: _buildBody(context, viewModel)),
-    );
+      body: RefreshIndicator(color: kCare, onRefresh: viewModel.load, child: _buildBody(context, viewModel)),
+    ));
   }
 
   Widget _buildBody(BuildContext context, EmarViewModel viewModel) {
     if (viewModel.isLoading && viewModel.orders.isEmpty) {
-      return const Center(child: CircularProgressIndicator(color: kTeal));
+      return Center(child: CircularProgressIndicator(color: kCare));
     }
     if (viewModel.loadError != null && viewModel.orders.isEmpty) {
       return ListView(padding: const EdgeInsets.all(24), children: [
@@ -107,11 +110,12 @@ class _OrderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final (fg, bg) = _statusColors[order.status] ?? (kMuted, kFieldFill);
+    watchCarePalette(context);
+    final (fg, bg) = _statusColors[order.status] ?? (kMuted, kCareBg);
 
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kFieldFill)),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kCareBorder)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -170,7 +174,7 @@ class _OrderCard extends StatelessWidget {
                 onPressed: onAdminister,
                 icon: const Icon(Icons.medication_liquid_outlined, size: 16),
                 label: const Text('Administer'),
-                style: FilledButton.styleFrom(backgroundColor: kTealDark, minimumSize: const Size(0, 34), textStyle: const TextStyle(fontSize: 13)),
+                style: FilledButton.styleFrom(backgroundColor: kCareDark, minimumSize: const Size(0, 34), textStyle: const TextStyle(fontSize: 13)),
               ),
             ),
           ],
@@ -188,6 +192,7 @@ class _MiniBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
       decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(6)),
@@ -216,6 +221,7 @@ class _AdministerDialogState extends State<_AdministerDialog> {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return AlertDialog(
       title: Text('${widget.order.drugName} — ${widget.order.dosage}'),
       content: Column(
@@ -230,7 +236,7 @@ class _AdministerDialogState extends State<_AdministerDialog> {
                 ChoiceChip(
                   label: Text(s),
                   selected: _status == s,
-                  selectedColor: kMint,
+                  selectedColor: kCareSoft,
                   onSelected: (_) => setState(() => _status = s),
                 ),
             ],
@@ -242,7 +248,7 @@ class _AdministerDialogState extends State<_AdministerDialog> {
             decoration: InputDecoration(
               hintText: 'Notes (optional)',
               filled: true,
-              fillColor: kFieldFill,
+              fillColor: Colors.white,
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide.none),
             ),
           ),
@@ -251,7 +257,7 @@ class _AdministerDialogState extends State<_AdministerDialog> {
       actions: [
         TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Cancel')),
         FilledButton(
-          style: FilledButton.styleFrom(backgroundColor: kTealDark),
+          style: FilledButton.styleFrom(backgroundColor: kCareDark),
           onPressed: () => Navigator.of(context).pop({'status': _status, 'notes': _notesController.text.trim().isEmpty ? null : _notesController.text.trim()}),
           child: const Text('Save'),
         ),
@@ -338,9 +344,10 @@ class _NewOrderScreenState extends State<_NewOrderScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('New medication order', style: TextStyle(fontWeight: FontWeight.w700))),
+    watchCarePalette(context);
+    return CareTheme(child: Scaffold(
+      backgroundColor: kCareBg,
+      appBar: carePageAppBar(context, 'New medication order'),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
@@ -350,13 +357,13 @@ class _NewOrderScreenState extends State<_NewOrderScreen> {
               if (_error != null) ...[authErrorBanner(_error!), const SizedBox(height: 16)],
               PatientPickerField(value: _patient, errorText: _patientError, onChanged: (p) => setState(() => _patient = p)),
               const SizedBox(height: 16),
-              TextField(controller: _drugController, decoration: authFieldDecoration('Drug name', hint: 'e.g. Paracetamol', icon: Icons.medication_outlined)),
+              TextField(controller: _drugController, decoration: careFieldDecoration('Drug name', hint: 'e.g. Paracetamol', icon: Icons.medication_outlined)),
               const SizedBox(height: 14),
-              TextField(controller: _dosageController, decoration: authFieldDecoration('Dosage', hint: 'e.g. 500mg', icon: Icons.scale_outlined)),
+              TextField(controller: _dosageController, decoration: careFieldDecoration('Dosage', hint: 'e.g. 500mg', icon: Icons.scale_outlined)),
               const SizedBox(height: 14),
-              TextField(controller: _routeController, decoration: authFieldDecoration('Route (optional)', hint: 'e.g. Oral, IV', icon: Icons.route_outlined)),
+              TextField(controller: _routeController, decoration: careFieldDecoration('Route (optional)', hint: 'e.g. Oral, IV', icon: Icons.route_outlined)),
               const SizedBox(height: 14),
-              TextField(controller: _frequencyController, decoration: authFieldDecoration('Frequency (optional)', hint: 'e.g. Twice daily', icon: Icons.repeat_rounded)),
+              TextField(controller: _frequencyController, decoration: careFieldDecoration('Frequency (optional)', hint: 'e.g. Twice daily', icon: Icons.repeat_rounded)),
               const SizedBox(height: 14),
               const Text('Scheduled time (optional)', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: kInk)),
               const SizedBox(height: 8),
@@ -365,7 +372,7 @@ class _NewOrderScreenState extends State<_NewOrderScreen> {
                 borderRadius: BorderRadius.circular(12),
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                  decoration: BoxDecoration(color: kFieldFill, borderRadius: BorderRadius.circular(12)),
+                  decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(12)),
                   child: Row(children: [
                     const Icon(Icons.access_time_rounded, size: 18, color: kMuted),
                     const SizedBox(width: 10),
@@ -374,7 +381,7 @@ class _NewOrderScreenState extends State<_NewOrderScreen> {
                 ),
               ),
               const SizedBox(height: 14),
-              TextField(controller: _notesController, maxLines: 3, decoration: authFieldDecoration('Notes (optional)', hint: '', icon: Icons.notes_outlined)),
+              TextField(controller: _notesController, maxLines: 3, decoration: careFieldDecoration('Notes (optional)', hint: '', icon: Icons.notes_outlined)),
               const SizedBox(height: 8),
               CheckboxListTile(
                 value: _isPrn,
@@ -396,7 +403,7 @@ class _NewOrderScreenState extends State<_NewOrderScreen> {
                 height: 50,
                 child: FilledButton(
                   onPressed: _saving ? null : _submit,
-                  style: FilledButton.styleFrom(backgroundColor: kTealDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+                  style: FilledButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
                   child: _saving
                       ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2.4, color: Colors.white))
                       : const Text('Add order', style: TextStyle(fontSize: 15.5, fontWeight: FontWeight.w600)),
@@ -406,6 +413,6 @@ class _NewOrderScreenState extends State<_NewOrderScreen> {
           ),
         ),
       ),
-    );
+    ));
   }
 }

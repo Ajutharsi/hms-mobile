@@ -4,6 +4,7 @@ import 'package:hms_mobile/core/services/api_service.dart';
 import 'package:hms_mobile/core/services/auth_storage.dart';
 import 'package:hms_mobile/core/services/nurse_api_service.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/nurse/models/shift_handover.dart';
 
 class ShiftHandoverDetailScreen extends StatefulWidget {
@@ -62,7 +63,7 @@ class _ShiftHandoverDetailScreenState extends State<ShiftHandoverDetailScreen> {
       final token = await _authStorage.readToken();
       await guardNetworkErrors(() => action(token!));
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: kTealDark, content: Text(successMessage)));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: kCareDark, content: Text(successMessage)));
       await _load();
     } on ApiException catch (e) {
       if (!mounted) return;
@@ -98,15 +99,16 @@ class _ShiftHandoverDetailScreenState extends State<ShiftHandoverDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Handover Detail')),
+    watchCarePalette(context);
+    return CareTheme(child: Scaffold(
+      appBar: carePageAppBar(context, 'Handover Detail'),
       body: _buildBody(),
-    );
+    ));
   }
 
   Widget _buildBody() {
     if (_isLoading && _detail == null) {
-      return const Center(child: CircularProgressIndicator(color: kTeal));
+      return Center(child: CircularProgressIndicator(color: kCare));
     }
     if (_loadError != null && _detail == null) {
       return ListView(
@@ -129,7 +131,7 @@ class _ShiftHandoverDetailScreenState extends State<ShiftHandoverDetailScreen> {
       children: [
         Container(
           padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kFieldFill)),
+          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kCareBorder)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -157,7 +159,7 @@ class _ShiftHandoverDetailScreenState extends State<ShiftHandoverDetailScreen> {
               ),
               if ((detail.shiftSummary ?? '').isNotEmpty) ...[
                 const SizedBox(height: 12),
-                const Divider(height: 1, color: kFieldFill),
+                Divider(height: 1, color: kCareBorder),
                 const SizedBox(height: 12),
                 Text(detail.shiftSummary!, style: const TextStyle(fontSize: 13.5, color: kInk)),
               ],
@@ -179,7 +181,7 @@ class _ShiftHandoverDetailScreenState extends State<ShiftHandoverDetailScreen> {
             width: double.infinity,
             child: FilledButton(
               onPressed: _isActing ? null : () => _act((token) => _api.handoverSubmit(token, widget.handoverId), successMessage: 'Handover submitted.'),
-              style: FilledButton.styleFrom(backgroundColor: kTealDark),
+              style: FilledButton.styleFrom(backgroundColor: kCareDark),
               child: const Text('Submit for acceptance'),
             ),
           ),
@@ -199,7 +201,7 @@ class _ShiftHandoverDetailScreenState extends State<ShiftHandoverDetailScreen> {
               Expanded(
                 child: FilledButton(
                   onPressed: _isActing ? null : () => _act((token) => _api.handoverAccept(token, widget.handoverId), successMessage: 'Handover accepted.'),
-                  style: FilledButton.styleFrom(backgroundColor: kTealDark),
+                  style: FilledButton.styleFrom(backgroundColor: kCareDark),
                   child: const Text('Accept'),
                 ),
               ),
@@ -219,7 +221,7 @@ class _ShiftHandoverDetailScreenState extends State<ShiftHandoverDetailScreen> {
           const SizedBox(height: 10),
           Container(
             padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14), border: Border.all(color: kFieldFill)),
+            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14), border: Border.all(color: kCareBorder)),
             child: Column(
               children: [
                 for (final t in detail.tasks) ...[
@@ -239,7 +241,7 @@ class _ShiftHandoverDetailScreenState extends State<ShiftHandoverDetailScreen> {
                       ),
                     ],
                   ),
-                  if (t != detail.tasks.last) const Padding(padding: EdgeInsets.symmetric(vertical: 8), child: Divider(height: 1, color: kFieldFill)),
+                  if (t != detail.tasks.last) Padding(padding: const EdgeInsets.symmetric(vertical: 8), child: Divider(height: 1, color: kCareBorder)),
                 ],
               ],
             ),
@@ -263,14 +265,15 @@ class _PatientCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final (fg, bg) = _conditionColors[card.condition] ?? (kMuted, kFieldFill);
+    watchCarePalette(context);
+    final (fg, bg) = _conditionColors[card.condition] ?? (kMuted, kCareBg);
 
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: card.isHighPriority ? kDangerFg : kFieldFill, width: card.isHighPriority ? 1.4 : 1),
+        border: Border.all(color: card.isHighPriority ? kDangerFg : kCareBg, width: card.isHighPriority ? 1.4 : 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -318,7 +321,7 @@ class _PatientCard extends StatelessWidget {
 
   Widget _tag(String text) => Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-        decoration: BoxDecoration(color: kFieldFill, borderRadius: BorderRadius.circular(6)),
+        decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(6)),
         child: Text(text, style: const TextStyle(fontSize: 11, color: kMuted, fontWeight: FontWeight.w600)),
       );
 

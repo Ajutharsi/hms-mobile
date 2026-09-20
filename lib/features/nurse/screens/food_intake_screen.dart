@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/nurse/models/food_intake.dart';
 import 'package:hms_mobile/features/nurse/viewmodels/food_intake_view_model.dart';
 
@@ -17,6 +18,7 @@ class FoodIntakeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return ChangeNotifierProvider(
       create: (_) => FoodIntakeViewModel(),
       child: const _FoodIntakeView(),
@@ -29,18 +31,19 @@ class _FoodIntakeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final viewModel = context.watch<FoodIntakeViewModel>();
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('Food Intake', style: TextStyle(fontWeight: FontWeight.w700))),
-      body: RefreshIndicator(color: kTeal, onRefresh: viewModel.load, child: _buildBody(context, viewModel)),
-    );
+    return CareTheme(child: Scaffold(
+      backgroundColor: kCareBg,
+      appBar: carePageAppBar(context, 'Food Intake'),
+      body: RefreshIndicator(color: kCare, onRefresh: viewModel.load, child: _buildBody(context, viewModel)),
+    ));
   }
 
   Widget _buildBody(BuildContext context, FoodIntakeViewModel viewModel) {
     if (viewModel.isLoading && viewModel.patients.isEmpty) {
-      return const Center(child: CircularProgressIndicator(color: kTeal));
+      return Center(child: CircularProgressIndicator(color: kCare));
     }
     if (viewModel.loadError != null && viewModel.patients.isEmpty) {
       return ListView(padding: const EdgeInsets.all(24), children: [
@@ -84,12 +87,13 @@ class _PatientCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(16),
       child: Container(
         padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kFieldFill)),
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kCareBorder)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -98,8 +102,8 @@ class _PatientCard extends StatelessWidget {
                 Expanded(child: Text(patient.name, style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w700, color: kInk))),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
-                  decoration: BoxDecoration(color: kMint, borderRadius: BorderRadius.circular(8)),
-                  child: Text(_titleCase(patient.dietType), style: const TextStyle(color: kTealDark, fontSize: 10.5, fontWeight: FontWeight.w700)),
+                  decoration: BoxDecoration(color: kCareSoft, borderRadius: BorderRadius.circular(8)),
+                  child: Text(_titleCase(patient.dietType), style: TextStyle(color: kCareDark, fontSize: 10.5, fontWeight: FontWeight.w700)),
                 ),
               ],
             ),
@@ -135,6 +139,7 @@ class FoodIntakeDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return ChangeNotifierProvider(
       create: (_) => FoodIntakeDetailViewModel(patientId: patientId),
       child: _FoodIntakeDetailView(patientName: patientName),
@@ -155,7 +160,7 @@ class _FoodIntakeDetailView extends StatelessWidget {
       notes: result['notes']?.isEmpty == true ? null : result['notes'],
     );
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kTealDark : null, content: Text(error ?? 'Diet plan updated.')));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kCareDark : null, content: Text(error ?? 'Diet plan updated.')));
   }
 
   Future<void> _logMeal(BuildContext context, FoodIntakeDetailViewModel viewModel) async {
@@ -168,30 +173,31 @@ class _FoodIntakeDetailView extends StatelessWidget {
       notes: result['notes']?.isEmpty == true ? null : result['notes'],
     );
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kTealDark : null, content: Text(error ?? 'Meal logged.')));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kCareDark : null, content: Text(error ?? 'Meal logged.')));
   }
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final viewModel = context.watch<FoodIntakeDetailViewModel>();
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: Text(patientName)),
+    return CareTheme(child: Scaffold(
+      backgroundColor: kCareBg,
+      appBar: carePageAppBar(context, patientName),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _logMeal(context, viewModel),
-        backgroundColor: kTealDark,
+        backgroundColor: kCareDark,
         foregroundColor: Colors.white,
         icon: const Icon(Icons.add, color: Colors.white),
         label: const Text('Log a meal', style: TextStyle(color: Colors.white)),
       ),
-      body: RefreshIndicator(color: kTeal, onRefresh: viewModel.load, child: _buildBody(context, viewModel)),
-    );
+      body: RefreshIndicator(color: kCare, onRefresh: viewModel.load, child: _buildBody(context, viewModel)),
+    ));
   }
 
   Widget _buildBody(BuildContext context, FoodIntakeDetailViewModel viewModel) {
     if (viewModel.isLoading && viewModel.logs.isEmpty && viewModel.dietPlan == null) {
-      return const Center(child: CircularProgressIndicator(color: kTeal));
+      return Center(child: CircularProgressIndicator(color: kCare));
     }
     if (viewModel.loadError != null) {
       return ListView(padding: const EdgeInsets.all(24), children: [
@@ -207,7 +213,7 @@ class _FoodIntakeDetailView extends StatelessWidget {
       children: [
         Container(
           padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kFieldFill)),
+          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kCareBorder)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -218,7 +224,7 @@ class _FoodIntakeDetailView extends StatelessWidget {
                 ],
               ),
               if (viewModel.dietPlan != null) ...[
-                Text(_titleCase(viewModel.dietPlan!.dietType), style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: kTealDark)),
+                Text(_titleCase(viewModel.dietPlan!.dietType), style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: kCareDark)),
                 if ((viewModel.dietPlan!.restrictions ?? '').isNotEmpty) Text('Restrictions: ${viewModel.dietPlan!.restrictions}', style: const TextStyle(fontSize: 12.5, color: kMuted)),
                 if ((viewModel.dietPlan!.notes ?? '').isNotEmpty) Text(viewModel.dietPlan!.notes!, style: const TextStyle(fontSize: 12.5, color: kMuted)),
               ] else
@@ -236,7 +242,7 @@ class _FoodIntakeDetailView extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(12),
               margin: const EdgeInsets.only(bottom: 8),
-              decoration: BoxDecoration(color: kFieldFill, borderRadius: BorderRadius.circular(12)),
+              decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(12)),
               child: Row(
                 children: [
                   Expanded(
@@ -249,7 +255,7 @@ class _FoodIntakeDetailView extends StatelessWidget {
                     ),
                   ),
                   if (log.quantity != null) Padding(padding: const EdgeInsets.only(right: 8), child: Text(_titleCase(log.quantity!), style: const TextStyle(fontSize: 11.5, color: kMuted))),
-                  Text(_titleCase(log.status), style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: kTealDark)),
+                  Text(_titleCase(log.status), style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: kCareDark)),
                 ],
               ),
             ),
@@ -281,6 +287,7 @@ class _DietPlanDialogState extends State<_DietPlanDialog> {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return AlertDialog(
       title: const Text('Update diet plan'),
       content: SingleChildScrollView(
@@ -304,7 +311,7 @@ class _DietPlanDialogState extends State<_DietPlanDialog> {
         TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Cancel')),
         FilledButton(
           onPressed: () => Navigator.of(context).pop({'diet_type': _dietType, 'restrictions': _restrictions.text.trim(), 'notes': _notes.text.trim()}),
-          style: FilledButton.styleFrom(backgroundColor: kTealDark),
+          style: FilledButton.styleFrom(backgroundColor: kCareDark),
           child: const Text('Save'),
         ),
       ],
@@ -333,6 +340,7 @@ class _LogMealDialogState extends State<_LogMealDialog> {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return AlertDialog(
       title: const Text('Log a meal'),
       content: SingleChildScrollView(
@@ -368,7 +376,7 @@ class _LogMealDialogState extends State<_LogMealDialog> {
         TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Cancel')),
         FilledButton(
           onPressed: () => Navigator.of(context).pop({'meal_type': _mealType, 'status': _status, 'quantity': _quantity ?? '', 'notes': _notes.text.trim()}),
-          style: FilledButton.styleFrom(backgroundColor: kTealDark),
+          style: FilledButton.styleFrom(backgroundColor: kCareDark),
           child: const Text('Save'),
         ),
       ],

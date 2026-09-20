@@ -5,6 +5,7 @@ import 'package:hms_mobile/core/services/api_service.dart';
 import 'package:hms_mobile/core/services/auth_storage.dart';
 import 'package:hms_mobile/core/services/nurse_api_service.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/nurse/models/icu_chart.dart';
 import 'package:hms_mobile/features/nurse/models/nurse_patient.dart';
 import 'package:hms_mobile/features/nurse/viewmodels/icu_view_model.dart';
@@ -15,6 +16,7 @@ class IcuScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return ChangeNotifierProvider(
       create: (_) => IcuViewModel(),
       child: const _IcuView(),
@@ -45,30 +47,31 @@ class _IcuView extends StatelessWidget {
     if (confirmed != true || !context.mounted) return;
     final error = await viewModel.destroy(chart.id);
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kTealDark : null, content: Text(error ?? 'Chart deleted.')));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kCareDark : null, content: Text(error ?? 'Chart deleted.')));
   }
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final viewModel = context.watch<IcuViewModel>();
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('ICU Charting', style: TextStyle(fontWeight: FontWeight.w700))),
+    return CareTheme(child: Scaffold(
+      backgroundColor: kCareBg,
+      appBar: carePageAppBar(context, 'ICU Charting'),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _newChart(context, viewModel),
-        backgroundColor: kTealDark,
+        backgroundColor: kCareDark,
         foregroundColor: Colors.white,
         icon: const Icon(Icons.add, color: Colors.white),
         label: const Text('New chart', style: TextStyle(color: Colors.white)),
       ),
-      body: RefreshIndicator(color: kTeal, onRefresh: viewModel.load, child: _buildBody(context, viewModel)),
-    );
+      body: RefreshIndicator(color: kCare, onRefresh: viewModel.load, child: _buildBody(context, viewModel)),
+    ));
   }
 
   Widget _buildBody(BuildContext context, IcuViewModel viewModel) {
     if (viewModel.isLoading && viewModel.charts.isEmpty) {
-      return const Center(child: CircularProgressIndicator(color: kTeal));
+      return Center(child: CircularProgressIndicator(color: kCare));
     }
     if (viewModel.loadError != null && viewModel.charts.isEmpty) {
       return ListView(padding: const EdgeInsets.all(24), children: [
@@ -100,7 +103,7 @@ class _IcuView extends StatelessWidget {
 }
 
 (Color, Color, String) _gcsStyle(int? total) {
-  if (total == null) return (kMuted, kFieldFill, '—');
+  if (total == null) return (kMuted, kCareBg, '—');
   if (total < 9) return (kDangerFg, kDangerBg, 'Severe');
   if (total <= 12) return (kWarningFg, kWarningBg, 'Moderate');
   return (kSuccessFg, kSuccessBg, 'Mild');
@@ -113,11 +116,12 @@ class _IcuCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final (gcsFg, gcsBg, gcsLabel) = _gcsStyle(chart.gcsTotal);
 
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kFieldFill)),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kCareBorder)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -149,9 +153,9 @@ class _IcuCard extends StatelessWidget {
               if (chart.gcsTotal != null)
                 _Chip(bg: gcsBg, fg: gcsFg, label: 'GCS ${chart.gcsTotal} · $gcsLabel'),
               if (chart.heartRate != null) _Chip(bg: kInfoBg, fg: kInfoFg, label: 'HR ${chart.heartRate}'),
-              if ((chart.ventilatorMode ?? '').isNotEmpty) _Chip(bg: kFieldFill, fg: kMuted, label: 'Vent: ${chart.ventilatorMode}'),
-              if ((chart.arterialBp ?? '').isNotEmpty) _Chip(bg: kFieldFill, fg: kMuted, label: 'BP ${chart.arterialBp}'),
-              if (chart.fluidBalance != null) _Chip(bg: kFieldFill, fg: kMuted, label: 'Balance ${chart.fluidBalance}'),
+              if ((chart.ventilatorMode ?? '').isNotEmpty) _Chip(bg: kCareBg, fg: kMuted, label: 'Vent: ${chart.ventilatorMode}'),
+              if ((chart.arterialBp ?? '').isNotEmpty) _Chip(bg: kCareBg, fg: kMuted, label: 'BP ${chart.arterialBp}'),
+              if (chart.fluidBalance != null) _Chip(bg: kCareBg, fg: kMuted, label: 'Balance ${chart.fluidBalance}'),
             ],
           ),
           if ((chart.notes ?? '').isNotEmpty) ...[
@@ -186,6 +190,7 @@ class _Chip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
       decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(8)),
@@ -303,39 +308,40 @@ class _NewIcuChartScreenState extends State<_NewIcuChartScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('New ICU Chart')),
+    watchCarePalette(context);
+    return CareTheme(child: Scaffold(
+      backgroundColor: kCareBg,
+      appBar: carePageAppBar(context, 'New ICU Chart'),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
         children: [
           PatientPickerField(value: _patient, errorText: _patientError, onChanged: (p) => setState(() => _patient = p)),
           const SizedBox(height: 20),
           const _SectionLabel('Respiratory'),
-          TextField(controller: _ventilatorMode, decoration: authFieldDecoration('Ventilator mode', hint: 'Optional', icon: Icons.air_outlined)),
+          TextField(controller: _ventilatorMode, decoration: careFieldDecoration('Ventilator mode', hint: 'Optional', icon: Icons.air_outlined)),
           const SizedBox(height: 12),
           Row(children: [
-            Expanded(child: TextField(controller: _fio2, keyboardType: TextInputType.number, decoration: authFieldDecoration('FiO2 %', hint: '0-100', icon: Icons.bubble_chart_outlined))),
+            Expanded(child: TextField(controller: _fio2, keyboardType: TextInputType.number, decoration: careFieldDecoration('FiO2 %', hint: '0-100', icon: Icons.bubble_chart_outlined))),
             const SizedBox(width: 10),
-            Expanded(child: TextField(controller: _peep, keyboardType: TextInputType.number, decoration: authFieldDecoration('PEEP', hint: '0-50', icon: Icons.compress_outlined))),
+            Expanded(child: TextField(controller: _peep, keyboardType: TextInputType.number, decoration: careFieldDecoration('PEEP', hint: '0-50', icon: Icons.compress_outlined))),
           ]),
           const SizedBox(height: 12),
           Row(children: [
-            Expanded(child: TextField(controller: _tidalVolume, keyboardType: TextInputType.number, decoration: authFieldDecoration('Tidal volume', hint: 'Optional', icon: Icons.air))),
+            Expanded(child: TextField(controller: _tidalVolume, keyboardType: TextInputType.number, decoration: careFieldDecoration('Tidal volume', hint: 'Optional', icon: Icons.air))),
             const SizedBox(width: 10),
-            Expanded(child: TextField(controller: _respRateSet, keyboardType: TextInputType.number, decoration: authFieldDecoration('Set resp. rate', hint: 'Optional', icon: Icons.speed_outlined))),
+            Expanded(child: TextField(controller: _respRateSet, keyboardType: TextInputType.number, decoration: careFieldDecoration('Set resp. rate', hint: 'Optional', icon: Icons.speed_outlined))),
           ]),
           const SizedBox(height: 20),
           const _SectionLabel('Cardiac'),
-          TextField(controller: _arterialBp, decoration: authFieldDecoration('Arterial BP', hint: '120/80', icon: Icons.favorite_border)),
+          TextField(controller: _arterialBp, decoration: careFieldDecoration('Arterial BP', hint: '120/80', icon: Icons.favorite_border)),
           const SizedBox(height: 12),
           Row(children: [
-            Expanded(child: TextField(controller: _cvp, keyboardType: TextInputType.number, decoration: authFieldDecoration('CVP', hint: 'Optional', icon: Icons.monitor_heart_outlined))),
+            Expanded(child: TextField(controller: _cvp, keyboardType: TextInputType.number, decoration: careFieldDecoration('CVP', hint: 'Optional', icon: Icons.monitor_heart_outlined))),
             const SizedBox(width: 10),
-            Expanded(child: TextField(controller: _heartRate, keyboardType: TextInputType.number, decoration: authFieldDecoration('Heart rate', hint: '0-300', icon: Icons.favorite))),
+            Expanded(child: TextField(controller: _heartRate, keyboardType: TextInputType.number, decoration: careFieldDecoration('Heart rate', hint: '0-300', icon: Icons.favorite))),
           ]),
           const SizedBox(height: 12),
-          TextField(controller: _rhythm, decoration: authFieldDecoration('Rhythm', hint: 'Optional', icon: Icons.show_chart)),
+          TextField(controller: _rhythm, decoration: careFieldDecoration('Rhythm', hint: 'Optional', icon: Icons.show_chart)),
           const SizedBox(height: 20),
           const _SectionLabel('Neuro (GCS)'),
           Row(children: [
@@ -348,26 +354,26 @@ class _NewIcuChartScreenState extends State<_NewIcuChartScreen> {
           const SizedBox(height: 20),
           const _SectionLabel('Fluid balance'),
           Row(children: [
-            Expanded(child: TextField(controller: _intakeOral, keyboardType: TextInputType.number, decoration: authFieldDecoration('Intake oral', hint: 'mL', icon: Icons.local_drink_outlined))),
+            Expanded(child: TextField(controller: _intakeOral, keyboardType: TextInputType.number, decoration: careFieldDecoration('Intake oral', hint: 'mL', icon: Icons.local_drink_outlined))),
             const SizedBox(width: 10),
-            Expanded(child: TextField(controller: _intakeIv, keyboardType: TextInputType.number, decoration: authFieldDecoration('Intake IV', hint: 'mL', icon: Icons.opacity_outlined))),
+            Expanded(child: TextField(controller: _intakeIv, keyboardType: TextInputType.number, decoration: careFieldDecoration('Intake IV', hint: 'mL', icon: Icons.opacity_outlined))),
           ]),
           const SizedBox(height: 12),
           Row(children: [
-            Expanded(child: TextField(controller: _outputUrine, keyboardType: TextInputType.number, decoration: authFieldDecoration('Output urine', hint: 'mL', icon: Icons.water_drop_outlined))),
+            Expanded(child: TextField(controller: _outputUrine, keyboardType: TextInputType.number, decoration: careFieldDecoration('Output urine', hint: 'mL', icon: Icons.water_drop_outlined))),
             const SizedBox(width: 10),
-            Expanded(child: TextField(controller: _outputDrain, keyboardType: TextInputType.number, decoration: authFieldDecoration('Output drain', hint: 'mL', icon: Icons.water_drop_outlined))),
+            Expanded(child: TextField(controller: _outputDrain, keyboardType: TextInputType.number, decoration: careFieldDecoration('Output drain', hint: 'mL', icon: Icons.water_drop_outlined))),
           ]),
           const SizedBox(height: 20),
-          TextField(controller: _linesDrains, decoration: authFieldDecoration('Lines / drains', hint: 'Optional', icon: Icons.link)),
+          TextField(controller: _linesDrains, decoration: careFieldDecoration('Lines / drains', hint: 'Optional', icon: Icons.link)),
           const SizedBox(height: 12),
-          TextField(controller: _notes, maxLines: 3, decoration: authFieldDecoration('Notes', hint: 'Optional', icon: Icons.notes_outlined)),
+          TextField(controller: _notes, maxLines: 3, decoration: careFieldDecoration('Notes', hint: 'Optional', icon: Icons.notes_outlined)),
           const SizedBox(height: 24),
           SizedBox(
             height: 48,
             child: ElevatedButton(
               onPressed: _submitting ? null : _submit,
-              style: ElevatedButton.styleFrom(backgroundColor: kTealDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+              style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
               child: _submitting
                   ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
                   : const Text('Save chart', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
@@ -375,7 +381,7 @@ class _NewIcuChartScreenState extends State<_NewIcuChartScreen> {
           ),
         ],
       ),
-    );
+    ));
   }
 }
 
@@ -385,6 +391,7 @@ class _SectionLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
       child: Text(label, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: kMuted, letterSpacing: 0.3)),
@@ -401,9 +408,10 @@ class _GcsDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return DropdownButtonFormField<int>(
       initialValue: value,
-      decoration: authFieldDecoration(label, hint: '', icon: Icons.remove_red_eye_outlined),
+      decoration: careFieldDecoration(label, hint: '', icon: Icons.remove_red_eye_outlined),
       items: List.generate(max, (i) => i + 1).map((v) => DropdownMenuItem(value: v, child: Text('$v'))).toList(),
       onChanged: onChanged,
     );

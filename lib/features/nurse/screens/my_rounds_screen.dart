@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/nurse/models/round_assignment.dart';
 import 'package:hms_mobile/features/nurse/viewmodels/rounds_view_model.dart';
 
@@ -10,6 +11,7 @@ class MyRoundsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return ChangeNotifierProvider(
       create: (_) => MyRoundsViewModel(),
       child: const _MyRoundsView(),
@@ -44,23 +46,24 @@ class _MyRoundsView extends StatelessWidget {
     );
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(backgroundColor: error == null ? kTealDark : null, content: Text(error ?? 'Round marked complete for ${patient.name}.')),
+      SnackBar(backgroundColor: error == null ? kCareDark : null, content: Text(error ?? 'Round marked complete for ${patient.name}.')),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final viewModel = context.watch<MyRoundsViewModel>();
 
-    return Scaffold(
-      appBar: AppBar(title: const Text('My Rounds')),
-      body: RefreshIndicator(color: kTeal, onRefresh: viewModel.load, child: _buildBody(context, viewModel)),
-    );
+    return CareTheme(child: Scaffold(
+      appBar: carePageAppBar(context, 'My Rounds'),
+      body: RefreshIndicator(color: kCare, onRefresh: viewModel.load, child: _buildBody(context, viewModel)),
+    ));
   }
 
   Widget _buildBody(BuildContext context, MyRoundsViewModel viewModel) {
     if (viewModel.isLoading && viewModel.assignments.isEmpty) {
-      return const Center(child: CircularProgressIndicator(color: kTeal));
+      return Center(child: CircularProgressIndicator(color: kCare));
     }
 
     if (viewModel.loadError != null && viewModel.assignments.isEmpty) {
@@ -93,14 +96,14 @@ class _MyRoundsView extends StatelessWidget {
       separatorBuilder: (_, __) => const SizedBox(height: 12),
       itemBuilder: (context, index) {
         final assignment = viewModel.assignments[index];
-        final (fg, bg, label) = _alertStyle[assignment.alertStatus] ?? (kMuted, kFieldFill, assignment.alertStatus);
+        final (fg, bg, label) = _alertStyle[assignment.alertStatus] ?? (kMuted, kCareBg, assignment.alertStatus);
 
         return Container(
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: assignment.alertStatus == 'danger' ? kDangerFg : kFieldFill, width: assignment.alertStatus == 'danger' ? 1.4 : 1),
+            border: Border.all(color: assignment.alertStatus == 'danger' ? kDangerFg : kCareBg, width: assignment.alertStatus == 'danger' ? 1.4 : 1),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -123,7 +126,7 @@ class _MyRoundsView extends StatelessWidget {
                 style: const TextStyle(fontSize: 12.5, color: kMuted),
               ),
               const SizedBox(height: 12),
-              const Divider(height: 1, color: kFieldFill),
+              Divider(height: 1, color: kCareBorder),
               const SizedBox(height: 10),
               for (final patient in assignment.patients) ...[
                 Padding(
@@ -142,8 +145,8 @@ class _MyRoundsView extends StatelessWidget {
                       OutlinedButton(
                         onPressed: () => _markRound(context, viewModel, assignment, patient),
                         style: OutlinedButton.styleFrom(
-                          foregroundColor: kTealDark,
-                          side: const BorderSide(color: kTealDark),
+                          foregroundColor: kCareDark,
+                          side: BorderSide(color: kCareDark),
                           minimumSize: const Size(0, 32),
                           textStyle: const TextStyle(fontSize: 12.5),
                         ),
@@ -152,7 +155,7 @@ class _MyRoundsView extends StatelessWidget {
                     ],
                   ),
                 ),
-                if (patient != assignment.patients.last) const Divider(height: 16, color: kFieldFill),
+                if (patient != assignment.patients.last) Divider(height: 16, color: kCareBg),
               ],
               if (assignment.patients.isEmpty) const Text('No admitted patients in this ward right now.', style: TextStyle(color: kMuted, fontSize: 12.5)),
             ],
@@ -190,6 +193,7 @@ class _MarkRoundDialogState extends State<_MarkRoundDialog> {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return AlertDialog(
       title: Text('Mark round — ${widget.patient.name}'),
       content: SingleChildScrollView(
@@ -211,7 +215,7 @@ class _MarkRoundDialogState extends State<_MarkRoundDialog> {
       actions: [
         TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Cancel')),
         FilledButton(
-          style: FilledButton.styleFrom(backgroundColor: kTealDark),
+          style: FilledButton.styleFrom(backgroundColor: kCareDark),
           onPressed: () => Navigator.of(context).pop({
             'blood_pressure': _bp.text.trim(),
             'temperature': _temp.text.trim(),

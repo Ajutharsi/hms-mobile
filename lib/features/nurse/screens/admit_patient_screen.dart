@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/nurse/models/ward.dart';
 import 'package:hms_mobile/features/nurse/viewmodels/admit_patient_view_model.dart';
 import 'package:hms_mobile/features/patient/models/doctor.dart';
@@ -11,6 +12,7 @@ class AdmitPatientScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return ChangeNotifierProvider(
       create: (_) => AdmitPatientViewModel(),
       child: const _AdmitPatientView(),
@@ -56,12 +58,13 @@ class _AdmitPatientViewState extends State<_AdmitPatientView> {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final viewModel = context.watch<AdmitPatientViewModel>();
 
-    return Scaffold(
-      appBar: AppBar(title: const Text('Admit Patient')),
+    return CareTheme(child: Scaffold(
+      appBar: carePageAppBar(context, 'Admit Patient'),
       body: viewModel.isLoadingMeta
-          ? const Center(child: CircularProgressIndicator(color: kTeal))
+          ? Center(child: CircularProgressIndicator(color: kCare))
           : viewModel.metaError != null
               ? Center(child: Text(viewModel.metaError!, style: const TextStyle(color: kMuted)))
               : ListView(
@@ -80,14 +83,14 @@ class _AdmitPatientViewState extends State<_AdmitPatientView> {
                     else ...[
                       TextField(
                         controller: _patientSearchController,
-                        decoration: authFieldDecoration('Search patient', hint: 'Name or MRN', icon: Icons.search),
+                        decoration: careFieldDecoration('Search patient', hint: 'Name or MRN', icon: Icons.search),
                         onChanged: viewModel.searchPatients,
                       ),
-                      if (viewModel.isSearchingPatients) const Padding(padding: EdgeInsets.only(top: 8), child: LinearProgressIndicator(color: kTeal)),
+                      if (viewModel.isSearchingPatients) Padding(padding: const EdgeInsets.only(top: 8), child: LinearProgressIndicator(color: kCare)),
                       if (viewModel.patientResults.isNotEmpty)
                         Container(
                           margin: const EdgeInsets.only(top: 6),
-                          decoration: BoxDecoration(color: kFieldFill, borderRadius: BorderRadius.circular(12)),
+                          decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(12)),
                           constraints: const BoxConstraints(maxHeight: 220),
                           child: ListView.builder(
                             shrinkWrap: true,
@@ -109,7 +112,7 @@ class _AdmitPatientViewState extends State<_AdmitPatientView> {
                     const SizedBox(height: 8),
                     DropdownButtonFormField<Ward>(
                       initialValue: viewModel.selectedWard,
-                      decoration: authFieldDecoration('Ward', hint: 'Select ward', icon: Icons.holiday_village_outlined),
+                      decoration: careFieldDecoration('Ward', hint: 'Select ward', icon: Icons.holiday_village_outlined),
                       items: viewModel.wards.map((w) => DropdownMenuItem(value: w, child: Text('${w.name} (${w.availableBeds} free)'))).toList(),
                       onChanged: viewModel.selectWard,
                     ),
@@ -117,11 +120,11 @@ class _AdmitPatientViewState extends State<_AdmitPatientView> {
                     const Text('Bed', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: kInk)),
                     const SizedBox(height: 8),
                     if (viewModel.isLoadingBeds)
-                      const LinearProgressIndicator(color: kTeal)
+                      LinearProgressIndicator(color: kCare)
                     else
                       DropdownButtonFormField<Bed>(
                         initialValue: viewModel.selectedBed,
-                        decoration: authFieldDecoration('Bed', hint: 'Select bed', icon: Icons.bed_outlined),
+                        decoration: careFieldDecoration('Bed', hint: 'Select bed', icon: Icons.bed_outlined),
                         items: viewModel.availableBeds.map((b) => DropdownMenuItem(value: b, child: Text(b.bedNo))).toList(),
                         onChanged: viewModel.selectedWard == null ? null : viewModel.selectBed,
                       ),
@@ -130,7 +133,7 @@ class _AdmitPatientViewState extends State<_AdmitPatientView> {
                     const SizedBox(height: 8),
                     DropdownButtonFormField<Doctor>(
                       initialValue: viewModel.selectedDoctor,
-                      decoration: authFieldDecoration('Doctor', hint: 'Select doctor', icon: Icons.medical_information_outlined),
+                      decoration: careFieldDecoration('Doctor', hint: 'Select doctor', icon: Icons.medical_information_outlined),
                       items: viewModel.doctors.map((d) => DropdownMenuItem(value: d, child: Text(d.label))).toList(),
                       onChanged: viewModel.selectDoctor,
                     ),
@@ -140,7 +143,7 @@ class _AdmitPatientViewState extends State<_AdmitPatientView> {
                     InkWell(
                       onTap: () => _pickDate(viewModel),
                       child: InputDecorator(
-                        decoration: authFieldDecoration('Admission date', hint: '', icon: Icons.calendar_today_outlined),
+                        decoration: careFieldDecoration('Admission date', hint: '', icon: Icons.calendar_today_outlined),
                         child: Text(
                           '${viewModel.admissionDate.year}-${viewModel.admissionDate.month.toString().padLeft(2, '0')}-${viewModel.admissionDate.day.toString().padLeft(2, '0')}',
                         ),
@@ -150,14 +153,14 @@ class _AdmitPatientViewState extends State<_AdmitPatientView> {
                     TextField(
                       controller: viewModel.reasonController,
                       maxLines: 3,
-                      decoration: authFieldDecoration('Admission reason (optional)', hint: 'Reason for admission', icon: Icons.notes_outlined),
+                      decoration: careFieldDecoration('Admission reason (optional)', hint: 'Reason for admission', icon: Icons.notes_outlined),
                     ),
                     const SizedBox(height: 24),
                     SizedBox(
                       height: 48,
                       child: ElevatedButton(
                         onPressed: viewModel.canSubmit && !viewModel.isSubmitting ? () => _submit(viewModel) : null,
-                        style: ElevatedButton.styleFrom(backgroundColor: kTealDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+                        style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
                         child: viewModel.isSubmitting
                             ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
                             : const Text('Admit patient', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
@@ -165,7 +168,7 @@ class _AdmitPatientViewState extends State<_AdmitPatientView> {
                     ),
                   ],
                 ),
-    );
+    ));
   }
 }
 
@@ -176,13 +179,14 @@ class _SelectedChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-      decoration: BoxDecoration(color: kMint, borderRadius: BorderRadius.circular(12)),
+      decoration: BoxDecoration(color: kCareSoft, borderRadius: BorderRadius.circular(12)),
       child: Row(
         children: [
-          Expanded(child: Text(label, style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w600, color: kTealDark))),
-          InkWell(onTap: onClear, child: const Icon(Icons.close, size: 18, color: kTealDark)),
+          Expanded(child: Text(label, style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w600, color: kCareDark))),
+          InkWell(onTap: onClear, child: Icon(Icons.close, size: 18, color: kCareDark)),
         ],
       ),
     );

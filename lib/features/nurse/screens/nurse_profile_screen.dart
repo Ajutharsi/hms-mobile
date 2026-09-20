@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/nurse/models/nurse_profile.dart';
 import 'package:hms_mobile/features/nurse/viewmodels/nurse_profile_view_model.dart';
 
@@ -10,6 +11,7 @@ class NurseProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return ChangeNotifierProvider(
       create: (_) => NurseProfileViewModel(),
       child: const _NurseProfileView(),
@@ -22,23 +24,24 @@ class _NurseProfileView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final viewModel = context.watch<NurseProfileViewModel>();
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('My Profile', style: TextStyle(fontWeight: FontWeight.w700))),
+    return CareTheme(child: Scaffold(
+      backgroundColor: kCareBg,
+      appBar: carePageAppBar(context, 'My Profile'),
       body: _buildBody(context, viewModel),
-    );
+    ));
   }
 
   Widget _buildBody(BuildContext context, NurseProfileViewModel viewModel) {
     if (viewModel.isLoading && viewModel.profile == null) {
-      return const Center(child: CircularProgressIndicator(color: kTeal));
+      return Center(child: CircularProgressIndicator(color: kCare));
     }
 
     if (viewModel.loadError != null && viewModel.profile == null) {
       return RefreshIndicator(
-        color: kTeal,
+        color: kCare,
         onRefresh: viewModel.load,
         child: ListView(
           padding: const EdgeInsets.all(24),
@@ -55,7 +58,7 @@ class _NurseProfileView extends StatelessWidget {
     final profile = viewModel.profile!;
 
     return RefreshIndicator(
-      color: kTeal,
+      color: kCare,
       onRefresh: viewModel.load,
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
@@ -71,21 +74,21 @@ class _NurseProfileView extends StatelessWidget {
               const SizedBox(height: 12),
               TextFormField(
                 controller: viewModel.nameController,
-                decoration: authFieldDecoration('Full name', hint: 'Your name', icon: Icons.person_outline),
+                decoration: careFieldDecoration('Full name', hint: 'Your name', icon: Icons.person_outline),
                 validator: viewModel.validateName,
               ),
               const SizedBox(height: 14),
               TextFormField(
                 controller: viewModel.emailController,
                 keyboardType: TextInputType.emailAddress,
-                decoration: authFieldDecoration('Email', hint: 'you@example.com', icon: Icons.email_outlined),
+                decoration: careFieldDecoration('Email', hint: 'you@example.com', icon: Icons.email_outlined),
                 validator: viewModel.validateEmail,
               ),
               const SizedBox(height: 14),
               TextFormField(
                 controller: viewModel.phoneController,
                 keyboardType: TextInputType.phone,
-                decoration: authFieldDecoration('Phone', hint: 'Optional', icon: Icons.phone_outlined),
+                decoration: careFieldDecoration('Phone', hint: 'Optional', icon: Icons.phone_outlined),
               ),
               const SizedBox(height: 24),
               const Text('Change password', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: kInk)),
@@ -95,21 +98,21 @@ class _NurseProfileView extends StatelessWidget {
               TextFormField(
                 controller: viewModel.currentPasswordController,
                 obscureText: true,
-                decoration: authFieldDecoration('Current password', hint: '••••••••', icon: Icons.lock_outline),
+                decoration: careFieldDecoration('Current password', hint: '••••••••', icon: Icons.lock_outline),
                 validator: viewModel.validateCurrentPassword,
               ),
               const SizedBox(height: 14),
               TextFormField(
                 controller: viewModel.newPasswordController,
                 obscureText: true,
-                decoration: authFieldDecoration('New password', hint: 'At least 8 characters', icon: Icons.lock_outline),
+                decoration: careFieldDecoration('New password', hint: 'At least 8 characters', icon: Icons.lock_outline),
                 validator: viewModel.validateNewPassword,
               ),
               const SizedBox(height: 14),
               TextFormField(
                 controller: viewModel.confirmPasswordController,
                 obscureText: true,
-                decoration: authFieldDecoration('Confirm new password', hint: '••••••••', icon: Icons.lock_outline),
+                decoration: careFieldDecoration('Confirm new password', hint: '••••••••', icon: Icons.lock_outline),
                 validator: viewModel.validateConfirmPassword,
               ),
               const SizedBox(height: 20),
@@ -121,10 +124,10 @@ class _NurseProfileView extends StatelessWidget {
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(color: kMint, borderRadius: BorderRadius.circular(10)),
+                  decoration: BoxDecoration(color: kCareSoft, borderRadius: BorderRadius.circular(10)),
                   child: Text(
                     viewModel.successMessage!,
-                    style: const TextStyle(color: kTealDark, fontSize: 13.5, fontWeight: FontWeight.w600),
+                    style: TextStyle(color: kCareDark, fontSize: 13.5, fontWeight: FontWeight.w600),
                   ),
                 ),
                 const SizedBox(height: 14),
@@ -134,7 +137,7 @@ class _NurseProfileView extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: viewModel.isSaving ? null : () => _save(context, viewModel),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: kTealDark,
+                    backgroundColor: kCareDark,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
                   child: viewModel.isSaving
@@ -153,7 +156,7 @@ class _NurseProfileView extends StatelessWidget {
     final success = await viewModel.save();
     if (!context.mounted || !success) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(backgroundColor: kTealDark, content: Text('Profile updated successfully!')),
+      SnackBar(backgroundColor: kCareDark, content: const Text('Profile updated successfully!')),
     );
   }
 }
@@ -165,6 +168,7 @@ class _AvatarHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return Center(
       child: Column(
         children: [
@@ -172,14 +176,14 @@ class _AvatarHeader extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: 44,
-                backgroundColor: kMint,
+                backgroundColor: kCareSoft,
                 backgroundImage: viewModel.pendingPhotoBytes != null
                     ? MemoryImage(viewModel.pendingPhotoBytes!)
                     : (profile.profilePhotoUrl != null ? NetworkImage(profile.profilePhotoUrl!) : null) as ImageProvider?,
                 child: viewModel.pendingPhotoBytes == null && profile.profilePhotoUrl == null
                     ? Text(
                         profile.name.isNotEmpty ? profile.name[0].toUpperCase() : '?',
-                        style: const TextStyle(fontSize: 32, fontWeight: FontWeight.w700, color: kTealDark),
+                        style: TextStyle(fontSize: 32, fontWeight: FontWeight.w700, color: kCareDark),
                       )
                     : null,
               ),
@@ -191,7 +195,7 @@ class _AvatarHeader extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20),
                   child: Container(
                     padding: const EdgeInsets.all(6),
-                    decoration: const BoxDecoration(color: kTealDark, shape: BoxShape.circle),
+                    decoration: BoxDecoration(color: kCareDark, shape: BoxShape.circle),
                     child: const Icon(Icons.camera_alt_rounded, color: Colors.white, size: 16),
                   ),
                 ),
@@ -204,7 +208,7 @@ class _AvatarHeader extends StatelessWidget {
             const SizedBox(height: 4),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-              decoration: BoxDecoration(color: kFieldFill, borderRadius: BorderRadius.circular(8)),
+              decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(8)),
               child: Text(
                 profile.department!,
                 style: const TextStyle(fontSize: 12, color: kMuted, fontWeight: FontWeight.w600),

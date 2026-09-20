@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/nurse/models/ward.dart';
 import 'package:hms_mobile/features/nurse/viewmodels/ward_view_model.dart';
 
@@ -10,6 +11,7 @@ class WardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return ChangeNotifierProvider(
       create: (_) => WardListViewModel(),
       child: const _WardListView(),
@@ -22,21 +24,22 @@ class _WardListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final viewModel = context.watch<WardListViewModel>();
 
-    return Scaffold(
-      appBar: AppBar(title: const Text('Ward')),
+    return CareTheme(child: Scaffold(
+      appBar: carePageAppBar(context, 'Ward'),
       body: RefreshIndicator(
-        color: kTeal,
+        color: kCare,
         onRefresh: viewModel.load,
         child: _buildBody(context, viewModel),
       ),
-    );
+    ));
   }
 
   Widget _buildBody(BuildContext context, WardListViewModel viewModel) {
     if (viewModel.isLoading && viewModel.wards.isEmpty) {
-      return const Center(child: CircularProgressIndicator(color: kTeal));
+      return Center(child: CircularProgressIndicator(color: kCare));
     }
 
     if (viewModel.loadError != null && viewModel.wards.isEmpty) {
@@ -87,7 +90,8 @@ class _WardCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final (fg, bg) = _typeColors[ward.type] ?? (kMuted, kFieldFill);
+    watchCarePalette(context);
+    final (fg, bg) = _typeColors[ward.type] ?? (kMuted, kCareBg);
     final occupied = ward.totalBeds - ward.availableBeds;
 
     return InkWell(
@@ -95,7 +99,7 @@ class _WardCard extends StatelessWidget {
       onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => WardDetailScreen(wardId: ward.id, wardName: ward.name))),
       child: Container(
         padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kFieldFill)),
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kCareBorder)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -143,6 +147,7 @@ class WardDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return ChangeNotifierProvider(
       create: (_) => WardDetailViewModel(wardId: wardId),
       child: _WardDetailView(wardName: wardName),
@@ -156,21 +161,22 @@ class _WardDetailView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final viewModel = context.watch<WardDetailViewModel>();
 
-    return Scaffold(
-      appBar: AppBar(title: Text(wardName)),
+    return CareTheme(child: Scaffold(
+      appBar: carePageAppBar(context, wardName),
       body: RefreshIndicator(
-        color: kTeal,
+        color: kCare,
         onRefresh: viewModel.load,
         child: _buildBody(viewModel),
       ),
-    );
+    ));
   }
 
   Widget _buildBody(WardDetailViewModel viewModel) {
     if (viewModel.isLoading && viewModel.detail == null) {
-      return const Center(child: CircularProgressIndicator(color: kTeal));
+      return Center(child: CircularProgressIndicator(color: kCare));
     }
 
     if (viewModel.loadError != null && viewModel.detail == null) {
@@ -202,17 +208,18 @@ class _BedTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final available = bed.isAvailable;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14), border: Border.all(color: kFieldFill)),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14), border: Border.all(color: kCareBorder)),
       child: Row(
         children: [
           Container(
             width: 36,
             height: 36,
-            decoration: BoxDecoration(color: available ? kSuccessBg : kFieldFill, borderRadius: BorderRadius.circular(10)),
+            decoration: BoxDecoration(color: available ? kSuccessBg : kCareBg, borderRadius: BorderRadius.circular(10)),
             child: Icon(Icons.bed_outlined, color: available ? kSuccessFg : kMuted, size: 18),
           ),
           const SizedBox(width: 12),
@@ -230,7 +237,7 @@ class _BedTile extends StatelessWidget {
           ),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
-            decoration: BoxDecoration(color: available ? kSuccessBg : kFieldFill, borderRadius: BorderRadius.circular(8)),
+            decoration: BoxDecoration(color: available ? kSuccessBg : kCareBg, borderRadius: BorderRadius.circular(8)),
             child: Text(
               available ? 'Available' : 'Occupied',
               style: TextStyle(color: available ? kSuccessFg : kMuted, fontSize: 11, fontWeight: FontWeight.w700),

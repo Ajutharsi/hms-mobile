@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/nurse/models/nurse_patient.dart';
 import 'package:hms_mobile/features/nurse/models/nursing_note.dart';
 import 'package:hms_mobile/features/nurse/viewmodels/nursing_notes_view_model.dart';
@@ -18,6 +19,7 @@ class NursingNotesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return ChangeNotifierProvider(
       create: (_) => NursingNotesViewModel(),
       child: const _NursingNotesView(),
@@ -53,34 +55,35 @@ class _NursingNotesView extends StatelessWidget {
     if (confirmed != true || !context.mounted) return;
     final error = await viewModel.destroy(note.id);
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kTealDark : null, content: Text(error ?? 'Note deleted.')));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kCareDark : null, content: Text(error ?? 'Note deleted.')));
   }
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final viewModel = context.watch<NursingNotesViewModel>();
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('Nursing Notes', style: TextStyle(fontWeight: FontWeight.w700))),
+    return CareTheme(child: Scaffold(
+      backgroundColor: kCareBg,
+      appBar: carePageAppBar(context, 'Nursing Notes'),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _newNote(context, viewModel),
-        backgroundColor: kTealDark,
+        backgroundColor: kCareDark,
         foregroundColor: Colors.white,
         icon: const Icon(Icons.add, color: Colors.white),
         label: const Text('New note', style: TextStyle(color: Colors.white)),
       ),
       body: RefreshIndicator(
-        color: kTeal,
+        color: kCare,
         onRefresh: viewModel.load,
         child: _buildBody(context, viewModel),
       ),
-    );
+    ));
   }
 
   Widget _buildBody(BuildContext context, NursingNotesViewModel viewModel) {
     if (viewModel.isLoading && viewModel.notes.isEmpty) {
-      return const Center(child: CircularProgressIndicator(color: kTeal));
+      return Center(child: CircularProgressIndicator(color: kCare));
     }
     if (viewModel.loadError != null && viewModel.notes.isEmpty) {
       return ListView(padding: const EdgeInsets.all(24), children: [
@@ -128,16 +131,17 @@ class _NoteCard extends StatefulWidget {
 class _NoteCardState extends State<_NoteCard> {
   bool _expanded = false;
 
-  static const _priorityColors = {
-    'routine': (kMuted, kFieldFill),
+  static Map<String, (Color, Color)> get _priorityColors => {
+    'routine': (kMuted, kCareBg),
     'urgent': (kWarningFg, kWarningBg),
     'critical': (kDangerFg, kDangerBg),
   };
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final note = widget.note;
-    final (fg, bg) = _priorityColors[note.priority] ?? (kMuted, kFieldFill);
+    final (fg, bg) = _priorityColors[note.priority] ?? (kMuted, kCareBg);
     final isLong = note.note.length > 140;
 
     return Container(
@@ -146,9 +150,9 @@ class _NoteCardState extends State<_NoteCard> {
         borderRadius: BorderRadius.circular(16),
         border: Border(
           left: BorderSide(color: fg, width: 3),
-          top: const BorderSide(color: kFieldFill),
-          right: const BorderSide(color: kFieldFill),
-          bottom: const BorderSide(color: kFieldFill),
+          top: BorderSide(color: kCareBg),
+          right: BorderSide(color: kCareBg),
+          bottom: BorderSide(color: kCareBg),
         ),
       ),
       padding: const EdgeInsets.all(16),
@@ -230,9 +234,10 @@ class _MiniChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-      decoration: BoxDecoration(color: kFieldFill, borderRadius: BorderRadius.circular(6)),
+      decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(6)),
       child: Text(label, style: const TextStyle(fontSize: 10.5, color: kMuted, fontWeight: FontWeight.w600)),
     );
   }
@@ -312,9 +317,10 @@ class _NoteFormScreenState extends State<_NoteFormScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: Text(_isEdit ? 'Edit note' : 'New note', style: const TextStyle(fontWeight: FontWeight.w700))),
+    watchCarePalette(context);
+    return CareTheme(child: Scaffold(
+      backgroundColor: kCareBg,
+      appBar: carePageAppBar(context, _isEdit ? 'Edit note' : 'New note'),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
@@ -331,7 +337,7 @@ class _NoteFormScreenState extends State<_NoteFormScreen> {
               DropdownButtonFormField<String>(
                 initialValue: _noteType,
                 isExpanded: true,
-                decoration: InputDecoration(filled: true, fillColor: kFieldFill, contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4), border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none)),
+                decoration: InputDecoration(filled: true, fillColor: Colors.white, contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4), border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none)),
                 items: _kNoteTypes.map((t) => DropdownMenuItem(value: t, child: Text(_titleCase(t)))).toList(),
                 onChanged: (v) => setState(() => _noteType = v ?? _noteType),
               ),
@@ -341,7 +347,7 @@ class _NoteFormScreenState extends State<_NoteFormScreen> {
               DropdownButtonFormField<String?>(
                 initialValue: _shift,
                 isExpanded: true,
-                decoration: InputDecoration(filled: true, fillColor: kFieldFill, contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4), border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none)),
+                decoration: InputDecoration(filled: true, fillColor: Colors.white, contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4), border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none)),
                 hint: const Text('None'),
                 items: [
                   const DropdownMenuItem<String?>(value: null, child: Text('None')),
@@ -356,7 +362,7 @@ class _NoteFormScreenState extends State<_NoteFormScreen> {
                 spacing: 8,
                 children: _kPriorities.map((p) {
                   final selected = _priority == p;
-                  return ChoiceChip(label: Text(_titleCase(p)), selected: selected, selectedColor: kMint, onSelected: (_) => setState(() => _priority = p));
+                  return ChoiceChip(label: Text(_titleCase(p)), selected: selected, selectedColor: kCareSoft, onSelected: (_) => setState(() => _priority = p));
                 }).toList(),
               ),
               const SizedBox(height: 16),
@@ -364,7 +370,7 @@ class _NoteFormScreenState extends State<_NoteFormScreen> {
                 controller: _noteController,
                 maxLines: 8,
                 maxLength: 5000,
-                decoration: authFieldDecoration('Note', hint: 'What should the next shift know?', icon: Icons.notes_outlined),
+                decoration: careFieldDecoration('Note', hint: 'What should the next shift know?', icon: Icons.notes_outlined),
               ),
               const SizedBox(height: 12),
               SizedBox(
@@ -372,7 +378,7 @@ class _NoteFormScreenState extends State<_NoteFormScreen> {
                 height: 50,
                 child: FilledButton(
                   onPressed: _saving ? null : _submit,
-                  style: FilledButton.styleFrom(backgroundColor: kTealDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+                  style: FilledButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
                   child: _saving
                       ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2.4, color: Colors.white))
                       : Text(_isEdit ? 'Save changes' : 'Add note', style: const TextStyle(fontSize: 15.5, fontWeight: FontWeight.w600)),
@@ -382,6 +388,6 @@ class _NoteFormScreenState extends State<_NoteFormScreen> {
           ),
         ),
       ),
-    );
+    ));
   }
 }

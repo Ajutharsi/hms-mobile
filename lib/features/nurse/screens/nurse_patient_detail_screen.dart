@@ -4,6 +4,7 @@ import 'package:hms_mobile/core/services/api_service.dart' show ApiException, gu
 import 'package:hms_mobile/core/services/auth_storage.dart';
 import 'package:hms_mobile/core/services/nurse_api_service.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/nurse/models/nurse_patient.dart';
 
 class NursePatientDetailScreen extends StatefulWidget {
@@ -49,16 +50,17 @@ class _NursePatientDetailScreenState extends State<NursePatientDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('Patient')),
-      body: RefreshIndicator(color: kTeal, onRefresh: _load, child: _buildBody()),
-    );
+    watchCarePalette(context);
+    return CareTheme(child: Scaffold(
+      backgroundColor: kCareBg,
+      appBar: carePageAppBar(context, 'Patient'),
+      body: RefreshIndicator(color: kCare, onRefresh: _load, child: _buildBody()),
+    ));
   }
 
   Widget _buildBody() {
     if (_isLoading && _patient == null) {
-      return const Center(child: CircularProgressIndicator(color: kTeal));
+      return Center(child: CircularProgressIndicator(color: kCare));
     }
     if (_error != null && _patient == null) {
       return ListView(padding: const EdgeInsets.all(24), children: [
@@ -80,10 +82,10 @@ class _NursePatientDetailScreenState extends State<NursePatientDetailScreen> {
             children: [
               CircleAvatar(
                 radius: 40,
-                backgroundColor: kMint,
+                backgroundColor: kCareSoft,
                 backgroundImage: p.photoUrl != null ? NetworkImage(p.photoUrl!) : null,
                 child: p.photoUrl == null
-                    ? Text(p.name.isNotEmpty ? p.name[0].toUpperCase() : '?', style: const TextStyle(fontSize: 28, fontWeight: FontWeight.w700, color: kTealDark))
+                    ? Text(p.name.isNotEmpty ? p.name[0].toUpperCase() : '?', style: TextStyle(fontSize: 28, fontWeight: FontWeight.w700, color: kCareDark))
                     : null,
               ),
               const SizedBox(height: 12),
@@ -91,7 +93,7 @@ class _NursePatientDetailScreenState extends State<NursePatientDetailScreen> {
               const SizedBox(height: 4),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                decoration: BoxDecoration(color: kFieldFill, borderRadius: BorderRadius.circular(8)),
+                decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(8)),
                 child: Text('MRN: ${p.mrn}', style: const TextStyle(fontSize: 12, color: kMuted, fontWeight: FontWeight.w600)),
               ),
             ],
@@ -132,9 +134,10 @@ class _SectionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(18), border: Border.all(color: kFieldFill)),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(18), border: Border.all(color: kCareBorder)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -155,6 +158,7 @@ class _InfoRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return Column(
       children: [
         Row(
@@ -170,7 +174,7 @@ class _InfoRow extends StatelessWidget {
             ),
           ],
         ),
-        if (showDivider) const Padding(padding: EdgeInsets.symmetric(vertical: 10), child: Divider(height: 1, color: kFieldFill)),
+        if (showDivider) Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Divider(height: 1, color: kCareBorder)),
       ],
     );
   }

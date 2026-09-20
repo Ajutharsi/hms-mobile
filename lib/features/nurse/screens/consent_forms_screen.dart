@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/core/services/api_service.dart' show ApiException, guardNetworkErrors;
 import 'package:hms_mobile/core/services/auth_storage.dart';
 import 'package:hms_mobile/core/services/nurse_api_service.dart';
@@ -22,6 +23,7 @@ class ConsentFormsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return ChangeNotifierProvider(
       create: (_) => ConsentFormsViewModel(),
       child: const _ConsentFormsView(),
@@ -43,7 +45,7 @@ class _ConsentFormsView extends StatelessWidget {
 
     final error = await viewModel.sign(form.id, patientSignature: result);
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kTealDark : null, content: Text(error ?? 'Consent form signed.')));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kCareDark : null, content: Text(error ?? 'Consent form signed.')));
   }
 
   Future<void> _decline(BuildContext context, ConsentFormsViewModel viewModel, ConsentForm form) async {
@@ -61,30 +63,31 @@ class _ConsentFormsView extends StatelessWidget {
 
     final error = await viewModel.updateStatus(form.id, 'declined');
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kTealDark : null, content: Text(error ?? 'Marked declined.')));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kCareDark : null, content: Text(error ?? 'Marked declined.')));
   }
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final viewModel = context.watch<ConsentFormsViewModel>();
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('Consent Forms', style: TextStyle(fontWeight: FontWeight.w700))),
+    return CareTheme(child: Scaffold(
+      backgroundColor: kCareBg,
+      appBar: carePageAppBar(context, 'Consent Forms'),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _newForm(context, viewModel),
-        backgroundColor: kTealDark,
+        backgroundColor: kCareDark,
         foregroundColor: Colors.white,
         icon: const Icon(Icons.add, color: Colors.white),
         label: const Text('New form', style: TextStyle(color: Colors.white)),
       ),
-      body: RefreshIndicator(color: kTeal, onRefresh: viewModel.load, child: _buildBody(context, viewModel)),
-    );
+      body: RefreshIndicator(color: kCare, onRefresh: viewModel.load, child: _buildBody(context, viewModel)),
+    ));
   }
 
   Widget _buildBody(BuildContext context, ConsentFormsViewModel viewModel) {
     if (viewModel.isLoading && viewModel.forms.isEmpty) {
-      return const Center(child: CircularProgressIndicator(color: kTeal));
+      return Center(child: CircularProgressIndicator(color: kCare));
     }
     if (viewModel.loadError != null && viewModel.forms.isEmpty) {
       return ListView(padding: const EdgeInsets.all(24), children: [
@@ -133,11 +136,12 @@ class _ConsentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final (fg, bg) = _statusColors[form.status] ?? (kMuted, kFieldFill);
+    watchCarePalette(context);
+    final (fg, bg) = _statusColors[form.status] ?? (kMuted, kCareBg);
 
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kFieldFill)),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kCareBorder)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -192,7 +196,7 @@ class _ConsentCard extends StatelessWidget {
                     onPressed: onSign,
                     icon: const Icon(Icons.draw_outlined, size: 16),
                     label: const Text('Sign'),
-                    style: FilledButton.styleFrom(backgroundColor: kTealDark, minimumSize: const Size(0, 34), textStyle: const TextStyle(fontSize: 13)),
+                    style: FilledButton.styleFrom(backgroundColor: kCareDark, minimumSize: const Size(0, 34), textStyle: const TextStyle(fontSize: 13)),
                   ),
               ],
             ),
@@ -231,6 +235,7 @@ class _SignDialogState extends State<_SignDialog> {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return AlertDialog(
       title: Text('Sign consent — ${widget.form.patientName ?? ''}'),
       content: SizedBox(
@@ -242,7 +247,7 @@ class _SignDialogState extends State<_SignDialog> {
             const SizedBox(height: 8),
             Expanded(
               child: Container(
-                decoration: BoxDecoration(border: Border.all(color: kFieldFill), borderRadius: BorderRadius.circular(8)),
+                decoration: BoxDecoration(border: Border.all(color: kCareBorder), borderRadius: BorderRadius.circular(8)),
                 child: SignaturePad(controller: _controller),
               ),
             ),
@@ -257,7 +262,7 @@ class _SignDialogState extends State<_SignDialog> {
         TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Cancel')),
         FilledButton(
           onPressed: _submitting ? null : _submit,
-          style: FilledButton.styleFrom(backgroundColor: kTealDark),
+          style: FilledButton.styleFrom(backgroundColor: kCareDark),
           child: _submitting
               ? const SizedBox(height: 16, width: 16, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
               : const Text('Save signature'),
@@ -338,9 +343,10 @@ class _NewConsentFormScreenState extends State<_NewConsentFormScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('New Consent Form')),
+    watchCarePalette(context);
+    return CareTheme(child: Scaffold(
+      backgroundColor: kCareBg,
+      appBar: carePageAppBar(context, 'New Consent Form'),
       body: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
         child: Form(
@@ -352,38 +358,38 @@ class _NewConsentFormScreenState extends State<_NewConsentFormScreen> {
               const SizedBox(height: 16),
               DropdownButtonFormField<String>(
                 initialValue: _consentType,
-                decoration: authFieldDecoration('Consent type', hint: '', icon: Icons.assignment_outlined),
+                decoration: careFieldDecoration('Consent type', hint: '', icon: Icons.assignment_outlined),
                 items: _kConsentTypes.map((t) => DropdownMenuItem(value: t, child: Text(_titleCase(t)))).toList(),
                 onChanged: (v) => setState(() => _consentType = v!),
               ),
               const SizedBox(height: 14),
               TextFormField(
                 controller: _procedureController,
-                decoration: authFieldDecoration('Procedure name', hint: 'Optional', icon: Icons.medical_information_outlined),
+                decoration: careFieldDecoration('Procedure name', hint: 'Optional', icon: Icons.medical_information_outlined),
               ),
               const SizedBox(height: 14),
               TextFormField(
                 controller: _descriptionController,
                 maxLines: 4,
-                decoration: authFieldDecoration('Description', hint: 'Consent details', icon: Icons.description_outlined),
+                decoration: careFieldDecoration('Description', hint: 'Consent details', icon: Icons.description_outlined),
                 validator: (v) => (v == null || v.trim().isEmpty) ? 'Required' : null,
               ),
               const SizedBox(height: 14),
               TextFormField(
                 controller: _witnessController,
-                decoration: authFieldDecoration('Witness name', hint: 'Optional', icon: Icons.person_outline),
+                decoration: careFieldDecoration('Witness name', hint: 'Optional', icon: Icons.person_outline),
               ),
               const SizedBox(height: 14),
               TextFormField(
                 controller: _doctorController,
-                decoration: authFieldDecoration('Doctor name', hint: 'Optional', icon: Icons.badge_outlined),
+                decoration: careFieldDecoration('Doctor name', hint: 'Optional', icon: Icons.badge_outlined),
               ),
               const SizedBox(height: 14),
               InkWell(
                 onTap: _pickDate,
                 borderRadius: BorderRadius.circular(12),
                 child: InputDecorator(
-                  decoration: authFieldDecoration('Consent date', hint: '', icon: Icons.event_outlined),
+                  decoration: careFieldDecoration('Consent date', hint: '', icon: Icons.event_outlined),
                   child: Text('${_consentDate.year}-${_consentDate.month.toString().padLeft(2, '0')}-${_consentDate.day.toString().padLeft(2, '0')}'),
                 ),
               ),
@@ -393,7 +399,7 @@ class _NewConsentFormScreenState extends State<_NewConsentFormScreen> {
                 height: 48,
                 child: ElevatedButton(
                   onPressed: _isSaving ? null : _submit,
-                  style: ElevatedButton.styleFrom(backgroundColor: kTealDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+                  style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
                   child: _isSaving
                       ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
                       : const Text('Create form', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
@@ -403,6 +409,6 @@ class _NewConsentFormScreenState extends State<_NewConsentFormScreen> {
           ),
         ),
       ),
-    );
+    ));
   }
 }

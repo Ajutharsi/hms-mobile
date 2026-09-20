@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/nurse/models/fluid_intake.dart';
 import 'package:hms_mobile/features/nurse/viewmodels/fluid_intake_view_model.dart';
 
@@ -15,6 +16,7 @@ class FluidIntakeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return ChangeNotifierProvider(
       create: (_) => FluidIntakeViewModel(),
       child: const _FluidIntakeView(),
@@ -27,18 +29,19 @@ class _FluidIntakeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final viewModel = context.watch<FluidIntakeViewModel>();
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('Fluid Intake', style: TextStyle(fontWeight: FontWeight.w700))),
-      body: RefreshIndicator(color: kTeal, onRefresh: viewModel.load, child: _buildBody(context, viewModel)),
-    );
+    return CareTheme(child: Scaffold(
+      backgroundColor: kCareBg,
+      appBar: carePageAppBar(context, 'Fluid Intake'),
+      body: RefreshIndicator(color: kCare, onRefresh: viewModel.load, child: _buildBody(context, viewModel)),
+    ));
   }
 
   Widget _buildBody(BuildContext context, FluidIntakeViewModel viewModel) {
     if (viewModel.isLoading && viewModel.patients.isEmpty) {
-      return const Center(child: CircularProgressIndicator(color: kTeal));
+      return Center(child: CircularProgressIndicator(color: kCare));
     }
     if (viewModel.loadError != null && viewModel.patients.isEmpty) {
       return ListView(padding: const EdgeInsets.all(24), children: [
@@ -82,6 +85,7 @@ class _PatientCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final negative = patient.balance < 0;
 
     return InkWell(
@@ -89,7 +93,7 @@ class _PatientCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(16),
       child: Container(
         padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kFieldFill)),
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kCareBorder)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -124,6 +128,7 @@ class _Reading extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -141,6 +146,7 @@ class FluidIntakeDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return ChangeNotifierProvider(
       create: (_) => FluidIntakeDetailViewModel(patientId: patientId),
       child: _FluidIntakeDetailView(patientName: patientName),
@@ -163,7 +169,7 @@ class _FluidIntakeDetailView extends StatelessWidget {
       notes: result['notes']?.isEmpty == true ? null : result['notes'],
     );
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kTealDark : null, content: Text(error ?? 'Fluid logged.')));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kCareDark : null, content: Text(error ?? 'Fluid logged.')));
   }
 
   Future<void> _delete(BuildContext context, FluidIntakeDetailViewModel viewModel, FluidLog log) async {
@@ -180,30 +186,31 @@ class _FluidIntakeDetailView extends StatelessWidget {
     if (confirmed != true || !context.mounted) return;
     final error = await viewModel.deleteLog(log.id);
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kTealDark : null, content: Text(error ?? 'Entry deleted.')));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kCareDark : null, content: Text(error ?? 'Entry deleted.')));
   }
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final viewModel = context.watch<FluidIntakeDetailViewModel>();
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: Text(patientName)),
+    return CareTheme(child: Scaffold(
+      backgroundColor: kCareBg,
+      appBar: carePageAppBar(context, patientName),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _logFluid(context, viewModel),
-        backgroundColor: kTealDark,
+        backgroundColor: kCareDark,
         foregroundColor: Colors.white,
         icon: const Icon(Icons.add, color: Colors.white),
         label: const Text('Log fluid', style: TextStyle(color: Colors.white)),
       ),
-      body: RefreshIndicator(color: kTeal, onRefresh: viewModel.load, child: _buildBody(context, viewModel)),
-    );
+      body: RefreshIndicator(color: kCare, onRefresh: viewModel.load, child: _buildBody(context, viewModel)),
+    ));
   }
 
   Widget _buildBody(BuildContext context, FluidIntakeDetailViewModel viewModel) {
     if (viewModel.isLoading && viewModel.logs.isEmpty) {
-      return const Center(child: CircularProgressIndicator(color: kTeal));
+      return Center(child: CircularProgressIndicator(color: kCare));
     }
     if (viewModel.loadError != null) {
       return ListView(padding: const EdgeInsets.all(24), children: [
@@ -234,7 +241,7 @@ class _FluidIntakeDetailView extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(12),
               margin: const EdgeInsets.only(bottom: 8),
-              decoration: BoxDecoration(color: kFieldFill, borderRadius: BorderRadius.circular(12)),
+              decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(12)),
               child: Row(
                 children: [
                   Container(
@@ -281,6 +288,7 @@ class _StatTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(14)),
@@ -323,6 +331,7 @@ class _LogFluidDialogState extends State<_LogFluidDialog> {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return AlertDialog(
       title: const Text('Log fluid'),
       content: SingleChildScrollView(
@@ -364,7 +373,7 @@ class _LogFluidDialogState extends State<_LogFluidDialog> {
             'log_time': '${_time.hour.toString().padLeft(2, '0')}:${_time.minute.toString().padLeft(2, '0')}',
             'notes': _notes.text.trim(),
           }),
-          style: FilledButton.styleFrom(backgroundColor: kTealDark),
+          style: FilledButton.styleFrom(backgroundColor: kCareDark),
           child: const Text('Save'),
         ),
       ],

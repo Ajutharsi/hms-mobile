@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/nurse/viewmodels/rounds_view_model.dart';
 
 /// Read-only charge-nurse view of every active round assignment across the
@@ -12,6 +13,7 @@ class StaffRoundsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return ChangeNotifierProvider(
       create: (_) => StaffRoundsViewModel(),
       child: const _StaffRoundsView(),
@@ -24,17 +26,18 @@ class _StaffRoundsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final viewModel = context.watch<StaffRoundsViewModel>();
 
-    return Scaffold(
-      appBar: AppBar(title: const Text('Staff Rounds')),
-      body: RefreshIndicator(color: kTeal, onRefresh: viewModel.load, child: _buildBody(viewModel)),
-    );
+    return CareTheme(child: Scaffold(
+      appBar: carePageAppBar(context, 'Staff Rounds'),
+      body: RefreshIndicator(color: kCare, onRefresh: viewModel.load, child: _buildBody(viewModel)),
+    ));
   }
 
   Widget _buildBody(StaffRoundsViewModel viewModel) {
     if (viewModel.isLoading && viewModel.assignments.isEmpty) {
-      return const Center(child: CircularProgressIndicator(color: kTeal));
+      return Center(child: CircularProgressIndicator(color: kCare));
     }
 
     if (viewModel.loadError != null && viewModel.assignments.isEmpty) {
@@ -74,7 +77,7 @@ class _StaffRoundsView extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: overdue ? kDangerFg : kFieldFill, width: overdue ? 1.4 : 1),
+            border: Border.all(color: overdue ? kDangerFg : kCareBg, width: overdue ? 1.4 : 1),
           ),
           child: Row(
             children: [

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/nurse/models/shift_handover.dart';
 import 'package:hms_mobile/features/nurse/screens/shift_handover_create_screen.dart';
 import 'package:hms_mobile/features/nurse/screens/shift_handover_detail_screen.dart';
@@ -12,6 +13,7 @@ class ShiftHandoverScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return ChangeNotifierProvider(
       create: (_) => ShiftHandoverViewModel(),
       child: const _ShiftHandoverView(),
@@ -33,10 +35,11 @@ class _ShiftHandoverView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final viewModel = context.watch<ShiftHandoverViewModel>();
 
-    return Scaffold(
-      appBar: AppBar(title: const Text('Shift Handover')),
+    return CareTheme(child: Scaffold(
+      appBar: carePageAppBar(context, 'Shift Handover'),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
           final createdId = await Navigator.of(context).push<int>(
@@ -46,7 +49,7 @@ class _ShiftHandoverView extends StatelessWidget {
             viewModel.load();
           }
         },
-        backgroundColor: kTealDark,
+        backgroundColor: kCareDark,
         foregroundColor: Colors.white,
         icon: const Icon(Icons.add, color: Colors.white),
         label: const Text('New handover', style: TextStyle(color: Colors.white)),
@@ -72,19 +75,19 @@ class _ShiftHandoverView extends StatelessWidget {
           ),
           Expanded(
             child: RefreshIndicator(
-              color: kTeal,
+              color: kCare,
               onRefresh: viewModel.load,
               child: _buildBody(context, viewModel),
             ),
           ),
         ],
       ),
-    );
+    ));
   }
 
   Widget _buildBody(BuildContext context, ShiftHandoverViewModel viewModel) {
     if (viewModel.isLoading && viewModel.handovers.isEmpty) {
-      return const Center(child: CircularProgressIndicator(color: kTeal));
+      return Center(child: CircularProgressIndicator(color: kCare));
     }
 
     if (viewModel.loadError != null && viewModel.handovers.isEmpty) {
@@ -139,13 +142,14 @@ class _FilterChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(20),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
         decoration: BoxDecoration(
-          color: selected ? kTealDark : kFieldFill,
+          color: selected ? kCareDark : kCareBg,
           borderRadius: BorderRadius.circular(20),
         ),
         child: Text(
@@ -162,8 +166,8 @@ class _HandoverCard extends StatelessWidget {
   final VoidCallback onTap;
   const _HandoverCard({required this.handover, required this.onTap});
 
-  static const _statusStyle = {
-    'draft': (kMuted, kFieldFill, 'Draft'),
+  static Map<String, (Color, Color, String)> get _statusStyle => {
+    'draft': (kMuted, kCareBg, 'Draft'),
     'pending_acceptance': (kWarningFg, kWarningBg, 'Pending'),
     'accepted': (kSuccessFg, kSuccessBg, 'Accepted'),
     'rejected': (kDangerFg, kDangerBg, 'Rejected'),
@@ -171,14 +175,15 @@ class _HandoverCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final (fg, bg, label) = _statusStyle[handover.status] ?? (kMuted, kFieldFill, handover.status);
+    watchCarePalette(context);
+    final (fg, bg, label) = _statusStyle[handover.status] ?? (kMuted, kCareBg, handover.status);
 
     return InkWell(
       borderRadius: BorderRadius.circular(16),
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kFieldFill)),
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kCareBorder)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

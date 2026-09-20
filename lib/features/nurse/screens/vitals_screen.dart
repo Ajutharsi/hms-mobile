@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/nurse/models/nurse_patient.dart';
 import 'package:hms_mobile/features/nurse/models/nurse_vital.dart';
 import 'package:hms_mobile/features/nurse/viewmodels/vitals_view_model.dart';
@@ -12,6 +13,7 @@ class VitalsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return ChangeNotifierProvider(
       create: (_) => VitalsViewModel(),
       child: const _VitalsView(),
@@ -29,25 +31,26 @@ class _VitalsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final viewModel = context.watch<VitalsViewModel>();
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('Vitals', style: TextStyle(fontWeight: FontWeight.w700))),
+    return CareTheme(child: Scaffold(
+      backgroundColor: kCareBg,
+      appBar: carePageAppBar(context, 'Vitals'),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _record(context, viewModel),
-        backgroundColor: kTealDark,
+        backgroundColor: kCareDark,
         foregroundColor: Colors.white,
         icon: const Icon(Icons.add, color: Colors.white),
         label: const Text('Record vitals', style: TextStyle(color: Colors.white)),
       ),
-      body: RefreshIndicator(color: kTeal, onRefresh: viewModel.load, child: _buildBody(context, viewModel)),
-    );
+      body: RefreshIndicator(color: kCare, onRefresh: viewModel.load, child: _buildBody(context, viewModel)),
+    ));
   }
 
   Widget _buildBody(BuildContext context, VitalsViewModel viewModel) {
     if (viewModel.isLoading && viewModel.vitals.isEmpty) {
-      return const Center(child: CircularProgressIndicator(color: kTeal));
+      return Center(child: CircularProgressIndicator(color: kCare));
     }
     if (viewModel.loadError != null && viewModel.vitals.isEmpty) {
       return ListView(padding: const EdgeInsets.all(24), children: [
@@ -82,7 +85,7 @@ class _VitalsView extends StatelessWidget {
 }
 
 (Color, Color) _newsColors(int? score) {
-  if (score == null) return (kMuted, kFieldFill);
+  if (score == null) return (kMuted, kCareBg);
   if (score >= 5) return (kDangerFg, kDangerBg);
   if (score >= 3) return (kWarningFg, kWarningBg);
   return (kSuccessFg, kSuccessBg);
@@ -95,6 +98,7 @@ class _VitalCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final (newsFg, newsBg) = _newsColors(vital.newsScore);
 
     return InkWell(
@@ -102,7 +106,7 @@ class _VitalCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(16),
       child: Container(
         padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kFieldFill)),
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kCareBorder)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -165,6 +169,7 @@ class _Reading extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -249,9 +254,10 @@ class _RecordVitalsScreenState extends State<_RecordVitalsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('Record vitals', style: TextStyle(fontWeight: FontWeight.w700))),
+    watchCarePalette(context);
+    return CareTheme(child: Scaffold(
+      backgroundColor: kCareBg,
+      appBar: carePageAppBar(context, 'Record vitals'),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
@@ -261,34 +267,34 @@ class _RecordVitalsScreenState extends State<_RecordVitalsScreen> {
               if (_error != null) ...[authErrorBanner(_error!), const SizedBox(height: 16)],
               PatientPickerField(value: _patient, errorText: _patientError, onChanged: (p) => setState(() => _patient = p)),
               const SizedBox(height: 16),
-              TextField(controller: _bpController, decoration: authFieldDecoration('Blood pressure', hint: '120/80', icon: Icons.favorite_border)),
+              TextField(controller: _bpController, decoration: careFieldDecoration('Blood pressure', hint: '120/80', icon: Icons.favorite_border)),
               const SizedBox(height: 14),
               Row(children: [
-                Expanded(child: TextField(controller: _pulseController, keyboardType: TextInputType.number, decoration: authFieldDecoration('Pulse', hint: 'bpm', icon: Icons.monitor_heart_outlined))),
+                Expanded(child: TextField(controller: _pulseController, keyboardType: TextInputType.number, decoration: careFieldDecoration('Pulse', hint: 'bpm', icon: Icons.monitor_heart_outlined))),
                 const SizedBox(width: 12),
-                Expanded(child: TextField(controller: _tempController, keyboardType: const TextInputType.numberWithOptions(decimal: true), decoration: authFieldDecoration('Temp', hint: '°C', icon: Icons.thermostat_outlined))),
+                Expanded(child: TextField(controller: _tempController, keyboardType: const TextInputType.numberWithOptions(decimal: true), decoration: careFieldDecoration('Temp', hint: '°C', icon: Icons.thermostat_outlined))),
               ]),
               const SizedBox(height: 14),
               Row(children: [
-                Expanded(child: TextField(controller: _rrController, keyboardType: TextInputType.number, decoration: authFieldDecoration('Resp. rate', hint: '/min', icon: Icons.air_outlined))),
+                Expanded(child: TextField(controller: _rrController, keyboardType: TextInputType.number, decoration: careFieldDecoration('Resp. rate', hint: '/min', icon: Icons.air_outlined))),
                 const SizedBox(width: 12),
-                Expanded(child: TextField(controller: _spo2Controller, keyboardType: TextInputType.number, decoration: authFieldDecoration('SpO2', hint: '%', icon: Icons.bubble_chart_outlined))),
+                Expanded(child: TextField(controller: _spo2Controller, keyboardType: TextInputType.number, decoration: careFieldDecoration('SpO2', hint: '%', icon: Icons.bubble_chart_outlined))),
               ]),
               const SizedBox(height: 14),
               Row(children: [
-                Expanded(child: TextField(controller: _weightController, keyboardType: const TextInputType.numberWithOptions(decimal: true), decoration: authFieldDecoration('Weight (optional)', hint: 'kg', icon: Icons.scale_outlined))),
+                Expanded(child: TextField(controller: _weightController, keyboardType: const TextInputType.numberWithOptions(decimal: true), decoration: careFieldDecoration('Weight (optional)', hint: 'kg', icon: Icons.scale_outlined))),
                 const SizedBox(width: 12),
-                Expanded(child: TextField(controller: _heightController, keyboardType: const TextInputType.numberWithOptions(decimal: true), decoration: authFieldDecoration('Height (optional)', hint: 'cm', icon: Icons.height))),
+                Expanded(child: TextField(controller: _heightController, keyboardType: const TextInputType.numberWithOptions(decimal: true), decoration: careFieldDecoration('Height (optional)', hint: 'cm', icon: Icons.height))),
               ]),
               const SizedBox(height: 14),
-              TextField(controller: _notesController, maxLines: 3, decoration: authFieldDecoration('Notes (optional)', hint: '', icon: Icons.notes_outlined)),
+              TextField(controller: _notesController, maxLines: 3, decoration: careFieldDecoration('Notes (optional)', hint: '', icon: Icons.notes_outlined)),
               const SizedBox(height: 20),
               SizedBox(
                 width: double.infinity,
                 height: 50,
                 child: FilledButton(
                   onPressed: _saving ? null : _submit,
-                  style: FilledButton.styleFrom(backgroundColor: kTealDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+                  style: FilledButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
                   child: _saving
                       ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2.4, color: Colors.white))
                       : const Text('Save vitals', style: TextStyle(fontSize: 15.5, fontWeight: FontWeight.w600)),
@@ -298,7 +304,7 @@ class _RecordVitalsScreenState extends State<_RecordVitalsScreen> {
           ),
         ),
       ),
-    );
+    ));
   }
 }
 
@@ -309,6 +315,7 @@ class _VitalsHistoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return ChangeNotifierProvider(
       create: (_) => VitalsHistoryViewModel(patientId: patientId),
       child: _VitalsHistoryView(patientName: patientName),
@@ -322,12 +329,13 @@ class _VitalsHistoryView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final viewModel = context.watch<VitalsHistoryViewModel>();
 
-    return Scaffold(
-      appBar: AppBar(title: Text('$patientName — history')),
+    return CareTheme(child: Scaffold(
+      appBar: carePageAppBar(context, '$patientName — history'),
       body: viewModel.isLoading
-          ? const Center(child: CircularProgressIndicator(color: kTeal))
+          ? Center(child: CircularProgressIndicator(color: kCare))
           : viewModel.loadError != null
               ? Center(child: Text(viewModel.loadError!, style: const TextStyle(color: kMuted)))
               : viewModel.history.isEmpty
@@ -338,6 +346,6 @@ class _VitalsHistoryView extends StatelessWidget {
                       separatorBuilder: (_, __) => const SizedBox(height: 10),
                       itemBuilder: (context, index) => _VitalCard(vital: viewModel.history[index], onTapTrend: () {}),
                     ),
-    );
+    ));
   }
 }

@@ -5,6 +5,7 @@ import 'package:hms_mobile/core/services/api_service.dart';
 import 'package:hms_mobile/core/services/auth_storage.dart';
 import 'package:hms_mobile/core/services/nurse_api_service.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/nurse/models/nurse_patient.dart';
 import 'package:hms_mobile/features/nurse/models/ot_schedule.dart';
 import 'package:hms_mobile/features/nurse/viewmodels/ot_view_model.dart';
@@ -16,6 +17,7 @@ class OtScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return ChangeNotifierProvider(
       create: (_) => OtViewModel(),
       child: const _OtView(),
@@ -35,7 +37,7 @@ class _OtView extends StatelessWidget {
     final error = await viewModel.start(ot.id);
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(backgroundColor: error == null ? kTealDark : null, content: Text(error ?? 'Surgery started.')),
+      SnackBar(backgroundColor: error == null ? kCareDark : null, content: Text(error ?? 'Surgery started.')),
     );
   }
 
@@ -46,7 +48,7 @@ class _OtView extends StatelessWidget {
     final error = await viewModel.complete(ot.id, postOpNotes: result['post_op_notes'], complications: result['complications']);
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(backgroundColor: error == null ? kTealDark : null, content: Text(error ?? 'Surgery marked complete.')),
+      SnackBar(backgroundColor: error == null ? kCareDark : null, content: Text(error ?? 'Surgery marked complete.')),
     );
   }
 
@@ -67,31 +69,32 @@ class _OtView extends StatelessWidget {
     final error = await viewModel.cancel(ot.id);
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(backgroundColor: error == null ? kTealDark : null, content: Text(error ?? 'OT schedule cancelled.')),
+      SnackBar(backgroundColor: error == null ? kCareDark : null, content: Text(error ?? 'OT schedule cancelled.')),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final viewModel = context.watch<OtViewModel>();
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('Operation Theatre', style: TextStyle(fontWeight: FontWeight.w700))),
+    return CareTheme(child: Scaffold(
+      backgroundColor: kCareBg,
+      appBar: carePageAppBar(context, 'Operation Theatre'),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _schedule(context, viewModel),
-        backgroundColor: kTealDark,
+        backgroundColor: kCareDark,
         foregroundColor: Colors.white,
         icon: const Icon(Icons.add, color: Colors.white),
         label: const Text('Schedule surgery', style: TextStyle(color: Colors.white)),
       ),
-      body: RefreshIndicator(color: kTeal, onRefresh: viewModel.load, child: _buildBody(context, viewModel)),
-    );
+      body: RefreshIndicator(color: kCare, onRefresh: viewModel.load, child: _buildBody(context, viewModel)),
+    ));
   }
 
   Widget _buildBody(BuildContext context, OtViewModel viewModel) {
     if (viewModel.isLoading && viewModel.schedules.isEmpty) {
-      return const Center(child: CircularProgressIndicator(color: kTeal));
+      return Center(child: CircularProgressIndicator(color: kCare));
     }
     if (viewModel.loadError != null && viewModel.schedules.isEmpty) {
       return ListView(padding: const EdgeInsets.all(24), children: [
@@ -140,8 +143,8 @@ class _OtCard extends StatelessWidget {
     'emergency': (kDangerFg, kDangerBg),
   };
 
-  static const _statusColors = {
-    'scheduled': (kMuted, kFieldFill),
+  static Map<String, (Color, Color)> get _statusColors => {
+    'scheduled': (kMuted, kCareBg),
     'in_progress': (kInfoFg, kInfoBg),
     'completed': (kSuccessFg, kSuccessBg),
     'cancelled': (kDangerFg, kDangerBg),
@@ -150,12 +153,13 @@ class _OtCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final (pFg, pBg) = _priorityColors[ot.priority] ?? (kMuted, kFieldFill);
-    final (sFg, sBg) = _statusColors[ot.status] ?? (kMuted, kFieldFill);
+    watchCarePalette(context);
+    final (pFg, pBg) = _priorityColors[ot.priority] ?? (kMuted, kCareBg);
+    final (sFg, sBg) = _statusColors[ot.status] ?? (kMuted, kCareBg);
 
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kFieldFill)),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kCareBorder)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -201,14 +205,14 @@ class _OtCard extends StatelessWidget {
                     onPressed: onStart,
                     icon: const Icon(Icons.play_arrow_rounded, size: 16),
                     label: const Text('Start'),
-                    style: FilledButton.styleFrom(backgroundColor: kTealDark, minimumSize: const Size(0, 34), textStyle: const TextStyle(fontSize: 13)),
+                    style: FilledButton.styleFrom(backgroundColor: kCareDark, minimumSize: const Size(0, 34), textStyle: const TextStyle(fontSize: 13)),
                   ),
                 if (ot.status == 'in_progress')
                   FilledButton.icon(
                     onPressed: onComplete,
                     icon: const Icon(Icons.check_rounded, size: 16),
                     label: const Text('Complete'),
-                    style: FilledButton.styleFrom(backgroundColor: kTealDark, minimumSize: const Size(0, 34), textStyle: const TextStyle(fontSize: 13)),
+                    style: FilledButton.styleFrom(backgroundColor: kCareDark, minimumSize: const Size(0, 34), textStyle: const TextStyle(fontSize: 13)),
                   ),
               ],
             ),
@@ -240,6 +244,7 @@ class _CompleteDialogState extends State<_CompleteDialog> {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return AlertDialog(
       title: const Text('Complete surgery'),
       content: SingleChildScrollView(
@@ -249,13 +254,13 @@ class _CompleteDialogState extends State<_CompleteDialog> {
             TextField(
               controller: _postOpController,
               maxLines: 3,
-              decoration: authFieldDecoration('Post-op notes', hint: 'Optional', icon: Icons.notes_outlined),
+              decoration: careFieldDecoration('Post-op notes', hint: 'Optional', icon: Icons.notes_outlined),
             ),
             const SizedBox(height: 12),
             TextField(
               controller: _complicationsController,
               maxLines: 3,
-              decoration: authFieldDecoration('Complications', hint: 'Optional', icon: Icons.warning_amber_outlined),
+              decoration: careFieldDecoration('Complications', hint: 'Optional', icon: Icons.warning_amber_outlined),
             ),
           ],
         ),
@@ -264,7 +269,7 @@ class _CompleteDialogState extends State<_CompleteDialog> {
         TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Cancel')),
         FilledButton(
           onPressed: () => Navigator.of(context).pop({'post_op_notes': _postOpController.text, 'complications': _complicationsController.text}),
-          style: FilledButton.styleFrom(backgroundColor: kTealDark),
+          style: FilledButton.styleFrom(backgroundColor: kCareDark),
           child: const Text('Complete'),
         ),
       ],
@@ -379,9 +384,10 @@ class _ScheduleOtScreenState extends State<_ScheduleOtScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('Schedule Surgery')),
+    watchCarePalette(context);
+    return CareTheme(child: Scaffold(
+      backgroundColor: kCareBg,
+      appBar: carePageAppBar(context, 'Schedule Surgery'),
       body: Form(
         key: _formKey,
         child: ListView(
@@ -391,7 +397,7 @@ class _ScheduleOtScreenState extends State<_ScheduleOtScreen> {
             const SizedBox(height: 14),
             TextFormField(
               controller: _procedureController,
-              decoration: authFieldDecoration('Procedure name', hint: 'e.g. Appendectomy', icon: Icons.medical_services_outlined),
+              decoration: careFieldDecoration('Procedure name', hint: 'e.g. Appendectomy', icon: Icons.medical_services_outlined),
               validator: (v) => (v == null || v.trim().isEmpty) ? 'Required' : null,
             ),
             const SizedBox(height: 14),
@@ -399,13 +405,13 @@ class _ScheduleOtScreenState extends State<_ScheduleOtScreen> {
             const SizedBox(height: 14),
             _DoctorDropdown(label: 'Anaesthetist (optional)', doctors: _doctors, value: _anaesthetist, onChanged: (d) => setState(() => _anaesthetist = d)),
             const SizedBox(height: 14),
-            TextFormField(controller: _theatreController, decoration: authFieldDecoration('Theatre no.', hint: 'Optional', icon: Icons.meeting_room_outlined)),
+            TextFormField(controller: _theatreController, decoration: careFieldDecoration('Theatre no.', hint: 'Optional', icon: Icons.meeting_room_outlined)),
             const SizedBox(height: 14),
-            TextFormField(controller: _icd10Controller, decoration: authFieldDecoration('ICD-10 code', hint: 'Optional', icon: Icons.tag_outlined)),
+            TextFormField(controller: _icd10Controller, decoration: careFieldDecoration('ICD-10 code', hint: 'Optional', icon: Icons.tag_outlined)),
             const SizedBox(height: 14),
             DropdownButtonFormField<String>(
               initialValue: _anaesthesiaType,
-              decoration: authFieldDecoration('Anaesthesia type', hint: 'Optional', icon: Icons.healing_outlined),
+              decoration: careFieldDecoration('Anaesthesia type', hint: 'Optional', icon: Icons.healing_outlined),
               items: const ['general', 'spinal', 'epidural', 'local', 'sedation']
                   .map((e) => DropdownMenuItem(value: e, child: Text(e[0].toUpperCase() + e.substring(1))))
                   .toList(),
@@ -414,7 +420,7 @@ class _ScheduleOtScreenState extends State<_ScheduleOtScreen> {
             const SizedBox(height: 14),
             DropdownButtonFormField<String>(
               initialValue: _priority,
-              decoration: authFieldDecoration('Priority', hint: '', icon: Icons.priority_high_outlined),
+              decoration: careFieldDecoration('Priority', hint: '', icon: Icons.priority_high_outlined),
               items: const ['elective', 'urgent', 'emergency'].map((e) => DropdownMenuItem(value: e, child: Text(e[0].toUpperCase() + e.substring(1)))).toList(),
               onChanged: (v) => setState(() => _priority = v ?? 'elective'),
             ),
@@ -422,7 +428,7 @@ class _ScheduleOtScreenState extends State<_ScheduleOtScreen> {
             InkWell(
               onTap: () => _pickDateTime(true),
               child: InputDecorator(
-                decoration: authFieldDecoration('Scheduled start', hint: 'Tap to pick', icon: Icons.schedule_outlined),
+                decoration: careFieldDecoration('Scheduled start', hint: 'Tap to pick', icon: Icons.schedule_outlined),
                 child: Text(_scheduledStart != null ? _fmt(_scheduledStart!) : 'Tap to pick', style: TextStyle(color: _scheduledStart != null ? kInk : kMuted)),
               ),
             ),
@@ -430,18 +436,18 @@ class _ScheduleOtScreenState extends State<_ScheduleOtScreen> {
             InkWell(
               onTap: () => _pickDateTime(false),
               child: InputDecorator(
-                decoration: authFieldDecoration('Scheduled end', hint: 'Optional', icon: Icons.schedule_outlined),
+                decoration: careFieldDecoration('Scheduled end', hint: 'Optional', icon: Icons.schedule_outlined),
                 child: Text(_scheduledEnd != null ? _fmt(_scheduledEnd!) : 'Optional', style: TextStyle(color: _scheduledEnd != null ? kInk : kMuted)),
               ),
             ),
             const SizedBox(height: 14),
-            TextFormField(controller: _preOpController, maxLines: 3, decoration: authFieldDecoration('Pre-op notes', hint: 'Optional', icon: Icons.notes_outlined)),
+            TextFormField(controller: _preOpController, maxLines: 3, decoration: careFieldDecoration('Pre-op notes', hint: 'Optional', icon: Icons.notes_outlined)),
             const SizedBox(height: 24),
             SizedBox(
               height: 48,
               child: ElevatedButton(
                 onPressed: _submitting ? null : _submit,
-                style: ElevatedButton.styleFrom(backgroundColor: kTealDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+                style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
                 child: _submitting
                     ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
                     : const Text('Schedule', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
@@ -450,7 +456,7 @@ class _ScheduleOtScreenState extends State<_ScheduleOtScreen> {
           ],
         ),
       ),
-    );
+    ));
   }
 }
 
@@ -463,13 +469,14 @@ class _DoctorDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     if (doctors == null) {
-      return const SizedBox(height: 54, child: Center(child: SizedBox(height: 18, width: 18, child: CircularProgressIndicator(strokeWidth: 2, color: kTeal))));
+      return SizedBox(height: 54, child: Center(child: SizedBox(height: 18, width: 18, child: CircularProgressIndicator(strokeWidth: 2, color: kCare))));
     }
 
     return DropdownButtonFormField<Doctor>(
       initialValue: value,
-      decoration: authFieldDecoration(label, hint: 'Optional', icon: Icons.person_outline),
+      decoration: careFieldDecoration(label, hint: 'Optional', icon: Icons.person_outline),
       isExpanded: true,
       items: doctors!.map((d) => DropdownMenuItem(value: d, child: Text(d.label, overflow: TextOverflow.ellipsis))).toList(),
       onChanged: onChanged,

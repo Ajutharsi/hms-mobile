@@ -5,6 +5,7 @@ import 'package:hms_mobile/core/services/api_service.dart';
 import 'package:hms_mobile/core/services/auth_storage.dart';
 import 'package:hms_mobile/core/services/nurse_api_service.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/nurse/models/er_registration.dart';
 import 'package:hms_mobile/features/nurse/models/nurse_patient.dart';
 import 'package:hms_mobile/features/nurse/viewmodels/er_view_model.dart';
@@ -22,6 +23,7 @@ class ErScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return ChangeNotifierProvider(
       create: (_) => ErViewModel(),
       child: const _ErView(),
@@ -42,7 +44,7 @@ class _ErView extends StatelessWidget {
     if (level == null || !context.mounted) return;
     final error = await viewModel.triage(reg.id, level);
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kTealDark : null, content: Text(error ?? 'Patient triaged.')));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kCareDark : null, content: Text(error ?? 'Patient triaged.')));
   }
 
   Future<void> _update(BuildContext context, ErViewModel viewModel, ErRegistration reg) async {
@@ -56,7 +58,7 @@ class _ErView extends StatelessWidget {
       icd10Code: result['icd10_code'] as String?,
     );
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kTealDark : null, content: Text(error ?? 'ER record updated.')));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kCareDark : null, content: Text(error ?? 'ER record updated.')));
   }
 
   Future<void> _discharge(BuildContext context, ErViewModel viewModel, ErRegistration reg) async {
@@ -64,30 +66,31 @@ class _ErView extends StatelessWidget {
     if (result == null || !context.mounted) return;
     final error = await viewModel.discharge(reg.id, status: result['status']!, notes: result['notes']);
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kTealDark : null, content: Text(error ?? 'ER visit closed.')));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kCareDark : null, content: Text(error ?? 'ER visit closed.')));
   }
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final viewModel = context.watch<ErViewModel>();
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('Emergency (ER)', style: TextStyle(fontWeight: FontWeight.w700))),
+    return CareTheme(child: Scaffold(
+      backgroundColor: kCareBg,
+      appBar: carePageAppBar(context, 'Emergency (ER)'),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _register(context, viewModel),
-        backgroundColor: kTealDark,
+        backgroundColor: kCareDark,
         foregroundColor: Colors.white,
         icon: const Icon(Icons.add, color: Colors.white),
         label: const Text('Register patient', style: TextStyle(color: Colors.white)),
       ),
-      body: RefreshIndicator(color: kTeal, onRefresh: viewModel.load, child: _buildBody(context, viewModel)),
-    );
+      body: RefreshIndicator(color: kCare, onRefresh: viewModel.load, child: _buildBody(context, viewModel)),
+    ));
   }
 
   Widget _buildBody(BuildContext context, ErViewModel viewModel) {
     if (viewModel.isLoading && viewModel.registrations.isEmpty) {
-      return const Center(child: CircularProgressIndicator(color: kTeal));
+      return Center(child: CircularProgressIndicator(color: kCare));
     }
     if (viewModel.loadError != null && viewModel.registrations.isEmpty) {
       return ListView(padding: const EdgeInsets.all(24), children: [
@@ -115,7 +118,7 @@ class _ErView extends StatelessWidget {
               _StatTile(label: 'Waiting', value: '${stats.waiting}', color: kWarningFg, bg: kWarningBg),
               _StatTile(label: 'In treatment', value: '${stats.underTreatment}', color: kInfoFg, bg: kInfoBg),
               _StatTile(label: 'Red alert', value: '${stats.redAlert}', color: kDangerFg, bg: kDangerBg),
-              _StatTile(label: 'Today', value: '${stats.todayTotal}', color: kTealDark, bg: kMint),
+              _StatTile(label: 'Today', value: '${stats.todayTotal}', color: kCareDark, bg: kCareSoft),
             ],
           ),
         const SizedBox(height: 16),
@@ -145,6 +148,7 @@ class _StatTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(12)),
@@ -173,12 +177,12 @@ class _ErCard extends StatelessWidget {
     'black': (Colors.white, Colors.black87),
   };
 
-  static const _statusColors = {
+  static Map<String, (Color, Color)> get _statusColors => {
     'waiting': (kWarningFg, kWarningBg),
     'under_treatment': (kInfoFg, kInfoBg),
-    'admitted': (kTealDark, kMint),
+    'admitted': (kCareDark, kCareSoft),
     'discharged': (kSuccessFg, kSuccessBg),
-    'transferred': (kMuted, kFieldFill),
+    'transferred': (kMuted, kCareBg),
     'expired': (Colors.white, Colors.black87),
   };
 
@@ -186,12 +190,13 @@ class _ErCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final (tFg, tBg) = _triageColors[reg.triageLevel] ?? (kMuted, kFieldFill);
-    final (sFg, sBg) = _statusColors[reg.status] ?? (kMuted, kFieldFill);
+    watchCarePalette(context);
+    final (tFg, tBg) = _triageColors[reg.triageLevel] ?? (kMuted, kCareBg);
+    final (sFg, sBg) = _statusColors[reg.status] ?? (kMuted, kCareBg);
 
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kFieldFill)),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kCareBorder)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -244,7 +249,7 @@ class _ErCard extends StatelessWidget {
                 OutlinedButton(onPressed: onUpdate, style: OutlinedButton.styleFrom(minimumSize: const Size(0, 32), textStyle: const TextStyle(fontSize: 12.5)), child: const Text('Update')),
                 FilledButton(
                   onPressed: onDischarge,
-                  style: FilledButton.styleFrom(backgroundColor: kTealDark, minimumSize: const Size(0, 32), textStyle: const TextStyle(fontSize: 12.5)),
+                  style: FilledButton.styleFrom(backgroundColor: kCareDark, minimumSize: const Size(0, 32), textStyle: const TextStyle(fontSize: 12.5)),
                   child: const Text('Close visit'),
                 ),
               ],
@@ -269,6 +274,7 @@ class _TriageDialogState extends State<_TriageDialog> {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return AlertDialog(
       title: const Text('Update triage level'),
       content: DropdownButtonFormField<String>(
@@ -278,7 +284,7 @@ class _TriageDialogState extends State<_TriageDialog> {
       ),
       actions: [
         TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Cancel')),
-        FilledButton(onPressed: () => Navigator.of(context).pop(_level), style: FilledButton.styleFrom(backgroundColor: kTealDark), child: const Text('Save')),
+        FilledButton(onPressed: () => Navigator.of(context).pop(_level), style: FilledButton.styleFrom(backgroundColor: kCareDark), child: const Text('Save')),
       ],
     );
   }
@@ -322,6 +328,7 @@ class _UpdateDialogState extends State<_UpdateDialog> {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return AlertDialog(
       title: const Text('Update ER record'),
       content: SingleChildScrollView(
@@ -358,7 +365,7 @@ class _UpdateDialogState extends State<_UpdateDialog> {
             'notes': _notesController.text.trim().isEmpty ? null : _notesController.text.trim(),
             'icd10_code': _icdController.text.trim().isEmpty ? null : _icdController.text.trim(),
           }),
-          style: FilledButton.styleFrom(backgroundColor: kTealDark),
+          style: FilledButton.styleFrom(backgroundColor: kCareDark),
           child: const Text('Save'),
         ),
       ],
@@ -385,6 +392,7 @@ class _DischargeDialogState extends State<_DischargeDialog> {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return AlertDialog(
       title: const Text('Close ER visit'),
       content: Column(
@@ -404,7 +412,7 @@ class _DischargeDialogState extends State<_DischargeDialog> {
         TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Cancel')),
         FilledButton(
           onPressed: () => Navigator.of(context).pop({'status': _status, 'notes': _notesController.text.trim().isEmpty ? null : _notesController.text.trim()}),
-          style: FilledButton.styleFrom(backgroundColor: kTealDark),
+          style: FilledButton.styleFrom(backgroundColor: kCareDark),
           child: const Text('Confirm'),
         ),
       ],
@@ -480,9 +488,10 @@ class _RegisterErScreenState extends State<_RegisterErScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('Register ER Patient')),
+    watchCarePalette(context);
+    return CareTheme(child: Scaffold(
+      backgroundColor: kCareBg,
+      appBar: carePageAppBar(context, 'Register ER Patient'),
       body: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
         child: Form(
@@ -501,44 +510,44 @@ class _RegisterErScreenState extends State<_RegisterErScreen> {
               const SizedBox(height: 14),
               TextFormField(
                 controller: _nameController,
-                decoration: authFieldDecoration('Patient name', hint: 'Full name', icon: Icons.person_outline),
+                decoration: careFieldDecoration('Patient name', hint: 'Full name', icon: Icons.person_outline),
                 validator: (v) => (v == null || v.trim().isEmpty) ? 'Required' : null,
               ),
               const SizedBox(height: 14),
-              TextFormField(controller: _phoneController, keyboardType: TextInputType.phone, decoration: authFieldDecoration('Phone', hint: 'Optional', icon: Icons.phone_outlined)),
+              TextFormField(controller: _phoneController, keyboardType: TextInputType.phone, decoration: careFieldDecoration('Phone', hint: 'Optional', icon: Icons.phone_outlined)),
               const SizedBox(height: 14),
-              TextFormField(controller: _ageController, keyboardType: TextInputType.number, decoration: authFieldDecoration('Age', hint: 'Optional', icon: Icons.cake_outlined)),
+              TextFormField(controller: _ageController, keyboardType: TextInputType.number, decoration: careFieldDecoration('Age', hint: 'Optional', icon: Icons.cake_outlined)),
               const SizedBox(height: 14),
               DropdownButtonFormField<String>(
                 initialValue: _gender,
-                decoration: authFieldDecoration('Gender', hint: 'Optional', icon: Icons.wc_outlined),
+                decoration: careFieldDecoration('Gender', hint: 'Optional', icon: Icons.wc_outlined),
                 items: const [DropdownMenuItem(value: 'male', child: Text('Male')), DropdownMenuItem(value: 'female', child: Text('Female')), DropdownMenuItem(value: 'other', child: Text('Other'))],
                 onChanged: (v) => setState(() => _gender = v),
               ),
               const SizedBox(height: 14),
               DropdownButtonFormField<String>(
                 initialValue: _triageLevel,
-                decoration: authFieldDecoration('Triage level', hint: '', icon: Icons.emergency_outlined),
+                decoration: careFieldDecoration('Triage level', hint: '', icon: Icons.emergency_outlined),
                 items: _kTriageLevels.map((l) => DropdownMenuItem(value: l, child: Text(l.toUpperCase()))).toList(),
                 onChanged: (v) => setState(() => _triageLevel = v!),
               ),
               const SizedBox(height: 14),
               TextFormField(
                 controller: _complaintController,
-                decoration: authFieldDecoration('Chief complaint', hint: 'Reason for visit', icon: Icons.report_problem_outlined),
+                decoration: careFieldDecoration('Chief complaint', hint: 'Reason for visit', icon: Icons.report_problem_outlined),
                 validator: (v) => (v == null || v.trim().isEmpty) ? 'Required' : null,
               ),
               const SizedBox(height: 14),
-              TextFormField(controller: _symptomsController, maxLines: 3, decoration: authFieldDecoration('Presenting symptoms', hint: 'Optional', icon: Icons.notes_outlined)),
+              TextFormField(controller: _symptomsController, maxLines: 3, decoration: careFieldDecoration('Presenting symptoms', hint: 'Optional', icon: Icons.notes_outlined)),
               const SizedBox(height: 14),
-              TextFormField(controller: _arrivalController, decoration: authFieldDecoration('Mode of arrival', hint: 'e.g. ambulance, walk-in', icon: Icons.local_shipping_outlined)),
+              TextFormField(controller: _arrivalController, decoration: careFieldDecoration('Mode of arrival', hint: 'e.g. ambulance, walk-in', icon: Icons.local_shipping_outlined)),
               const SizedBox(height: 20),
               if (_error != null) ...[authErrorBanner(_error!), const SizedBox(height: 14)],
               SizedBox(
                 height: 48,
                 child: ElevatedButton(
                   onPressed: _isSaving ? null : _submit,
-                  style: ElevatedButton.styleFrom(backgroundColor: kTealDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+                  style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
                   child: _isSaving
                       ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
                       : const Text('Register patient', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
@@ -548,6 +557,6 @@ class _RegisterErScreenState extends State<_RegisterErScreen> {
           ),
         ),
       ),
-    );
+    ));
   }
 }

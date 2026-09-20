@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/nurse/models/nurse_patient.dart';
 import 'package:hms_mobile/features/nurse/screens/nurse_patient_detail_screen.dart';
 import 'package:hms_mobile/features/nurse/viewmodels/nurse_patients_view_model.dart';
@@ -11,6 +12,7 @@ class PatientsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return ChangeNotifierProvider(
       create: (_) => NursePatientsViewModel(),
       child: const _PatientsView(),
@@ -23,11 +25,12 @@ class _PatientsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final viewModel = context.watch<NursePatientsViewModel>();
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('Patients', style: TextStyle(fontWeight: FontWeight.w700))),
+    return CareTheme(child: Scaffold(
+      backgroundColor: kCareBg,
+      appBar: carePageAppBar(context, 'Patients'),
       body: Column(
         children: [
           Padding(
@@ -38,7 +41,7 @@ class _PatientsView extends StatelessWidget {
                 hintText: 'Search by name or MRN',
                 prefixIcon: const Icon(Icons.search, color: kMuted, size: 20),
                 filled: true,
-                fillColor: kFieldFill,
+                fillColor: Colors.white,
                 contentPadding: const EdgeInsets.symmetric(vertical: 12),
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
               ),
@@ -61,19 +64,19 @@ class _PatientsView extends StatelessWidget {
           const SizedBox(height: 4),
           Expanded(
             child: RefreshIndicator(
-              color: kTeal,
+              color: kCare,
               onRefresh: viewModel.load,
               child: _buildBody(context, viewModel),
             ),
           ),
         ],
       ),
-    );
+    ));
   }
 
   Widget _buildBody(BuildContext context, NursePatientsViewModel viewModel) {
     if (viewModel.isLoading && viewModel.patients.isEmpty) {
-      return const Center(child: CircularProgressIndicator(color: kTeal));
+      return Center(child: CircularProgressIndicator(color: kCare));
     }
     if (viewModel.loadError != null && viewModel.patients.isEmpty) {
       return ListView(padding: const EdgeInsets.all(24), children: [
@@ -115,12 +118,13 @@ class _FilterChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(20),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-        decoration: BoxDecoration(color: selected ? kTealDark : kFieldFill, borderRadius: BorderRadius.circular(20)),
+        decoration: BoxDecoration(color: selected ? kCareDark : kCareBg, borderRadius: BorderRadius.circular(20)),
         child: Text(label, style: TextStyle(color: selected ? Colors.white : kMuted, fontSize: 12.5, fontWeight: FontWeight.w600)),
       ),
     );
@@ -134,20 +138,21 @@ class _PatientCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(16),
       child: Container(
         padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kFieldFill)),
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kCareBorder)),
         child: Row(
           children: [
             CircleAvatar(
               radius: 22,
-              backgroundColor: kMint,
+              backgroundColor: kCareSoft,
               backgroundImage: patient.photoUrl != null ? NetworkImage(patient.photoUrl!) : null,
               child: patient.photoUrl == null
-                  ? Text(patient.name.isNotEmpty ? patient.name[0].toUpperCase() : '?', style: const TextStyle(color: kTealDark, fontWeight: FontWeight.w700))
+                  ? Text(patient.name.isNotEmpty ? patient.name[0].toUpperCase() : '?', style: TextStyle(color: kCareDark, fontWeight: FontWeight.w700))
                   : null,
             ),
             const SizedBox(width: 12),
@@ -176,7 +181,7 @@ class _PatientCard extends StatelessWidget {
             else
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
-                decoration: BoxDecoration(color: kFieldFill, borderRadius: BorderRadius.circular(8)),
+                decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(8)),
                 child: Text(patient.patientType.toUpperCase(), style: const TextStyle(color: kMuted, fontSize: 10.5, fontWeight: FontWeight.w700)),
               ),
           ],
