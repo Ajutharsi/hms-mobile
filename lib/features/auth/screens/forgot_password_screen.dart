@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/auth/viewmodels/forgot_password_view_model.dart';
 import 'package:hms_mobile/features/auth/widgets/auth_scaffold.dart';
 
@@ -56,14 +57,14 @@ class _ForgotPasswordForm extends StatelessWidget {
           const SizedBox(height: 20),
           const Text(
             'Reset your password',
-            style: TextStyle(fontSize: 28, fontWeight: FontWeight.w700, color: kInk, height: 1.15),
+            style: TextStyle(fontSize: 23, fontWeight: FontWeight.w800, color: kInk, height: 1.15),
           ),
           const SizedBox(height: 8),
           const Text(
             "Enter your account email and we'll send you a link to set a new password.",
             style: TextStyle(fontSize: 14.5, color: kMuted),
           ),
-          const SizedBox(height: 30),
+          const SizedBox(height: 24),
           if (viewModel.errorMessage != null) ...[
             authErrorBanner(viewModel.errorMessage!),
             const SizedBox(height: 20),
@@ -75,7 +76,7 @@ class _ForgotPasswordForm extends StatelessWidget {
             autofillHints: const [AutofillHints.email],
             onFieldSubmitted: (_) => viewModel.submit(),
             style: const TextStyle(color: kInk, fontSize: 15),
-            decoration: authFieldDecoration('Email', hint: 'you@example.com', icon: Icons.mail_outline_rounded),
+            decoration: careFieldDecoration('Email', hint: 'you@example.com', icon: Icons.mail_outline_rounded),
             validator: viewModel.validateEmail,
           ),
           const SizedBox(height: 26),
@@ -85,7 +86,7 @@ class _ForgotPasswordForm extends StatelessWidget {
             child: FilledButton(
               onPressed: viewModel.isLoading ? null : viewModel.submit,
               style: FilledButton.styleFrom(
-                backgroundColor: kTealDark,
+                backgroundColor: kCare,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               ),
               child: viewModel.isLoading
@@ -120,14 +121,14 @@ class _SentConfirmation extends StatelessWidget {
         Container(
           width: 56,
           height: 56,
-          decoration: BoxDecoration(color: kMint, borderRadius: BorderRadius.circular(16)),
+          decoration: BoxDecoration(color: kCareSoft, borderRadius: BorderRadius.circular(16)),
           alignment: Alignment.center,
-          child: const Icon(Icons.mark_email_read_outlined, color: kTeal, size: 28),
+          child: const Icon(Icons.mark_email_read_outlined, color: kCare, size: 28),
         ),
         const SizedBox(height: 24),
         const Text(
           'Check your email',
-          style: TextStyle(fontSize: 26, fontWeight: FontWeight.w700, color: kInk, height: 1.15),
+          style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800, color: kInk, height: 1.15),
         ),
         const SizedBox(height: 10),
         RichText(
@@ -142,19 +143,19 @@ class _SentConfirmation extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(height: 30),
+        const SizedBox(height: 24),
         SizedBox(
           width: double.infinity,
           height: 50,
           child: OutlinedButton(
             onPressed: () => Navigator.of(context).pop(),
             style: OutlinedButton.styleFrom(
-              side: const BorderSide(color: kTeal),
+              side: const BorderSide(color: kCare),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             ),
             child: const Text(
               'Back to sign in',
-              style: TextStyle(fontSize: 15.5, fontWeight: FontWeight.w600, color: kTeal),
+              style: TextStyle(fontSize: 15.5, fontWeight: FontWeight.w600, color: kCare),
             ),
           ),
         ),

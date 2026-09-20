@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_ui.dart';
+import 'package:hms_mobile/features/patient/models/doctor.dart';
 import 'package:hms_mobile/features/patient/viewmodels/book_appointment_view_model.dart';
 
 class BookAppointmentScreen extends StatelessWidget {
@@ -11,28 +13,13 @@ class BookAppointmentScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => BookAppointmentViewModel(),
-      child: const _BookAppointmentView(),
+      child: const CareTheme(child: _BookAppointmentView()),
     );
   }
 }
 
 class _BookAppointmentView extends StatelessWidget {
   const _BookAppointmentView();
-
-  Future<void> _pickDate(BuildContext context, BookAppointmentViewModel viewModel) async {
-    final now = DateTime.now();
-    final picked = await showDatePicker(
-      context: context,
-      initialDate: viewModel.selectedDate ?? now,
-      firstDate: now,
-      lastDate: now.add(const Duration(days: 60)),
-      builder: (context, child) => Theme(
-        data: Theme.of(context).copyWith(colorScheme: const ColorScheme.light(primary: kTeal)),
-        child: child!,
-      ),
-    );
-    if (picked != null) viewModel.selectDate(picked);
-  }
 
   Future<void> _submit(BuildContext context, BookAppointmentViewModel viewModel) async {
     final tokenNumber = await viewModel.submit();
@@ -41,7 +28,7 @@ class _BookAppointmentView extends StatelessWidget {
     Navigator.of(context).pop(true);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        backgroundColor: kTealDark,
+        backgroundColor: kCareDark,
         content: Text(tokenNumber > 0 ? 'Appointment booked — token #$tokenNumber.' : 'Appointment booked.'),
       ),
     );
@@ -50,204 +37,224 @@ class _BookAppointmentView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<BookAppointmentViewModel>();
+    final today = DateUtils.dateOnly(DateTime.now());
 
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        foregroundColor: kInk,
-        elevation: 0,
-        title: const Text('Book appointment', style: TextStyle(fontWeight: FontWeight.w700)),
-      ),
-      body: SafeArea(
-        child: viewModel.loadingDoctors
-            ? const Center(child: CircularProgressIndicator(color: kTeal))
-            : SingleChildScrollView(
-                padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (viewModel.errorMessage != null) ...[
-                      authErrorBanner(viewModel.errorMessage!),
-                      const SizedBox(height: 18),
-                    ],
-                    const Text('Doctor', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: kInk)),
-                    const SizedBox(height: 8),
-                    DropdownButtonFormField(
-                      initialValue: viewModel.selectedDoctor,
-                      isExpanded: true,
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: kFieldFill,
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
-                      ),
-                      hint: const Text('Choose a doctor'),
-                      items: viewModel.doctors
-                          .map((d) => DropdownMenuItem(value: d, child: Text(d.label, overflow: TextOverflow.ellipsis)))
-                          .toList(),
-                      onChanged: viewModel.selectDoctor,
+      appBar: carePageAppBar(context, 'Book Appointment'),
+      body: viewModel.loadingDoctors
+          ? const Center(child: CircularProgressIndicator(color: kCare))
+          : ListView(
+              padding: const EdgeInsets.fromLTRB(0, 18, 0, 24),
+              children: [
+                if (viewModel.errorMessage != null)
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
+                    child: authErrorBanner(viewModel.errorMessage!),
+                  ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: CareSectionTitle(title: 'Select Doctor'),
+                ),
+                const SizedBox(height: 12),
+                if (viewModel.doctors.isEmpty)
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    child: Text('No doctors available right now.', style: TextStyle(color: kMuted)),
+                  )
+                else
+                  SizedBox(
+                    height: 158,
+                    child: ListView.separated(
+                      scrollDirection: Axis.horizontal,
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+                      itemCount: viewModel.doctors.length,
+                      separatorBuilder: (_, __) => const SizedBox(width: 12),
+                      itemBuilder: (context, index) {
+                        final doctor = viewModel.doctors[index];
+                        return _DoctorCard(
+                          doctor: doctor,
+                          selected: viewModel.selectedDoctor?.id == doctor.id,
+                          onTap: () => viewModel.selectDoctor(doctor),
+                        );
+                      },
                     ),
-                    const SizedBox(height: 22),
-                    const Text('Date', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: kInk)),
-                    const SizedBox(height: 8),
-                    InkWell(
-                      onTap: () => _pickDate(context, viewModel),
-                      borderRadius: BorderRadius.circular(12),
-                      child: Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                        decoration: BoxDecoration(color: kFieldFill, borderRadius: BorderRadius.circular(12)),
-                        child: Row(
-                          children: [
-                            const Icon(Icons.calendar_today_outlined, size: 18, color: kMuted),
-                            const SizedBox(width: 10),
-                            Text(
-                              viewModel.selectedDate == null
-                                  ? 'Choose a date'
-                                  : BookAppointmentViewModel.formatDate(viewModel.selectedDate!),
-                              style: TextStyle(
-                                color: viewModel.selectedDate == null ? const Color(0xFFAEB8B6) : kInk,
-                                fontSize: 15,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                  ),
+                const SizedBox(height: 22),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: CareSectionTitle(title: 'Select Date'),
+                ),
+                const SizedBox(height: 12),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: CareCard(
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    child: CalendarDatePicker(
+                      initialDate: viewModel.selectedDate ?? today,
+                      firstDate: today,
+                      lastDate: today.add(const Duration(days: 60)),
+                      onDateChanged: viewModel.selectDate,
                     ),
-                    const SizedBox(height: 22),
-                    if (viewModel.selectedDoctor != null && viewModel.selectedDate != null) ...[
-                      const Text('Time', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: kInk)),
-                      const SizedBox(height: 8),
-                      if (viewModel.loadingSlots)
-                        const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 12),
-                          child: Center(child: CircularProgressIndicator(color: kTeal)),
-                        )
-                      else if (viewModel.slots.isEmpty)
-                        const Text('No slots available that day.', style: TextStyle(color: kMuted, fontSize: 13.5))
-                      else
-                        Wrap(
-                          spacing: 10,
-                          runSpacing: 10,
-                          children: viewModel.slots.map((slot) {
-                            final selected = viewModel.selectedTime == slot.time;
-                            return GestureDetector(
-                              onTap: slot.available ? () => viewModel.selectTime(slot.time) : null,
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                                decoration: BoxDecoration(
-                                  color: selected ? kTeal : (slot.available ? kFieldFill : const Color(0xFFF0F0F0)),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Text(
-                                  slot.time,
-                                  style: TextStyle(
-                                    fontSize: 13.5,
-                                    fontWeight: FontWeight.w600,
-                                    color: selected
-                                        ? Colors.white
-                                        : (slot.available ? kInk : const Color(0xFFBFC5C3)),
-                                    decoration: slot.available ? null : TextDecoration.lineThrough,
-                                  ),
-                                ),
-                              ),
-                            );
-                          }).toList(),
+                  ),
+                ),
+                const SizedBox(height: 22),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: CareSectionTitle(title: 'Select Time'),
+                ),
+                const SizedBox(height: 12),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: _SlotsSection(viewModel: viewModel),
+                ),
+                const SizedBox(height: 22),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: CareSectionTitle(title: 'Visit Type'),
+                ),
+                const SizedBox(height: 12),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    children: [
+                      for (final (value, label) in const [('op', 'Walk-in (OP)'), ('consult', 'Consult'), ('followup', 'Follow-up')]) ...[
+                        if (value != 'op') const SizedBox(width: 10),
+                        Expanded(
+                          child: CareChoicePill(
+                            label: label,
+                            selected: viewModel.visitType == value,
+                            onTap: () => viewModel.selectVisitType(value),
+                          ),
                         ),
-                      const SizedBox(height: 22),
-                    ],
-                    const Text('Visit type', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: kInk)),
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        _VisitTypeOption(label: 'Walk-in (OP)', value: 'op', selected: viewModel.visitType, onChanged: viewModel.selectVisitType),
-                        const SizedBox(width: 10),
-                        _VisitTypeOption(label: 'Consult', value: 'consult', selected: viewModel.visitType, onChanged: viewModel.selectVisitType),
-                        const SizedBox(width: 10),
-                        _VisitTypeOption(label: 'Follow-up', value: 'followup', selected: viewModel.visitType, onChanged: viewModel.selectVisitType),
                       ],
-                    ),
-                    const SizedBox(height: 22),
-                    const Text('Notes (optional)', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: kInk)),
-                    const SizedBox(height: 8),
-                    TextField(
-                      controller: viewModel.notesController,
-                      maxLines: 3,
-                      style: const TextStyle(color: kInk, fontSize: 14.5),
-                      decoration: InputDecoration(
-                        hintText: 'Anything the doctor should know beforehand',
-                        hintStyle: const TextStyle(color: Color(0xFFAEB8B6), fontSize: 14),
-                        filled: true,
-                        fillColor: kFieldFill,
-                        contentPadding: const EdgeInsets.all(14),
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
-                      ),
-                    ),
-                    const SizedBox(height: 30),
-                    SizedBox(
-                      width: double.infinity,
-                      height: 50,
-                      child: FilledButton(
-                        onPressed: viewModel.isBooking ? null : () => _submit(context, viewModel),
-                        style: FilledButton.styleFrom(
-                          backgroundColor: kTealDark,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                        ),
-                        child: viewModel.isBooking
-                            ? const SizedBox(
-                                height: 20,
-                                width: 20,
-                                child: CircularProgressIndicator(strokeWidth: 2.4, color: Colors.white),
-                              )
-                            : const Text('Confirm booking', style: TextStyle(fontSize: 15.5, fontWeight: FontWeight.w600)),
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 22),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: TextField(
+                    controller: viewModel.notesController,
+                    maxLines: 3,
+                    style: const TextStyle(color: kInk, fontSize: 14.5),
+                    decoration: careFieldDecoration('Notes (optional)', hint: 'Anything the doctor should know beforehand', icon: Icons.notes_rounded),
+                  ),
+                ),
+              ],
+            ),
+      bottomNavigationBar: viewModel.loadingDoctors
+          ? null
+          : SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 8, 20, 12),
+                child: CarePrimaryButton(
+                  label: 'Book Appointment',
+                  icon: Icons.check_circle_outline_rounded,
+                  loading: viewModel.isBooking,
+                  onPressed: () => _submit(context, viewModel),
                 ),
               ),
+            ),
+    );
+  }
+}
+
+class _DoctorCard extends StatelessWidget {
+  final Doctor doctor;
+  final bool selected;
+  final VoidCallback onTap;
+
+  const _DoctorCard({required this.doctor, required this.selected, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 160),
+        width: 124,
+        padding: const EdgeInsets.fromLTRB(10, 14, 10, 10),
+        decoration: BoxDecoration(
+          color: selected ? kCareSoft : Colors.white,
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(color: selected ? kCare : kCareBorder, width: selected ? 1.8 : 1),
+          boxShadow: kCareShadow,
+        ),
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Column(
+              children: [
+                CareAvatar(name: doctor.name, imageUrl: doctor.photoUrl, radius: 28),
+                const SizedBox(height: 10),
+                Text(
+                  doctor.name,
+                  maxLines: 2,
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700, color: kInk, height: 1.2),
+                ),
+                const SizedBox(height: 3),
+                Text(
+                  (doctor.specialization ?? '').isEmpty ? 'General' : doctor.specialization!,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontSize: 11, color: kMuted),
+                ),
+              ],
+            ),
+            if (selected)
+              const Positioned(
+                top: -6,
+                right: -2,
+                child: Icon(Icons.check_circle_rounded, color: kCare, size: 22),
+              ),
+          ],
+        ),
       ),
     );
   }
 }
 
-class _VisitTypeOption extends StatelessWidget {
-  final String label;
-  final String value;
-  final String selected;
-  final ValueChanged<String> onChanged;
-
-  const _VisitTypeOption({
-    required this.label,
-    required this.value,
-    required this.selected,
-    required this.onChanged,
-  });
+class _SlotsSection extends StatelessWidget {
+  final BookAppointmentViewModel viewModel;
+  const _SlotsSection({required this.viewModel});
 
   @override
   Widget build(BuildContext context) {
-    final isSelected = selected == value;
-    return Expanded(
-      child: GestureDetector(
-        onTap: () => onChanged(value),
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 11),
-          decoration: BoxDecoration(
-            color: isSelected ? kTeal : kFieldFill,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          alignment: Alignment.center,
-          child: Text(
-            label,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 12.5,
-              fontWeight: FontWeight.w600,
-              color: isSelected ? Colors.white : kMuted,
-            ),
-          ),
-        ),
-      ),
+    if (viewModel.selectedDoctor == null) {
+      return const Text('Choose a doctor above to see available times.', style: TextStyle(color: kMuted, fontSize: 13.5));
+    }
+    if (viewModel.loadingSlots) {
+      return const Padding(
+        padding: EdgeInsets.symmetric(vertical: 12),
+        child: Center(child: CircularProgressIndicator(color: kCare)),
+      );
+    }
+    if (viewModel.slots.isEmpty) {
+      return const Text('No slots available that day — try another date.', style: TextStyle(color: kMuted, fontSize: 13.5));
+    }
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final width = (constraints.maxWidth - 20) / 3;
+        return Wrap(
+          spacing: 10,
+          runSpacing: 10,
+          children: [
+            for (final slot in viewModel.slots)
+              SizedBox(
+                width: width,
+                child: CareChoicePill(
+                  label: slot.time,
+                  selected: viewModel.selectedTime == slot.time,
+                  enabled: slot.available,
+                  onTap: () => viewModel.selectTime(slot.time),
+                ),
+              ),
+          ],
+        );
+      },
     );
   }
 }

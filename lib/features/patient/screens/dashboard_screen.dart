@@ -2,450 +2,428 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/patient/models/appointment.dart';
+import 'package:hms_mobile/features/patient/models/patient_profile.dart';
 import 'package:hms_mobile/features/patient/viewmodels/home_view_model.dart';
 import 'package:hms_mobile/features/patient/viewmodels/profile_view_model.dart';
 
-/// The Dashboard tab — the patient's landing page. Mirrors the web's
-/// PatientDashboardController: a quick-actions row, the four "Overall
-/// Statistics" cards (appointments/today/lab orders/MRN), a recent-
-/// appointments preview and an account-info summary.
-class DashboardTabBody extends StatelessWidget {
-  final VoidCallback onBookAppointment;
-  final void Function(int tabIndex) onNavigateTab;
+/// Every place the patient app can navigate to — the home shell decides
+/// whether each one is a bottom-nav tab or a pushed page.
+enum PatientSection { home, appointments, book, prescriptions, lab, bills, profile }
 
-  const DashboardTabBody({
-    super.key,
-    required this.onBookAppointment,
-    required this.onNavigateTab,
-  });
+/// The Home tab — the patient's landing page. Mirrors the web's
+/// PatientDashboardController: greeting, the stats (appointments / today /
+/// lab orders), upcoming visits and shortcuts to every portal section.
+class DashboardTabBody extends StatelessWidget {
+  final void Function(PatientSection section) onOpen;
+
+  const DashboardTabBody({super.key, required this.onOpen});
 
   @override
   Widget build(BuildContext context) {
     final homeViewModel = context.watch<HomeViewModel>();
     final profileViewModel = context.watch<ProfileViewModel>();
     final profile = profileViewModel.profile;
+    final upcoming = homeViewModel.appointments.where((a) => a.isScheduled).toList()
+      ..sort((a, b) => '${a.date} ${a.time}'.compareTo('${b.date} ${b.time}'));
 
+    final topInset = MediaQuery.of(context).padding.top;
+
+    // The header scrolls away with the page, so a fixed teal strip keeps the
+    // status bar readable once content slides underneath it.
+    return Stack(
+      children: [
+        _buildScroll(context, homeViewModel, profileViewModel, profile, upcoming),
+        Positioned(top: 0, left: 0, right: 0, height: topInset, child: const ColoredBox(color: kCare)),
+      ],
+    );
+  }
+
+  Widget _buildScroll(
+    BuildContext context,
+    HomeViewModel homeViewModel,
+    ProfileViewModel profileViewModel,
+    PatientProfile? profile,
+    List<Appointment> upcoming,
+  ) {
     return RefreshIndicator(
-      color: kTeal,
+      color: kCare,
+      edgeOffset: 120,
       onRefresh: () => Future.wait([
         homeViewModel.loadAppointments(),
         profileViewModel.load(),
       ]),
       child: ListView(
         physics: const AlwaysScrollableScrollPhysics(),
-        padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
+        padding: EdgeInsets.zero,
         children: [
-          const Text('Quick actions', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: kMuted, letterSpacing: 0.3)),
-          const SizedBox(height: 10),
-          Row(
-            children: [
-              Expanded(
-                child: _QuickActionTile(
-                  icon: Icons.event_outlined,
-                  color: kTealDark,
-                  bg: kMint,
+          _HomeHeader(
+            name: profile?.name ?? homeViewModel.user.name,
+            mrn: profile?.mrn,
+            photoUrl: profile?.profilePhotoUrl ?? homeViewModel.user.profilePhotoUrl,
+            onAvatarTap: () => onOpen(PatientSection.profile),
+            onSearchTap: () => onOpen(PatientSection.book),
+            stats: _StatsStrip(
+              stats: [
+                _Stat(
+                  value: '${profile?.stats.totalAppointments ?? homeViewModel.appointments.length}',
                   label: 'Appointments',
-                  sublabel: 'Book a visit',
-                  onTap: onBookAppointment,
+                  icon: Icons.calendar_month_rounded,
+                  onTap: () => onOpen(PatientSection.appointments),
                 ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: _QuickActionTile(
-                  icon: Icons.biotech_outlined,
-                  color: kInfoFg,
-                  bg: kInfoBg,
-                  label: 'Lab Results',
-                  sublabel: 'Your results',
-                  onTap: () => onNavigateTab(3),
+                _Stat(
+                  value: '${profile?.stats.todayAppointments ?? 0}',
+                  label: 'Today',
+                  icon: Icons.today_rounded,
+                  onTap: () => onOpen(PatientSection.appointments),
                 ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: _QuickActionTile(
-                  icon: Icons.person_outline,
-                  color: kSuccessFg,
-                  bg: kSuccessBg,
-                  label: 'My Profile',
-                  sublabel: 'Account',
-                  onTap: () => onNavigateTab(5),
+                _Stat(
+                  value: '${profile?.stats.labOrders ?? 0}',
+                  label: 'Lab orders',
+                  icon: Icons.biotech_rounded,
+                  onTap: () => onOpen(PatientSection.lab),
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 24),
-          const Text('Overall statistics', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: kMuted, letterSpacing: 0.3)),
-          const SizedBox(height: 10),
-          GridView.count(
-            crossAxisCount: 2,
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            mainAxisSpacing: 10,
-            crossAxisSpacing: 10,
-            childAspectRatio: 1.5,
-            children: [
-              _StatCard(
-                icon: Icons.event_outlined,
-                color: kTealDark,
-                bg: kMint,
-                label: 'My Appointments',
-                value: '${profile?.stats.totalAppointments ?? homeViewModel.appointments.length}',
-                trend: 'Total booked',
-                onTap: () => onNavigateTab(1),
-              ),
-              _StatCard(
-                icon: Icons.access_time_rounded,
-                color: kWarningFg,
-                bg: kWarningBg,
-                label: "Today's Appts",
-                value: '${profile?.stats.todayAppointments ?? 0}',
-                trend: 'Today',
-                onTap: () => onNavigateTab(1),
-              ),
-              _StatCard(
-                icon: Icons.biotech_outlined,
-                color: kInfoFg,
-                bg: kInfoBg,
-                label: 'Lab Orders',
-                value: '${profile?.stats.labOrders ?? 0}',
-                trend: 'Total',
-                onTap: () => onNavigateTab(3),
-              ),
-              _StatCard(
-                icon: Icons.badge_outlined,
-                color: kSuccessFg,
-                bg: kSuccessBg,
-                label: 'MRN',
-                value: profile?.mrn ?? '—',
-                trend: 'Patient ID',
-                valueFontSize: 15,
-                onTap: () => onNavigateTab(5),
-              ),
-            ],
-          ),
-          const SizedBox(height: 24),
-          _SectionCard(
-            title: 'My Appointments',
-            actionLabel: 'View All',
-            onAction: () => onNavigateTab(1),
-            child: _RecentAppointments(
-              appointments: homeViewModel.appointments.take(3).toList(),
-              isLoading: homeViewModel.isLoading && homeViewModel.appointments.isEmpty,
+              ],
             ),
           ),
-          const SizedBox(height: 16),
-          _SectionCard(
-            title: 'My Information',
-            actionLabel: 'Edit',
-            onAction: () => onNavigateTab(5),
-            child: _InfoSummary(
-              name: profile?.name,
-              email: profile?.email,
-              phone: profile?.phone,
-              mrn: profile?.mrn,
-              isLoading: profileViewModel.isLoading && profile == null,
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 22, 20, 12),
+            child: CareSectionTitle(
+              title: 'Upcoming Appointments',
+              actionLabel: 'See all',
+              onAction: () => onOpen(PatientSection.appointments),
             ),
           ),
+          _UpcomingStrip(
+            appointments: upcoming,
+            isLoading: homeViewModel.isLoading && homeViewModel.appointments.isEmpty,
+            onBook: () => onOpen(PatientSection.book),
+            onOpenAppointments: () => onOpen(PatientSection.appointments),
+          ),
+          const Padding(
+            padding: EdgeInsets.fromLTRB(20, 24, 20, 12),
+            child: CareSectionTitle(title: 'Options'),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              children: [
+                CareOptionTile(
+                  icon: Icons.event_available_rounded,
+                  title: 'Book Appointment',
+                  subtitle: 'Pick a doctor, date and time',
+                  onTap: () => onOpen(PatientSection.book),
+                ),
+                const SizedBox(height: 10),
+                CareOptionTile(
+                  icon: Icons.medication_rounded,
+                  title: 'My Prescriptions',
+                  subtitle: 'Medicines your doctor prescribed',
+                  onTap: () => onOpen(PatientSection.prescriptions),
+                ),
+                const SizedBox(height: 10),
+                CareOptionTile(
+                  icon: Icons.biotech_rounded,
+                  title: 'Lab Results',
+                  subtitle: 'Reports and test values',
+                  onTap: () => onOpen(PatientSection.lab),
+                ),
+                const SizedBox(height: 10),
+                CareOptionTile(
+                  icon: Icons.receipt_long_rounded,
+                  title: 'Bills & Payments',
+                  subtitle: 'Invoices and balances',
+                  onTap: () => onOpen(PatientSection.bills),
+                ),
+                const SizedBox(height: 10),
+                CareOptionTile(
+                  icon: Icons.person_rounded,
+                  title: 'My Profile',
+                  subtitle: 'Account details and password',
+                  onTap: () => onOpen(PatientSection.profile),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 28),
         ],
       ),
     );
   }
 }
 
-class _QuickActionTile extends StatelessWidget {
-  final IconData icon;
-  final Color color;
-  final Color bg;
-  final String label;
-  final String sublabel;
-  final VoidCallback onTap;
+class _HomeHeader extends StatelessWidget {
+  final String name;
+  final String? mrn;
+  final String? photoUrl;
+  final VoidCallback onAvatarTap;
+  final VoidCallback onSearchTap;
+  final Widget stats;
 
-  const _QuickActionTile({
-    required this.icon,
-    required this.color,
-    required this.bg,
-    required this.label,
-    required this.sublabel,
-    required this.onTap,
+  const _HomeHeader({
+    required this.name,
+    required this.mrn,
+    required this.photoUrl,
+    required this.onAvatarTap,
+    required this.onSearchTap,
+    required this.stats,
   });
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 10),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: kFieldFill),
-        ),
-        child: Column(
-          children: [
-            Container(
-              width: 38,
-              height: 38,
-              decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(11)),
-              child: Icon(icon, color: color, size: 19),
-            ),
-            const SizedBox(height: 8),
-            Text(label, textAlign: TextAlign.center, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: kInk)),
-            const SizedBox(height: 1),
-            Text(sublabel, textAlign: TextAlign.center, style: const TextStyle(fontSize: 10.5, color: kMuted)),
-          ],
-        ),
-      ),
-    );
-  }
-}
+    final topInset = MediaQuery.of(context).padding.top;
+    const statsOverlap = 46.0;
 
-class _StatCard extends StatelessWidget {
-  final IconData icon;
-  final Color color;
-  final Color bg;
-  final String label;
-  final String value;
-  final String trend;
-  final double? valueFontSize;
-  final VoidCallback onTap;
-
-  const _StatCard({
-    required this.icon,
-    required this.color,
-    required this.bg,
-    required this.label,
-    required this.value,
-    required this.trend,
-    required this.onTap,
-    this.valueFontSize,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(18),
-      child: Container(
-        padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: kFieldFill),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+    return Stack(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: statsOverlap),
+          child: CareHeaderBackground(
+            radius: 32,
+            padding: EdgeInsets.fromLTRB(20, topInset + 16, 20, 24 + 62),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  width: 30,
-                  height: 30,
-                  decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(9)),
-                  child: Icon(icon, color: color, size: 16),
+                Row(
+                  children: [
+                    GestureDetector(
+                      onTap: onAvatarTap,
+                      child: CareAvatar(name: name, imageUrl: photoUrl, radius: 25, ring: true),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Hello 👋', style: TextStyle(color: Colors.white.withValues(alpha: 0.85), fontSize: 13)),
+                          const SizedBox(height: 2),
+                          Text(
+                            name,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(color: Colors.white, fontSize: 19, fontWeight: FontWeight.w800),
+                          ),
+                          if ((mrn ?? '').isNotEmpty)
+                            Text('MRN: $mrn', style: TextStyle(color: Colors.white.withValues(alpha: 0.8), fontSize: 11.5)),
+                        ],
+                      ),
+                    ),
+                    _HeaderIconButton(icon: Icons.menu_rounded, onTap: () => Scaffold.of(context).openDrawer()),
+                  ],
                 ),
-                const Spacer(),
-                Text(trend, style: const TextStyle(fontSize: 10, color: kMuted)),
+                const SizedBox(height: 20),
+                GestureDetector(
+                  onTap: onSearchTap,
+                  child: Container(
+                    height: 48,
+                    padding: const EdgeInsets.symmetric(horizontal: 14),
+                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14)),
+                    child: const Row(
+                      children: [
+                        Icon(Icons.search_rounded, color: kCare),
+                        SizedBox(width: 10),
+                        Expanded(
+                          child: Text('Find a doctor & book a visit', style: TextStyle(color: Color(0xFF9AA6A4), fontSize: 14)),
+                        ),
+                        Icon(Icons.tune_rounded, color: kCare, size: 20),
+                      ],
+                    ),
+                  ),
+                ),
               ],
             ),
-            const Spacer(),
-            Text(
-              value,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(fontSize: valueFontSize ?? 20, fontWeight: FontWeight.w800, color: kInk),
-            ),
-            Text(label, style: const TextStyle(fontSize: 11, color: kMuted, fontWeight: FontWeight.w600)),
-          ],
+          ),
         ),
+        Positioned(left: 20, right: 20, bottom: 0, child: stats),
+      ],
+    );
+  }
+}
+
+class _HeaderIconButton extends StatelessWidget {
+  final IconData icon;
+  final VoidCallback onTap;
+  const _HeaderIconButton({required this.icon, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.white.withValues(alpha: 0.18),
+      shape: const CircleBorder(),
+      child: InkWell(
+        customBorder: const CircleBorder(),
+        onTap: onTap,
+        child: Padding(padding: const EdgeInsets.all(10), child: Icon(icon, color: Colors.white, size: 22)),
       ),
     );
   }
 }
 
-class _SectionCard extends StatelessWidget {
-  final String title;
-  final String actionLabel;
-  final VoidCallback onAction;
-  final Widget child;
+class _Stat {
+  final String value;
+  final String label;
+  final IconData icon;
+  final VoidCallback onTap;
+  const _Stat({required this.value, required this.label, required this.icon, required this.onTap});
+}
 
-  const _SectionCard({
-    required this.title,
-    required this.actionLabel,
-    required this.onAction,
-    required this.child,
-  });
+class _StatsStrip extends StatelessWidget {
+  final List<_Stat> stats;
+  const _StatsStrip({required this.stats});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      height: 92,
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: kFieldFill),
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: const [BoxShadow(color: Color(0x1A0E6B61), blurRadius: 24, offset: Offset(0, 10))],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+      child: Row(
         children: [
-          Row(
-            children: [
-              Expanded(child: Text(title, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: kInk))),
-              InkWell(
-                onTap: onAction,
-                child: Text(actionLabel, style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700, color: kTealDark)),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          child,
-        ],
-      ),
-    );
-  }
-}
-
-class _RecentAppointments extends StatelessWidget {
-  final List<Appointment> appointments;
-  final bool isLoading;
-
-  const _RecentAppointments({required this.appointments, required this.isLoading});
-
-  @override
-  Widget build(BuildContext context) {
-    if (isLoading) {
-      return const Padding(
-        padding: EdgeInsets.symmetric(vertical: 12),
-        child: Center(child: CircularProgressIndicator(strokeWidth: 2, color: kTeal)),
-      );
-    }
-
-    if (appointments.isEmpty) {
-      return const Text('No appointments yet.', style: TextStyle(color: kMuted, fontSize: 13));
-    }
-
-    return Column(
-      children: [
-        for (final appointment in appointments) ...[
-          Row(
-            children: [
-              Expanded(
+          for (var i = 0; i < stats.length; i++) ...[
+            if (i > 0) const VerticalDivider(width: 1, indent: 20, endIndent: 20, color: kCareBorder),
+            Expanded(
+              child: InkWell(
+                onTap: stats[i].onTap,
+                borderRadius: BorderRadius.circular(20),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      appointment.doctorName ?? 'Doctor',
-                      style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w700, color: kInk),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(stats[i].icon, size: 16, color: kCare),
+                        const SizedBox(width: 5),
+                        Text(stats[i].value, style: const TextStyle(fontSize: 21, fontWeight: FontWeight.w800, color: kInk)),
+                      ],
                     ),
-                    const SizedBox(height: 2),
-                    Text('${appointment.date} · ${appointment.time}', style: const TextStyle(fontSize: 12, color: kMuted)),
+                    const SizedBox(height: 3),
+                    Text(stats[i].label, style: const TextStyle(fontSize: 11.5, color: kMuted, fontWeight: FontWeight.w600)),
                   ],
                 ),
               ),
-              _StatusChip(status: appointment.status),
-            ],
-          ),
-          if (appointment != appointments.last) const Padding(
-            padding: EdgeInsets.symmetric(vertical: 10),
-            child: Divider(height: 1, color: kFieldFill),
-          ),
+            ),
+          ],
         ],
-      ],
+      ),
     );
   }
 }
 
-class _StatusChip extends StatelessWidget {
-  final String status;
-  const _StatusChip({required this.status});
-
-  @override
-  Widget build(BuildContext context) {
-    final (Color bg, Color fg, String label) = switch (status) {
-      'scheduled' => (kMint, kTealDark, 'Scheduled'),
-      'completed' => (kSuccessBg, kSuccessFg, 'Completed'),
-      'cancelled' => (kFieldFill, kMuted, 'Cancelled'),
-      'no_show' => (const Color(0xFFFBEAE8), const Color(0xFFB3261E), 'No-show'),
-      _ => (kFieldFill, kMuted, status),
-    };
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
-      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(8)),
-      child: Text(label, style: TextStyle(color: fg, fontSize: 11, fontWeight: FontWeight.w700)),
-    );
-  }
-}
-
-class _InfoSummary extends StatelessWidget {
-  final String? name;
-  final String? email;
-  final String? phone;
-  final String? mrn;
+class _UpcomingStrip extends StatelessWidget {
+  final List<Appointment> appointments;
   final bool isLoading;
+  final VoidCallback onBook;
+  final VoidCallback onOpenAppointments;
 
-  const _InfoSummary({
-    required this.name,
-    required this.email,
-    required this.phone,
-    required this.mrn,
+  const _UpcomingStrip({
+    required this.appointments,
     required this.isLoading,
+    required this.onBook,
+    required this.onOpenAppointments,
   });
 
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return const Padding(
-        padding: EdgeInsets.symmetric(vertical: 12),
-        child: Center(child: CircularProgressIndicator(strokeWidth: 2, color: kTeal)),
+      return const SizedBox(height: 120, child: Center(child: CircularProgressIndicator(color: kCare)));
+    }
+
+    if (appointments.isEmpty) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: CareCard(
+          child: Row(
+            children: [
+              const CareIconBox(icon: Icons.event_busy_rounded, filled: false, size: 48),
+              const SizedBox(width: 14),
+              const Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('No upcoming visits', style: TextStyle(fontSize: 14.5, fontWeight: FontWeight.w700, color: kInk)),
+                    SizedBox(height: 2),
+                    Text('Book one in a few taps.', style: TextStyle(fontSize: 12.5, color: kMuted)),
+                  ],
+                ),
+              ),
+              FilledButton(
+                onPressed: onBook,
+                style: FilledButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  minimumSize: const Size(0, 38),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                ),
+                child: const Text('Book', style: TextStyle(fontWeight: FontWeight.w700)),
+              ),
+            ],
+          ),
+        ),
       );
     }
 
-    return Column(
-      children: [
-        _InfoRow(icon: Icons.person_outline, label: 'Name', value: name ?? '—'),
-        _InfoRow(icon: Icons.email_outlined, label: 'Email', value: email ?? '—'),
-        _InfoRow(icon: Icons.phone_outlined, label: 'Phone', value: (phone == null || phone!.isEmpty) ? '—' : phone!),
-        _InfoRow(icon: Icons.badge_outlined, label: 'MRN', value: mrn ?? '—', showDivider: false),
-      ],
+    return SizedBox(
+      height: 224,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+        itemCount: appointments.length,
+        separatorBuilder: (_, __) => const SizedBox(width: 12),
+        itemBuilder: (context, index) => _UpcomingCard(appointment: appointments[index], onTap: onOpenAppointments),
+      ),
     );
   }
 }
 
-class _InfoRow extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final String value;
-  final bool showDivider;
-
-  const _InfoRow({required this.icon, required this.label, required this.value, this.showDivider = true});
+class _UpcomingCard extends StatelessWidget {
+  final Appointment appointment;
+  final VoidCallback onTap;
+  const _UpcomingCard({required this.appointment, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
+    final doctor = appointment.doctorName ?? 'Doctor';
+    return SizedBox(
+      width: 172,
+      child: CareCard(
+        onTap: onTap,
+        padding: const EdgeInsets.fromLTRB(14, 16, 14, 14),
+        child: Column(
           children: [
-            Icon(icon, size: 16, color: kMuted),
-            const SizedBox(width: 10),
-            Text(label, style: const TextStyle(fontSize: 12.5, color: kMuted)),
+            CareAvatar(name: doctor, radius: 28),
+            const SizedBox(height: 10),
+            Text(
+              doctor,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: kInk),
+            ),
+            const SizedBox(height: 2),
+            Text(
+              (appointment.doctorSpecialization ?? '').isEmpty ? 'General' : appointment.doctorSpecialization!,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(fontSize: 12, color: kMuted),
+            ),
+            const SizedBox(height: 8),
+            CareChip(label: appointment.date, bg: kCarePinkBg, fg: kCarePinkFg),
             const Spacer(),
-            Flexible(
+            Container(
+              width: double.infinity,
+              height: 32,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(color: kCare, borderRadius: BorderRadius.circular(10)),
               child: Text(
-                value,
-                textAlign: TextAlign.right,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: kInk),
+                appointment.time.isEmpty ? 'View' : appointment.time,
+                style: const TextStyle(color: Colors.white, fontSize: 12.5, fontWeight: FontWeight.w700),
               ),
             ),
           ],
         ),
-        if (showDivider) const Padding(
-          padding: EdgeInsets.symmetric(vertical: 10),
-          child: Divider(height: 1, color: kFieldFill),
-        ),
-      ],
+      ),
     );
   }
 }

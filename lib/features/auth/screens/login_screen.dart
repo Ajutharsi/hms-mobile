@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/navigation/role_home.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/auth/viewmodels/login_view_model.dart';
 import 'package:hms_mobile/features/auth/widgets/auth_scaffold.dart';
 import 'package:hms_mobile/features/auth/screens/forgot_password_screen.dart';
@@ -45,7 +46,7 @@ class _LoginViewState extends State<_LoginView> {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(message), backgroundColor: kTealDark),
+          SnackBar(content: Text(message), backgroundColor: kCare),
         );
       });
     }
@@ -75,14 +76,14 @@ class _LoginViewState extends State<_LoginView> {
             const SizedBox(height: 28),
             const Text(
               'Welcome back',
-              style: TextStyle(fontSize: 30, fontWeight: FontWeight.w700, color: kInk, height: 1.15),
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.w800, color: kInk, height: 1.15),
             ),
             const SizedBox(height: 8),
             const Text(
               "Let's get you signed in.",
               style: TextStyle(fontSize: 15, color: kMuted),
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: 24),
             if (viewModel.errorMessage != null) ...[
               authErrorBanner(viewModel.errorMessage!),
               const SizedBox(height: 20),
@@ -93,7 +94,7 @@ class _LoginViewState extends State<_LoginView> {
               textInputAction: TextInputAction.next,
               autofillHints: const [AutofillHints.email],
               style: const TextStyle(color: kInk, fontSize: 15),
-              decoration: authFieldDecoration('Email', hint: 'you@example.com', icon: Icons.mail_outline_rounded),
+              decoration: careFieldDecoration('Email', hint: 'you@example.com', icon: Icons.mail_outline_rounded),
               validator: viewModel.validateEmail,
             ),
             const SizedBox(height: 18),
@@ -104,7 +105,7 @@ class _LoginViewState extends State<_LoginView> {
               autofillHints: const [AutofillHints.password],
               onFieldSubmitted: (_) => _handleSubmit(viewModel),
               style: const TextStyle(color: kInk, fontSize: 15),
-              decoration: authFieldDecoration('Password', hint: '••••••••', icon: Icons.lock_outline_rounded).copyWith(
+              decoration: careFieldDecoration('Password', hint: '••••••••', icon: Icons.lock_outline_rounded).copyWith(
                 suffixIcon: IconButton(
                   splashRadius: 20,
                   icon: Icon(
@@ -128,7 +129,7 @@ class _LoginViewState extends State<_LoginView> {
                 },
                 child: const Text(
                   'Forgot password?',
-                  style: TextStyle(color: kTeal, fontSize: 13, fontWeight: FontWeight.w600),
+                  style: TextStyle(color: kCare, fontSize: 13, fontWeight: FontWeight.w600),
                 ),
               ),
             ),
@@ -139,8 +140,8 @@ class _LoginViewState extends State<_LoginView> {
               child: FilledButton(
                 onPressed: viewModel.isLoading ? null : () => _handleSubmit(viewModel),
                 style: FilledButton.styleFrom(
-                  backgroundColor: kTealDark,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  backgroundColor: kCare,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                 ),
                 child: viewModel.isLoading
                     ? const SizedBox(
@@ -163,7 +164,7 @@ class _LoginViewState extends State<_LoginView> {
                     const TextSpan(text: 'New patient? '),
                     TextSpan(
                       text: 'Create an account',
-                      style: const TextStyle(color: kTeal, fontWeight: FontWeight.w600),
+                      style: const TextStyle(color: kCare, fontWeight: FontWeight.w600),
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
                           Navigator.of(context).push(

@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:hms_mobile/features/patient/models/invoice.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_ui.dart';
+import 'package:hms_mobile/features/patient/models/invoice.dart';
 import 'package:hms_mobile/features/patient/viewmodels/invoices_view_model.dart';
 
-/// The Invoices tab body — embedded inside [HomeScreen]'s bottom-nav shell.
-/// There's no payment gateway wired up anywhere in this app, so this is
-/// read-only billing information plus a "request help" button that lets a
-/// patient ask the billing team to follow up — it deliberately does not
-/// pretend to be a "Pay now" button.
+/// The bills list body — shown on the "Bills & Payments" page the home
+/// shell pushes. There's no payment gateway wired up anywhere in this app,
+/// so this is read-only billing information plus a "request help" button
+/// that lets a patient ask the billing team to follow up — it deliberately
+/// does not pretend to be a "Pay now" button.
 class InvoicesTabBody extends StatelessWidget {
   const InvoicesTabBody({super.key});
 
@@ -17,6 +18,7 @@ class InvoicesTabBody extends StatelessWidget {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(22)),
         title: const Text('Request billing help?'),
         content: Text(
           'This sends invoice ${invoice.invoiceNo} to our billing team, who will contact you about the ₹${invoice.balance.toStringAsFixed(2)} balance. '
@@ -26,7 +28,7 @@ class InvoicesTabBody extends StatelessWidget {
           TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('Cancel')),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Send request', style: TextStyle(color: kTealDark, fontWeight: FontWeight.w600)),
+            child: const Text('Send request', style: TextStyle(color: kCareDark, fontWeight: FontWeight.w700)),
           ),
         ],
       ),
@@ -37,7 +39,7 @@ class InvoicesTabBody extends StatelessWidget {
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        backgroundColor: error == null ? kTealDark : null,
+        backgroundColor: error == null ? kCareDark : null,
         content: Text(error ?? 'Request sent — our billing team will contact you shortly.'),
       ),
     );
@@ -48,63 +50,87 @@ class InvoicesTabBody extends StatelessWidget {
     final viewModel = context.watch<InvoicesViewModel>();
 
     return RefreshIndicator(
-      color: kTeal,
+      color: kCare,
       onRefresh: viewModel.loadInvoices,
       child: _buildBody(context, viewModel),
     );
   }
 
   Widget _buildBody(BuildContext context, InvoicesViewModel viewModel) {
-    if (viewModel.isLoading && viewModel.invoices.isEmpty) {
-      return const Center(child: CircularProgressIndicator(color: kTeal));
-    }
-
-    if (viewModel.errorMessage != null && viewModel.invoices.isEmpty) {
-      return ListView(
-        padding: const EdgeInsets.all(24),
-        children: [
-          const SizedBox(height: 80),
-          const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
-          const SizedBox(height: 12),
-          Text(viewModel.errorMessage!, textAlign: TextAlign.center, style: const TextStyle(color: kMuted)),
-        ],
-      );
-    }
-
+    if (viewModel.isLoading && viewModel.invoices.isEmpty) return const CareStateView.loading();
+    if (viewModel.errorMessage != null && viewModel.invoices.isEmpty) return CareStateView.error(viewModel.errorMessage!);
     if (viewModel.invoices.isEmpty) {
-      return ListView(
-        padding: const EdgeInsets.all(24),
-        children: const [
-          SizedBox(height: 80),
-          Icon(Icons.receipt_long_outlined, color: kMuted, size: 40),
-          SizedBox(height: 12),
-          Text(
-            'No invoices yet',
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: kInk),
-          ),
-          SizedBox(height: 6),
-          Text(
-            'Your billing history will show up here.',
-            textAlign: TextAlign.center,
-            style: TextStyle(color: kMuted, fontSize: 13.5),
-          ),
-        ],
+      return const CareStateView(
+        icon: Icons.receipt_long_rounded,
+        title: 'No invoices yet',
+        message: 'Your billing history will show up here.',
       );
     }
 
-    return ListView.separated(
-      padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
-      itemCount: viewModel.invoices.length,
-      separatorBuilder: (_, __) => const SizedBox(height: 12),
-      itemBuilder: (context, index) {
-        final invoice = viewModel.invoices[index];
-        return _InvoiceCard(
-          invoice: invoice,
-          isRequestingHelp: viewModel.requestingHelpFor.contains(invoice.id),
-          onRequestHelp: () => _confirmRequestHelp(context, viewModel, invoice),
-        );
-      },
+    final outstanding = viewModel.invoices.fold<double>(0, (sum, invoice) => sum + invoice.balance);
+    final unpaidCount = viewModel.invoices.where((invoice) => invoice.hasBalance).length;
+
+    return ListView(
+      physics: const AlwaysScrollableScrollPhysics(),
+      padding: const EdgeInsets.fromLTRB(20, 18, 20, 24),
+      children: [
+        _BalanceSummary(outstanding: outstanding, unpaidCount: unpaidCount, total: viewModel.invoices.length),
+        const SizedBox(height: 18),
+        const CareSectionTitle(title: 'All Invoices'),
+        const SizedBox(height: 12),
+        for (final invoice in viewModel.invoices) ...[
+          _InvoiceCard(
+            invoice: invoice,
+            isRequestingHelp: viewModel.requestingHelpFor.contains(invoice.id),
+            onRequestHelp: () => _confirmRequestHelp(context, viewModel, invoice),
+          ),
+          const SizedBox(height: 12),
+        ],
+      ],
+    );
+  }
+}
+
+class _BalanceSummary extends StatelessWidget {
+  final double outstanding;
+  final int unpaidCount;
+  final int total;
+
+  const _BalanceSummary({required this.outstanding, required this.unpaidCount, required this.total});
+
+  @override
+  Widget build(BuildContext context) {
+    return CareHeaderBackground(
+      radius: 22,
+      padding: const EdgeInsets.all(18),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Outstanding balance', style: TextStyle(color: Colors.white.withValues(alpha: 0.85), fontSize: 13)),
+                const SizedBox(height: 4),
+                Text(
+                  '₹${outstanding.toStringAsFixed(2)}',
+                  style: const TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.w800),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  unpaidCount == 0 ? 'All $total invoices are paid' : '$unpaidCount of $total invoices pending',
+                  style: TextStyle(color: Colors.white.withValues(alpha: 0.85), fontSize: 12.5),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            width: 52,
+            height: 52,
+            decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(16)),
+            child: const Icon(Icons.account_balance_wallet_rounded, color: Colors.white, size: 28),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -118,86 +144,82 @@ class _InvoiceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(color: kFieldFill, borderRadius: BorderRadius.circular(14)),
+    return CareCard(
+      padding: EdgeInsets.zero,
       child: Theme(
         data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
         child: ExpansionTile(
-          tilePadding: const EdgeInsets.symmetric(horizontal: 16),
-          childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 14),
+          tilePadding: const EdgeInsets.fromLTRB(14, 6, 12, 6),
+          childrenPadding: const EdgeInsets.fromLTRB(14, 0, 14, 14),
           shape: const RoundedRectangleBorder(side: BorderSide.none),
-          iconColor: kTeal,
+          iconColor: kCare,
           collapsedIconColor: kMuted,
+          leading: const CareIconBox(icon: Icons.receipt_long_rounded, size: 44),
           title: Row(
             children: [
               Expanded(
-                child: Text(
-                  invoice.invoiceNo,
-                  style: const TextStyle(fontSize: 15.5, fontWeight: FontWeight.w700, color: kInk),
-                ),
+                child: Text(invoice.invoiceNo, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: kInk)),
               ),
-              _StatusChip(status: invoice.status),
+              CareChip.status(invoice.status),
             ],
           ),
           subtitle: Padding(
             padding: const EdgeInsets.only(top: 6),
             child: Row(
               children: [
-                const Icon(Icons.calendar_today_outlined, size: 13, color: kMuted),
-                const SizedBox(width: 5),
+                const Icon(Icons.calendar_today_rounded, size: 12, color: kMuted),
+                const SizedBox(width: 4),
                 Text(invoice.date, style: const TextStyle(fontSize: 12.5, color: kMuted)),
                 const Spacer(),
                 Text(
-                  invoice.hasBalance ? 'Balance ₹${invoice.balance.toStringAsFixed(2)}' : 'Fully paid',
+                  invoice.hasBalance ? 'Due ₹${invoice.balance.toStringAsFixed(2)}' : 'Paid',
                   style: TextStyle(
                     fontSize: 13,
-                    fontWeight: FontWeight.w700,
-                    color: invoice.hasBalance ? const Color(0xFFB3261E) : const Color(0xFF2F7D5B),
+                    fontWeight: FontWeight.w800,
+                    color: invoice.hasBalance ? kCarePinkFg : kSuccessFg,
                   ),
                 ),
               ],
             ),
           ),
           children: [
-            _AmountRow(label: 'Total', value: invoice.total),
-            _AmountRow(label: 'Paid', value: invoice.paidAmount),
-            _AmountRow(label: 'Balance', value: invoice.balance, emphasize: true),
-            const SizedBox(height: 10),
-            ...invoice.items.map((item) => Padding(
-                  padding: const EdgeInsets.only(bottom: 6),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          '${item.itemName}${item.quantity > 1 ? ' × ${item.quantity}' : ''}',
-                          style: const TextStyle(fontSize: 13, color: kInk),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(14)),
+              child: Column(
+                children: [
+                  ...invoice.items.map((item) => Padding(
+                        padding: const EdgeInsets.only(bottom: 6),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                '${item.itemName}${item.quantity > 1 ? ' × ${item.quantity}' : ''}',
+                                style: const TextStyle(fontSize: 13, color: kInk),
+                              ),
+                            ),
+                            Text('₹${item.total.toStringAsFixed(2)}', style: const TextStyle(fontSize: 13, color: kMuted)),
+                          ],
                         ),
-                      ),
-                      Text('₹${item.total.toStringAsFixed(2)}', style: const TextStyle(fontSize: 13, color: kMuted)),
-                    ],
-                  ),
-                )),
+                      )),
+                  const Divider(height: 16, color: kCareBorder),
+                  _AmountRow(label: 'Total', value: invoice.total),
+                  _AmountRow(label: 'Paid', value: invoice.paidAmount),
+                  _AmountRow(label: 'Balance', value: invoice.balance, emphasize: true),
+                ],
+              ),
+            ),
             if (invoice.hasBalance) ...[
-              const SizedBox(height: 10),
+              const SizedBox(height: 12),
               SizedBox(
                 width: double.infinity,
-                height: 42,
-                child: OutlinedButton(
+                height: 44,
+                child: OutlinedButton.icon(
                   onPressed: isRequestingHelp ? null : onRequestHelp,
-                  style: OutlinedButton.styleFrom(
-                    side: const BorderSide(color: kTeal),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                  ),
-                  child: isRequestingHelp
-                      ? const SizedBox(
-                          height: 16,
-                          width: 16,
-                          child: CircularProgressIndicator(strokeWidth: 2, color: kTeal),
-                        )
-                      : const Text(
-                          'Request payment help',
-                          style: TextStyle(color: kTealDark, fontSize: 13.5, fontWeight: FontWeight.w600),
-                        ),
+                  icon: isRequestingHelp
+                      ? const SizedBox(height: 16, width: 16, child: CircularProgressIndicator(strokeWidth: 2, color: kCare))
+                      : const Icon(Icons.support_agent_rounded, size: 19),
+                  label: const Text('Request payment help', style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w700)),
                 ),
               ),
             ],
@@ -221,38 +243,13 @@ class _AmountRow extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: const TextStyle(fontSize: 13, color: kMuted)),
+          Text(label, style: TextStyle(fontSize: 13, color: emphasize ? kInk : kMuted, fontWeight: emphasize ? FontWeight.w700 : FontWeight.w400)),
           Text(
             '₹${value.toStringAsFixed(2)}',
-            style: TextStyle(
-              fontSize: 13,
-              fontWeight: emphasize ? FontWeight.w700 : FontWeight.w500,
-              color: kInk,
-            ),
+            style: TextStyle(fontSize: emphasize ? 14 : 13, fontWeight: emphasize ? FontWeight.w800 : FontWeight.w500, color: emphasize ? kCareDark : kInk),
           ),
         ],
       ),
-    );
-  }
-}
-
-class _StatusChip extends StatelessWidget {
-  final String status;
-  const _StatusChip({required this.status});
-
-  @override
-  Widget build(BuildContext context) {
-    final (Color bg, Color fg, String label) = switch (status) {
-      'paid' => (const Color(0xFFE6F4E6), const Color(0xFF2F7D5B), 'Paid'),
-      'partial' => (const Color(0xFFFBF1DE), const Color(0xFF8A5A00), 'Partial'),
-      'unpaid' => (const Color(0xFFFBEAE8), const Color(0xFFB3261E), 'Unpaid'),
-      _ => (kFieldFill, kMuted, status),
-    };
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(8)),
-      child: Text(label, style: TextStyle(color: fg, fontSize: 11.5, fontWeight: FontWeight.w700)),
     );
   }
 }

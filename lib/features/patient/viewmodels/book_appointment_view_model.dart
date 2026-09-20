@@ -26,7 +26,8 @@ class BookAppointmentViewModel extends ChangeNotifier {
   List<TimeSlot> slots = [];
 
   Doctor? selectedDoctor;
-  DateTime? selectedDate;
+  // Defaults to today so the inline calendar has a selected day from the start.
+  DateTime? selectedDate = DateUtils.dateOnly(DateTime.now());
   String? selectedTime;
   String visitType = 'op';
 
@@ -48,11 +49,13 @@ class BookAppointmentViewModel extends ChangeNotifier {
 
   void selectDoctor(Doctor? doctor) {
     selectedDoctor = doctor;
+    notifyListeners();
     _loadSlots();
   }
 
   void selectDate(DateTime date) {
     selectedDate = date;
+    notifyListeners();
     _loadSlots();
   }
 

@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/models/app_user.dart';
-import 'package:hms_mobile/features/patient/models/appointment.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_ui.dart';
+import 'package:hms_mobile/features/patient/models/appointment.dart';
 import 'package:hms_mobile/features/patient/viewmodels/home_view_model.dart';
 import 'package:hms_mobile/features/patient/viewmodels/invoices_view_model.dart';
 import 'package:hms_mobile/features/patient/viewmodels/lab_results_view_model.dart';
@@ -17,8 +18,10 @@ import 'package:hms_mobile/features/auth/screens/login_screen.dart';
 import 'package:hms_mobile/features/patient/screens/prescriptions_screen.dart';
 import 'package:hms_mobile/features/patient/screens/profile_screen.dart';
 
-/// The patient's home shell — a bottom-nav container holding every Patient
-/// Portal section: Appointments, Prescriptions, Lab Results, Billing.
+/// The patient's home shell — bottom nav (Home / Appointments / Lab /
+/// Profile) around a center "Book" button, plus a drawer that mirrors the
+/// web patient portal's sidebar. Prescriptions and Bills open as their own
+/// pages from the home options list and the drawer.
 class HomeScreen extends StatelessWidget {
   final AppUser user;
   const HomeScreen({super.key, required this.user});
@@ -33,7 +36,7 @@ class HomeScreen extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => InvoicesViewModel()),
         ChangeNotifierProvider(create: (_) => ProfileViewModel()),
       ],
-      child: const _HomeShell(),
+      child: const CareTheme(child: _HomeShell()),
     );
   }
 }
@@ -46,18 +49,57 @@ class _HomeShell extends StatefulWidget {
 }
 
 class _HomeShellState extends State<_HomeShell> {
+  static const _tabs = [PatientSection.home, PatientSection.appointments, PatientSection.lab, PatientSection.profile];
+  static const _tabTitles = ['Home', 'My Appointments', 'Lab Results', 'My Profile'];
+
   int _tabIndex = 0;
 
-  Future<void> _bookAppointment(BuildContext context, HomeViewModel viewModel) async {
+  Future<void> _bookAppointment() async {
+    final viewModel = context.read<HomeViewModel>();
     final booked = await Navigator.of(context).push<bool>(
       MaterialPageRoute(builder: (_) => const BookAppointmentScreen()),
     );
-    if (booked == true) viewModel.loadAppointments();
+    if (booked == true) {
+      viewModel.loadAppointments();
+      if (mounted) context.read<ProfileViewModel>().load();
+    }
   }
 
-  Future<void> _logout(BuildContext context, HomeViewModel viewModel) async {
+  // Generic so the provider is registered under the concrete view-model
+  // type the pushed body looks up, not as a bare ChangeNotifier.
+  void _pushSection<T extends ChangeNotifier>(String title, T viewModel, Widget body) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => ChangeNotifierProvider<T>.value(
+          value: viewModel,
+          child: CareTheme(
+            child: Scaffold(
+              appBar: carePageAppBar(context, title),
+              body: body,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _open(PatientSection section) {
+    switch (section) {
+      case PatientSection.book:
+        _bookAppointment();
+      case PatientSection.prescriptions:
+        _pushSection('My Prescriptions', context.read<PrescriptionsViewModel>(), const PrescriptionsTabBody());
+      case PatientSection.bills:
+        _pushSection('Bills & Payments', context.read<InvoicesViewModel>(), const InvoicesTabBody());
+      default:
+        setState(() => _tabIndex = _tabs.indexOf(section));
+    }
+  }
+
+  Future<void> _logout() async {
+    final viewModel = context.read<HomeViewModel>();
     await viewModel.logout();
-    if (!context.mounted) return;
+    if (!mounted) return;
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(builder: (_) => const LoginScreen()),
     );
@@ -66,211 +108,136 @@ class _HomeShellState extends State<_HomeShell> {
   @override
   Widget build(BuildContext context) {
     final homeViewModel = context.watch<HomeViewModel>();
-    final firstName = homeViewModel.user.firstName;
 
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        foregroundColor: kInk,
-        elevation: 0,
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('Hi there,', style: TextStyle(fontSize: 12.5, color: kMuted, fontWeight: FontWeight.w400)),
-            Text(firstName, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: kInk)),
-          ],
-        ),
-        actions: [
-          IconButton(
-            tooltip: 'Log out',
-            icon: homeViewModel.isLoggingOut
-                ? const SizedBox(
-                    height: 18,
-                    width: 18,
-                    child: CircularProgressIndicator(strokeWidth: 2, color: kTeal),
-                  )
-                : const Icon(Icons.logout_rounded, color: kMuted),
-            onPressed: homeViewModel.isLoggingOut ? null : () => _logout(context, homeViewModel),
+      backgroundColor: kCareBg,
+      drawer: _PatientDrawer(
+        user: homeViewModel.user,
+        photoUrl: context.watch<ProfileViewModel>().profile?.profilePhotoUrl,
+        isLoggingOut: homeViewModel.isLoggingOut,
+        onOpen: _open,
+        onLogout: _logout,
+      ),
+      body: Column(
+        children: [
+          if (_tabIndex != 0) CarePageHeader(title: _tabTitles[_tabIndex], showBack: false),
+          Expanded(
+            child: IndexedStack(
+              index: _tabIndex,
+              children: [
+                DashboardTabBody(onOpen: _open),
+                const _AppointmentsTab(),
+                const LabResultsTabBody(),
+                const ProfileTabBody(),
+              ],
+            ),
           ),
         ],
       ),
-      drawer: _PatientDrawer(
-        onNavigateTab: (index) => setState(() => _tabIndex = index),
-        onBookAppointment: () => _bookAppointment(context, homeViewModel),
-      ),
-      floatingActionButton: _tabIndex == 1
-          ? FloatingActionButton.extended(
-              onPressed: () => _bookAppointment(context, homeViewModel),
-              backgroundColor: kTealDark,
-              foregroundColor: Colors.white,
-              icon: const Icon(Icons.add, color: Colors.white),
-              label: const Text('Book appointment', style: TextStyle(color: Colors.white)),
-            )
-          : null,
-      body: SafeArea(
-        child: IndexedStack(
-          index: _tabIndex,
-          children: [
-            DashboardTabBody(
-              onBookAppointment: () => _bookAppointment(context, homeViewModel),
-              onNavigateTab: (index) => setState(() => _tabIndex = index),
-            ),
-            const _AppointmentsTab(),
-            const PrescriptionsTabBody(),
-            const LabResultsTabBody(),
-            const InvoicesTabBody(),
-            const ProfileTabBody(),
-          ],
-        ),
-      ),
-      bottomNavigationBar: NavigationBar(
+      bottomNavigationBar: CareBottomNav(
         selectedIndex: _tabIndex,
-        onDestinationSelected: (index) => setState(() => _tabIndex = index),
-        indicatorColor: kMint,
-        labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
-        destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.dashboard_outlined, color: kMuted),
-            selectedIcon: Icon(Icons.dashboard, color: kTealDark),
-            label: 'Dashboard',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.event_outlined, color: kMuted),
-            selectedIcon: Icon(Icons.event, color: kTealDark),
-            label: 'Appointments',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.medication_outlined, color: kMuted),
-            selectedIcon: Icon(Icons.medication, color: kTealDark),
-            label: 'Prescriptions',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.biotech_outlined, color: kMuted),
-            selectedIcon: Icon(Icons.biotech, color: kTealDark),
-            label: 'Lab Results',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.receipt_long_outlined, color: kMuted),
-            selectedIcon: Icon(Icons.receipt_long, color: kTealDark),
-            label: 'Billing',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.person_outline, color: kMuted),
-            selectedIcon: Icon(Icons.person, color: kTealDark),
-            label: 'Profile',
-          ),
+        onSelected: (i) => setState(() => _tabIndex = i),
+        centerIcon: Icons.add_rounded,
+        onCenterTap: _bookAppointment,
+        items: const [
+          CareNavItem(icon: Icons.home_outlined, activeIcon: Icons.home_rounded, label: 'Home'),
+          CareNavItem(icon: Icons.calendar_month_outlined, activeIcon: Icons.calendar_month_rounded, label: 'Visits'),
+          CareNavItem(icon: Icons.biotech_outlined, activeIcon: Icons.biotech_rounded, label: 'Lab'),
+          CareNavItem(icon: Icons.person_outline_rounded, activeIcon: Icons.person_rounded, label: 'Profile'),
         ],
       ),
     );
   }
 }
 
-/// Mirrors the web patient portal's persistent sidebar (MAIN / PATIENT
-/// PORTAL groups) as a drawer — mobile keeps the bottom nav for the most
-/// common taps too, this just matches the web's navigation structure.
+/// Mirrors the web patient portal's sidebar (MAIN / PATIENT PORTAL).
 class _PatientDrawer extends StatelessWidget {
-  final void Function(int) onNavigateTab;
-  final VoidCallback onBookAppointment;
-  const _PatientDrawer({required this.onNavigateTab, required this.onBookAppointment});
+  final AppUser user;
+  final String? photoUrl;
+  final bool isLoggingOut;
+  final void Function(PatientSection) onOpen;
+  final VoidCallback onLogout;
+
+  const _PatientDrawer({
+    required this.user,
+    required this.photoUrl,
+    required this.isLoggingOut,
+    required this.onOpen,
+    required this.onLogout,
+  });
 
   @override
   Widget build(BuildContext context) {
+    void go(PatientSection section) {
+      Navigator.of(context).pop();
+      onOpen(section);
+    }
+
+    final topInset = MediaQuery.of(context).padding.top;
+
     return Drawer(
-      child: SafeArea(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            Container(
-              padding: const EdgeInsets.fromLTRB(20, 24, 20, 16),
-              child: Row(
-                children: [
-                  Container(
-                    width: 34,
-                    height: 34,
-                    decoration: BoxDecoration(color: kMint, borderRadius: BorderRadius.circular(9)),
-                    child: const Icon(Icons.add_rounded, color: kTealDark),
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.horizontal(right: Radius.circular(28))),
+      child: Column(
+        children: [
+          CareHeaderBackground(
+            radius: 0,
+            padding: EdgeInsets.fromLTRB(22, topInset + 24, 22, 22),
+            child: Row(
+              children: [
+                CareAvatar(name: user.name, imageUrl: photoUrl ?? user.profilePhotoUrl, radius: 30, ring: true),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        user.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w700),
+                      ),
+                      const SizedBox(height: 3),
+                      Text(
+                        user.email,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(color: Colors.white.withValues(alpha: 0.85), fontSize: 12.5),
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 10),
-                  const Text('HMS', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800, color: kInk)),
-                ],
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: ListView(
+              padding: const EdgeInsets.fromLTRB(12, 14, 12, 12),
+              children: [
+                _DrawerTile(icon: Icons.home_rounded, label: 'Home', onTap: () => go(PatientSection.home)),
+                _DrawerTile(icon: Icons.calendar_month_rounded, label: 'My Appointments', onTap: () => go(PatientSection.appointments)),
+                _DrawerTile(icon: Icons.event_available_rounded, label: 'Book Appointment', onTap: () => go(PatientSection.book)),
+                _DrawerTile(icon: Icons.medication_rounded, label: 'My Prescriptions', onTap: () => go(PatientSection.prescriptions)),
+                _DrawerTile(icon: Icons.biotech_rounded, label: 'My Lab Results', onTap: () => go(PatientSection.lab)),
+                _DrawerTile(icon: Icons.receipt_long_rounded, label: 'My Bills', onTap: () => go(PatientSection.bills)),
+                _DrawerTile(icon: Icons.person_rounded, label: 'My Profile', onTap: () => go(PatientSection.profile)),
+              ],
+            ),
+          ),
+          SafeArea(
+            top: false,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
+              child: CarePrimaryButton(
+                label: 'Log out',
+                icon: Icons.logout_rounded,
+                loading: isLoggingOut,
+                onPressed: onLogout,
               ),
             ),
-            const _DrawerGroupLabel('MAIN'),
-            _DrawerTile(
-              icon: Icons.dashboard_outlined,
-              label: 'Dashboard',
-              onTap: () {
-                onNavigateTab(0);
-                Navigator.of(context).pop();
-              },
-            ),
-            const _DrawerGroupLabel('PATIENT PORTAL'),
-            _DrawerTile(
-              icon: Icons.event_outlined,
-              label: 'My Appointments',
-              onTap: () {
-                onNavigateTab(1);
-                Navigator.of(context).pop();
-              },
-            ),
-            _DrawerTile(
-              icon: Icons.event_available_outlined,
-              label: 'Book Appointment',
-              onTap: () {
-                Navigator.of(context).pop();
-                onBookAppointment();
-              },
-            ),
-            _DrawerTile(
-              icon: Icons.medication_outlined,
-              label: 'My Prescriptions',
-              onTap: () {
-                onNavigateTab(2);
-                Navigator.of(context).pop();
-              },
-            ),
-            _DrawerTile(
-              icon: Icons.receipt_long_outlined,
-              label: 'My Bills',
-              onTap: () {
-                onNavigateTab(4);
-                Navigator.of(context).pop();
-              },
-            ),
-            _DrawerTile(
-              icon: Icons.biotech_outlined,
-              label: 'My Lab Results',
-              onTap: () {
-                onNavigateTab(3);
-                Navigator.of(context).pop();
-              },
-            ),
-            _DrawerTile(
-              icon: Icons.person_outline,
-              label: 'My Profile',
-              onTap: () {
-                onNavigateTab(5);
-                Navigator.of(context).pop();
-              },
-            ),
-            const SizedBox(height: 16),
-          ],
-        ),
+          ),
+        ],
       ),
-    );
-  }
-}
-
-class _DrawerGroupLabel extends StatelessWidget {
-  final String label;
-  const _DrawerGroupLabel(this.label);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 16, 20, 6),
-      child: Text(label, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: kMuted, letterSpacing: 0.6)),
     );
   }
 }
@@ -284,40 +251,48 @@ class _DrawerTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      dense: true,
-      visualDensity: const VisualDensity(vertical: -2),
-      leading: Icon(icon, size: 20, color: kMuted),
-      title: Text(label, style: const TextStyle(fontSize: 14, color: kInk, fontWeight: FontWeight.w500)),
       onTap: onTap,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+      leading: CareIconBox(icon: icon, size: 36, filled: false),
+      title: Text(label, style: const TextStyle(fontSize: 14.5, color: kInk, fontWeight: FontWeight.w600)),
+      trailing: const Icon(Icons.chevron_right_rounded, color: Color(0xFFB5C2C0)),
     );
   }
 }
 
-class _AppointmentsTab extends StatelessWidget {
+class _AppointmentsTab extends StatefulWidget {
   const _AppointmentsTab();
 
-  Future<void> _confirmCancel(BuildContext context, HomeViewModel viewModel, Appointment appointment) async {
+  @override
+  State<_AppointmentsTab> createState() => _AppointmentsTabState();
+}
+
+class _AppointmentsTabState extends State<_AppointmentsTab> {
+  bool _showUpcoming = true;
+
+  Future<void> _confirmCancel(HomeViewModel viewModel, Appointment appointment) async {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(22)),
         title: const Text('Cancel appointment?'),
-        content: Text('Cancel your appointment with ${appointment.doctorName} on ${appointment.date}?'),
+        content: Text('Cancel your appointment with ${appointment.doctorName ?? 'the doctor'} on ${appointment.date}?'),
         actions: [
           TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('No, keep it')),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Yes, cancel', style: TextStyle(color: Color(0xFFB3261E))),
+            child: const Text('Yes, cancel', style: TextStyle(color: kCarePinkFg, fontWeight: FontWeight.w700)),
           ),
         ],
       ),
     );
-    if (confirmed != true || !context.mounted) return;
+    if (confirmed != true || !mounted) return;
 
     final error = await viewModel.cancelAppointment(appointment.id);
-    if (!context.mounted) return;
+    if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        backgroundColor: error == null ? kTealDark : null,
+        backgroundColor: error == null ? kCareDark : null,
         content: Text(error ?? 'Appointment cancelled.'),
       ),
     );
@@ -326,156 +301,155 @@ class _AppointmentsTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<HomeViewModel>();
+    // Soonest visit first; the API returns newest-booked first.
+    final upcoming = viewModel.appointments.where((a) => a.isScheduled).toList()
+      ..sort((a, b) => '${a.date} ${a.time}'.compareTo('${b.date} ${b.time}'));
+    final history = viewModel.appointments.where((a) => !a.isScheduled).toList();
+    final shown = _showUpcoming ? upcoming : history;
 
-    return RefreshIndicator(
-      color: kTeal,
-      onRefresh: viewModel.loadAppointments,
-      child: _buildBody(context, viewModel),
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 4),
+          child: Container(
+            padding: const EdgeInsets.all(4),
+            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14), border: Border.all(color: kCareBorder)),
+            child: Row(
+              children: [
+                _SegmentButton(label: 'Upcoming (${upcoming.length})', selected: _showUpcoming, onTap: () => setState(() => _showUpcoming = true)),
+                _SegmentButton(label: 'History (${history.length})', selected: !_showUpcoming, onTap: () => setState(() => _showUpcoming = false)),
+              ],
+            ),
+          ),
+        ),
+        Expanded(
+          child: RefreshIndicator(
+            color: kCare,
+            onRefresh: viewModel.loadAppointments,
+            child: _buildList(viewModel, shown),
+          ),
+        ),
+      ],
     );
   }
 
-  Widget _buildBody(BuildContext context, HomeViewModel viewModel) {
-    if (viewModel.isLoading && viewModel.appointments.isEmpty) {
-      return const Center(child: CircularProgressIndicator(color: kTeal));
-    }
-
-    if (viewModel.loadError != null && viewModel.appointments.isEmpty) {
-      return ListView(
-        padding: const EdgeInsets.all(24),
-        children: [
-          const SizedBox(height: 80),
-          const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
-          const SizedBox(height: 12),
-          Text(viewModel.loadError!, textAlign: TextAlign.center, style: const TextStyle(color: kMuted)),
-        ],
-      );
-    }
-
-    if (viewModel.appointments.isEmpty) {
-      return ListView(
-        padding: const EdgeInsets.all(24),
-        children: const [
-          SizedBox(height: 80),
-          Icon(Icons.event_available_outlined, color: kMuted, size: 40),
-          SizedBox(height: 12),
-          Text(
-            'No appointments yet',
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: kInk),
-          ),
-          SizedBox(height: 6),
-          Text(
-            'Tap "Book appointment" to schedule your first visit.',
-            textAlign: TextAlign.center,
-            style: TextStyle(color: kMuted, fontSize: 13.5),
-          ),
-        ],
+  Widget _buildList(HomeViewModel viewModel, List<Appointment> shown) {
+    if (viewModel.isLoading && viewModel.appointments.isEmpty) return const CareStateView.loading();
+    if (viewModel.loadError != null && viewModel.appointments.isEmpty) return CareStateView.error(viewModel.loadError!);
+    if (shown.isEmpty) {
+      return CareStateView(
+        icon: Icons.event_available_rounded,
+        title: _showUpcoming ? 'No upcoming appointments' : 'No past appointments',
+        message: _showUpcoming ? 'Tap the + button below to book a visit.' : 'Completed and cancelled visits will show up here.',
       );
     }
 
     return ListView.separated(
-      padding: const EdgeInsets.fromLTRB(20, 8, 20, 100),
-      itemCount: viewModel.appointments.length,
+      physics: const AlwaysScrollableScrollPhysics(),
+      padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+      itemCount: shown.length,
       separatorBuilder: (_, __) => const SizedBox(height: 12),
       itemBuilder: (context, index) {
-        final appointment = viewModel.appointments[index];
-        return _AppointmentCard(
+        final appointment = shown[index];
+        return AppointmentCard(
           appointment: appointment,
-          onCancel: () => _confirmCancel(context, viewModel, appointment),
+          onCancel: appointment.isScheduled ? () => _confirmCancel(viewModel, appointment) : null,
         );
       },
     );
   }
 }
 
-class _AppointmentCard extends StatelessWidget {
-  final Appointment appointment;
-  final VoidCallback onCancel;
-
-  const _AppointmentCard({required this.appointment, required this.onCancel});
+class _SegmentButton extends StatelessWidget {
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+  const _SegmentButton({required this.label, required this.selected, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: kFieldFill,
-        borderRadius: BorderRadius.circular(14),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  appointment.doctorName ?? 'Doctor',
-                  style: const TextStyle(fontSize: 15.5, fontWeight: FontWeight.w700, color: kInk),
-                ),
-              ),
-              _StatusChip(status: appointment.status),
-            ],
+    return Expanded(
+      child: GestureDetector(
+        onTap: onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 180),
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          decoration: BoxDecoration(color: selected ? kCare : Colors.transparent, borderRadius: BorderRadius.circular(11)),
+          alignment: Alignment.center,
+          child: Text(
+            label,
+            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: selected ? Colors.white : kMuted),
           ),
-          if ((appointment.doctorSpecialization ?? '').isNotEmpty) ...[
-            const SizedBox(height: 2),
-            Text(
-              appointment.doctorSpecialization!,
-              style: const TextStyle(fontSize: 12.5, color: kMuted),
-            ),
-          ],
-          const SizedBox(height: 10),
-          Row(
-            children: [
-              const Icon(Icons.calendar_today_outlined, size: 14, color: kMuted),
-              const SizedBox(width: 6),
-              Text(appointment.date, style: const TextStyle(fontSize: 13, color: kMuted)),
-              const SizedBox(width: 16),
-              const Icon(Icons.access_time_rounded, size: 14, color: kMuted),
-              const SizedBox(width: 6),
-              Text(appointment.time, style: const TextStyle(fontSize: 13, color: kMuted)),
-              if (appointment.tokenNumber != null) ...[
-                const SizedBox(width: 16),
-                const Icon(Icons.confirmation_number_outlined, size: 14, color: kMuted),
-                const SizedBox(width: 6),
-                Text('Token #${appointment.tokenNumber}', style: const TextStyle(fontSize: 13, color: kMuted)),
-              ],
-            ],
-          ),
-          if (appointment.isScheduled) ...[
-            const SizedBox(height: 12),
-            Align(
-              alignment: Alignment.centerRight,
-              child: TextButton(
-                onPressed: onCancel,
-                style: TextButton.styleFrom(padding: EdgeInsets.zero, minimumSize: const Size(0, 32)),
-                child: const Text('Cancel', style: TextStyle(color: Color(0xFFB3261E), fontSize: 13, fontWeight: FontWeight.w600)),
-              ),
-            ),
-          ],
-        ],
+        ),
       ),
     );
   }
 }
 
-class _StatusChip extends StatelessWidget {
-  final String status;
-  const _StatusChip({required this.status});
+/// Doctor avatar + name, date/time chips and status — shared by the
+/// appointments list here and the home screen's "See all" target.
+class AppointmentCard extends StatelessWidget {
+  final Appointment appointment;
+  final VoidCallback? onCancel;
+
+  const AppointmentCard({super.key, required this.appointment, this.onCancel});
 
   @override
   Widget build(BuildContext context) {
-    final (Color bg, Color fg, String label) = switch (status) {
-      'scheduled' => (const Color(0xFFE3F1EE), kTealDark, 'Scheduled'),
-      'completed' => (const Color(0xFFE6F4E6), const Color(0xFF2F7D5B), 'Completed'),
-      'cancelled' => (const Color(0xFFF1E9E9), const Color(0xFF8A6B6B), 'Cancelled'),
-      'no_show' => (const Color(0xFFFBEAE8), const Color(0xFFB3261E), 'No-show'),
-      _ => (kFieldFill, kMuted, status),
-    };
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(8)),
-      child: Text(label, style: TextStyle(color: fg, fontSize: 11.5, fontWeight: FontWeight.w700)),
+    final doctor = appointment.doctorName ?? 'Doctor';
+    return CareCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              CareAvatar(name: doctor, radius: 26),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(doctor, style: const TextStyle(fontSize: 15.5, fontWeight: FontWeight.w700, color: kInk)),
+                    if ((appointment.doctorSpecialization ?? '').isNotEmpty) ...[
+                      const SizedBox(height: 2),
+                      Text(appointment.doctorSpecialization!, style: const TextStyle(fontSize: 12.5, color: kMuted)),
+                    ],
+                  ],
+                ),
+              ),
+              CareChip.status(appointment.status),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Wrap(
+            spacing: 8,
+            runSpacing: 6,
+            children: [
+              CareChip(label: appointment.date, bg: kCarePinkBg, fg: kCarePinkFg, icon: Icons.calendar_today_rounded),
+              if (appointment.time.isNotEmpty)
+                CareChip(label: appointment.time, bg: kCareSoft, fg: kCareDark, icon: Icons.access_time_rounded),
+              if (appointment.tokenNumber != null)
+                CareChip(label: 'Token #${appointment.tokenNumber}', bg: kInfoBg, fg: kInfoFg, icon: Icons.confirmation_number_outlined),
+            ],
+          ),
+          if (onCancel != null) ...[
+            const SizedBox(height: 12),
+            SizedBox(
+              width: double.infinity,
+              height: 40,
+              child: OutlinedButton(
+                onPressed: onCancel,
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: kCarePinkFg,
+                  side: const BorderSide(color: kCarePinkBg, width: 1.4),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                ),
+                child: const Text('Cancel appointment', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700)),
+              ),
+            ),
+          ],
+        ],
+      ),
     );
   }
 }

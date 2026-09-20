@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/auth/viewmodels/register_view_model.dart';
 import 'package:hms_mobile/features/auth/widgets/auth_scaffold.dart';
 import 'package:hms_mobile/features/auth/screens/login_screen.dart';
@@ -53,14 +54,14 @@ class _RegisterViewState extends State<_RegisterView> {
             const SizedBox(height: 28),
             const Text(
               'Create your account',
-              style: TextStyle(fontSize: 28, fontWeight: FontWeight.w700, color: kInk, height: 1.15),
+              style: TextStyle(fontSize: 23, fontWeight: FontWeight.w800, color: kInk, height: 1.15),
             ),
             const SizedBox(height: 8),
             const Text(
               'Register as a patient to book appointments and view your records.',
               style: TextStyle(fontSize: 14.5, color: kMuted),
             ),
-            const SizedBox(height: 30),
+            const SizedBox(height: 24),
             if (viewModel.errorMessage != null) ...[
               authErrorBanner(viewModel.errorMessage!),
               const SizedBox(height: 20),
@@ -70,7 +71,7 @@ class _RegisterViewState extends State<_RegisterView> {
               textInputAction: TextInputAction.next,
               autofillHints: const [AutofillHints.name],
               style: const TextStyle(color: kInk, fontSize: 15),
-              decoration: authFieldDecoration('Full name', hint: 'e.g. Priya Sharma', icon: Icons.person_outline_rounded),
+              decoration: careFieldDecoration('Full name', hint: 'e.g. Priya Sharma', icon: Icons.person_outline_rounded),
               validator: viewModel.validateName,
             ),
             const SizedBox(height: 16),
@@ -80,7 +81,7 @@ class _RegisterViewState extends State<_RegisterView> {
               textInputAction: TextInputAction.next,
               autofillHints: const [AutofillHints.email],
               style: const TextStyle(color: kInk, fontSize: 15),
-              decoration: authFieldDecoration('Email', hint: 'you@example.com', icon: Icons.mail_outline_rounded),
+              decoration: careFieldDecoration('Email', hint: 'you@example.com', icon: Icons.mail_outline_rounded),
               validator: viewModel.validateEmail,
             ),
             const SizedBox(height: 16),
@@ -90,7 +91,7 @@ class _RegisterViewState extends State<_RegisterView> {
               textInputAction: TextInputAction.next,
               autofillHints: const [AutofillHints.telephoneNumber],
               style: const TextStyle(color: kInk, fontSize: 15),
-              decoration: authFieldDecoration('Phone (optional)', hint: '98765 43210', icon: Icons.call_outlined),
+              decoration: careFieldDecoration('Phone (optional)', hint: '98765 43210', icon: Icons.call_outlined),
             ),
             const SizedBox(height: 18),
             const Text('Gender', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: kInk)),
@@ -111,7 +112,7 @@ class _RegisterViewState extends State<_RegisterView> {
               textInputAction: TextInputAction.next,
               autofillHints: const [AutofillHints.newPassword],
               style: const TextStyle(color: kInk, fontSize: 15),
-              decoration: authFieldDecoration('Password', hint: 'At least 8 characters', icon: Icons.lock_outline_rounded).copyWith(
+              decoration: careFieldDecoration('Password', hint: 'At least 8 characters', icon: Icons.lock_outline_rounded).copyWith(
                 suffixIcon: IconButton(
                   splashRadius: 20,
                   icon: Icon(
@@ -131,7 +132,7 @@ class _RegisterViewState extends State<_RegisterView> {
               textInputAction: TextInputAction.done,
               onFieldSubmitted: (_) => _handleSubmit(viewModel),
               style: const TextStyle(color: kInk, fontSize: 15),
-              decoration: authFieldDecoration('Confirm password', hint: 'Re-enter your password', icon: Icons.lock_outline_rounded)
+              decoration: careFieldDecoration('Confirm password', hint: 'Re-enter your password', icon: Icons.lock_outline_rounded)
                   .copyWith(
                 suffixIcon: IconButton(
                   splashRadius: 20,
@@ -152,8 +153,8 @@ class _RegisterViewState extends State<_RegisterView> {
               child: FilledButton(
                 onPressed: viewModel.isLoading ? null : () => _handleSubmit(viewModel),
                 style: FilledButton.styleFrom(
-                  backgroundColor: kTealDark,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  backgroundColor: kCare,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                 ),
                 child: viewModel.isLoading
                     ? const SizedBox(
@@ -173,7 +174,7 @@ class _RegisterViewState extends State<_RegisterView> {
                     const TextSpan(text: 'Already have an account? '),
                     TextSpan(
                       text: 'Sign in',
-                      style: const TextStyle(color: kTeal, fontWeight: FontWeight.w600),
+                      style: const TextStyle(color: kCare, fontWeight: FontWeight.w600),
                       recognizer: TapGestureRecognizer()..onTap = () => Navigator.of(context).pop(),
                     ),
                   ],
@@ -210,9 +211,9 @@ class _GenderOption extends StatelessWidget {
           duration: const Duration(milliseconds: 150),
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
-            color: isSelected ? kTeal : kFieldFill,
+            color: isSelected ? kCare : kFieldFill,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: isSelected ? kTeal : Colors.transparent),
+            border: Border.all(color: isSelected ? kCare : Colors.transparent),
           ),
           alignment: Alignment.center,
           child: Text(
