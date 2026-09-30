@@ -5,6 +5,7 @@ import 'package:hms_mobile/core/services/api_service.dart';
 import 'package:hms_mobile/core/services/auth_storage.dart';
 import 'package:hms_mobile/core/services/receptionist_api_service.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/receptionist/models/insurance_claim.dart';
 import 'package:hms_mobile/features/receptionist/models/reception_patient.dart';
 import 'package:hms_mobile/features/receptionist/screens/insurance_claim_detail_screen.dart';
@@ -15,7 +16,7 @@ String titleCase(String s) => s.split('_').map((w) => w.isEmpty ? w : '${w[0].to
 (Color, Color) claimStatusColors(String status) {
   if (status == 'approved' || status == 'partially_approved' || status == 'settled') return (kSuccessFg, kSuccessBg);
   if (status == 'rejected' || status == 'pre_auth_rejected') return (kDangerFg, kDangerBg);
-  if (status == 'draft') return (kMuted, kFieldFill);
+  if (status == 'draft') return (kMuted, kCareBg);
   return (kInfoFg, kInfoBg);
 }
 
@@ -24,6 +25,7 @@ class InsuranceClaimsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return ChangeNotifierProvider(
       create: (_) => InsuranceClaimsViewModel(),
       child: const _InsuranceClaimsView(),
@@ -41,25 +43,26 @@ class _InsuranceClaimsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final viewModel = context.watch<InsuranceClaimsViewModel>();
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('Insurance Claims', style: TextStyle(fontWeight: FontWeight.w700))),
+    return CareTheme(child: Scaffold(
+      backgroundColor: kCareBg,
+      appBar: carePageAppBar(context, 'Insurance Claims'),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _newClaim(context, viewModel),
-        backgroundColor: kTealDark,
+        backgroundColor: kCareDark,
         foregroundColor: Colors.white,
         icon: const Icon(Icons.add, color: Colors.white),
         label: const Text('New claim', style: TextStyle(color: Colors.white)),
       ),
-      body: RefreshIndicator(color: kTeal, onRefresh: viewModel.load, child: _buildBody(context, viewModel)),
-    );
+      body: RefreshIndicator(color: kCare, onRefresh: viewModel.load, child: _buildBody(context, viewModel)),
+    ));
   }
 
   Widget _buildBody(BuildContext context, InsuranceClaimsViewModel viewModel) {
     if (viewModel.isLoading && viewModel.claims.isEmpty) {
-      return const Center(child: CircularProgressIndicator(color: kTeal));
+      return Center(child: CircularProgressIndicator(color: kCare));
     }
     if (viewModel.loadError != null && viewModel.claims.isEmpty) {
       return ListView(padding: const EdgeInsets.all(24), children: [
@@ -84,7 +87,7 @@ class _InsuranceClaimsView extends StatelessWidget {
             crossAxisSpacing: 10,
             childAspectRatio: 2.2,
             children: [
-              _StatTile(label: 'Total Claims', value: '${stats.total}', color: kTealDark, bg: kMint),
+              _StatTile(label: 'Total Claims', value: '${stats.total}', color: kCareDark, bg: kCareSoft),
               _StatTile(label: 'Pending', value: '${stats.pending}', color: kWarningFg, bg: kWarningBg),
               _StatTile(label: 'Approved', value: '${stats.approved}', color: kSuccessFg, bg: kSuccessBg),
               _StatTile(label: 'Rejected', value: '${stats.rejected}', color: kDangerFg, bg: kDangerBg),
@@ -118,6 +121,7 @@ class _StatTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(14)),
@@ -139,6 +143,7 @@ class _ClaimCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final (fg, bg) = claimStatusColors(claim.status);
 
     return InkWell(
@@ -146,7 +151,7 @@ class _ClaimCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(16),
       child: Container(
         padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kFieldFill)),
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kCareBorder)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -166,7 +171,7 @@ class _ClaimCard extends StatelessWidget {
             Row(
               children: [
                 Expanded(child: Text(claim.insuranceCompany, style: const TextStyle(fontSize: 12.5, color: kInk, fontWeight: FontWeight.w600))),
-                Text('₹${claim.claimAmount.toStringAsFixed(0)}', style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: kTealDark)),
+                Text('₹${claim.claimAmount.toStringAsFixed(0)}', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: kCareDark)),
               ],
             ),
           ],
@@ -218,10 +223,11 @@ class _ReceptionPatientPickerFieldState extends State<ReceptionPatientPickerFiel
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     if (widget.value != null) {
       return Container(
         padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(color: kMint, borderRadius: BorderRadius.circular(12)),
+        decoration: BoxDecoration(color: kCareSoft, borderRadius: BorderRadius.circular(12)),
         child: Row(
           children: [
             Expanded(
@@ -244,14 +250,14 @@ class _ReceptionPatientPickerFieldState extends State<ReceptionPatientPickerFiel
       children: [
         TextField(
           controller: _controller,
-          decoration: authFieldDecoration('Patient', hint: 'Search name or MRN', icon: Icons.search).copyWith(errorText: widget.errorText),
+          decoration: careFieldDecoration('Patient', hint: 'Search name or MRN', icon: Icons.search).copyWith(errorText: widget.errorText),
           onChanged: _search,
         ),
-        if (_searching) const Padding(padding: EdgeInsets.only(top: 8), child: LinearProgressIndicator(color: kTeal)),
+        if (_searching) Padding(padding: const EdgeInsets.only(top: 8), child: LinearProgressIndicator(color: kCare)),
         if (_results.isNotEmpty)
           Container(
             margin: const EdgeInsets.only(top: 6),
-            decoration: BoxDecoration(color: kFieldFill, borderRadius: BorderRadius.circular(12)),
+            decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(12)),
             constraints: const BoxConstraints(maxHeight: 220),
             child: ListView.builder(
               shrinkWrap: true,
@@ -366,9 +372,10 @@ class _ClaimFormScreenState extends State<_ClaimFormScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('New Insurance Claim')),
+    watchCarePalette(context);
+    return CareTheme(child: Scaffold(
+      backgroundColor: kCareBg,
+      appBar: carePageAppBar(context, 'New Insurance Claim'),
       body: Form(
         key: _formKey,
         child: ListView(
@@ -376,24 +383,24 @@ class _ClaimFormScreenState extends State<_ClaimFormScreen> {
           children: [
             ReceptionPatientPickerField(value: _patient, errorText: _patientError, onChanged: (p) => setState(() { _patient = p; _patientError = null; })),
             const SizedBox(height: 14),
-            TextFormField(controller: _companyController, decoration: authFieldDecoration('Insurance company', hint: 'Required', icon: Icons.shield_outlined), validator: (v) => (v == null || v.trim().isEmpty) ? 'Required' : null),
+            TextFormField(controller: _companyController, decoration: careFieldDecoration('Insurance company', hint: 'Required', icon: Icons.shield_outlined), validator: (v) => (v == null || v.trim().isEmpty) ? 'Required' : null),
             const SizedBox(height: 14),
-            TextFormField(controller: _tpaController, decoration: authFieldDecoration('TPA name', hint: 'Optional', icon: Icons.business_outlined)),
+            TextFormField(controller: _tpaController, decoration: careFieldDecoration('TPA name', hint: 'Optional', icon: Icons.business_outlined)),
             const SizedBox(height: 14),
-            TextFormField(controller: _policyController, decoration: authFieldDecoration('Policy number', hint: 'Required', icon: Icons.numbers_outlined), validator: (v) => (v == null || v.trim().isEmpty) ? 'Required' : null),
+            TextFormField(controller: _policyController, decoration: careFieldDecoration('Policy number', hint: 'Required', icon: Icons.numbers_outlined), validator: (v) => (v == null || v.trim().isEmpty) ? 'Required' : null),
             const SizedBox(height: 14),
-            TextFormField(controller: _memberController, decoration: authFieldDecoration('Member ID', hint: 'Optional', icon: Icons.badge_outlined)),
+            TextFormField(controller: _memberController, decoration: careFieldDecoration('Member ID', hint: 'Optional', icon: Icons.badge_outlined)),
             const SizedBox(height: 14),
             TextFormField(
               controller: _amountController,
               keyboardType: TextInputType.number,
-              decoration: authFieldDecoration('Claim amount', hint: 'Required', icon: Icons.currency_rupee),
+              decoration: careFieldDecoration('Claim amount', hint: 'Required', icon: Icons.currency_rupee),
               validator: (v) => (double.tryParse(v ?? '') == null) ? 'Enter a valid amount' : null,
             ),
             const SizedBox(height: 14),
             DropdownButtonFormField<String>(
               initialValue: _claimType,
-              decoration: authFieldDecoration('Claim type', hint: '', icon: Icons.category_outlined),
+              decoration: careFieldDecoration('Claim type', hint: '', icon: Icons.category_outlined),
               items: const [DropdownMenuItem(value: 'cashless', child: Text('Cashless')), DropdownMenuItem(value: 'reimbursement', child: Text('Reimbursement'))],
               onChanged: (v) => setState(() => _claimType = v ?? _claimType),
             ),
@@ -401,7 +408,7 @@ class _ClaimFormScreenState extends State<_ClaimFormScreen> {
             InkWell(
               onTap: () => _pickDate(true),
               child: InputDecorator(
-                decoration: authFieldDecoration('Admission date', hint: 'Optional', icon: Icons.event_outlined),
+                decoration: careFieldDecoration('Admission date', hint: 'Optional', icon: Icons.event_outlined),
                 child: Text(_admissionDate != null ? _fmt(_admissionDate!) : 'Tap to pick', style: TextStyle(color: _admissionDate != null ? kInk : kMuted)),
               ),
             ),
@@ -409,22 +416,22 @@ class _ClaimFormScreenState extends State<_ClaimFormScreen> {
             InkWell(
               onTap: () => _pickDate(false),
               child: InputDecorator(
-                decoration: authFieldDecoration('Discharge date', hint: 'Optional', icon: Icons.event_available_outlined),
+                decoration: careFieldDecoration('Discharge date', hint: 'Optional', icon: Icons.event_available_outlined),
                 child: Text(_dischargeDate != null ? _fmt(_dischargeDate!) : 'Tap to pick', style: TextStyle(color: _dischargeDate != null ? kInk : kMuted)),
               ),
             ),
             const SizedBox(height: 14),
-            TextFormField(controller: _diagnosisController, maxLines: 2, decoration: authFieldDecoration('Diagnosis', hint: 'Optional', icon: Icons.medical_information_outlined)),
+            TextFormField(controller: _diagnosisController, maxLines: 2, decoration: careFieldDecoration('Diagnosis', hint: 'Optional', icon: Icons.medical_information_outlined)),
             const SizedBox(height: 14),
-            TextFormField(controller: _treatmentController, maxLines: 2, decoration: authFieldDecoration('Treatment details', hint: 'Optional', icon: Icons.healing_outlined)),
+            TextFormField(controller: _treatmentController, maxLines: 2, decoration: careFieldDecoration('Treatment details', hint: 'Optional', icon: Icons.healing_outlined)),
             const SizedBox(height: 14),
-            TextFormField(controller: _icdController, decoration: authFieldDecoration('ICD-10 code', hint: 'Optional', icon: Icons.tag_outlined)),
+            TextFormField(controller: _icdController, decoration: careFieldDecoration('ICD-10 code', hint: 'Optional', icon: Icons.tag_outlined)),
             const SizedBox(height: 24),
             SizedBox(
               height: 48,
               child: ElevatedButton(
                 onPressed: _submitting ? null : _submit,
-                style: ElevatedButton.styleFrom(backgroundColor: kTealDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+                style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
                 child: _submitting
                     ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
                     : const Text('Create claim', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
@@ -433,6 +440,6 @@ class _ClaimFormScreenState extends State<_ClaimFormScreen> {
           ],
         ),
       ),
-    );
+    ));
   }
 }

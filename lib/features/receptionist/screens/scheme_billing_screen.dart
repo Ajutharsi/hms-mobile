@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/receptionist/models/reception_patient.dart';
 import 'package:hms_mobile/features/receptionist/models/scheme_billing.dart';
 import 'package:hms_mobile/features/receptionist/screens/insurance_claims_screen.dart' show ReceptionPatientPickerField, titleCase;
@@ -14,7 +15,7 @@ const kSchemeStatuses = ['draft', 'submitted', 'approved', 'rejected', 'settled'
 (Color, Color) schemeStatusColors(String status) {
   if (status == 'approved' || status == 'settled') return (kSuccessFg, kSuccessBg);
   if (status == 'rejected') return (kDangerFg, kDangerBg);
-  if (status == 'draft') return (kMuted, kFieldFill);
+  if (status == 'draft') return (kMuted, kCareBg);
   return (kInfoFg, kInfoBg);
 }
 
@@ -23,6 +24,7 @@ class SchemeBillingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return ChangeNotifierProvider(
       create: (_) => SchemeBillingViewModel(),
       child: const _SchemeBillingView(),
@@ -40,25 +42,26 @@ class _SchemeBillingView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final viewModel = context.watch<SchemeBillingViewModel>();
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('Scheme Billing', style: TextStyle(fontWeight: FontWeight.w700))),
+    return CareTheme(child: Scaffold(
+      backgroundColor: kCareBg,
+      appBar: carePageAppBar(context, 'Scheme Billing'),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _newBill(context, viewModel),
-        backgroundColor: kTealDark,
+        backgroundColor: kCareDark,
         foregroundColor: Colors.white,
         icon: const Icon(Icons.add, color: Colors.white),
         label: const Text('New scheme bill', style: TextStyle(color: Colors.white)),
       ),
-      body: RefreshIndicator(color: kTeal, onRefresh: viewModel.load, child: _buildBody(context, viewModel)),
-    );
+      body: RefreshIndicator(color: kCare, onRefresh: viewModel.load, child: _buildBody(context, viewModel)),
+    ));
   }
 
   Widget _buildBody(BuildContext context, SchemeBillingViewModel viewModel) {
     if (viewModel.isLoading && viewModel.bills.isEmpty) {
-      return const Center(child: CircularProgressIndicator(color: kTeal));
+      return Center(child: CircularProgressIndicator(color: kCare));
     }
     if (viewModel.loadError != null && viewModel.bills.isEmpty) {
       return ListView(padding: const EdgeInsets.all(24), children: [
@@ -83,7 +86,7 @@ class _SchemeBillingView extends StatelessWidget {
             crossAxisSpacing: 10,
             childAspectRatio: 2.2,
             children: [
-              _StatTile(label: 'Total Claims', value: '${stats.total}', color: kTealDark, bg: kMint),
+              _StatTile(label: 'Total Claims', value: '${stats.total}', color: kCareDark, bg: kCareSoft),
               _StatTile(label: 'Pending', value: '${stats.pending}', color: kWarningFg, bg: kWarningBg),
               _StatTile(label: 'Approved Amt', value: '₹${stats.approvedAmount.toStringAsFixed(0)}', color: kSuccessFg, bg: kSuccessBg),
               _StatTile(label: 'Settled', value: '${stats.settled}', color: kInfoFg, bg: kInfoBg),
@@ -117,6 +120,7 @@ class _StatTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(14)),
@@ -138,6 +142,7 @@ class _BillCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final (fg, bg) = schemeStatusColors(bill.status);
 
     return InkWell(
@@ -145,7 +150,7 @@ class _BillCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(16),
       child: Container(
         padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kFieldFill)),
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kCareBorder)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -165,11 +170,11 @@ class _BillCard extends StatelessWidget {
               children: [
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                  decoration: BoxDecoration(color: kFieldFill, borderRadius: BorderRadius.circular(7)),
+                  decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(7)),
                   child: Text(bill.scheme.toUpperCase(), style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: kInk)),
                 ),
                 const Spacer(),
-                Text('₹${bill.packageRate.toStringAsFixed(0)}', style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: kTealDark)),
+                Text('₹${bill.packageRate.toStringAsFixed(0)}', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: kCareDark)),
               ],
             ),
           ],
@@ -243,9 +248,10 @@ class _SchemeBillFormScreenState extends State<_SchemeBillFormScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('New Scheme Bill')),
+    watchCarePalette(context);
+    return CareTheme(child: Scaffold(
+      backgroundColor: kCareBg,
+      appBar: carePageAppBar(context, 'New Scheme Bill'),
       body: Form(
         key: _formKey,
         child: ListView(
@@ -255,35 +261,35 @@ class _SchemeBillFormScreenState extends State<_SchemeBillFormScreen> {
             const SizedBox(height: 14),
             DropdownButtonFormField<String>(
               initialValue: _scheme,
-              decoration: authFieldDecoration('Scheme', hint: '', icon: Icons.request_quote_outlined),
+              decoration: careFieldDecoration('Scheme', hint: '', icon: Icons.request_quote_outlined),
               items: kSchemes.map((s) => DropdownMenuItem(value: s, child: Text(titleCase(s)))).toList(),
               onChanged: (v) => setState(() => _scheme = v ?? _scheme),
             ),
             const SizedBox(height: 14),
-            TextFormField(controller: _schemeNameController, decoration: authFieldDecoration('Scheme name', hint: 'Optional', icon: Icons.badge_outlined)),
+            TextFormField(controller: _schemeNameController, decoration: careFieldDecoration('Scheme name', hint: 'Optional', icon: Icons.badge_outlined)),
             const SizedBox(height: 14),
-            TextFormField(controller: _beneficiaryController, decoration: authFieldDecoration('Beneficiary ID', hint: 'Optional', icon: Icons.person_outline)),
+            TextFormField(controller: _beneficiaryController, decoration: careFieldDecoration('Beneficiary ID', hint: 'Optional', icon: Icons.person_outline)),
             const SizedBox(height: 14),
-            TextFormField(controller: _packageCodeController, decoration: authFieldDecoration('Package code', hint: 'Optional', icon: Icons.qr_code_outlined)),
+            TextFormField(controller: _packageCodeController, decoration: careFieldDecoration('Package code', hint: 'Optional', icon: Icons.qr_code_outlined)),
             const SizedBox(height: 14),
-            TextFormField(controller: _packageNameController, decoration: authFieldDecoration('Package name', hint: 'Optional', icon: Icons.inventory_2_outlined)),
+            TextFormField(controller: _packageNameController, decoration: careFieldDecoration('Package name', hint: 'Optional', icon: Icons.inventory_2_outlined)),
             const SizedBox(height: 14),
             TextFormField(
               controller: _packageRateController,
               keyboardType: TextInputType.number,
-              decoration: authFieldDecoration('Package rate', hint: 'Required', icon: Icons.currency_rupee),
+              decoration: careFieldDecoration('Package rate', hint: 'Required', icon: Icons.currency_rupee),
               validator: (v) => (double.tryParse(v ?? '') == null) ? 'Enter a valid rate' : null,
             ),
             const SizedBox(height: 14),
-            TextFormField(controller: _actualBillController, keyboardType: TextInputType.number, decoration: authFieldDecoration('Actual bill', hint: 'Optional', icon: Icons.receipt_outlined)),
+            TextFormField(controller: _actualBillController, keyboardType: TextInputType.number, decoration: careFieldDecoration('Actual bill', hint: 'Optional', icon: Icons.receipt_outlined)),
             const SizedBox(height: 14),
-            TextFormField(controller: _icdController, decoration: authFieldDecoration('ICD-10 code', hint: 'Optional', icon: Icons.tag_outlined)),
+            TextFormField(controller: _icdController, decoration: careFieldDecoration('ICD-10 code', hint: 'Optional', icon: Icons.tag_outlined)),
             const SizedBox(height: 24),
             SizedBox(
               height: 48,
               child: ElevatedButton(
                 onPressed: _submitting ? null : _submit,
-                style: ElevatedButton.styleFrom(backgroundColor: kTealDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+                style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
                 child: _submitting
                     ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
                     : const Text('Create bill', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
@@ -292,6 +298,6 @@ class _SchemeBillFormScreenState extends State<_SchemeBillFormScreen> {
           ],
         ),
       ),
-    );
+    ));
   }
 }

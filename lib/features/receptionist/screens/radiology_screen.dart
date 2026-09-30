@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/receptionist/models/radiology_order.dart';
 import 'package:hms_mobile/features/receptionist/screens/radiology_detail_screen.dart';
 import 'package:hms_mobile/features/receptionist/screens/radiology_order_screen.dart';
@@ -12,6 +13,7 @@ class RadiologyScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return ChangeNotifierProvider(
       create: (_) => RadiologyViewModel(),
       child: const _RadiologyView(),
@@ -29,25 +31,26 @@ class _RadiologyView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final viewModel = context.watch<RadiologyViewModel>();
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('Radiology', style: TextStyle(fontWeight: FontWeight.w700))),
+    return CareTheme(child: Scaffold(
+      backgroundColor: kCareBg,
+      appBar: carePageAppBar(context, 'Radiology'),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _create(context, viewModel),
-        backgroundColor: kTealDark,
+        backgroundColor: kCareDark,
         foregroundColor: Colors.white,
         icon: const Icon(Icons.add, color: Colors.white),
         label: const Text('New order', style: TextStyle(color: Colors.white)),
       ),
-      body: RefreshIndicator(color: kTeal, onRefresh: viewModel.load, child: _buildBody(context, viewModel)),
-    );
+      body: RefreshIndicator(color: kCare, onRefresh: viewModel.load, child: _buildBody(context, viewModel)),
+    ));
   }
 
   Widget _buildBody(BuildContext context, RadiologyViewModel viewModel) {
     if (viewModel.isLoading && viewModel.orders.isEmpty) {
-      return const Center(child: CircularProgressIndicator(color: kTeal));
+      return Center(child: CircularProgressIndicator(color: kCare));
     }
     if (viewModel.loadError != null && viewModel.orders.isEmpty) {
       return ListView(padding: const EdgeInsets.all(24), children: [
@@ -72,7 +75,7 @@ class _RadiologyView extends StatelessWidget {
             crossAxisSpacing: 8,
             childAspectRatio: 1.1,
             children: [
-              _StatTile(label: 'Total', value: '${stats.total}', color: kTealDark, bg: kMint),
+              _StatTile(label: 'Total', value: '${stats.total}', color: kCareDark, bg: kCareSoft),
               _StatTile(label: 'Pending', value: '${stats.pending}', color: kWarningFg, bg: kWarningBg),
               _StatTile(label: 'Completed', value: '${stats.completed}', color: kSuccessFg, bg: kSuccessBg),
               _StatTile(label: 'Emergency', value: '${stats.emergency}', color: kDangerFg, bg: kDangerBg),
@@ -106,6 +109,7 @@ class _StatTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(12)),
@@ -125,14 +129,14 @@ class _OrderCard extends StatelessWidget {
   final VoidCallback onTap;
   const _OrderCard({required this.order, required this.onTap});
 
-  static const _priorityColors = {
-    'routine': (kMuted, kFieldFill),
+  static Map<String, (Color, Color)> get _priorityColors => {
+    'routine': (kMuted, kCareBg),
     'urgent': (kWarningFg, kWarningBg),
     'emergency': (kDangerFg, kDangerBg),
   };
 
-  static const _statusColors = {
-    'ordered': (kMuted, kFieldFill),
+  static Map<String, (Color, Color)> get _statusColors => {
+    'ordered': (kMuted, kCareBg),
     'scheduled': (kInfoFg, kInfoBg),
     'in_progress': (kInfoFg, kInfoBg),
     'completed': (kSuccessFg, kSuccessBg),
@@ -141,15 +145,16 @@ class _OrderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final (pFg, pBg) = _priorityColors[order.priority] ?? (kMuted, kFieldFill);
-    final (sFg, sBg) = _statusColors[order.status] ?? (kMuted, kFieldFill);
+    watchCarePalette(context);
+    final (pFg, pBg) = _priorityColors[order.priority] ?? (kMuted, kCareBg);
+    final (sFg, sBg) = _statusColors[order.status] ?? (kMuted, kCareBg);
 
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(16),
       child: Container(
         padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kFieldFill)),
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kCareBorder)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

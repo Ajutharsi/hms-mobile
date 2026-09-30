@@ -4,6 +4,7 @@ import 'package:hms_mobile/core/services/api_service.dart';
 import 'package:hms_mobile/core/services/auth_storage.dart';
 import 'package:hms_mobile/core/services/receptionist_api_service.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/receptionist/models/reception_patient.dart';
 import 'package:hms_mobile/features/receptionist/screens/patient_form_screen.dart';
 
@@ -51,22 +52,17 @@ class _ReceptionPatientDetailScreenState extends State<ReceptionPatientDetailScr
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        foregroundColor: kInk,
-        elevation: 0,
-        title: const Text('Patient Details', style: TextStyle(fontWeight: FontWeight.w700)),
-        actions: [if (_patient != null) IconButton(onPressed: _edit, icon: const Icon(Icons.edit_outlined))],
-      ),
+    watchCarePalette(context);
+    return CareTheme(child: Scaffold(
+      backgroundColor: kCareBg,
+      appBar: carePageAppBar(context, 'Patient Details', actions: [if (_patient != null) IconButton(onPressed: _edit, icon: const Icon(Icons.edit_outlined, color: Colors.white))]),
       body: _buildBody(),
-    );
+    ));
   }
 
   Widget _buildBody() {
     if (_isLoading && _patient == null) {
-      return const Center(child: CircularProgressIndicator(color: kTeal));
+      return Center(child: CircularProgressIndicator(color: kCare));
     }
     if (_error != null && _patient == null) {
       return ListView(padding: const EdgeInsets.all(24), children: [
@@ -87,16 +83,16 @@ class _ReceptionPatientDetailScreenState extends State<ReceptionPatientDetailScr
             children: [
               CircleAvatar(
                 radius: 40,
-                backgroundColor: kMint,
+                backgroundColor: kCareSoft,
                 backgroundImage: p.photoUrl != null ? NetworkImage(p.photoUrl!) : null,
-                child: p.photoUrl == null ? Text(p.name.isNotEmpty ? p.name[0].toUpperCase() : '?', style: const TextStyle(fontSize: 28, color: kTealDark, fontWeight: FontWeight.w700)) : null,
+                child: p.photoUrl == null ? Text(p.name.isNotEmpty ? p.name[0].toUpperCase() : '?', style: TextStyle(fontSize: 28, color: kCareDark, fontWeight: FontWeight.w700)) : null,
               ),
               const SizedBox(height: 12),
               Text(p.name, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: kInk)),
               const SizedBox(height: 4),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                decoration: BoxDecoration(color: kFieldFill, borderRadius: BorderRadius.circular(8)),
+                decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(8)),
                 child: Text('MRN: ${p.mrn}', style: const TextStyle(fontSize: 12, color: kMuted, fontWeight: FontWeight.w600)),
               ),
             ],
@@ -105,7 +101,7 @@ class _ReceptionPatientDetailScreenState extends State<ReceptionPatientDetailScr
         const SizedBox(height: 20),
         Container(
           padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kFieldFill)),
+          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kCareBorder)),
           child: Column(
             children: [
               _Row('Status', p.status),
@@ -137,6 +133,7 @@ class _Row extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return Column(
       children: [
         Row(
@@ -145,7 +142,7 @@ class _Row extends StatelessWidget {
             Flexible(child: Text(value, textAlign: TextAlign.right, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: kInk))),
           ],
         ),
-        if (showDivider) const Padding(padding: EdgeInsets.symmetric(vertical: 10), child: Divider(height: 1, color: kFieldFill)),
+        if (showDivider) Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Divider(height: 1, color: kCareBorder)),
       ],
     );
   }

@@ -5,6 +5,7 @@ import 'package:hms_mobile/core/services/api_service.dart';
 import 'package:hms_mobile/core/services/auth_storage.dart';
 import 'package:hms_mobile/core/services/receptionist_api_service.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/receptionist/models/opd_token.dart';
 import 'package:hms_mobile/features/receptionist/models/reception_appointment.dart';
 import 'package:hms_mobile/features/receptionist/models/reception_patient.dart';
@@ -14,7 +15,7 @@ import 'package:hms_mobile/features/receptionist/viewmodels/opd_queue_view_model
 (Color, Color) _tokenStatusColors(String s) => switch (s) {
       'in_consultation' => (kInfoFg, kInfoBg),
       'completed' => (kSuccessFg, kSuccessBg),
-      'skipped' => (kMuted, kFieldFill),
+      'skipped' => (kMuted, kCareBg),
       'cancelled' => (kDangerFg, kDangerBg),
       _ => (kWarningFg, kWarningBg),
     };
@@ -24,6 +25,7 @@ class OpdQueueScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return ChangeNotifierProvider(
       create: (_) => OpdQueueViewModel(),
       child: const _OpdQueueView(),
@@ -40,19 +42,19 @@ class _OpdQueueView extends StatelessWidget {
 
     final error = await viewModel.issueToken(patientId: result['patient_id'] as int, doctorId: result['doctor_id'] as int, notes: result['notes'] as String?);
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kTealDark : null, content: Text(error ?? 'Token issued successfully!')));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kCareDark : null, content: Text(error ?? 'Token issued successfully!')));
   }
 
   Future<void> _setStatus(BuildContext context, OpdQueueViewModel viewModel, OpdToken token, String status) async {
     final error = await viewModel.updateStatus(token.id, status);
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kTealDark : null, content: Text(error ?? 'Queue status updated.')));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kCareDark : null, content: Text(error ?? 'Queue status updated.')));
   }
 
   Future<void> _callNext(BuildContext context, OpdQueueViewModel viewModel, int doctorId) async {
     final error = await viewModel.callNext(doctorId);
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kTealDark : null, content: Text(error ?? 'Next patient called.')));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kCareDark : null, content: Text(error ?? 'Next patient called.')));
   }
 
   Future<void> _delete(BuildContext context, OpdQueueViewModel viewModel, OpdToken token) async {
@@ -69,30 +71,31 @@ class _OpdQueueView extends StatelessWidget {
     if (confirmed != true || !context.mounted) return;
     final error = await viewModel.destroy(token.id);
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kTealDark : null, content: Text(error ?? 'Token removed.')));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kCareDark : null, content: Text(error ?? 'Token removed.')));
   }
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final viewModel = context.watch<OpdQueueViewModel>();
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('OPD Queue', style: TextStyle(fontWeight: FontWeight.w700))),
+    return CareTheme(child: Scaffold(
+      backgroundColor: kCareBg,
+      appBar: carePageAppBar(context, 'OPD Queue'),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _issueToken(context, viewModel),
-        backgroundColor: kTealDark,
+        backgroundColor: kCareDark,
         foregroundColor: Colors.white,
         icon: const Icon(Icons.add, color: Colors.white),
         label: const Text('Issue token', style: TextStyle(color: Colors.white)),
       ),
-      body: RefreshIndicator(color: kTeal, onRefresh: viewModel.load, child: _buildBody(context, viewModel)),
-    );
+      body: RefreshIndicator(color: kCare, onRefresh: viewModel.load, child: _buildBody(context, viewModel)),
+    ));
   }
 
   Widget _buildBody(BuildContext context, OpdQueueViewModel viewModel) {
     if (viewModel.isLoading && viewModel.tokens.isEmpty) {
-      return const Center(child: CircularProgressIndicator(color: kTeal));
+      return Center(child: CircularProgressIndicator(color: kCare));
     }
     if (viewModel.loadError != null && viewModel.tokens.isEmpty) {
       return ListView(padding: const EdgeInsets.all(24), children: [
@@ -121,7 +124,7 @@ class _OpdQueueView extends StatelessWidget {
             crossAxisSpacing: 8,
             childAspectRatio: 1.1,
             children: [
-              _StatTile(label: 'Total', value: '${stats.total}', color: kTealDark, bg: kMint),
+              _StatTile(label: 'Total', value: '${stats.total}', color: kCareDark, bg: kCareSoft),
               _StatTile(label: 'Waiting', value: '${stats.waiting}', color: kWarningFg, bg: kWarningBg),
               _StatTile(label: 'In Consult', value: '${stats.inConsult}', color: kInfoFg, bg: kInfoBg),
               _StatTile(label: 'Completed', value: '${stats.completed}', color: kSuccessFg, bg: kSuccessBg),
@@ -137,8 +140,8 @@ class _OpdQueueView extends StatelessWidget {
                 Expanded(child: Text(entry.value.first.doctorName ?? 'Doctor', style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w700, color: kInk))),
                 TextButton.icon(
                   onPressed: () => _callNext(context, viewModel, entry.key),
-                  icon: const Icon(Icons.skip_next_rounded, size: 16, color: kTealDark),
-                  label: const Text('Call Next', style: TextStyle(color: kTealDark, fontSize: 12.5, fontWeight: FontWeight.w600)),
+                  icon: Icon(Icons.skip_next_rounded, size: 16, color: kCareDark),
+                  label: Text('Call Next', style: TextStyle(color: kCareDark, fontSize: 12.5, fontWeight: FontWeight.w600)),
                 ),
               ],
             ),
@@ -168,6 +171,7 @@ class _StatTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(12)),
@@ -192,11 +196,12 @@ class _TokenCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final (fg, bg) = _tokenStatusColors(token.status);
 
     return Container(
       padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kFieldFill)),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kCareBorder)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -204,7 +209,7 @@ class _TokenCard extends StatelessWidget {
             children: [
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                decoration: BoxDecoration(color: kFieldFill, borderRadius: BorderRadius.circular(7)),
+                decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(7)),
                 child: Text('#${token.queuePosition}', style: const TextStyle(fontSize: 10.5, fontWeight: FontWeight.w700, color: kInk)),
               ),
               const SizedBox(width: 8),
@@ -228,10 +233,10 @@ class _TokenCard extends StatelessWidget {
             children: [
               if (token.status == 'waiting') ...[
                 TextButton(onPressed: onSkip, child: const Text('Skip', style: TextStyle(color: kMuted, fontSize: 12.5, fontWeight: FontWeight.w600))),
-                TextButton(onPressed: onCallIn, child: const Text('Call In', style: TextStyle(color: kTealDark, fontSize: 12.5, fontWeight: FontWeight.w600))),
+                TextButton(onPressed: onCallIn, child: Text('Call In', style: TextStyle(color: kCareDark, fontSize: 12.5, fontWeight: FontWeight.w600))),
               ],
               if (token.status == 'in_consultation')
-                TextButton(onPressed: onComplete, child: const Text('Complete', style: TextStyle(color: kTealDark, fontSize: 12.5, fontWeight: FontWeight.w600))),
+                TextButton(onPressed: onComplete, child: Text('Complete', style: TextStyle(color: kCareDark, fontSize: 12.5, fontWeight: FontWeight.w600))),
               TextButton(onPressed: onDelete, child: const Text('Remove', style: TextStyle(color: Color(0xFFB3261E), fontSize: 12.5, fontWeight: FontWeight.w600))),
             ],
           ),
@@ -284,12 +289,13 @@ class _IssueTokenDialogState extends State<_IssueTokenDialog> {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return AlertDialog(
       title: const Text('Issue OPD token'),
       content: SizedBox(
         width: 360,
         child: _isLoadingDoctors
-            ? const SizedBox(height: 80, child: Center(child: CircularProgressIndicator(color: kTeal)))
+            ? SizedBox(height: 80, child: Center(child: CircularProgressIndicator(color: kCare)))
             : SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -311,7 +317,7 @@ class _IssueTokenDialogState extends State<_IssueTokenDialog> {
       actions: [
         TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Cancel')),
         FilledButton(
-          style: FilledButton.styleFrom(backgroundColor: kTealDark),
+          style: FilledButton.styleFrom(backgroundColor: kCareDark),
           onPressed: (_patient == null || _doctor == null)
               ? null
               : () => Navigator.of(context).pop({'patient_id': _patient!.id, 'doctor_id': _doctor!.id, 'notes': _notesController.text.trim().isEmpty ? null : _notesController.text.trim()}),

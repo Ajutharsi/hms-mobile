@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/receptionist/models/scheme_billing.dart';
 import 'package:hms_mobile/features/receptionist/screens/insurance_claims_screen.dart' show titleCase;
 import 'package:hms_mobile/features/receptionist/screens/scheme_billing_screen.dart' show kSchemes, kSchemeStatuses, schemeStatusColors;
@@ -13,6 +14,7 @@ class SchemeBillingDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return ChangeNotifierProvider(
       create: (_) => SchemeBillingDetailViewModel(billId: billId),
       child: const _DetailView(),
@@ -28,7 +30,7 @@ class _DetailView extends StatelessWidget {
     if (result == null || !context.mounted) return;
     final error = await viewModel.update(result);
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kTealDark : null, content: Text(error ?? 'Scheme bill updated!')));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kCareDark : null, content: Text(error ?? 'Scheme bill updated!')));
   }
 
   Future<void> _updateStatus(BuildContext context, SchemeBillingDetailViewModel viewModel, SchemeBilling bill) async {
@@ -36,7 +38,7 @@ class _DetailView extends StatelessWidget {
     if (result == null || !context.mounted) return;
     final error = await viewModel.updateStatus(result);
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kTealDark : null, content: Text(error ?? 'Status updated!')));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kCareDark : null, content: Text(error ?? 'Status updated!')));
   }
 
   Future<void> _delete(BuildContext context, SchemeBillingDetailViewModel viewModel) async {
@@ -62,39 +64,34 @@ class _DetailView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final viewModel = context.watch<SchemeBillingDetailViewModel>();
     final bill = viewModel.bill;
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        foregroundColor: kInk,
-        elevation: 0,
-        title: Text(bill?.schemeBillNo ?? 'Scheme Bill'),
-        actions: bill == null
+    return CareTheme(child: Scaffold(
+      backgroundColor: kCareBg,
+      appBar: carePageAppBar(context, bill?.schemeBillNo ?? 'Scheme Bill', actions: bill == null
             ? null
             : [
-                IconButton(icon: const Icon(Icons.edit_outlined), onPressed: () => _edit(context, viewModel, bill)),
-                IconButton(icon: const Icon(Icons.delete_outline), onPressed: () => _delete(context, viewModel)),
-              ],
-      ),
+                IconButton(icon: const Icon(Icons.edit_outlined, color: Colors.white), onPressed: () => _edit(context, viewModel, bill)),
+                IconButton(icon: const Icon(Icons.delete_outline, color: Colors.white), onPressed: () => _delete(context, viewModel)),
+              ]),
       floatingActionButton: bill == null
           ? null
           : FloatingActionButton.extended(
               onPressed: () => _updateStatus(context, viewModel, bill),
-              backgroundColor: kTealDark,
+              backgroundColor: kCareDark,
               foregroundColor: Colors.white,
               icon: const Icon(Icons.flag_outlined, color: Colors.white),
               label: const Text('Update status', style: TextStyle(color: Colors.white)),
             ),
       body: _buildBody(viewModel),
-    );
+    ));
   }
 
   Widget _buildBody(SchemeBillingDetailViewModel viewModel) {
     if (viewModel.isLoading && viewModel.bill == null) {
-      return const Center(child: CircularProgressIndicator(color: kTeal));
+      return Center(child: CircularProgressIndicator(color: kCare));
     }
     if (viewModel.loadError != null && viewModel.bill == null) {
       return ListView(padding: const EdgeInsets.all(24), children: [
@@ -125,7 +122,7 @@ class _DetailView extends StatelessWidget {
         const SizedBox(height: 16),
         Container(
           padding: const EdgeInsets.all(14),
-          decoration: BoxDecoration(color: kFieldFill, borderRadius: BorderRadius.circular(14)),
+          decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(14)),
           child: Column(
             children: [
               _row('Scheme', bill.scheme.toUpperCase()),
@@ -199,6 +196,7 @@ class _EditDialogState extends State<_EditDialog> {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return AlertDialog(
       title: const Text('Edit scheme bill'),
       content: SizedBox(
@@ -270,6 +268,7 @@ class _StatusDialogState extends State<_StatusDialog> {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return AlertDialog(
       title: const Text('Update status'),
       content: SingleChildScrollView(

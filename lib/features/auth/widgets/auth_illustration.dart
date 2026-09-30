@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_ui.dart';
 
 /// The illustration side panel shown only on wide (web/desktop) viewports,
 /// shared by the login and register screens with different copy.
@@ -13,8 +14,9 @@ class AuthIllustrationPane extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return Container(
-      color: kMint,
+      color: kCareSoft,
       child: Stack(
         alignment: Alignment.center,
         clipBehavior: Clip.none,
@@ -69,6 +71,7 @@ class AuthPulseBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return Container(
       width: 56,
       height: 56,
@@ -80,7 +83,7 @@ class AuthPulseBadge extends StatelessWidget {
         ],
       ),
       alignment: Alignment.center,
-      child: const Icon(Icons.monitor_heart_rounded, color: kTeal, size: 28),
+      child: Icon(Icons.monitor_heart_rounded, color: kCare, size: 28),
     );
   }
 }
@@ -92,10 +95,11 @@ class AuthCompactIllustration extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return ClipRRect(
       borderRadius: BorderRadius.circular(24),
       child: Container(
-        color: kMint,
+        color: kCareSoft,
         padding: const EdgeInsets.symmetric(vertical: 18),
         child: Stack(
           alignment: Alignment.center,

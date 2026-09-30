@@ -162,14 +162,15 @@ class CareHeaderBackground extends StatelessWidget {
 /// App bar for inner pages: teal, centered white title, back arrow.
 class CarePageHeader extends StatelessWidget implements PreferredSizeWidget {
   final String title;
-  final List<Widget> actions;
+  /// Nullable so a screen can pass `condition ? null : [...]` directly.
+  final List<Widget>? actions;
   final bool showBack;
   final VoidCallback? onBack;
 
   const CarePageHeader({
     super.key,
     required this.title,
-    this.actions = const [],
+    this.actions,
     this.showBack = true,
     this.onBack,
   });
@@ -207,7 +208,7 @@ class CarePageHeader extends StatelessWidget implements PreferredSizeWidget {
             ),
             SizedBox(
               width: 48,
-              child: actions.isEmpty ? null : Row(mainAxisAlignment: MainAxisAlignment.end, children: actions),
+              child: (actions == null || actions!.isEmpty) ? null : Row(mainAxisAlignment: MainAxisAlignment.end, children: actions!),
             ),
           ],
         ),
@@ -218,7 +219,7 @@ class CarePageHeader extends StatelessWidget implements PreferredSizeWidget {
 
 /// Wraps [CarePageHeader] so it can be used as a Scaffold appBar with the
 /// status-bar inset included in its height.
-PreferredSizeWidget carePageAppBar(BuildContext context, String title, {List<Widget> actions = const [], bool showBack = true, VoidCallback? onBack}) {
+PreferredSizeWidget carePageAppBar(BuildContext context, String title, {List<Widget>? actions, bool showBack = true, VoidCallback? onBack}) {
   final topInset = MediaQuery.of(context).padding.top;
   return PreferredSize(
     preferredSize: Size.fromHeight(64 + topInset),
@@ -593,6 +594,107 @@ class CareChoicePill extends StatelessWidget {
             decoration: enabled ? null : TextDecoration.lineThrough,
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// Counter shown inside a header — turns to the alert colour when its
+/// number needs attention (overdue rounds, unpaid bills, pending orders).
+class CareAlertPill extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String value;
+  final bool urgent;
+  final VoidCallback onTap;
+
+  const CareAlertPill({
+    super.key,
+    required this.icon,
+    required this.label,
+    required this.value,
+    required this.urgent,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    watchCarePalette(context);
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        decoration: BoxDecoration(
+          color: urgent ? kCarePinkBg : Colors.white.withValues(alpha: 0.18),
+          borderRadius: BorderRadius.circular(14),
+        ),
+        child: Row(
+          children: [
+            Icon(icon, size: 18, color: urgent ? kCarePinkFg : Colors.white),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: urgent ? kCarePinkFg : Colors.white),
+              ),
+            ),
+            Text(value, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: urgent ? kCarePinkFg : Colors.white)),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// One number on a dashboard: icon, value, label and a short caption.
+class CareStatCard extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String value;
+  final String trend;
+  final bool alert;
+
+  const CareStatCard({
+    super.key,
+    required this.icon,
+    required this.label,
+    required this.value,
+    required this.trend,
+    this.alert = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    watchCarePalette(context);
+    return CareCard(
+      padding: const EdgeInsets.all(14),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 30,
+                height: 30,
+                decoration: BoxDecoration(color: alert ? kCarePinkBg : kCareSoft, borderRadius: BorderRadius.circular(9)),
+                child: Icon(icon, color: alert ? kCarePinkFg : kCareDark, size: 16),
+              ),
+              const Spacer(),
+              Flexible(
+                child: Text(
+                  trend,
+                  textAlign: TextAlign.right,
+                  style: TextStyle(fontSize: 9.5, color: alert ? kCarePinkFg : kMuted, fontWeight: alert ? FontWeight.w700 : FontWeight.w400),
+                ),
+              ),
+            ],
+          ),
+          const Spacer(),
+          Text(value, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w800, color: kInk)),
+          Text(label, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 10.5, color: kMuted, fontWeight: FontWeight.w600)),
+        ],
       ),
     );
   }

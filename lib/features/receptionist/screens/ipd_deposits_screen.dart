@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/receptionist/models/ipd_deposit.dart';
 import 'package:hms_mobile/features/receptionist/models/reception_patient.dart';
 import 'package:hms_mobile/features/receptionist/screens/insurance_claims_screen.dart' show ReceptionPatientPickerField;
@@ -16,6 +17,7 @@ class IpdDepositsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return ChangeNotifierProvider(
       create: (_) => IpdDepositsViewModel(),
       child: const _IpdDepositsView(),
@@ -38,7 +40,7 @@ class _IpdDepositsView extends StatelessWidget {
       notes: result['notes'] as String?,
     );
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kTealDark : null, content: Text(error ?? 'Deposit recorded successfully!')));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kCareDark : null, content: Text(error ?? 'Deposit recorded successfully!')));
   }
 
   Future<void> _refund(BuildContext context, IpdDepositsViewModel viewModel, IpdDeposit deposit) async {
@@ -47,30 +49,31 @@ class _IpdDepositsView extends StatelessWidget {
 
     final error = await viewModel.refund(deposit.id, amount: result['amount'] as double, paymentMethod: result['payment_method'] as String, notes: result['notes'] as String?);
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kTealDark : null, content: Text(error ?? 'Refund recorded.')));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kCareDark : null, content: Text(error ?? 'Refund recorded.')));
   }
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final viewModel = context.watch<IpdDepositsViewModel>();
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('IPD Deposits', style: TextStyle(fontWeight: FontWeight.w700))),
+    return CareTheme(child: Scaffold(
+      backgroundColor: kCareBg,
+      appBar: carePageAppBar(context, 'IPD Deposits'),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _collect(context, viewModel),
-        backgroundColor: kTealDark,
+        backgroundColor: kCareDark,
         foregroundColor: Colors.white,
         icon: const Icon(Icons.add, color: Colors.white),
         label: const Text('Collect deposit', style: TextStyle(color: Colors.white)),
       ),
-      body: RefreshIndicator(color: kTeal, onRefresh: viewModel.load, child: _buildBody(context, viewModel)),
-    );
+      body: RefreshIndicator(color: kCare, onRefresh: viewModel.load, child: _buildBody(context, viewModel)),
+    ));
   }
 
   Widget _buildBody(BuildContext context, IpdDepositsViewModel viewModel) {
     if (viewModel.isLoading && viewModel.deposits.isEmpty) {
-      return const Center(child: CircularProgressIndicator(color: kTeal));
+      return Center(child: CircularProgressIndicator(color: kCare));
     }
     if (viewModel.loadError != null && viewModel.deposits.isEmpty) {
       return ListView(padding: const EdgeInsets.all(24), children: [
@@ -93,7 +96,7 @@ class _IpdDepositsView extends StatelessWidget {
               const SizedBox(width: 10),
               Expanded(child: _StatTile(label: 'Refunded', value: '₹${stats.totalRefunded.toStringAsFixed(0)}', color: kWarningFg, bg: kWarningBg)),
               const SizedBox(width: 10),
-              Expanded(child: _StatTile(label: 'Today', value: '₹${stats.todayCollection.toStringAsFixed(0)}', color: kTealDark, bg: kMint)),
+              Expanded(child: _StatTile(label: 'Today', value: '₹${stats.todayCollection.toStringAsFixed(0)}', color: kCareDark, bg: kCareSoft)),
             ],
           ),
         const SizedBox(height: 20),
@@ -118,6 +121,7 @@ class _StatTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(14)),
@@ -139,12 +143,13 @@ class _DepositCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final isAdvance = deposit.type == 'advance';
     final amountColor = isAdvance ? kSuccessFg : kWarningFg;
 
     return Container(
       padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kFieldFill)),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kCareBorder)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -173,7 +178,7 @@ class _DepositCard extends StatelessWidget {
             const SizedBox(height: 8),
             Align(
               alignment: Alignment.centerRight,
-              child: TextButton.icon(onPressed: onRefund, icon: const Icon(Icons.undo, size: 15), label: const Text('Refund'), style: TextButton.styleFrom(foregroundColor: kTealDark)),
+              child: TextButton.icon(onPressed: onRefund, icon: const Icon(Icons.undo, size: 15), label: const Text('Refund'), style: TextButton.styleFrom(foregroundColor: kCareDark)),
             ),
           ],
         ],
@@ -207,6 +212,7 @@ class _CollectDialogState extends State<_CollectDialog> {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return AlertDialog(
       title: const Text('Collect deposit'),
       content: SizedBox(
@@ -251,7 +257,7 @@ class _CollectDialogState extends State<_CollectDialog> {
               'notes': _notesController.text.trim().isEmpty ? null : _notesController.text.trim(),
             });
           },
-          style: FilledButton.styleFrom(backgroundColor: kTealDark),
+          style: FilledButton.styleFrom(backgroundColor: kCareDark),
           child: const Text('Collect'),
         ),
       ],
@@ -281,6 +287,7 @@ class _RefundDialogState extends State<_RefundDialog> {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return AlertDialog(
       title: Text('Refund ${widget.deposit.patientName ?? ''}'),
       content: SingleChildScrollView(
@@ -310,7 +317,7 @@ class _RefundDialogState extends State<_RefundDialog> {
             if (amount == null || amount <= 0 || amount > widget.deposit.balance) return;
             Navigator.of(context).pop({'amount': amount, 'payment_method': _paymentMethod, 'notes': _notesController.text.trim().isEmpty ? null : _notesController.text.trim()});
           },
-          style: FilledButton.styleFrom(backgroundColor: kTealDark),
+          style: FilledButton.styleFrom(backgroundColor: kCareDark),
           child: const Text('Refund'),
         ),
       ],

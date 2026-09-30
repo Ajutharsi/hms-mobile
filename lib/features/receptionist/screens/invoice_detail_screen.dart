@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/receptionist/viewmodels/invoices_view_model.dart';
 
 const _kPaymentMethods = ['cash', 'card', 'upi', 'bank_transfer', 'cheque'];
@@ -12,6 +13,7 @@ class InvoiceDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return ChangeNotifierProvider(
       create: (_) => InvoiceDetailViewModel(invoiceId: invoiceId),
       child: const _InvoiceDetailView(),
@@ -36,23 +38,24 @@ class _InvoiceDetailView extends StatelessWidget {
       notes: result['notes'],
     );
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kTealDark : null, content: Text(error ?? 'Payment recorded!')));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kCareDark : null, content: Text(error ?? 'Payment recorded!')));
   }
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final viewModel = context.watch<InvoiceDetailViewModel>();
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: Text(viewModel.invoice?.invoiceNo ?? 'Invoice')),
+    return CareTheme(child: Scaffold(
+      backgroundColor: kCareBg,
+      appBar: carePageAppBar(context, viewModel.invoice?.invoiceNo ?? 'Invoice'),
       body: _buildBody(context, viewModel),
-    );
+    ));
   }
 
   Widget _buildBody(BuildContext context, InvoiceDetailViewModel viewModel) {
     if (viewModel.isLoading && viewModel.invoice == null) {
-      return const Center(child: CircularProgressIndicator(color: kTeal));
+      return Center(child: CircularProgressIndicator(color: kCare));
     }
     if (viewModel.loadError != null && viewModel.invoice == null) {
       return ListView(padding: const EdgeInsets.all(24), children: [
@@ -71,7 +74,7 @@ class _InvoiceDetailView extends StatelessWidget {
       children: [
         Container(
           padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(color: kFieldFill, borderRadius: BorderRadius.circular(16)),
+          decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(16)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -81,7 +84,7 @@ class _InvoiceDetailView extends StatelessWidget {
               _amountRow('Subtotal', invoice.subtotal),
               _amountRow('Discount', -invoice.discount),
               _amountRow('Tax', invoice.tax),
-              const Divider(height: 20, color: kFieldFill),
+              Divider(height: 20, color: kCareBg),
               _amountRow('Total', invoice.total, bold: true),
               _amountRow('Paid', invoice.paidAmount, color: kSuccessFg),
               _amountRow('Balance', invoice.balance, color: invoice.balance > 0 ? const Color(0xFFB3261E) : kSuccessFg, bold: true),
@@ -95,7 +98,7 @@ class _InvoiceDetailView extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(12),
             margin: const EdgeInsets.only(bottom: 8),
-            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12), border: Border.all(color: kFieldFill)),
+            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12), border: Border.all(color: kCareBorder)),
             child: Row(
               children: [
                 Expanded(
@@ -107,7 +110,7 @@ class _InvoiceDetailView extends StatelessWidget {
                     ],
                   ),
                 ),
-                Text('₹${item.total.toStringAsFixed(2)}', style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: kTealDark)),
+                Text('₹${item.total.toStringAsFixed(2)}', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: kCareDark)),
               ],
             ),
           ),
@@ -144,7 +147,7 @@ class _InvoiceDetailView extends StatelessWidget {
             height: 46,
             child: ElevatedButton.icon(
               onPressed: () => _addPayment(context, viewModel),
-              style: ElevatedButton.styleFrom(backgroundColor: kTealDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+              style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
               icon: const Icon(Icons.payments_outlined, color: Colors.white),
               label: const Text('Add payment', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
             ),
@@ -195,6 +198,7 @@ class _PaymentDialogState extends State<_PaymentDialog> {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return AlertDialog(
       title: const Text('Add payment'),
       content: SizedBox(

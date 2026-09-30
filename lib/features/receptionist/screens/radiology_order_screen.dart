@@ -4,6 +4,7 @@ import 'package:hms_mobile/core/services/api_service.dart';
 import 'package:hms_mobile/core/services/auth_storage.dart';
 import 'package:hms_mobile/core/services/receptionist_api_service.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/receptionist/models/reception_appointment.dart';
 import 'package:hms_mobile/features/receptionist/models/reception_patient.dart';
 
@@ -120,11 +121,12 @@ class _RadiologyOrderScreenState extends State<RadiologyOrderScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('New Radiology Order', style: TextStyle(fontWeight: FontWeight.w700))),
+    watchCarePalette(context);
+    return CareTheme(child: Scaffold(
+      backgroundColor: kCareBg,
+      appBar: carePageAppBar(context, 'New Radiology Order'),
       body: _isLoadingDoctors
-          ? const Center(child: CircularProgressIndicator(color: kTeal))
+          ? Center(child: CircularProgressIndicator(color: kCare))
           : Form(
               key: _formKey,
               child: ListView(
@@ -135,7 +137,7 @@ class _RadiologyOrderScreenState extends State<RadiologyOrderScreen> {
                   if (_selectedPatient != null)
                     Container(
                       padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(color: kMint, borderRadius: BorderRadius.circular(12)),
+                      decoration: BoxDecoration(color: kCareSoft, borderRadius: BorderRadius.circular(12)),
                       child: Row(
                         children: [
                           Expanded(
@@ -154,13 +156,13 @@ class _RadiologyOrderScreenState extends State<RadiologyOrderScreen> {
                   else ...[
                     TextField(
                       controller: _patientSearchController,
-                      decoration: authFieldDecoration('Search patient', hint: 'Name or MRN', icon: Icons.search),
+                      decoration: careFieldDecoration('Search patient', hint: 'Name or MRN', icon: Icons.search),
                       onChanged: _searchPatients,
                     ),
                     if (_patientResults.isNotEmpty)
                       Container(
                         margin: const EdgeInsets.only(top: 6),
-                        decoration: BoxDecoration(color: kFieldFill, borderRadius: BorderRadius.circular(12)),
+                        decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(12)),
                         constraints: const BoxConstraints(maxHeight: 220),
                         child: ListView.builder(
                           shrinkWrap: true,
@@ -186,39 +188,39 @@ class _RadiologyOrderScreenState extends State<RadiologyOrderScreen> {
                   const SizedBox(height: 8),
                   DropdownButtonFormField<ReceptionDoctor>(
                     initialValue: _selectedDoctor,
-                    decoration: authFieldDecoration('Doctor', hint: 'Optional', icon: Icons.medical_services_outlined),
+                    decoration: careFieldDecoration('Doctor', hint: 'Optional', icon: Icons.medical_services_outlined),
                     items: _doctors.map((d) => DropdownMenuItem(value: d, child: Text(d.name))).toList(),
                     onChanged: (v) => setState(() => _selectedDoctor = v),
                   ),
                   const SizedBox(height: 20),
                   DropdownButtonFormField<String>(
                     initialValue: _modality,
-                    decoration: authFieldDecoration('Modality', hint: 'Select modality', icon: Icons.camera_outlined),
+                    decoration: careFieldDecoration('Modality', hint: 'Select modality', icon: Icons.camera_outlined),
                     items: _kModalities.map((m) => DropdownMenuItem(value: m, child: Text(m))).toList(),
                     onChanged: (v) => setState(() => _modality = v!),
                   ),
                   const SizedBox(height: 14),
                   TextFormField(
                     controller: _bodyPartController,
-                    decoration: authFieldDecoration('Body part', hint: 'e.g. Chest', icon: Icons.accessibility_new_outlined),
+                    decoration: careFieldDecoration('Body part', hint: 'e.g. Chest', icon: Icons.accessibility_new_outlined),
                     validator: (v) => (v == null || v.trim().isEmpty) ? 'Required' : null,
                   ),
                   const SizedBox(height: 14),
                   TextFormField(
                     controller: _studyController,
-                    decoration: authFieldDecoration('Study description', hint: 'e.g. Chest X-Ray PA view', icon: Icons.description_outlined),
+                    decoration: careFieldDecoration('Study description', hint: 'e.g. Chest X-Ray PA view', icon: Icons.description_outlined),
                     validator: (v) => (v == null || v.trim().isEmpty) ? 'Required' : null,
                   ),
                   const SizedBox(height: 14),
                   TextFormField(
                     controller: _indicationController,
-                    decoration: authFieldDecoration('Clinical indication', hint: 'Optional', icon: Icons.notes_outlined),
+                    decoration: careFieldDecoration('Clinical indication', hint: 'Optional', icon: Icons.notes_outlined),
                     maxLines: 3,
                   ),
                   const SizedBox(height: 14),
                   DropdownButtonFormField<String>(
                     initialValue: _priority,
-                    decoration: authFieldDecoration('Priority', hint: 'Select priority', icon: Icons.flag_outlined),
+                    decoration: careFieldDecoration('Priority', hint: 'Select priority', icon: Icons.flag_outlined),
                     items: _kPriorities.map((p) => DropdownMenuItem(value: p, child: Text(p[0].toUpperCase() + p.substring(1)))).toList(),
                     onChanged: (v) => setState(() => _priority = v!),
                   ),
@@ -226,7 +228,7 @@ class _RadiologyOrderScreenState extends State<RadiologyOrderScreen> {
                   InkWell(
                     onTap: _pickScheduledAt,
                     child: InputDecorator(
-                      decoration: authFieldDecoration('Scheduled at', hint: 'Optional', icon: Icons.event_outlined),
+                      decoration: careFieldDecoration('Scheduled at', hint: 'Optional', icon: Icons.event_outlined),
                       child: Text(
                         _scheduledAt == null ? 'Not scheduled' : '${_scheduledAt!.toLocal()}'.substring(0, 16),
                         style: TextStyle(color: _scheduledAt == null ? kMuted : kInk),
@@ -242,7 +244,7 @@ class _RadiologyOrderScreenState extends State<RadiologyOrderScreen> {
                     height: 48,
                     child: ElevatedButton(
                       onPressed: _isSaving ? null : _submit,
-                      style: ElevatedButton.styleFrom(backgroundColor: kTealDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+                      style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
                       child: _isSaving
                           ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
                           : const Text('Create order', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
@@ -251,6 +253,6 @@ class _RadiologyOrderScreenState extends State<RadiologyOrderScreen> {
                 ],
               ),
             ),
-    );
+    ));
   }
 }

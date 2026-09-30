@@ -4,6 +4,7 @@ import 'package:hms_mobile/core/services/api_service.dart';
 import 'package:hms_mobile/core/services/auth_storage.dart';
 import 'package:hms_mobile/core/services/receptionist_api_service.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/receptionist/models/reception_appointment.dart';
 import 'package:hms_mobile/features/receptionist/models/reception_patient.dart';
 
@@ -183,11 +184,12 @@ class _AppointmentFormScreenState extends State<AppointmentFormScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: Text(_isEdit ? 'Edit Appointment' : 'Book Appointment', style: const TextStyle(fontWeight: FontWeight.w700))),
+    watchCarePalette(context);
+    return CareTheme(child: Scaffold(
+      backgroundColor: kCareBg,
+      appBar: carePageAppBar(context, _isEdit ? 'Edit Appointment' : 'Book Appointment'),
       body: _isLoadingDoctors
-          ? const Center(child: CircularProgressIndicator(color: kTeal))
+          ? Center(child: CircularProgressIndicator(color: kCare))
           : ListView(
               padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
               children: [
@@ -196,27 +198,27 @@ class _AppointmentFormScreenState extends State<AppointmentFormScreen> {
                 if (_isEdit)
                   Container(
                     padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(color: kFieldFill, borderRadius: BorderRadius.circular(12)),
+                    decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(12)),
                     child: Text('${widget.existing!.patientName ?? ''} · ${widget.existing!.patientMrn ?? ''}', style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13.5)),
                   )
                 else if (_selectedPatient != null)
                   Container(
                     padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(color: kMint, borderRadius: BorderRadius.circular(12)),
+                    decoration: BoxDecoration(color: kCareSoft, borderRadius: BorderRadius.circular(12)),
                     child: Row(
                       children: [
-                        Expanded(child: Text('${_selectedPatient!.name} · ${_selectedPatient!.mrn}', style: const TextStyle(fontWeight: FontWeight.w600, color: kTealDark, fontSize: 13.5))),
-                        InkWell(onTap: () => setState(() => _selectedPatient = null), child: const Icon(Icons.close, size: 18, color: kTealDark)),
+                        Expanded(child: Text('${_selectedPatient!.name} · ${_selectedPatient!.mrn}', style: TextStyle(fontWeight: FontWeight.w600, color: kCareDark, fontSize: 13.5))),
+                        InkWell(onTap: () => setState(() => _selectedPatient = null), child: Icon(Icons.close, size: 18, color: kCareDark)),
                       ],
                     ),
                   )
                 else ...[
-                  TextField(controller: _searchController, decoration: authFieldDecoration('Search patient', hint: 'Name or MRN', icon: Icons.search), onChanged: _searchPatients),
-                  if (_isSearchingPatients) const Padding(padding: EdgeInsets.only(top: 8), child: LinearProgressIndicator(color: kTeal)),
+                  TextField(controller: _searchController, decoration: careFieldDecoration('Search patient', hint: 'Name or MRN', icon: Icons.search), onChanged: _searchPatients),
+                  if (_isSearchingPatients) Padding(padding: const EdgeInsets.only(top: 8), child: LinearProgressIndicator(color: kCare)),
                   if (_patientResults.isNotEmpty)
                     Container(
                       margin: const EdgeInsets.only(top: 6),
-                      decoration: BoxDecoration(color: kFieldFill, borderRadius: BorderRadius.circular(12)),
+                      decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(12)),
                       constraints: const BoxConstraints(maxHeight: 220),
                       child: ListView.builder(
                         shrinkWrap: true,
@@ -241,7 +243,7 @@ class _AppointmentFormScreenState extends State<AppointmentFormScreen> {
                 const SizedBox(height: 8),
                 DropdownButtonFormField<ReceptionDoctor>(
                   initialValue: _selectedDoctor,
-                  decoration: authFieldDecoration('Doctor', hint: 'Select doctor', icon: Icons.medical_services_outlined),
+                  decoration: careFieldDecoration('Doctor', hint: 'Select doctor', icon: Icons.medical_services_outlined),
                   items: _doctors.map((d) => DropdownMenuItem(value: d, child: Text(d.specialization != null ? '${d.name} (${d.specialization})' : d.name))).toList(),
                   onChanged: (v) {
                     setState(() => _selectedDoctor = v);
@@ -253,7 +255,7 @@ class _AppointmentFormScreenState extends State<AppointmentFormScreen> {
                 const SizedBox(height: 8),
                 InkWell(
                   onTap: _pickDate,
-                  child: InputDecorator(decoration: authFieldDecoration('Date', hint: '', icon: Icons.calendar_today_outlined), child: Text(_fmtDate(_date))),
+                  child: InputDecorator(decoration: careFieldDecoration('Date', hint: '', icon: Icons.calendar_today_outlined), child: Text(_fmtDate(_date))),
                 ),
                 const SizedBox(height: 16),
                 const Text('Time', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: kInk)),
@@ -262,12 +264,12 @@ class _AppointmentFormScreenState extends State<AppointmentFormScreen> {
                   InkWell(
                     onTap: _pickManualTime,
                     child: InputDecorator(
-                      decoration: authFieldDecoration('Time', hint: '', icon: Icons.access_time_rounded),
+                      decoration: careFieldDecoration('Time', hint: '', icon: Icons.access_time_rounded),
                       child: Text(_manualTime != null ? '${_manualTime!.hour.toString().padLeft(2, '0')}:${_manualTime!.minute.toString().padLeft(2, '0')}' : 'Select time'),
                     ),
                   )
                 else if (_isLoadingSlots)
-                  const Padding(padding: EdgeInsets.symmetric(vertical: 12), child: LinearProgressIndicator(color: kTeal))
+                  Padding(padding: const EdgeInsets.symmetric(vertical: 12), child: LinearProgressIndicator(color: kCare))
                 else if (_selectedDoctor == null)
                   const Text('Pick a doctor to see available slots.', style: TextStyle(color: kMuted, fontSize: 12.5))
                 else if (_slots.isEmpty)
@@ -282,8 +284,8 @@ class _AppointmentFormScreenState extends State<AppointmentFormScreen> {
                           label: Text(s.time),
                           selected: _selectedTime == s.time,
                           onSelected: s.available ? (_) => setState(() => _selectedTime = s.time) : null,
-                          selectedColor: kMint,
-                          disabledColor: kFieldFill,
+                          selectedColor: kCareSoft,
+                          disabledColor: kCareBg,
                           labelStyle: TextStyle(color: s.available ? kInk : kMuted, decoration: s.available ? null : TextDecoration.lineThrough),
                         ),
                     ],
@@ -293,7 +295,7 @@ class _AppointmentFormScreenState extends State<AppointmentFormScreen> {
                 const SizedBox(height: 8),
                 DropdownButtonFormField<String>(
                   initialValue: _type,
-                  decoration: authFieldDecoration('Type', hint: '', icon: Icons.category_outlined),
+                  decoration: careFieldDecoration('Type', hint: '', icon: Icons.category_outlined),
                   items: _kTypes.map((t) => DropdownMenuItem(value: t, child: Text(t[0].toUpperCase() + t.substring(1)))).toList(),
                   onChanged: (v) => setState(() => _type = v!),
                 ),
@@ -303,13 +305,13 @@ class _AppointmentFormScreenState extends State<AppointmentFormScreen> {
                   const SizedBox(height: 8),
                   DropdownButtonFormField<String>(
                     initialValue: _status,
-                    decoration: authFieldDecoration('Status', hint: '', icon: Icons.info_outline),
+                    decoration: careFieldDecoration('Status', hint: '', icon: Icons.info_outline),
                     items: _kStatuses.map((s) => DropdownMenuItem(value: s, child: Text(s.replaceAll('_', ' ')))).toList(),
                     onChanged: (v) => setState(() => _status = v!),
                   ),
                 ],
                 const SizedBox(height: 16),
-                TextField(controller: _notesController, maxLines: 3, decoration: authFieldDecoration('Notes (optional)', hint: '', icon: Icons.notes_outlined)),
+                TextField(controller: _notesController, maxLines: 3, decoration: careFieldDecoration('Notes (optional)', hint: '', icon: Icons.notes_outlined)),
                 if (_error != null) ...[
                   const SizedBox(height: 16),
                   authErrorBanner(_error!),
@@ -319,7 +321,7 @@ class _AppointmentFormScreenState extends State<AppointmentFormScreen> {
                   height: 48,
                   child: ElevatedButton(
                     onPressed: (_canSubmit && !_isSaving) ? _submit : null,
-                    style: ElevatedButton.styleFrom(backgroundColor: kTealDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+                    style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
                     child: _isSaving
                         ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
                         : Text(_isEdit ? 'Save changes' : 'Book appointment', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
@@ -327,6 +329,6 @@ class _AppointmentFormScreenState extends State<AppointmentFormScreen> {
                 ),
               ],
             ),
-    );
+    ));
   }
 }

@@ -5,6 +5,7 @@ import 'package:hms_mobile/core/services/api_service.dart';
 import 'package:hms_mobile/core/services/auth_storage.dart';
 import 'package:hms_mobile/core/services/receptionist_api_service.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/receptionist/models/reception_appointment.dart';
 import 'package:hms_mobile/features/receptionist/models/reception_patient.dart';
 import 'package:hms_mobile/features/receptionist/models/referral.dart';
@@ -17,7 +18,7 @@ const _kReferralStatuses = ['pending', 'accepted', 'completed', 'cancelled'];
 (Color, Color) _priorityColors(String p) => switch (p) {
       'emergency' => (kDangerFg, kDangerBg),
       'urgent' => (kWarningFg, kWarningBg),
-      _ => (kMuted, kFieldFill),
+      _ => (kMuted, kCareBg),
     };
 
 (Color, Color) _statusColors(String s) => switch (s) {
@@ -32,6 +33,7 @@ class ReferralsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return ChangeNotifierProvider(
       create: (_) => ReferralsViewModel(),
       child: const _ReferralsView(),
@@ -61,7 +63,7 @@ class _ReferralsView extends StatelessWidget {
     if (status == null) return;
     final error = await viewModel.updateStatus(referral.id, status);
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kTealDark : null, content: Text(error ?? 'Referral status updated.')));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kCareDark : null, content: Text(error ?? 'Referral status updated.')));
   }
 
   Future<void> _delete(BuildContext context, ReferralsViewModel viewModel, Referral referral) async {
@@ -78,19 +80,20 @@ class _ReferralsView extends StatelessWidget {
     if (confirmed != true || !context.mounted) return;
     final error = await viewModel.destroy(referral.id);
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kTealDark : null, content: Text(error ?? 'Referral deleted.')));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kCareDark : null, content: Text(error ?? 'Referral deleted.')));
   }
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final viewModel = context.watch<ReferralsViewModel>();
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('Referrals', style: TextStyle(fontWeight: FontWeight.w700))),
+    return CareTheme(child: Scaffold(
+      backgroundColor: kCareBg,
+      appBar: carePageAppBar(context, 'Referrals'),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _newReferral(context, viewModel),
-        backgroundColor: kTealDark,
+        backgroundColor: kCareDark,
         foregroundColor: Colors.white,
         icon: const Icon(Icons.add, color: Colors.white),
         label: const Text('New referral', style: TextStyle(color: Colors.white)),
@@ -103,24 +106,24 @@ class _ReferralsView extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
               children: [
-                ChoiceChip(label: const Text('All'), selected: viewModel.statusFilter == null, onSelected: (_) => viewModel.setFilter(null), selectedColor: kMint),
+                ChoiceChip(label: const Text('All'), selected: viewModel.statusFilter == null, onSelected: (_) => viewModel.setFilter(null), selectedColor: kCareSoft),
                 const SizedBox(width: 8),
                 for (final s in _kReferralStatuses) ...[
-                  ChoiceChip(label: Text(titleCase(s)), selected: viewModel.statusFilter == s, onSelected: (_) => viewModel.setFilter(s), selectedColor: kMint),
+                  ChoiceChip(label: Text(titleCase(s)), selected: viewModel.statusFilter == s, onSelected: (_) => viewModel.setFilter(s), selectedColor: kCareSoft),
                   const SizedBox(width: 8),
                 ],
               ],
             ),
           ),
-          Expanded(child: RefreshIndicator(color: kTeal, onRefresh: viewModel.load, child: _buildBody(context, viewModel))),
+          Expanded(child: RefreshIndicator(color: kCare, onRefresh: viewModel.load, child: _buildBody(context, viewModel))),
         ],
       ),
-    );
+    ));
   }
 
   Widget _buildBody(BuildContext context, ReferralsViewModel viewModel) {
     if (viewModel.isLoading && viewModel.referrals.isEmpty) {
-      return const Center(child: CircularProgressIndicator(color: kTeal));
+      return Center(child: CircularProgressIndicator(color: kCare));
     }
     if (viewModel.loadError != null && viewModel.referrals.isEmpty) {
       return ListView(padding: const EdgeInsets.all(24), children: [
@@ -163,12 +166,13 @@ class _ReferralCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final (pFg, pBg) = _priorityColors(referral.priority);
     final (sFg, sBg) = _statusColors(referral.status);
 
     return Container(
       padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kFieldFill)),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kCareBorder)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -203,7 +207,7 @@ class _ReferralCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              TextButton(onPressed: onStatus, child: const Text('Status', style: TextStyle(color: kTealDark, fontSize: 12.5, fontWeight: FontWeight.w600))),
+              TextButton(onPressed: onStatus, child: Text('Status', style: TextStyle(color: kCareDark, fontSize: 12.5, fontWeight: FontWeight.w600))),
               TextButton(onPressed: onDelete, child: const Text('Delete', style: TextStyle(color: Color(0xFFB3261E), fontSize: 12.5, fontWeight: FontWeight.w600))),
             ],
           ),
@@ -311,11 +315,12 @@ class _ReferralFormScreenState extends State<_ReferralFormScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('New Referral', style: TextStyle(fontWeight: FontWeight.w700))),
+    watchCarePalette(context);
+    return CareTheme(child: Scaffold(
+      backgroundColor: kCareBg,
+      appBar: carePageAppBar(context, 'New Referral'),
       body: _isLoadingDoctors
-          ? const Center(child: CircularProgressIndicator(color: kTeal))
+          ? Center(child: CircularProgressIndicator(color: kCare))
           : Form(
               key: _formKey,
               child: ListView(
@@ -325,14 +330,14 @@ class _ReferralFormScreenState extends State<_ReferralFormScreen> {
                   const SizedBox(height: 14),
                   DropdownButtonFormField<ReceptionDoctor>(
                     initialValue: _referredBy,
-                    decoration: authFieldDecoration('Referred by', hint: 'Select doctor', icon: Icons.medical_services_outlined),
+                    decoration: careFieldDecoration('Referred by', hint: 'Select doctor', icon: Icons.medical_services_outlined),
                     items: _doctors.map((d) => DropdownMenuItem(value: d, child: Text(d.name))).toList(),
                     onChanged: (v) => setState(() => _referredBy = v),
                   ),
                   const SizedBox(height: 14),
                   DropdownButtonFormField<ReceptionDoctor>(
                     initialValue: _referredTo,
-                    decoration: authFieldDecoration('Referred to', hint: 'Select doctor', icon: Icons.medical_information_outlined),
+                    decoration: careFieldDecoration('Referred to', hint: 'Select doctor', icon: Icons.medical_information_outlined),
                     items: _doctors.map((d) => DropdownMenuItem(value: d, child: Text(d.name))).toList(),
                     onChanged: (v) => setState(() => _referredTo = v),
                   ),
@@ -340,15 +345,15 @@ class _ReferralFormScreenState extends State<_ReferralFormScreen> {
                   TextFormField(
                     controller: _reasonController,
                     maxLines: 2,
-                    decoration: authFieldDecoration('Reason', hint: 'Required', icon: Icons.notes_outlined),
+                    decoration: careFieldDecoration('Reason', hint: 'Required', icon: Icons.notes_outlined),
                     validator: (v) => (v == null || v.trim().isEmpty) ? 'Required' : null,
                   ),
                   const SizedBox(height: 14),
-                  TextFormField(controller: _notesController, maxLines: 2, decoration: authFieldDecoration('Notes (optional)', hint: '', icon: Icons.sticky_note_2_outlined)),
+                  TextFormField(controller: _notesController, maxLines: 2, decoration: careFieldDecoration('Notes (optional)', hint: '', icon: Icons.sticky_note_2_outlined)),
                   const SizedBox(height: 14),
                   DropdownButtonFormField<String>(
                     initialValue: _priority,
-                    decoration: authFieldDecoration('Priority', hint: '', icon: Icons.priority_high),
+                    decoration: careFieldDecoration('Priority', hint: '', icon: Icons.priority_high),
                     items: _kPriorities.map((p) => DropdownMenuItem(value: p, child: Text(titleCase(p)))).toList(),
                     onChanged: (v) => setState(() => _priority = v!),
                   ),
@@ -356,7 +361,7 @@ class _ReferralFormScreenState extends State<_ReferralFormScreen> {
                   InkWell(
                     onTap: _pickDate,
                     child: InputDecorator(
-                      decoration: authFieldDecoration('Referral date', hint: '', icon: Icons.calendar_today_outlined),
+                      decoration: careFieldDecoration('Referral date', hint: '', icon: Icons.calendar_today_outlined),
                       child: Text('${_date.year.toString().padLeft(4, '0')}-${_date.month.toString().padLeft(2, '0')}-${_date.day.toString().padLeft(2, '0')}'),
                     ),
                   ),
@@ -369,7 +374,7 @@ class _ReferralFormScreenState extends State<_ReferralFormScreen> {
                     height: 48,
                     child: ElevatedButton(
                       onPressed: _isSaving ? null : _submit,
-                      style: ElevatedButton.styleFrom(backgroundColor: kTealDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+                      style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
                       child: _isSaving
                           ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
                           : const Text('Create referral', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
@@ -378,6 +383,6 @@ class _ReferralFormScreenState extends State<_ReferralFormScreen> {
                 ],
               ),
             ),
-    );
+    ));
   }
 }

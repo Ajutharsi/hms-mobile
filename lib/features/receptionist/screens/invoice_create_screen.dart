@@ -4,6 +4,7 @@ import 'package:hms_mobile/core/services/api_service.dart';
 import 'package:hms_mobile/core/services/auth_storage.dart';
 import 'package:hms_mobile/core/services/receptionist_api_service.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/receptionist/models/invoice.dart';
 import 'package:hms_mobile/features/receptionist/models/reception_patient.dart';
 
@@ -153,11 +154,12 @@ class _InvoiceCreateScreenState extends State<InvoiceCreateScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('New Invoice', style: TextStyle(fontWeight: FontWeight.w700))),
+    watchCarePalette(context);
+    return CareTheme(child: Scaffold(
+      backgroundColor: kCareBg,
+      appBar: carePageAppBar(context, 'New Invoice'),
       body: _isLoadingServices
-          ? const Center(child: CircularProgressIndicator(color: kTeal))
+          ? Center(child: CircularProgressIndicator(color: kCare))
           : ListView(
               padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
               children: [
@@ -166,7 +168,7 @@ class _InvoiceCreateScreenState extends State<InvoiceCreateScreen> {
                 if (_selectedPatient != null)
                   Container(
                     padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(color: kMint, borderRadius: BorderRadius.circular(12)),
+                    decoration: BoxDecoration(color: kCareSoft, borderRadius: BorderRadius.circular(12)),
                     child: Row(
                       children: [
                         Expanded(
@@ -185,13 +187,13 @@ class _InvoiceCreateScreenState extends State<InvoiceCreateScreen> {
                 else ...[
                   TextField(
                     controller: _patientSearchController,
-                    decoration: authFieldDecoration('Search patient', hint: 'Name or MRN', icon: Icons.search),
+                    decoration: careFieldDecoration('Search patient', hint: 'Name or MRN', icon: Icons.search),
                     onChanged: _searchPatients,
                   ),
                   if (_patientResults.isNotEmpty)
                     Container(
                       margin: const EdgeInsets.only(top: 6),
-                      decoration: BoxDecoration(color: kFieldFill, borderRadius: BorderRadius.circular(12)),
+                      decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(12)),
                       constraints: const BoxConstraints(maxHeight: 220),
                       child: ListView.builder(
                         shrinkWrap: true,
@@ -228,14 +230,14 @@ class _InvoiceCreateScreenState extends State<InvoiceCreateScreen> {
                 const SizedBox(height: 8),
                 Align(
                   alignment: Alignment.centerRight,
-                  child: Text('Subtotal: ₹${_subtotal.toStringAsFixed(2)}', style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w700, color: kTealDark)),
+                  child: Text('Subtotal: ₹${_subtotal.toStringAsFixed(2)}', style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w700, color: kCareDark)),
                 ),
                 const SizedBox(height: 20),
                 Row(
                   children: [
-                    Expanded(child: TextField(controller: _discountController, decoration: authFieldDecoration('Discount', hint: '0', icon: Icons.percent), keyboardType: TextInputType.number)),
+                    Expanded(child: TextField(controller: _discountController, decoration: careFieldDecoration('Discount', hint: '0', icon: Icons.percent), keyboardType: TextInputType.number)),
                     const SizedBox(width: 12),
-                    Expanded(child: TextField(controller: _taxController, decoration: authFieldDecoration('Tax', hint: '0', icon: Icons.add_chart), keyboardType: TextInputType.number)),
+                    Expanded(child: TextField(controller: _taxController, decoration: careFieldDecoration('Tax', hint: '0', icon: Icons.add_chart), keyboardType: TextInputType.number)),
                   ],
                 ),
                 const SizedBox(height: 14),
@@ -245,12 +247,12 @@ class _InvoiceCreateScreenState extends State<InvoiceCreateScreen> {
                     if (date != null) setState(() => _dueDate = date);
                   },
                   child: InputDecorator(
-                    decoration: authFieldDecoration('Due date', hint: 'Optional', icon: Icons.event_outlined),
+                    decoration: careFieldDecoration('Due date', hint: 'Optional', icon: Icons.event_outlined),
                     child: Text(_dueDate == null ? 'Not set' : '${_dueDate!.toLocal()}'.substring(0, 10), style: TextStyle(color: _dueDate == null ? kMuted : kInk)),
                   ),
                 ),
                 const SizedBox(height: 14),
-                TextField(controller: _notesController, decoration: authFieldDecoration('Notes', hint: 'Optional', icon: Icons.notes_outlined), maxLines: 2),
+                TextField(controller: _notesController, decoration: careFieldDecoration('Notes', hint: 'Optional', icon: Icons.notes_outlined), maxLines: 2),
                 if (_error != null) ...[
                   const SizedBox(height: 16),
                   authErrorBanner(_error!),
@@ -260,7 +262,7 @@ class _InvoiceCreateScreenState extends State<InvoiceCreateScreen> {
                   height: 48,
                   child: ElevatedButton(
                     onPressed: _isSaving ? null : _submit,
-                    style: ElevatedButton.styleFrom(backgroundColor: kTealDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+                    style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
                     child: _isSaving
                         ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
                         : const Text('Create invoice', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
@@ -268,7 +270,7 @@ class _InvoiceCreateScreenState extends State<InvoiceCreateScreen> {
                 ),
               ],
             ),
-    );
+    ));
   }
 }
 
@@ -285,10 +287,11 @@ class _LineEditor extends StatefulWidget {
 class _LineEditorState extends State<_LineEditor> {
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return Container(
       margin: const EdgeInsets.only(top: 10),
       padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(color: kFieldFill, borderRadius: BorderRadius.circular(12)),
+      decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(12)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -328,7 +331,7 @@ class _LineEditorState extends State<_LineEditor> {
             ],
           ),
           const SizedBox(height: 6),
-          Align(alignment: Alignment.centerRight, child: Text('₹${widget.line.total.toStringAsFixed(2)}', style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700, color: kTealDark))),
+          Align(alignment: Alignment.centerRight, child: Text('₹${widget.line.total.toStringAsFixed(2)}', style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700, color: kCareDark))),
         ],
       ),
     );

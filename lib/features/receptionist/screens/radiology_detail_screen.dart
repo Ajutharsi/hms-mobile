@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/receptionist/viewmodels/radiology_view_model.dart';
 
 class RadiologyDetailScreen extends StatelessWidget {
@@ -10,6 +11,7 @@ class RadiologyDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return ChangeNotifierProvider(
       create: (_) => RadiologyDetailViewModel(orderId: orderId),
       child: const _RadiologyDetailView(),
@@ -30,7 +32,7 @@ class _RadiologyDetailView extends StatelessWidget {
       radiologistName: result['radiologist_name'],
     );
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kTealDark : null, content: Text(error ?? 'Findings saved!')));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kCareDark : null, content: Text(error ?? 'Findings saved!')));
   }
 
   Future<void> _delete(BuildContext context, RadiologyDetailViewModel viewModel) async {
@@ -56,26 +58,21 @@ class _RadiologyDetailView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final viewModel = context.watch<RadiologyDetailViewModel>();
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        foregroundColor: kInk,
-        elevation: 0,
-        title: Text(viewModel.order?.orderNo ?? 'Radiology Order'),
-        actions: [
-          IconButton(onPressed: () => _delete(context, viewModel), icon: const Icon(Icons.delete_outline, color: kMuted)),
-        ],
-      ),
+    return CareTheme(child: Scaffold(
+      backgroundColor: kCareBg,
+      appBar: carePageAppBar(context, viewModel.order?.orderNo ?? 'Radiology Order', actions: [
+          IconButton(onPressed: () => _delete(context, viewModel), icon: const Icon(Icons.delete_outline, color: Colors.white)),
+        ]),
       body: _buildBody(context, viewModel),
-    );
+    ));
   }
 
   Widget _buildBody(BuildContext context, RadiologyDetailViewModel viewModel) {
     if (viewModel.isLoading && viewModel.order == null) {
-      return const Center(child: CircularProgressIndicator(color: kTeal));
+      return Center(child: CircularProgressIndicator(color: kCare));
     }
     if (viewModel.loadError != null && viewModel.order == null) {
       return ListView(padding: const EdgeInsets.all(24), children: [
@@ -94,7 +91,7 @@ class _RadiologyDetailView extends StatelessWidget {
       children: [
         Container(
           padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(color: kFieldFill, borderRadius: BorderRadius.circular(16)),
+          decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(16)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -119,7 +116,7 @@ class _RadiologyDetailView extends StatelessWidget {
           const SizedBox(height: 10),
           Container(
             padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14), border: Border.all(color: kFieldFill)),
+            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14), border: Border.all(color: kCareBorder)),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -145,7 +142,7 @@ class _RadiologyDetailView extends StatelessWidget {
             height: 46,
             child: ElevatedButton.icon(
               onPressed: () => _enterFindings(context, viewModel),
-              style: ElevatedButton.styleFrom(backgroundColor: kTealDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+              style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
               icon: const Icon(Icons.edit_note, color: Colors.white),
               label: const Text('Enter findings', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
             ),
@@ -190,6 +187,7 @@ class _FindingsDialogState extends State<_FindingsDialog> {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return AlertDialog(
       title: const Text('Enter findings'),
       content: SizedBox(

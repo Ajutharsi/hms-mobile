@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/receptionist/models/reception_appointment.dart';
 import 'package:hms_mobile/features/receptionist/screens/appointment_form_screen.dart';
 import 'package:hms_mobile/features/receptionist/viewmodels/reception_appointments_view_model.dart';
@@ -13,6 +14,7 @@ class ReceptionAppointmentsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return ChangeNotifierProvider(
       create: (_) => ReceptionAppointmentsViewModel(),
       child: const _ReceptionAppointmentsView(),
@@ -35,14 +37,15 @@ class _ReceptionAppointmentsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final viewModel = context.watch<ReceptionAppointmentsViewModel>();
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('Appointments', style: TextStyle(fontWeight: FontWeight.w700))),
+    return CareTheme(child: Scaffold(
+      backgroundColor: kCareBg,
+      appBar: carePageAppBar(context, 'Appointments'),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _book(context, viewModel),
-        backgroundColor: kTealDark,
+        backgroundColor: kCareDark,
         foregroundColor: Colors.white,
         icon: const Icon(Icons.add, color: Colors.white),
         label: const Text('Book appointment', style: TextStyle(color: Colors.white)),
@@ -60,22 +63,22 @@ class _ReceptionAppointmentsView extends StatelessWidget {
                     label: Text(status == null ? 'All' : status.replaceAll('_', ' ')),
                     selected: viewModel.statusFilter == status,
                     onSelected: (_) => viewModel.setFilter(status),
-                    selectedColor: kMint,
+                    selectedColor: kCareSoft,
                   ),
                   const SizedBox(width: 8),
                 ],
               ],
             ),
           ),
-          Expanded(child: RefreshIndicator(color: kTeal, onRefresh: viewModel.load, child: _buildBody(context, viewModel))),
+          Expanded(child: RefreshIndicator(color: kCare, onRefresh: viewModel.load, child: _buildBody(context, viewModel))),
         ],
       ),
-    );
+    ));
   }
 
   Widget _buildBody(BuildContext context, ReceptionAppointmentsViewModel viewModel) {
     if (viewModel.isLoading && viewModel.appointments.isEmpty) {
-      return const Center(child: CircularProgressIndicator(color: kTeal));
+      return Center(child: CircularProgressIndicator(color: kCare));
     }
     if (viewModel.loadError != null && viewModel.appointments.isEmpty) {
       return ListView(padding: const EdgeInsets.all(24), children: [
@@ -111,31 +114,32 @@ class _AppointmentCard extends StatelessWidget {
   final VoidCallback onTap;
   const _AppointmentCard({required this.appointment, required this.onTap});
 
-  static const _statusColors = {
+  static Map<String, (Color, Color)> get _statusColors => {
     'scheduled': (kInfoFg, kInfoBg),
     'completed': (kSuccessFg, kSuccessBg),
     'cancelled': (kDangerFg, kDangerBg),
-    'no_show': (kMuted, kFieldFill),
+    'no_show': (kMuted, kCareBg),
   };
 
-  static const _typeColors = {
+  static Map<String, (Color, Color)> get _typeColors => {
     'op': (kInfoFg, kInfoBg),
     'emergency': (kDangerFg, kDangerBg),
-    'consult': (kTealDark, kMint),
+    'consult': (kCareDark, kCareSoft),
     'followup': (kSuccessFg, kSuccessBg),
   };
 
   @override
   Widget build(BuildContext context) {
-    final (sFg, sBg) = _statusColors[appointment.status] ?? (kMuted, kFieldFill);
-    final (tFg, tBg) = _typeColors[appointment.type] ?? (kMuted, kFieldFill);
+    watchCarePalette(context);
+    final (sFg, sBg) = _statusColors[appointment.status] ?? (kMuted, kCareBg);
+    final (tFg, tBg) = _typeColors[appointment.type] ?? (kMuted, kCareBg);
 
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(16),
       child: Container(
         padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kFieldFill)),
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kCareBorder)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

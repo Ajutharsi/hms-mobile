@@ -214,7 +214,7 @@ class _GenderOption extends StatelessWidget {
           duration: const Duration(milliseconds: 150),
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
-            color: isSelected ? kCare : kFieldFill,
+            color: isSelected ? kCare : kCareBg,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(color: isSelected ? kCare : Colors.transparent),
           ),

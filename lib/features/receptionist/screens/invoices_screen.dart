@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/receptionist/models/invoice.dart';
 import 'package:hms_mobile/features/receptionist/screens/invoice_create_screen.dart';
 import 'package:hms_mobile/features/receptionist/screens/invoice_detail_screen.dart';
@@ -14,6 +15,7 @@ class InvoicesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return ChangeNotifierProvider(
       create: (_) => InvoicesViewModel(),
       child: const _InvoicesView(),
@@ -44,14 +46,15 @@ class _InvoicesViewState extends State<_InvoicesView> {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final viewModel = context.watch<InvoicesViewModel>();
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('Invoices', style: TextStyle(fontWeight: FontWeight.w700))),
+    return CareTheme(child: Scaffold(
+      backgroundColor: kCareBg,
+      appBar: carePageAppBar(context, 'Invoices'),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _create(context, viewModel),
-        backgroundColor: kTealDark,
+        backgroundColor: kCareDark,
         foregroundColor: Colors.white,
         icon: const Icon(Icons.add, color: Colors.white),
         label: const Text('New invoice', style: TextStyle(color: Colors.white)),
@@ -62,7 +65,7 @@ class _InvoicesViewState extends State<_InvoicesView> {
             padding: const EdgeInsets.fromLTRB(20, 12, 20, 8),
             child: TextField(
               controller: _searchController,
-              decoration: authFieldDecoration('Search invoices', hint: 'Patient name or MRN', icon: Icons.search),
+              decoration: careFieldDecoration('Search invoices', hint: 'Patient name or MRN', icon: Icons.search),
               onSubmitted: viewModel.search,
               onChanged: (v) {
                 if (v.isEmpty) viewModel.search('');
@@ -80,7 +83,7 @@ class _InvoicesViewState extends State<_InvoicesView> {
                     label: Text(status == null ? 'All' : status[0].toUpperCase() + status.substring(1)),
                     selected: viewModel.statusFilter == status,
                     onSelected: (_) => viewModel.setFilter(status),
-                    selectedColor: kMint,
+                    selectedColor: kCareSoft,
                   ),
                   const SizedBox(width: 8),
                 ],
@@ -88,15 +91,15 @@ class _InvoicesViewState extends State<_InvoicesView> {
             ),
           ),
           const SizedBox(height: 8),
-          Expanded(child: RefreshIndicator(color: kTeal, onRefresh: viewModel.load, child: _buildBody(context, viewModel))),
+          Expanded(child: RefreshIndicator(color: kCare, onRefresh: viewModel.load, child: _buildBody(context, viewModel))),
         ],
       ),
-    );
+    ));
   }
 
   Widget _buildBody(BuildContext context, InvoicesViewModel viewModel) {
     if (viewModel.isLoading && viewModel.invoices.isEmpty) {
-      return const Center(child: CircularProgressIndicator(color: kTeal));
+      return Center(child: CircularProgressIndicator(color: kCare));
     }
     if (viewModel.loadError != null && viewModel.invoices.isEmpty) {
       return ListView(padding: const EdgeInsets.all(24), children: [
@@ -121,7 +124,7 @@ class _InvoicesViewState extends State<_InvoicesView> {
             crossAxisSpacing: 10,
             childAspectRatio: 2.4,
             children: [
-              _StatTile(label: 'Total Invoices', value: '${stats.totalInvoices}', color: kTealDark, bg: kMint),
+              _StatTile(label: 'Total Invoices', value: '${stats.totalInvoices}', color: kCareDark, bg: kCareSoft),
               _StatTile(label: 'Overdue', value: '${stats.overdue}', color: kDangerFg, bg: kDangerBg),
               _StatTile(label: 'Paid', value: '₹${stats.paid.toStringAsFixed(0)}', color: kSuccessFg, bg: kSuccessBg),
               _StatTile(label: 'Outstanding', value: '₹${stats.outstanding.toStringAsFixed(0)}', color: kWarningFg, bg: kWarningBg),
@@ -156,6 +159,7 @@ class _StatTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(14)),
@@ -175,25 +179,26 @@ class _InvoiceCard extends StatelessWidget {
   final VoidCallback onTap;
   const _InvoiceCard({required this.invoice, required this.onTap});
 
-  static const _statusColors = {
-    'draft': (kMuted, kFieldFill),
+  static Map<String, (Color, Color)> get _statusColors => {
+    'draft': (kMuted, kCareBg),
     'sent': (kInfoFg, kInfoBg),
     'paid': (kSuccessFg, kSuccessBg),
     'partial': (kWarningFg, kWarningBg),
     'overdue': (kDangerFg, kDangerBg),
-    'cancelled': (kMuted, kFieldFill),
+    'cancelled': (kMuted, kCareBg),
   };
 
   @override
   Widget build(BuildContext context) {
-    final (fg, bg) = _statusColors[invoice.status] ?? (kMuted, kFieldFill);
+    watchCarePalette(context);
+    final (fg, bg) = _statusColors[invoice.status] ?? (kMuted, kCareBg);
 
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(16),
       child: Container(
         padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kFieldFill)),
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kCareBorder)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

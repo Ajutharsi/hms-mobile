@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/receptionist/models/insurance_claim.dart';
 import 'package:hms_mobile/features/receptionist/screens/insurance_claims_screen.dart';
 import 'package:hms_mobile/features/receptionist/viewmodels/insurance_claims_view_model.dart';
@@ -17,6 +18,7 @@ class InsuranceClaimDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return ChangeNotifierProvider(
       create: (_) => InsuranceClaimDetailViewModel(claimId: claimId),
       child: const _DetailView(),
@@ -32,7 +34,7 @@ class _DetailView extends StatelessWidget {
     if (result == null || !context.mounted) return;
     final error = await viewModel.update(result);
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kTealDark : null, content: Text(error ?? 'Claim updated!')));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kCareDark : null, content: Text(error ?? 'Claim updated!')));
   }
 
   Future<void> _updateStatus(BuildContext context, InsuranceClaimDetailViewModel viewModel, InsuranceClaim claim) async {
@@ -40,7 +42,7 @@ class _DetailView extends StatelessWidget {
     if (result == null || !context.mounted) return;
     final error = await viewModel.updateStatus(result);
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kTealDark : null, content: Text(error ?? 'Status updated!')));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kCareDark : null, content: Text(error ?? 'Status updated!')));
   }
 
   Future<void> _delete(BuildContext context, InsuranceClaimDetailViewModel viewModel) async {
@@ -66,39 +68,34 @@ class _DetailView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final viewModel = context.watch<InsuranceClaimDetailViewModel>();
     final claim = viewModel.claim;
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        foregroundColor: kInk,
-        elevation: 0,
-        title: Text(claim?.claimNo ?? 'Insurance Claim'),
-        actions: claim == null
+    return CareTheme(child: Scaffold(
+      backgroundColor: kCareBg,
+      appBar: carePageAppBar(context, claim?.claimNo ?? 'Insurance Claim', actions: claim == null
             ? null
             : [
-                IconButton(icon: const Icon(Icons.edit_outlined), onPressed: () => _edit(context, viewModel, claim)),
-                IconButton(icon: const Icon(Icons.delete_outline), onPressed: () => _delete(context, viewModel)),
-              ],
-      ),
+                IconButton(icon: const Icon(Icons.edit_outlined, color: Colors.white), onPressed: () => _edit(context, viewModel, claim)),
+                IconButton(icon: const Icon(Icons.delete_outline, color: Colors.white), onPressed: () => _delete(context, viewModel)),
+              ]),
       floatingActionButton: claim == null
           ? null
           : FloatingActionButton.extended(
               onPressed: () => _updateStatus(context, viewModel, claim),
-              backgroundColor: kTealDark,
+              backgroundColor: kCareDark,
               foregroundColor: Colors.white,
               icon: const Icon(Icons.flag_outlined, color: Colors.white),
               label: const Text('Update status', style: TextStyle(color: Colors.white)),
             ),
       body: _buildBody(context, viewModel),
-    );
+    ));
   }
 
   Widget _buildBody(BuildContext context, InsuranceClaimDetailViewModel viewModel) {
     if (viewModel.isLoading && viewModel.claim == null) {
-      return const Center(child: CircularProgressIndicator(color: kTeal));
+      return Center(child: CircularProgressIndicator(color: kCare));
     }
     if (viewModel.loadError != null && viewModel.claim == null) {
       return ListView(padding: const EdgeInsets.all(24), children: [
@@ -171,9 +168,10 @@ class _InfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return Container(
       padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(color: kFieldFill, borderRadius: BorderRadius.circular(14)),
+      decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(14)),
       child: Column(
         children: [
           for (int i = 0; i < rows.length; i++) ...[
@@ -223,6 +221,7 @@ class _EditDialogState extends State<_EditDialog> {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return AlertDialog(
       title: const Text('Edit claim'),
       content: SizedBox(
@@ -299,6 +298,7 @@ class _StatusDialogState extends State<_StatusDialog> {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return AlertDialog(
       title: const Text('Update status'),
       content: SingleChildScrollView(
