@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:hms_mobile/core/models/app_user.dart';
+import 'package:hms_mobile/features/doctor/screens/doctor_home_screen.dart';
 import 'package:hms_mobile/features/lab/screens/lab_home_screen.dart';
 import 'package:hms_mobile/features/nurse/screens/nurse_home_screen.dart';
 import 'package:hms_mobile/features/patient/screens/home_screen.dart';
@@ -9,16 +10,19 @@ import 'package:hms_mobile/features/receptionist/screens/receptionist_home_scree
 import 'package:hms_mobile/features/staff/screens/staff_home_screen.dart';
 
 /// Routes a freshly-logged-in (or restored-session) user to the right
-/// role's home shell. Only patient, nurse, staff, lab_assistant,
-/// receptionist, and pharmacist have a mobile build so far — any other
-/// role sees a plain "not available yet" screen rather than a crash or a
-/// silent wrong-role UI.
+/// role's home shell. Patient, doctor, nurse, staff, lab_assistant,
+/// receptionist and pharmacist have a mobile build; admin and super_admin
+/// stay web-only and see a plain "not available yet" screen rather than a
+/// crash or a silent wrong-role UI.
 class RoleHome extends StatelessWidget {
   final AppUser user;
   const RoleHome({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {
+    if (user.roles.contains('doctor')) {
+      return DoctorHomeScreen(user: user);
+    }
     if (user.roles.contains('nurse')) {
       return NurseHomeScreen(user: user);
     }
