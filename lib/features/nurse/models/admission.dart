@@ -1,3 +1,5 @@
+import 'package:hms_mobile/core/models/json_value.dart';
+
 class Admission {
   final int id;
   final String? admissionNo;
@@ -44,7 +46,7 @@ class Admission {
         admissionDate: json['admission_date']?.toString(),
         dischargeDate: json['discharge_date']?.toString(),
         status: json['status']?.toString() ?? '',
-        totalCharges: (json['total_charges'] as num?)?.toDouble() ?? 0,
+        totalCharges: asDoubleOr(json['total_charges'], 0),
       );
 }
 
@@ -62,9 +64,9 @@ class AdmissionBalance {
   });
 
   factory AdmissionBalance.fromJson(Map<String, dynamic> json) => AdmissionBalance(
-        invoiceTotal: (json['invoice_total'] as num?)?.toDouble() ?? 0,
-        paymentsMade: (json['payments_made'] as num?)?.toDouble() ?? 0,
-        depositBalance: (json['deposit_balance'] as num?)?.toDouble() ?? 0,
-        outstanding: (json['outstanding'] as num?)?.toDouble() ?? 0,
+        invoiceTotal: asDoubleOr(json['invoice_total'], 0),
+        paymentsMade: asDoubleOr(json['payments_made'], 0),
+        depositBalance: asDoubleOr(json['deposit_balance'], 0),
+        outstanding: asDoubleOr(json['outstanding'], 0),
       );
 }

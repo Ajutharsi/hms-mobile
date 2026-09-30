@@ -1,3 +1,5 @@
+import 'package:hms_mobile/core/models/json_value.dart';
+
 class ShiftHandoverSummary {
   final int id;
   final String? handoverNo;
@@ -46,10 +48,10 @@ class HandoverVitals {
 
   factory HandoverVitals.fromJson(Map<String, dynamic> json) => HandoverVitals(
         bloodPressure: json['blood_pressure']?.toString(),
-        pulseRate: json['pulse_rate'] as num?,
-        temperature: json['temperature'] as num?,
-        respiratoryRate: json['respiratory_rate'] as num?,
-        spo2: json['spo2'] as num?,
+        pulseRate: asNum(json['pulse_rate']),
+        temperature: asNum(json['temperature']),
+        respiratoryRate: asNum(json['respiratory_rate']),
+        spo2: asNum(json['spo2']),
         recordedAt: json['recorded_at']?.toString(),
       );
 }

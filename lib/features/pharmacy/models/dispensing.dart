@@ -1,3 +1,4 @@
+import 'package:hms_mobile/core/models/json_value.dart';
 import 'package:hms_mobile/features/pharmacy/models/drug.dart';
 
 class Dispensing {
@@ -32,7 +33,7 @@ class Dispensing {
         patientName: json['patient_name']?.toString(),
         patientMrn: json['patient_mrn']?.toString(),
         prescriptionNo: json['prescription_no']?.toString(),
-        totalAmount: (json['total_amount'] as num?)?.toDouble() ?? 0,
+        totalAmount: asDoubleOr(json['total_amount'], 0),
         status: json['status']?.toString() ?? 'dispensed',
         itemsCount: json['items_count'] as int? ?? 0,
         dispensedDate: json['dispensed_date']?.toString(),
@@ -58,8 +59,8 @@ class DispensingItem {
         medicineName: json['medicine_name']?.toString() ?? '',
         quantityPrescribed: json['quantity_prescribed'] as int?,
         quantityDispensed: json['quantity_dispensed'] as int? ?? 0,
-        unitPrice: (json['unit_price'] as num?)?.toDouble() ?? 0,
-        totalPrice: (json['total_price'] as num?)?.toDouble() ?? 0,
+        unitPrice: asDoubleOr(json['unit_price'], 0),
+        totalPrice: asDoubleOr(json['total_price'], 0),
       );
 }
 
@@ -90,7 +91,7 @@ class DispensingDetail extends Dispensing {
         patientName: json['patient_name']?.toString(),
         patientMrn: json['patient_mrn']?.toString(),
         prescriptionNo: json['prescription_no']?.toString(),
-        totalAmount: (json['total_amount'] as num?)?.toDouble() ?? 0,
+        totalAmount: asDoubleOr(json['total_amount'], 0),
         status: json['status']?.toString() ?? 'dispensed',
         dispensedDate: json['dispensed_date']?.toString(),
         notes: json['notes']?.toString(),

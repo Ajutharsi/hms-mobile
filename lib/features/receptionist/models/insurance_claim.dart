@@ -1,3 +1,5 @@
+import 'package:hms_mobile/core/models/json_value.dart';
+
 class InsuranceClaimStats {
   final int total;
   final int pending;
@@ -18,7 +20,7 @@ class InsuranceClaimStats {
         pending: json['pending'] as int? ?? 0,
         approved: json['approved'] as int? ?? 0,
         rejected: json['rejected'] as int? ?? 0,
-        totalApprovedAmount: (json['total_approved_amount'] as num?)?.toDouble() ?? 0,
+        totalApprovedAmount: asDoubleOr(json['total_approved_amount'], 0),
       );
 }
 
@@ -80,9 +82,9 @@ class InsuranceClaim {
         tpaName: json['tpa_name']?.toString(),
         policyNumber: json['policy_number']?.toString() ?? '',
         memberId: json['member_id']?.toString(),
-        claimAmount: (json['claim_amount'] as num?)?.toDouble() ?? 0,
-        approvedAmount: (json['approved_amount'] as num?)?.toDouble(),
-        patientLiability: (json['patient_liability'] as num?)?.toDouble(),
+        claimAmount: asDoubleOr(json['claim_amount'], 0),
+        approvedAmount: asDouble(json['approved_amount']),
+        patientLiability: asDouble(json['patient_liability']),
         claimType: json['claim_type']?.toString() ?? 'cashless',
         status: json['status']?.toString() ?? 'draft',
         admissionDate: json['admission_date']?.toString(),

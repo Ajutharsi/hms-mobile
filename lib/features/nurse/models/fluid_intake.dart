@@ -1,3 +1,5 @@
+import 'package:hms_mobile/core/models/json_value.dart';
+
 class FluidIntakePatient {
   final int id;
   final String name;
@@ -25,9 +27,9 @@ class FluidIntakePatient {
         mrn: json['mrn']?.toString() ?? '',
         wardName: json['ward_name']?.toString(),
         bedNo: json['bed_no']?.toString(),
-        intake: json['intake'] as num? ?? 0,
-        output: json['output'] as num? ?? 0,
-        balance: json['balance'] as num? ?? 0,
+        intake: asNum(json['intake']) ?? 0,
+        output: asNum(json['output']) ?? 0,
+        balance: asNum(json['balance']) ?? 0,
       );
 }
 

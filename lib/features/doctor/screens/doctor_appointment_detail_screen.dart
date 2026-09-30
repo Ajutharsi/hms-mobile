@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:hms_mobile/core/models/date_display.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/doctor/models/doctor_models.dart';
@@ -200,7 +201,7 @@ class _VitalsCard extends StatelessWidget {
           ),
           if ((vitals.recordedAt ?? '').isNotEmpty) ...[
             const SizedBox(height: 8),
-            Text('Recorded ${vitals.recordedAt}', style: const TextStyle(fontSize: 11.5, color: kMuted)),
+            Text('Recorded ${shortDateTime(vitals.recordedAt)}', style: const TextStyle(fontSize: 11.5, color: kMuted)),
           ],
         ],
       ),

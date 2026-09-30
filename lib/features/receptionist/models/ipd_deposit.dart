@@ -1,3 +1,5 @@
+import 'package:hms_mobile/core/models/json_value.dart';
+
 class IpdDepositStats {
   final double totalCollected;
   final double totalRefunded;
@@ -6,9 +8,9 @@ class IpdDepositStats {
   const IpdDepositStats({required this.totalCollected, required this.totalRefunded, required this.todayCollection});
 
   factory IpdDepositStats.fromJson(Map<String, dynamic> json) => IpdDepositStats(
-        totalCollected: (json['total_collected'] as num?)?.toDouble() ?? 0,
-        totalRefunded: (json['total_refunded'] as num?)?.toDouble() ?? 0,
-        todayCollection: (json['today_collection'] as num?)?.toDouble() ?? 0,
+        totalCollected: asDoubleOr(json['total_collected'], 0),
+        totalRefunded: asDoubleOr(json['total_refunded'], 0),
+        todayCollection: asDoubleOr(json['today_collection'], 0),
       );
 }
 
@@ -49,13 +51,13 @@ class IpdDeposit {
         patientId: json['patient_id'] as int,
         patientName: json['patient_name']?.toString(),
         patientMrn: json['patient_mrn']?.toString(),
-        amount: (json['amount'] as num?)?.toDouble() ?? 0,
+        amount: asDoubleOr(json['amount'], 0),
         type: json['type']?.toString() ?? 'advance',
         paymentMethod: json['payment_method']?.toString() ?? '',
         referenceNo: json['reference_no']?.toString(),
         notes: json['notes']?.toString(),
         collectedByName: json['collected_by_name']?.toString(),
         depositedAt: json['deposited_at']?.toString(),
-        balance: (json['balance'] as num?)?.toDouble() ?? 0,
+        balance: asDoubleOr(json['balance'], 0),
       );
 }

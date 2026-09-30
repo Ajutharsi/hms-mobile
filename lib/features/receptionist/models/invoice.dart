@@ -1,3 +1,5 @@
+import 'package:hms_mobile/core/models/json_value.dart';
+
 class InvoiceStats {
   final int totalInvoices;
   final double paid;
@@ -8,8 +10,8 @@ class InvoiceStats {
 
   factory InvoiceStats.fromJson(Map<String, dynamic> json) => InvoiceStats(
         totalInvoices: json['total_invoices'] as int? ?? 0,
-        paid: (json['paid'] as num?)?.toDouble() ?? 0,
-        outstanding: (json['outstanding'] as num?)?.toDouble() ?? 0,
+        paid: asDoubleOr(json['paid'], 0),
+        outstanding: asDoubleOr(json['outstanding'], 0),
         overdue: json['overdue'] as int? ?? 0,
       );
 }
@@ -49,9 +51,9 @@ class Invoice {
         patientMrn: json['patient_mrn']?.toString(),
         invoiceDate: json['invoice_date']?.toString(),
         dueDate: json['due_date']?.toString(),
-        total: (json['total'] as num?)?.toDouble() ?? 0,
-        paidAmount: (json['paid_amount'] as num?)?.toDouble() ?? 0,
-        balance: (json['balance'] as num?)?.toDouble() ?? 0,
+        total: asDoubleOr(json['total'], 0),
+        paidAmount: asDoubleOr(json['paid_amount'], 0),
+        balance: asDoubleOr(json['balance'], 0),
         status: json['status']?.toString() ?? 'draft',
       );
 }
@@ -80,9 +82,9 @@ class InvoiceItemLine {
         itemType: json['item_type']?.toString(),
         description: json['description']?.toString(),
         quantity: json['quantity'] as int? ?? 0,
-        unitPrice: (json['unit_price'] as num?)?.toDouble() ?? 0,
-        discount: (json['discount'] as num?)?.toDouble() ?? 0,
-        total: (json['total'] as num?)?.toDouble() ?? 0,
+        unitPrice: asDoubleOr(json['unit_price'], 0),
+        discount: asDoubleOr(json['discount'], 0),
+        total: asDoubleOr(json['total'], 0),
       );
 }
 
@@ -105,7 +107,7 @@ class InvoicePayment {
 
   factory InvoicePayment.fromJson(Map<String, dynamic> json) => InvoicePayment(
         paymentNo: json['payment_no']?.toString(),
-        amount: (json['amount'] as num?)?.toDouble() ?? 0,
+        amount: asDoubleOr(json['amount'], 0),
         paymentMethod: json['payment_method']?.toString() ?? '',
         referenceNo: json['reference_no']?.toString(),
         paymentDate: json['payment_date']?.toString(),
@@ -151,13 +153,13 @@ class InvoiceDetail extends Invoice {
         patientMrn: json['patient_mrn']?.toString(),
         invoiceDate: json['invoice_date']?.toString(),
         dueDate: json['due_date']?.toString(),
-        total: (json['total'] as num?)?.toDouble() ?? 0,
-        paidAmount: (json['paid_amount'] as num?)?.toDouble() ?? 0,
-        balance: (json['balance'] as num?)?.toDouble() ?? 0,
+        total: asDoubleOr(json['total'], 0),
+        paidAmount: asDoubleOr(json['paid_amount'], 0),
+        balance: asDoubleOr(json['balance'], 0),
         status: json['status']?.toString() ?? 'draft',
-        subtotal: (json['subtotal'] as num?)?.toDouble() ?? 0,
-        discount: (json['discount'] as num?)?.toDouble() ?? 0,
-        tax: (json['tax'] as num?)?.toDouble() ?? 0,
+        subtotal: asDoubleOr(json['subtotal'], 0),
+        discount: asDoubleOr(json['discount'], 0),
+        tax: asDoubleOr(json['tax'], 0),
         notes: json['notes']?.toString(),
         createdByName: json['created_by_name']?.toString(),
         items: (json['items'] as List? ?? []).map((i) => InvoiceItemLine.fromJson(i as Map<String, dynamic>)).toList(),
@@ -179,6 +181,6 @@ class BillingServiceItem {
         serviceCode: json['service_code']?.toString(),
         serviceName: json['service_name']?.toString() ?? '',
         category: json['category']?.toString(),
-        price: (json['price'] as num?)?.toDouble() ?? 0,
+        price: asDoubleOr(json['price'], 0),
       );
 }

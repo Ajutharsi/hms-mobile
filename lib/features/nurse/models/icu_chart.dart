@@ -1,3 +1,5 @@
+import 'package:hms_mobile/core/models/json_value.dart';
+
 class IcuChart {
   final int id;
   final int patientId;
@@ -74,11 +76,11 @@ class IcuChart {
         gcsVerbal: json['gcs_verbal'] as int?,
         gcsMotor: json['gcs_motor'] as int?,
         gcsTotal: json['gcs_total'] as int?,
-        intakeOral: json['intake_oral'] as num?,
-        intakeIv: json['intake_iv'] as num?,
-        outputUrine: json['output_urine'] as num?,
-        outputDrain: json['output_drain'] as num?,
-        fluidBalance: json['fluid_balance'] as num?,
+        intakeOral: asNum(json['intake_oral']),
+        intakeIv: asNum(json['intake_iv']),
+        outputUrine: asNum(json['output_urine']),
+        outputDrain: asNum(json['output_drain']),
+        fluidBalance: asNum(json['fluid_balance']),
         notes: json['notes']?.toString(),
         chartedAt: json['charted_at']?.toString(),
         recordedByName: json['recorded_by_name']?.toString(),

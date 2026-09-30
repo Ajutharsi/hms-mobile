@@ -1,3 +1,5 @@
+import 'package:hms_mobile/core/models/json_value.dart';
+
 class Drug {
   final int id;
   final String? drugCode;
@@ -44,7 +46,7 @@ class Drug {
         form: json['form']?.toString() ?? '',
         strength: json['strength']?.toString(),
         manufacturer: json['manufacturer']?.toString(),
-        unitPrice: (json['unit_price'] as num?)?.toDouble() ?? 0,
+        unitPrice: asDoubleOr(json['unit_price'], 0),
         minStockLevel: json['min_stock_level'] as int?,
         currentStock: json['current_stock'] as int? ?? 0,
         expiryDate: json['expiry_date']?.toString(),

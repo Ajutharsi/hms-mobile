@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
@@ -321,7 +323,16 @@ Future<T> guardNetworkErrors<T>(Future<T> Function() action) async {
     return await action();
   } on ApiException {
     rethrow;
-  } catch (_) {
+  } on SocketException {
     throw ApiException('Could not reach the server. Is the backend running and reachable?');
+  } on http.ClientException {
+    throw ApiException('Could not reach the server. Is the backend running and reachable?');
+  } on TimeoutException {
+    throw ApiException('The server took too long to respond. Please try again.');
+  } catch (error) {
+    // Anything else is ours — a bad cast or a payload we didn't expect.
+    // Saying "could not reach the server" for those sent us hunting the
+    // network while the real fault was in here.
+    throw ApiException("Something went wrong reading the server's response. ($error)");
   }
 }

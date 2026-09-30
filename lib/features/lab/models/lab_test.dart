@@ -1,3 +1,5 @@
+import 'package:hms_mobile/core/models/json_value.dart';
+
 class LabTest {
   final int id;
   final String? testCode;
@@ -31,7 +33,7 @@ class LabTest {
         testName: json['test_name']?.toString() ?? '',
         category: json['category']?.toString() ?? '',
         sampleType: json['sample_type']?.toString() ?? '',
-        price: (json['price'] as num?)?.toDouble() ?? 0,
+        price: asDoubleOr(json['price'], 0),
         unit: json['unit']?.toString(),
         normalRangeMale: json['normal_range_male']?.toString(),
         normalRangeFemale: json['normal_range_female']?.toString(),

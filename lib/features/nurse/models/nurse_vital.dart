@@ -1,3 +1,5 @@
+import 'package:hms_mobile/core/models/json_value.dart';
+
 class NurseVital {
   final int id;
   final int patientId;
@@ -39,12 +41,12 @@ class NurseVital {
         patientName: json['patient_name']?.toString(),
         patientMrn: json['patient_mrn']?.toString(),
         bloodPressure: json['blood_pressure']?.toString(),
-        temperature: json['temperature'] as num?,
+        temperature: asNum(json['temperature']),
         pulseRate: json['pulse_rate'] as int?,
         respiratoryRate: json['respiratory_rate'] as int?,
         spo2: json['spo2'] as int?,
-        weight: json['weight'] as num?,
-        height: json['height'] as num?,
+        weight: asNum(json['weight']),
+        height: asNum(json['height']),
         newsScore: json['news_score'] as int?,
         notes: json['notes']?.toString(),
         recordedAt: json['recorded_at']?.toString(),

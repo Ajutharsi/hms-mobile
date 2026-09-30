@@ -1,3 +1,5 @@
+import 'package:hms_mobile/core/models/json_value.dart';
+
 class SchemeBillingStats {
   final int total;
   final int pending;
@@ -9,7 +11,7 @@ class SchemeBillingStats {
   factory SchemeBillingStats.fromJson(Map<String, dynamic> json) => SchemeBillingStats(
         total: json['total'] as int? ?? 0,
         pending: json['pending'] as int? ?? 0,
-        approvedAmount: (json['approved_amount'] as num?)?.toDouble() ?? 0,
+        approvedAmount: asDoubleOr(json['approved_amount'], 0),
         settled: json['settled'] as int? ?? 0,
       );
 }
@@ -71,10 +73,10 @@ class SchemeBilling {
         beneficiaryId: json['beneficiary_id']?.toString(),
         packageCode: json['package_code']?.toString(),
         packageName: json['package_name']?.toString(),
-        packageRate: (json['package_rate'] as num?)?.toDouble() ?? 0,
-        actualBill: (json['actual_bill'] as num?)?.toDouble() ?? 0,
-        schemePayment: (json['scheme_payment'] as num?)?.toDouble(),
-        patientLiability: (json['patient_liability'] as num?)?.toDouble(),
+        packageRate: asDoubleOr(json['package_rate'], 0),
+        actualBill: asDoubleOr(json['actual_bill'], 0),
+        schemePayment: asDouble(json['scheme_payment']),
+        patientLiability: asDouble(json['patient_liability']),
         status: json['status']?.toString() ?? 'draft',
         rejectionReason: json['rejection_reason']?.toString(),
         submissionDate: json['submission_date']?.toString(),

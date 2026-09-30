@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import 'package:hms_mobile/core/models/date_display.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
@@ -145,7 +147,7 @@ class _VitalCard extends StatelessWidget {
               children: [
                 const Icon(Icons.access_time_rounded, size: 13, color: kMuted),
                 const SizedBox(width: 6),
-                Text(vital.recordedAt ?? '', style: const TextStyle(fontSize: 12, color: kMuted)),
+                Text(shortDateTime(vital.recordedAt), style: const TextStyle(fontSize: 12, color: kMuted)),
                 if (vital.recordedByName != null) ...[
                   const SizedBox(width: 12),
                   const Icon(Icons.person_outline, size: 13, color: kMuted),

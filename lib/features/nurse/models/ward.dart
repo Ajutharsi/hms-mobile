@@ -1,3 +1,5 @@
+import 'package:hms_mobile/core/models/json_value.dart';
+
 class Ward {
   final int id;
   final String? wardNo;
@@ -30,7 +32,7 @@ class Ward {
         building: json['building']?.toString(),
         totalBeds: json['total_beds'] as int? ?? 0,
         availableBeds: json['available_beds'] as int? ?? 0,
-        chargePerDay: (json['charge_per_day'] as num?)?.toDouble() ?? 0,
+        chargePerDay: asDoubleOr(json['charge_per_day'], 0),
       );
 }
 
