@@ -238,14 +238,19 @@ class _ConsultationCard extends StatelessWidget {
       children: [
         CareCard(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               row('Chief complaint', consultation.chiefComplaint),
               row('Diagnosis', consultation.diagnosis),
               if ((consultation.icd10Code ?? '').isNotEmpty)
                 Padding(
                   padding: const EdgeInsets.only(bottom: 10),
-                  child: CareChip(label: 'ICD-10 ${consultation.icd10Code}', bg: kCareSoft, fg: kCareDark),
+                  // Align, or the stretching Column would pull the chip
+                  // across the whole card.
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: CareChip(label: 'ICD-10 ${consultation.icd10Code}', bg: kCareSoft, fg: kCareDark),
+                  ),
                 ),
               row('Treatment plan', consultation.treatmentPlan),
               row('Notes', consultation.notes),

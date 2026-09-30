@@ -583,15 +583,18 @@ class CareChoicePill extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           border: Border.all(color: selected ? kCare : (enabled ? kCareBorder : Colors.transparent)),
         ),
-        alignment: Alignment.center,
-        child: Text(
-          label,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 13,
-            fontWeight: FontWeight.w600,
-            color: selected ? Colors.white : (enabled ? kInk : const Color(0xFFBFC5C3)),
-            decoration: enabled ? null : TextDecoration.lineThrough,
+        child: Center(
+          widthFactor: 1,
+          heightFactor: 1,
+          child: Text(
+            label,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+              color: selected ? Colors.white : (enabled ? kInk : const Color(0xFFBFC5C3)),
+              decoration: enabled ? null : TextDecoration.lineThrough,
+            ),
           ),
         ),
       ),

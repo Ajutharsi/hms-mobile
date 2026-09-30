@@ -34,6 +34,13 @@ class DoctorDashboardStats {
       );
 }
 
+/// 'HH:MM:SS' from the API reads better as 'HH:MM' on a phone.
+String _shortTime(String? raw) {
+  final value = raw ?? '';
+  final parts = value.split(':');
+  return parts.length >= 2 ? '${parts[0]}:${parts[1]}' : value;
+}
+
 class DoctorAppointment {
   final int id;
   final String appointmentId;
@@ -70,7 +77,7 @@ class DoctorAppointment {
         patientName: json['patient_name']?.toString(),
         patientMrn: json['patient_mrn']?.toString(),
         date: json['date']?.toString() ?? '',
-        time: json['time']?.toString() ?? '',
+        time: _shortTime(json['time']?.toString()),
         type: json['type']?.toString() ?? '',
         status: json['status']?.toString() ?? 'scheduled',
         tokenNumber: json['token_number'] as int?,
