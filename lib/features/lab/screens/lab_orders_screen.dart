@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/lab/models/lab_order.dart';
 import 'package:hms_mobile/features/lab/screens/lab_order_create_screen.dart';
 import 'package:hms_mobile/features/lab/screens/lab_order_detail_screen.dart';
@@ -14,6 +15,7 @@ class LabOrdersScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return ChangeNotifierProvider(
       create: (_) => LabOrdersViewModel(),
       child: const _LabOrdersView(),
@@ -31,14 +33,15 @@ class _LabOrdersView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final viewModel = context.watch<LabOrdersViewModel>();
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('Lab Orders', style: TextStyle(fontWeight: FontWeight.w700))),
+    return CareTheme(child: Scaffold(
+      backgroundColor: kCareBg,
+      appBar: carePageAppBar(context, 'Lab Orders'),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _create(context, viewModel),
-        backgroundColor: kTealDark,
+        backgroundColor: kCareDark,
         foregroundColor: Colors.white,
         icon: const Icon(Icons.add, color: Colors.white),
         label: const Text('New order', style: TextStyle(color: Colors.white)),
@@ -56,22 +59,22 @@ class _LabOrdersView extends StatelessWidget {
                     label: Text(status == null ? 'All' : status[0].toUpperCase() + status.substring(1)),
                     selected: viewModel.statusFilter == status,
                     onSelected: (_) => viewModel.setFilter(status),
-                    selectedColor: kMint,
+                    selectedColor: kCareSoft,
                   ),
                   const SizedBox(width: 8),
                 ],
               ],
             ),
           ),
-          Expanded(child: RefreshIndicator(color: kTeal, onRefresh: viewModel.load, child: _buildBody(context, viewModel))),
+          Expanded(child: RefreshIndicator(color: kCare, onRefresh: viewModel.load, child: _buildBody(context, viewModel))),
         ],
       ),
-    );
+    ));
   }
 
   Widget _buildBody(BuildContext context, LabOrdersViewModel viewModel) {
     if (viewModel.isLoading && viewModel.orders.isEmpty) {
-      return const Center(child: CircularProgressIndicator(color: kTeal));
+      return Center(child: CircularProgressIndicator(color: kCare));
     }
     if (viewModel.loadError != null && viewModel.orders.isEmpty) {
       return ListView(padding: const EdgeInsets.all(24), children: [
@@ -122,14 +125,15 @@ class _OrderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final (fg, bg) = _statusColors[order.status] ?? (kMuted, kFieldFill);
+    watchCarePalette(context);
+    final (fg, bg) = _statusColors[order.status] ?? (kMuted, kCareBg);
 
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(16),
       child: Container(
         padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kFieldFill)),
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kCareBorder)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

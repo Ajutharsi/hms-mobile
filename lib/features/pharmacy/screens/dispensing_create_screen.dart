@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/pharmacy/models/drug.dart';
 import 'package:hms_mobile/features/pharmacy/viewmodels/dispensing_create_view_model.dart';
 
@@ -10,6 +11,7 @@ class DispensingCreateScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return ChangeNotifierProvider(
       create: (_) => DispensingCreateViewModel(),
       child: const _DispensingCreateView(),
@@ -84,15 +86,16 @@ class _DispensingCreateViewState extends State<_DispensingCreateView> {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final viewModel = context.watch<DispensingCreateViewModel>();
 
     final total = viewModel.lines.fold<double>(0, (sum, l) => sum + (l.drug.unitPrice * l.quantity));
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('New Dispensing', style: TextStyle(fontWeight: FontWeight.w700))),
+    return CareTheme(child: Scaffold(
+      backgroundColor: kCareBg,
+      appBar: carePageAppBar(context, 'New Dispensing'),
       body: viewModel.isLoadingDrugs
-          ? const Center(child: CircularProgressIndicator(color: kTeal))
+          ? Center(child: CircularProgressIndicator(color: kCare))
           : ListView(
               padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
               children: [
@@ -101,7 +104,7 @@ class _DispensingCreateViewState extends State<_DispensingCreateView> {
                 if (viewModel.selectedPatient != null)
                   Container(
                     padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(color: kMint, borderRadius: BorderRadius.circular(12)),
+                    decoration: BoxDecoration(color: kCareSoft, borderRadius: BorderRadius.circular(12)),
                     child: Row(
                       children: [
                         Expanded(
@@ -120,13 +123,13 @@ class _DispensingCreateViewState extends State<_DispensingCreateView> {
                 else ...[
                   TextField(
                     controller: _searchController,
-                    decoration: authFieldDecoration('Search patient', hint: 'Name or MRN', icon: Icons.search),
+                    decoration: careFieldDecoration('Search patient', hint: 'Name or MRN', icon: Icons.search),
                     onChanged: viewModel.searchPatients,
                   ),
                   if (viewModel.patientResults.isNotEmpty)
                     Container(
                       margin: const EdgeInsets.only(top: 6),
-                      decoration: BoxDecoration(color: kFieldFill, borderRadius: BorderRadius.circular(12)),
+                      decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(12)),
                       constraints: const BoxConstraints(maxHeight: 220),
                       child: ListView.builder(
                         shrinkWrap: true,
@@ -165,7 +168,7 @@ class _DispensingCreateViewState extends State<_DispensingCreateView> {
                     Container(
                       margin: const EdgeInsets.only(bottom: 8),
                       padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12), border: Border.all(color: kFieldFill)),
+                      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12), border: Border.all(color: kCareBorder)),
                       child: Row(
                         children: [
                           Expanded(
@@ -195,17 +198,17 @@ class _DispensingCreateViewState extends State<_DispensingCreateView> {
                     ),
                   ],
                 if (viewModel.lines.isNotEmpty) ...[
-                  const Divider(color: kFieldFill),
+                  Divider(color: kCareBg),
                   Row(
                     children: [
                       const Text('Total', style: TextStyle(fontWeight: FontWeight.w700, color: kInk)),
                       const Spacer(),
-                      Text('₹${total.toStringAsFixed(2)}', style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16, color: kTealDark)),
+                      Text('₹${total.toStringAsFixed(2)}', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16, color: kCareDark)),
                     ],
                   ),
                 ],
                 const SizedBox(height: 20),
-                TextField(controller: _notesController, decoration: authFieldDecoration('Notes', hint: 'Optional', icon: Icons.notes_outlined), maxLines: 3),
+                TextField(controller: _notesController, decoration: careFieldDecoration('Notes', hint: 'Optional', icon: Icons.notes_outlined), maxLines: 3),
                 if (_error != null) ...[
                   const SizedBox(height: 16),
                   authErrorBanner(_error!),
@@ -215,7 +218,7 @@ class _DispensingCreateViewState extends State<_DispensingCreateView> {
                   height: 48,
                   child: ElevatedButton(
                     onPressed: viewModel.isSaving ? null : () => _submit(viewModel),
-                    style: ElevatedButton.styleFrom(backgroundColor: kTealDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+                    style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
                     child: viewModel.isSaving
                         ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
                         : const Text('Complete dispensing', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
@@ -223,6 +226,6 @@ class _DispensingCreateViewState extends State<_DispensingCreateView> {
                 ),
               ],
             ),
-    );
+    ));
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/lab/models/lab_order.dart';
 import 'package:hms_mobile/features/lab/viewmodels/lab_orders_view_model.dart';
 
@@ -11,6 +12,7 @@ class LabOrderDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return ChangeNotifierProvider(
       create: (_) => LabOrderDetailViewModel(orderId: orderId),
       child: const _LabOrderDetailView(),
@@ -30,23 +32,24 @@ class _LabOrderDetailView extends StatelessWidget {
 
     final error = await viewModel.saveResults(results);
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kTealDark : null, content: Text(error ?? 'Results saved!')));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kCareDark : null, content: Text(error ?? 'Results saved!')));
   }
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final viewModel = context.watch<LabOrderDetailViewModel>();
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: Text(viewModel.order?.orderNo ?? 'Lab Order')),
+    return CareTheme(child: Scaffold(
+      backgroundColor: kCareBg,
+      appBar: carePageAppBar(context, viewModel.order?.orderNo ?? 'Lab Order'),
       body: _buildBody(context, viewModel),
-    );
+    ));
   }
 
   Widget _buildBody(BuildContext context, LabOrderDetailViewModel viewModel) {
     if (viewModel.isLoading && viewModel.order == null) {
-      return const Center(child: CircularProgressIndicator(color: kTeal));
+      return Center(child: CircularProgressIndicator(color: kCare));
     }
     if (viewModel.loadError != null && viewModel.order == null) {
       return ListView(padding: const EdgeInsets.all(24), children: [
@@ -65,7 +68,7 @@ class _LabOrderDetailView extends StatelessWidget {
       children: [
         Container(
           padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(color: kFieldFill, borderRadius: BorderRadius.circular(16)),
+          decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(16)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -93,7 +96,7 @@ class _LabOrderDetailView extends StatelessWidget {
             height: 46,
             child: ElevatedButton.icon(
               onPressed: viewModel.isSaving ? null : () => _enterResults(context, viewModel, pendingItems),
-              style: ElevatedButton.styleFrom(backgroundColor: kTealDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+              style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
               icon: viewModel.isSaving
                   ? const SizedBox(height: 16, width: 16, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
                   : const Icon(Icons.science_outlined, color: Colors.white, size: 18),
@@ -112,6 +115,7 @@ class _ItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final completed = item.status == 'completed';
     final result = item.result;
     final flagColor = switch (result?.flag) {
@@ -122,7 +126,7 @@ class _ItemCard extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14), border: Border.all(color: kFieldFill)),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14), border: Border.all(color: kCareBorder)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -186,6 +190,7 @@ class _EnterResultsDialogState extends State<_EnterResultsDialog> {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return AlertDialog(
       title: const Text('Enter results'),
       content: SizedBox(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/pharmacy/models/drug.dart';
 import 'package:hms_mobile/features/pharmacy/viewmodels/drug_master_view_model.dart';
 
@@ -10,6 +11,7 @@ class DrugMasterScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return ChangeNotifierProvider(
       create: (_) => DrugMasterViewModel(),
       child: const _DrugMasterView(),
@@ -40,7 +42,7 @@ class _DrugMasterViewState extends State<_DrugMasterView> {
     final error = await viewModel.save(id: existing?.id, fields: result);
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(backgroundColor: error == null ? kTealDark : null, content: Text(error ?? (existing == null ? 'Drug added successfully!' : 'Drug updated!'))),
+      SnackBar(backgroundColor: error == null ? kCareDark : null, content: Text(error ?? (existing == null ? 'Drug added successfully!' : 'Drug updated!'))),
     );
   }
 
@@ -50,7 +52,7 @@ class _DrugMasterViewState extends State<_DrugMasterView> {
 
     final error = await viewModel.addStock(drug.id, quantity: result['quantity'] as int, reason: result['reason'] as String, notes: result['notes'] as String?);
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kTealDark : null, content: Text(error ?? 'Stock added!')));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kCareDark : null, content: Text(error ?? 'Stock added!')));
   }
 
   Future<void> _viewHistory(BuildContext context, DrugMasterViewModel viewModel, Drug drug) async {
@@ -78,19 +80,20 @@ class _DrugMasterViewState extends State<_DrugMasterView> {
     if (confirmed != true || !context.mounted) return;
     final error = await viewModel.destroy(drug.id);
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kTealDark : null, content: Text(error ?? 'Drug deleted.')));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kCareDark : null, content: Text(error ?? 'Drug deleted.')));
   }
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final viewModel = context.watch<DrugMasterViewModel>();
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('Drug Master', style: TextStyle(fontWeight: FontWeight.w700))),
+    return CareTheme(child: Scaffold(
+      backgroundColor: kCareBg,
+      appBar: carePageAppBar(context, 'Drug Master'),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _addOrEdit(context, viewModel),
-        backgroundColor: kTealDark,
+        backgroundColor: kCareDark,
         foregroundColor: Colors.white,
         icon: const Icon(Icons.add, color: Colors.white),
         label: const Text('Add drug', style: TextStyle(color: Colors.white)),
@@ -101,22 +104,22 @@ class _DrugMasterViewState extends State<_DrugMasterView> {
             padding: const EdgeInsets.fromLTRB(20, 12, 20, 8),
             child: TextField(
               controller: _searchController,
-              decoration: authFieldDecoration('Search drugs', hint: 'Name or generic name', icon: Icons.search),
+              decoration: careFieldDecoration('Search drugs', hint: 'Name or generic name', icon: Icons.search),
               onSubmitted: viewModel.search,
               onChanged: (v) {
                 if (v.isEmpty) viewModel.search('');
               },
             ),
           ),
-          Expanded(child: RefreshIndicator(color: kTeal, onRefresh: viewModel.load, child: _buildBody(context, viewModel))),
+          Expanded(child: RefreshIndicator(color: kCare, onRefresh: viewModel.load, child: _buildBody(context, viewModel))),
         ],
       ),
-    );
+    ));
   }
 
   Widget _buildBody(BuildContext context, DrugMasterViewModel viewModel) {
     if (viewModel.isLoading && viewModel.drugs.isEmpty) {
-      return const Center(child: CircularProgressIndicator(color: kTeal));
+      return Center(child: CircularProgressIndicator(color: kCare));
     }
     if (viewModel.loadError != null && viewModel.drugs.isEmpty) {
       return ListView(padding: const EdgeInsets.all(24), children: [
@@ -163,6 +166,7 @@ class _DrugCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final (stockBg, stockFg) = drug.isExpired || drug.isLowStock
         ? (kDangerBg, kDangerFg)
         : drug.isNearExpiry
@@ -171,7 +175,7 @@ class _DrugCard extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kFieldFill)),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kCareBorder)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -218,9 +222,9 @@ class _DrugCard extends StatelessWidget {
             spacing: 6,
             runSpacing: 6,
             children: [
-              _Chip(bg: kFieldFill, fg: kMuted, label: drug.category),
-              _Chip(bg: kFieldFill, fg: kMuted, label: drug.form),
-              if ((drug.strength ?? '').isNotEmpty) _Chip(bg: kFieldFill, fg: kMuted, label: drug.strength!),
+              _Chip(bg: kCareBg, fg: kMuted, label: drug.category),
+              _Chip(bg: kCareBg, fg: kMuted, label: drug.form),
+              if ((drug.strength ?? '').isNotEmpty) _Chip(bg: kCareBg, fg: kMuted, label: drug.strength!),
             ],
           ),
           const SizedBox(height: 10),
@@ -235,7 +239,7 @@ class _DrugCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 8),
-              Text('₹${drug.unitPrice.toStringAsFixed(2)}', style: const TextStyle(fontSize: 12.5, color: kTealDark, fontWeight: FontWeight.w600)),
+              Text('₹${drug.unitPrice.toStringAsFixed(2)}', style: TextStyle(fontSize: 12.5, color: kCareDark, fontWeight: FontWeight.w600)),
               const Spacer(),
               if ((drug.expiryDate ?? '').isNotEmpty)
                 Text('Exp: ${drug.expiryDate}', style: TextStyle(fontSize: 11, color: drug.isNearExpiry || drug.isExpired ? kDangerFg : kMuted)),
@@ -255,6 +259,7 @@ class _Chip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(7)),
@@ -320,6 +325,7 @@ class _DrugDialogState extends State<_DrugDialog> {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final isEdit = widget.existing != null;
 
     return AlertDialog(
@@ -429,6 +435,7 @@ class _AddStockDialogState extends State<_AddStockDialog> {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return AlertDialog(
       title: Text('Add stock — ${widget.drug.drugName}'),
       content: Form(
@@ -476,6 +483,7 @@ class _StockHistorySheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
@@ -491,7 +499,7 @@ class _StockHistorySheet extends StatelessWidget {
                 future: viewModel.stockHistory(drug.id),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState != ConnectionState.done) {
-                    return const Center(child: CircularProgressIndicator(color: kTeal));
+                    return Center(child: CircularProgressIndicator(color: kCare));
                   }
                   final history = snapshot.data ?? [];
                   if (history.isEmpty) {
@@ -499,7 +507,7 @@ class _StockHistorySheet extends StatelessWidget {
                   }
                   return ListView.separated(
                     itemCount: history.length,
-                    separatorBuilder: (_, __) => const Divider(height: 1, color: kFieldFill),
+                    separatorBuilder: (_, __) => Divider(height: 1, color: kCareBorder),
                     itemBuilder: (context, index) {
                       final entry = history[index];
                       final isIn = entry.type == 'in';

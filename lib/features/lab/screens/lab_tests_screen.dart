@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/lab/models/lab_test.dart';
 import 'package:hms_mobile/features/lab/viewmodels/lab_tests_view_model.dart';
 
@@ -12,6 +13,7 @@ class LabTestsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return ChangeNotifierProvider(
       create: (_) => LabTestsViewModel(),
       child: const _LabTestsView(),
@@ -40,7 +42,7 @@ class _LabTestsView extends StatelessWidget {
     );
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(backgroundColor: error == null ? kTealDark : null, content: Text(error ?? (existing == null ? 'Lab test added!' : 'Lab test updated!'))),
+      SnackBar(backgroundColor: error == null ? kCareDark : null, content: Text(error ?? (existing == null ? 'Lab test added!' : 'Lab test updated!'))),
     );
   }
 
@@ -59,30 +61,31 @@ class _LabTestsView extends StatelessWidget {
     if (confirmed != true || !context.mounted) return;
     final error = await viewModel.destroy(test.id);
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kTealDark : null, content: Text(error ?? 'Test deleted.')));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: error == null ? kCareDark : null, content: Text(error ?? 'Test deleted.')));
   }
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final viewModel = context.watch<LabTestsViewModel>();
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('Lab Tests', style: TextStyle(fontWeight: FontWeight.w700))),
+    return CareTheme(child: Scaffold(
+      backgroundColor: kCareBg,
+      appBar: carePageAppBar(context, 'Lab Tests'),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _addOrEdit(context, viewModel),
-        backgroundColor: kTealDark,
+        backgroundColor: kCareDark,
         foregroundColor: Colors.white,
         icon: const Icon(Icons.add, color: Colors.white),
         label: const Text('Add test', style: TextStyle(color: Colors.white)),
       ),
-      body: RefreshIndicator(color: kTeal, onRefresh: viewModel.load, child: _buildBody(context, viewModel)),
-    );
+      body: RefreshIndicator(color: kCare, onRefresh: viewModel.load, child: _buildBody(context, viewModel)),
+    ));
   }
 
   Widget _buildBody(BuildContext context, LabTestsViewModel viewModel) {
     if (viewModel.isLoading && viewModel.tests.isEmpty) {
-      return const Center(child: CircularProgressIndicator(color: kTeal));
+      return Center(child: CircularProgressIndicator(color: kCare));
     }
     if (viewModel.loadError != null && viewModel.tests.isEmpty) {
       return ListView(padding: const EdgeInsets.all(24), children: [
@@ -125,11 +128,12 @@ class _TestCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final active = test.status == 'active';
 
     return Container(
       padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kFieldFill)),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kCareBorder)),
       child: Row(
         children: [
           Expanded(
@@ -141,7 +145,7 @@ class _TestCard extends StatelessWidget {
                     Expanded(child: Text(test.testName, style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w700, color: kInk))),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                      decoration: BoxDecoration(color: active ? kSuccessBg : kFieldFill, borderRadius: BorderRadius.circular(7)),
+                      decoration: BoxDecoration(color: active ? kSuccessBg : kCareBg, borderRadius: BorderRadius.circular(7)),
                       child: Text(test.status, style: TextStyle(color: active ? kSuccessFg : kMuted, fontSize: 10.5, fontWeight: FontWeight.w700)),
                     ),
                   ],
@@ -149,7 +153,7 @@ class _TestCard extends StatelessWidget {
                 const SizedBox(height: 3),
                 Text('${test.category} · ${test.sampleType}', style: const TextStyle(fontSize: 12, color: kMuted)),
                 const SizedBox(height: 4),
-                Text('₹${test.price.toStringAsFixed(0)}${test.unit != null ? ' · ${test.unit}' : ''}', style: const TextStyle(fontSize: 12.5, color: kTealDark, fontWeight: FontWeight.w600)),
+                Text('₹${test.price.toStringAsFixed(0)}${test.unit != null ? ' · ${test.unit}' : ''}', style: TextStyle(fontSize: 12.5, color: kCareDark, fontWeight: FontWeight.w600)),
               ],
             ),
           ),
@@ -200,6 +204,7 @@ class _LabTestDialogState extends State<_LabTestDialog> {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return AlertDialog(
       title: Text(widget.existing == null ? 'Add lab test' : 'Edit lab test'),
       content: SizedBox(

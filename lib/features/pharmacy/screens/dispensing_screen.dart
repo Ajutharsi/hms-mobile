@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/pharmacy/models/dispensing.dart';
 import 'package:hms_mobile/features/pharmacy/screens/dispensing_create_screen.dart';
 import 'package:hms_mobile/features/pharmacy/viewmodels/dispensing_view_model.dart';
@@ -16,6 +17,7 @@ class DispensingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return ChangeNotifierProvider(
       create: (_) => DispensingListViewModel(),
       child: _DispensingView(canCreate: canCreate),
@@ -34,27 +36,28 @@ class _DispensingView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final viewModel = context.watch<DispensingListViewModel>();
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('Dispensing', style: TextStyle(fontWeight: FontWeight.w700))),
+    return CareTheme(child: Scaffold(
+      backgroundColor: kCareBg,
+      appBar: carePageAppBar(context, 'Dispensing'),
       floatingActionButton: canCreate
           ? FloatingActionButton.extended(
               onPressed: () => _create(context, viewModel),
-              backgroundColor: kTealDark,
+              backgroundColor: kCareDark,
               foregroundColor: Colors.white,
               icon: const Icon(Icons.add, color: Colors.white),
               label: const Text('New dispensing', style: TextStyle(color: Colors.white)),
             )
           : null,
-      body: RefreshIndicator(color: kTeal, onRefresh: viewModel.load, child: _buildBody(context, viewModel)),
-    );
+      body: RefreshIndicator(color: kCare, onRefresh: viewModel.load, child: _buildBody(context, viewModel)),
+    ));
   }
 
   Widget _buildBody(BuildContext context, DispensingListViewModel viewModel) {
     if (viewModel.isLoading && viewModel.dispensings.isEmpty) {
-      return const Center(child: CircularProgressIndicator(color: kTeal));
+      return Center(child: CircularProgressIndicator(color: kCare));
     }
     if (viewModel.loadError != null && viewModel.dispensings.isEmpty) {
       return ListView(padding: const EdgeInsets.all(24), children: [
@@ -101,14 +104,15 @@ class _DispensingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final (fg, bg) = _statusColors[dispensing.status] ?? (kMuted, kFieldFill);
+    watchCarePalette(context);
+    final (fg, bg) = _statusColors[dispensing.status] ?? (kMuted, kCareBg);
 
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(16),
       child: Container(
         padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kFieldFill)),
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kCareBorder)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -131,7 +135,7 @@ class _DispensingCard extends StatelessWidget {
                 const Spacer(),
                 Text('${dispensing.itemsCount} items', style: const TextStyle(fontSize: 12, color: kMuted)),
                 const SizedBox(width: 10),
-                Text('₹${dispensing.totalAmount.toStringAsFixed(2)}', style: const TextStyle(fontSize: 12.5, color: kTealDark, fontWeight: FontWeight.w700)),
+                Text('₹${dispensing.totalAmount.toStringAsFixed(2)}', style: TextStyle(fontSize: 12.5, color: kCareDark, fontWeight: FontWeight.w700)),
               ],
             ),
           ],
@@ -147,6 +151,7 @@ class _DispensingDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return ChangeNotifierProvider(
       create: (_) => DispensingDetailViewModel(dispensingId: id),
       child: const _DispensingDetailView(),
@@ -159,18 +164,19 @@ class _DispensingDetailView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final viewModel = context.watch<DispensingDetailViewModel>();
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: Text(viewModel.detail?.dispensingNo ?? 'Dispensing')),
+    return CareTheme(child: Scaffold(
+      backgroundColor: kCareBg,
+      appBar: carePageAppBar(context, viewModel.detail?.dispensingNo ?? 'Dispensing'),
       body: _buildBody(viewModel),
-    );
+    ));
   }
 
   Widget _buildBody(DispensingDetailViewModel viewModel) {
     if (viewModel.isLoading && viewModel.detail == null) {
-      return const Center(child: CircularProgressIndicator(color: kTeal));
+      return Center(child: CircularProgressIndicator(color: kCare));
     }
     if (viewModel.loadError != null && viewModel.detail == null) {
       return ListView(padding: const EdgeInsets.all(24), children: [
@@ -188,7 +194,7 @@ class _DispensingDetailView extends StatelessWidget {
       children: [
         Container(
           padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(color: kFieldFill, borderRadius: BorderRadius.circular(16)),
+          decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(16)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -210,7 +216,7 @@ class _DispensingDetailView extends StatelessWidget {
         for (final item in d.items) ...[
           Container(
             padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14), border: Border.all(color: kFieldFill)),
+            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14), border: Border.all(color: kCareBorder)),
             child: Row(
               children: [
                 Expanded(
@@ -222,7 +228,7 @@ class _DispensingDetailView extends StatelessWidget {
                     ],
                   ),
                 ),
-                Text('₹${item.totalPrice.toStringAsFixed(2)}', style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: kTealDark)),
+                Text('₹${item.totalPrice.toStringAsFixed(2)}', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: kCareDark)),
               ],
             ),
           ),
@@ -235,7 +241,7 @@ class _DispensingDetailView extends StatelessWidget {
             children: [
               const Text('Total', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: kInk)),
               const Spacer(),
-              Text('₹${d.totalAmount.toStringAsFixed(2)}', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: kTealDark)),
+              Text('₹${d.totalAmount.toStringAsFixed(2)}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: kCareDark)),
             ],
           ),
         ),

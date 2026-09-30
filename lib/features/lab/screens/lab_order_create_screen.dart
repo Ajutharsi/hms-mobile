@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/lab/viewmodels/lab_order_create_view_model.dart';
 
 class LabOrderCreateScreen extends StatelessWidget {
@@ -9,6 +10,7 @@ class LabOrderCreateScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return ChangeNotifierProvider(
       create: (_) => LabOrderCreateViewModel(),
       child: const _LabOrderCreateView(),
@@ -47,13 +49,14 @@ class _LabOrderCreateViewState extends State<_LabOrderCreateView> {
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final viewModel = context.watch<LabOrderCreateViewModel>();
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.white, foregroundColor: kInk, elevation: 0, title: const Text('New Lab Order', style: TextStyle(fontWeight: FontWeight.w700))),
+    return CareTheme(child: Scaffold(
+      backgroundColor: kCareBg,
+      appBar: carePageAppBar(context, 'New Lab Order'),
       body: viewModel.isLoadingMeta
-          ? const Center(child: CircularProgressIndicator(color: kTeal))
+          ? Center(child: CircularProgressIndicator(color: kCare))
           : ListView(
               padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
               children: [
@@ -62,7 +65,7 @@ class _LabOrderCreateViewState extends State<_LabOrderCreateView> {
                 if (viewModel.selectedPatient != null)
                   Container(
                     padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(color: kMint, borderRadius: BorderRadius.circular(12)),
+                    decoration: BoxDecoration(color: kCareSoft, borderRadius: BorderRadius.circular(12)),
                     child: Row(
                       children: [
                         Expanded(
@@ -84,13 +87,13 @@ class _LabOrderCreateViewState extends State<_LabOrderCreateView> {
                 else ...[
                   TextField(
                     controller: _searchController,
-                    decoration: authFieldDecoration('Search patient', hint: 'Name or MRN', icon: Icons.search),
+                    decoration: careFieldDecoration('Search patient', hint: 'Name or MRN', icon: Icons.search),
                     onChanged: viewModel.searchPatients,
                   ),
                   if (viewModel.patientResults.isNotEmpty)
                     Container(
                       margin: const EdgeInsets.only(top: 6),
-                      decoration: BoxDecoration(color: kFieldFill, borderRadius: BorderRadius.circular(12)),
+                      decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(12)),
                       constraints: const BoxConstraints(maxHeight: 220),
                       child: ListView.builder(
                         shrinkWrap: true,
@@ -115,7 +118,7 @@ class _LabOrderCreateViewState extends State<_LabOrderCreateView> {
                 const SizedBox(height: 8),
                 DropdownButtonFormField(
                   initialValue: viewModel.selectedDoctor,
-                  decoration: authFieldDecoration('Doctor', hint: 'Select doctor', icon: Icons.medical_services_outlined),
+                  decoration: careFieldDecoration('Doctor', hint: 'Select doctor', icon: Icons.medical_services_outlined),
                   items: viewModel.doctors.map((d) => DropdownMenuItem(value: d, child: Text(d.name))).toList(),
                   onChanged: viewModel.selectDoctor,
                 ),
@@ -134,15 +137,15 @@ class _LabOrderCreateViewState extends State<_LabOrderCreateView> {
                           label: Text(t.testName),
                           selected: viewModel.selectedTestIds.contains(t.id),
                           onSelected: (_) => viewModel.toggleTest(t.id),
-                          selectedColor: kMint,
-                          checkmarkColor: kTealDark,
+                          selectedColor: kCareSoft,
+                          checkmarkColor: kCareDark,
                         ),
                     ],
                   ),
                 const SizedBox(height: 20),
                 TextField(
                   controller: _notesController,
-                  decoration: authFieldDecoration('Notes', hint: 'Optional', icon: Icons.notes_outlined),
+                  decoration: careFieldDecoration('Notes', hint: 'Optional', icon: Icons.notes_outlined),
                   maxLines: 3,
                 ),
                 if (_error != null) ...[
@@ -154,7 +157,7 @@ class _LabOrderCreateViewState extends State<_LabOrderCreateView> {
                   height: 48,
                   child: ElevatedButton(
                     onPressed: viewModel.isSaving ? null : () => _submit(viewModel),
-                    style: ElevatedButton.styleFrom(backgroundColor: kTealDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+                    style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
                     child: viewModel.isSaving
                         ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
                         : const Text('Create order', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
@@ -162,6 +165,6 @@ class _LabOrderCreateViewState extends State<_LabOrderCreateView> {
                 ),
               ],
             ),
-    );
+    ));
   }
 }

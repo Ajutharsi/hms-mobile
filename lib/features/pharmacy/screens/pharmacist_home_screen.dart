@@ -3,14 +3,18 @@ import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/models/app_user.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/auth/screens/login_screen.dart';
+import 'package:hms_mobile/features/pharmacy/models/pharmacy_dashboard_stats.dart';
+import 'package:hms_mobile/features/pharmacy/screens/dispensing_create_screen.dart';
 import 'package:hms_mobile/features/pharmacy/screens/dispensing_screen.dart';
 import 'package:hms_mobile/features/pharmacy/screens/drug_master_screen.dart';
 import 'package:hms_mobile/features/pharmacy/screens/pharmacy_profile_screen.dart';
 import 'package:hms_mobile/features/pharmacy/viewmodels/pharmacy_dashboard_view_model.dart';
+import 'package:hms_mobile/features/settings/screens/appearance_screen.dart';
 
-/// The pharmacist role's home shell — the smallest role sidebar in this
-/// app: Dashboard, Drug Master, Dispensing, My Profile.
+/// The pharmacist's home shell — dispensing, the drug master and the
+/// profile, with the centre button starting a new dispensing.
 class PharmacistHomeScreen extends StatelessWidget {
   final AppUser user;
   const PharmacistHomeScreen({super.key, required this.user});
@@ -19,13 +23,26 @@ class PharmacistHomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => PharmacyDashboardViewModel(user: user),
-      child: const _PharmacistShell(),
+      child: const CareTheme(child: _PharmacyShell()),
     );
   }
 }
 
-class _PharmacistShell extends StatelessWidget {
-  const _PharmacistShell();
+enum _Target { dispensing, drugs, profile, appearance }
+
+Widget _screenFor(_Target target) => switch (target) {
+      _Target.dispensing => const DispensingScreen(),
+      _Target.drugs => const DrugMasterScreen(),
+      _Target.profile => const PharmacyProfileScreen(),
+      _Target.appearance => const AppearanceScreen(),
+    };
+
+void _open(BuildContext context, _Target target) {
+  Navigator.of(context).push(MaterialPageRoute(builder: (_) => _screenFor(target)));
+}
+
+class _PharmacyShell extends StatelessWidget {
+  const _PharmacyShell();
 
   Future<void> _logout(BuildContext context, PharmacyDashboardViewModel viewModel) async {
     await viewModel.logout();
@@ -33,133 +50,165 @@ class _PharmacistShell extends StatelessWidget {
     Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => const LoginScreen()));
   }
 
+  Future<void> _newDispensing(BuildContext context, PharmacyDashboardViewModel viewModel) async {
+    final created = await Navigator.of(context).push<bool>(
+      MaterialPageRoute(builder: (_) => const DispensingCreateScreen()),
+    );
+    if (created == true) viewModel.load();
+  }
+
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     final viewModel = context.watch<PharmacyDashboardViewModel>();
 
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        foregroundColor: kInk,
-        elevation: 0,
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('Hi there,', style: TextStyle(fontSize: 12.5, color: kMuted, fontWeight: FontWeight.w400)),
-            Text(viewModel.user.firstName, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: kInk)),
+      backgroundColor: kCareBg,
+      drawer: _PharmacyDrawer(
+        user: viewModel.user,
+        isLoggingOut: viewModel.isLoggingOut,
+        onLogout: () => _logout(context, viewModel),
+      ),
+      body: RefreshIndicator(
+        color: kCare,
+        edgeOffset: 120,
+        onRefresh: viewModel.load,
+        child: _DashboardBody(viewModel: viewModel),
+      ),
+      bottomNavigationBar: Builder(
+        builder: (context) => CareBottomNav(
+          selectedIndex: 0,
+          centerIcon: Icons.add_rounded,
+          onCenterTap: () => _newDispensing(context, viewModel),
+          onSelected: (i) {
+            switch (i) {
+              case 1:
+                _open(context, _Target.dispensing);
+              case 2:
+                _open(context, _Target.drugs);
+              case 3:
+                _open(context, _Target.profile);
+            }
+          },
+          items: const [
+            CareNavItem(icon: Icons.home_outlined, activeIcon: Icons.home_rounded, label: 'Home'),
+            CareNavItem(icon: Icons.local_pharmacy_outlined, activeIcon: Icons.local_pharmacy_rounded, label: 'Dispense'),
+            CareNavItem(icon: Icons.medication_outlined, activeIcon: Icons.medication_rounded, label: 'Drugs'),
+            CareNavItem(icon: Icons.person_outline_rounded, activeIcon: Icons.person_rounded, label: 'Profile'),
           ],
         ),
-        actions: [
-          IconButton(
-            tooltip: 'Log out',
-            icon: viewModel.isLoggingOut
-                ? const SizedBox(height: 18, width: 18, child: CircularProgressIndicator(strokeWidth: 2, color: kTeal))
-                : const Icon(Icons.logout_rounded, color: kMuted),
-            onPressed: viewModel.isLoggingOut ? null : () => _logout(context, viewModel),
+      ),
+    );
+  }
+}
+
+class _PharmacyDrawer extends StatelessWidget {
+  final AppUser user;
+  final bool isLoggingOut;
+  final VoidCallback onLogout;
+
+  const _PharmacyDrawer({required this.user, required this.isLoggingOut, required this.onLogout});
+
+  @override
+  Widget build(BuildContext context) {
+    watchCarePalette(context);
+    final topInset = MediaQuery.of(context).padding.top;
+
+    return Drawer(
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.horizontal(right: Radius.circular(28))),
+      child: Column(
+        children: [
+          CareHeaderBackground(
+            radius: 0,
+            padding: EdgeInsets.fromLTRB(22, topInset + 24, 22, 22),
+            child: Row(
+              children: [
+                CareAvatar(name: user.name, imageUrl: user.profilePhotoUrl, radius: 28, ring: true),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(user.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: Colors.white, fontSize: 16.5, fontWeight: FontWeight.w700)),
+                      const SizedBox(height: 3),
+                      Text(user.email, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(color: Colors.white.withValues(alpha: 0.85), fontSize: 12)),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: ListView(
+              padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+              children: const [
+                _DrawerGroup(label: 'MAIN', items: [
+                  _DrawerItem(icon: Icons.dashboard_rounded, label: 'Dashboard'),
+                ]),
+                _DrawerGroup(label: 'PHARMACY', items: [
+                  _DrawerItem(icon: Icons.local_pharmacy_rounded, label: 'Dispensing', target: _Target.dispensing),
+                  _DrawerItem(icon: Icons.medication_rounded, label: 'Drug Master', target: _Target.drugs),
+                ]),
+                _DrawerGroup(label: 'ACCOUNT', items: [
+                  _DrawerItem(icon: Icons.person_rounded, label: 'My Profile', target: _Target.profile),
+                  _DrawerItem(icon: Icons.palette_rounded, label: 'Appearance', target: _Target.appearance),
+                ]),
+              ],
+            ),
+          ),
+          SafeArea(
+            top: false,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
+              child: CarePrimaryButton(label: 'Log out', icon: Icons.logout_rounded, loading: isLoggingOut, onPressed: onLogout),
+            ),
           ),
         ],
       ),
-      drawer: const _PharmacistDrawer(),
-      body: SafeArea(
-        child: RefreshIndicator(color: kTeal, onRefresh: viewModel.load, child: _DashboardBody(viewModel: viewModel)),
-      ),
     );
   }
 }
 
-class _PharmacistDrawer extends StatelessWidget {
-  const _PharmacistDrawer();
-
-  @override
-  Widget build(BuildContext context) {
-    return Drawer(
-      child: SafeArea(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            Container(
-              padding: const EdgeInsets.fromLTRB(20, 24, 20, 16),
-              child: Row(
-                children: [
-                  Container(
-                    width: 34,
-                    height: 34,
-                    decoration: BoxDecoration(color: kMint, borderRadius: BorderRadius.circular(9)),
-                    child: const Icon(Icons.add_rounded, color: kTealDark),
-                  ),
-                  const SizedBox(width: 10),
-                  const Text('HMS', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800, color: kInk)),
-                ],
-              ),
-            ),
-            const _DrawerGroupLabel('MAIN'),
-            _DrawerTile(
-              icon: Icons.dashboard_outlined,
-              label: 'Dashboard',
-              onTap: () => Navigator.of(context).pop(),
-            ),
-            const _DrawerGroupLabel('PHARMACY'),
-            _DrawerTile(
-              icon: Icons.medication_outlined,
-              label: 'Drug Master',
-              onTap: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).push(MaterialPageRoute(builder: (_) => const DrugMasterScreen()));
-              },
-            ),
-            _DrawerTile(
-              icon: Icons.local_pharmacy_outlined,
-              label: 'Dispensing',
-              onTap: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).push(MaterialPageRoute(builder: (_) => const DispensingScreen()));
-              },
-            ),
-            const _DrawerGroupLabel('MAIN'),
-            _DrawerTile(
-              icon: Icons.person_outline,
-              label: 'My Profile',
-              onTap: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).push(MaterialPageRoute(builder: (_) => const PharmacyProfileScreen()));
-              },
-            ),
-            const SizedBox(height: 16),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _DrawerGroupLabel extends StatelessWidget {
+class _DrawerGroup extends StatelessWidget {
   final String label;
-  const _DrawerGroupLabel(this.label);
+  final List<_DrawerItem> items;
+  const _DrawerGroup({required this.label, required this.items});
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 16, 20, 6),
-      child: Text(label, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: kMuted, letterSpacing: 0.6)),
+    watchCarePalette(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(14, 14, 14, 6),
+          child: Text(label, style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: kCare, letterSpacing: 0.8)),
+        ),
+        ...items,
+      ],
     );
   }
 }
 
-class _DrawerTile extends StatelessWidget {
+class _DrawerItem extends StatelessWidget {
   final IconData icon;
   final String label;
-  final VoidCallback onTap;
-  const _DrawerTile({required this.icon, required this.label, required this.onTap});
+  final _Target? target;
+  const _DrawerItem({required this.icon, required this.label, this.target});
 
   @override
   Widget build(BuildContext context) {
+    watchCarePalette(context);
     return ListTile(
       dense: true,
-      visualDensity: const VisualDensity(vertical: -2),
-      leading: Icon(icon, size: 20, color: kMuted),
-      title: Text(label, style: const TextStyle(fontSize: 14, color: kInk, fontWeight: FontWeight.w500)),
-      onTap: onTap,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+      leading: CareIconBox(icon: icon, size: 34, filled: false),
+      title: Text(label, style: const TextStyle(fontSize: 14, color: kInk, fontWeight: FontWeight.w600)),
+      onTap: () {
+        Navigator.of(context).pop();
+        if (target != null) _open(context, target!);
+      },
     );
   }
 }
@@ -170,166 +219,200 @@ class _DashboardBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (viewModel.isLoading && viewModel.stats == null) {
-      return const Center(child: CircularProgressIndicator(color: kTeal));
-    }
-
-    if (viewModel.loadError != null && viewModel.stats == null) {
-      return ListView(
-        padding: const EdgeInsets.all(24),
-        children: [
-          const SizedBox(height: 80),
-          const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
-          const SizedBox(height: 12),
-          Text(viewModel.loadError!, textAlign: TextAlign.center, style: const TextStyle(color: kMuted)),
-        ],
-      );
-    }
+    watchCarePalette(context);
+    if (viewModel.isLoading && viewModel.stats == null) return const CareStateView.loading();
+    if (viewModel.loadError != null && viewModel.stats == null) return CareStateView.error(viewModel.loadError!);
 
     final stats = viewModel.stats!;
+    final topInset = MediaQuery.of(context).padding.top;
 
-    return ListView(
-      physics: const AlwaysScrollableScrollPhysics(),
-      padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
+    return Stack(
       children: [
-        const Text('Quick actions', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: kMuted, letterSpacing: 0.3)),
-        const SizedBox(height: 10),
-        Row(
+        ListView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: EdgeInsets.zero,
           children: [
-            Expanded(
-              child: _QuickActionTile(
-                icon: Icons.assignment_outlined,
-                color: kTealDark,
-                bg: kMint,
-                label: 'Dispensing',
-                sublabel: 'Fulfill orders',
-                onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const DispensingScreen())),
+            _PharmacyHeader(user: viewModel.user, stats: stats),
+            const Padding(
+              padding: EdgeInsets.fromLTRB(20, 22, 20, 12),
+              child: CareSectionTitle(title: 'Quick actions'),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                children: [
+                  CareOptionTile(
+                    icon: Icons.local_pharmacy_rounded,
+                    title: 'Dispensing',
+                    subtitle: 'Hand out medicines, see history',
+                    onTap: () => _open(context, _Target.dispensing),
+                  ),
+                  const SizedBox(height: 10),
+                  CareOptionTile(
+                    icon: Icons.medication_rounded,
+                    title: 'Drug Master',
+                    subtitle: 'Stock, prices and expiry',
+                    onTap: () => _open(context, _Target.drugs),
+                  ),
+                  const SizedBox(height: 10),
+                  CareOptionTile(
+                    icon: Icons.person_rounded,
+                    title: 'My Profile',
+                    subtitle: 'Account details and password',
+                    onTap: () => _open(context, _Target.profile),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: _QuickActionTile(
-                icon: Icons.medication_outlined,
-                color: kInfoFg,
-                bg: kInfoBg,
-                label: 'Drug Master',
-                sublabel: 'Catalog',
-                onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const DrugMasterScreen())),
+            const Padding(
+              padding: EdgeInsets.fromLTRB(20, 24, 20, 12),
+              child: CareSectionTitle(title: 'Overall statistics'),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: GridView.count(
+                crossAxisCount: 2,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                mainAxisSpacing: 10,
+                crossAxisSpacing: 10,
+                childAspectRatio: 1.5,
+                children: [
+                  CareStatCard(icon: Icons.medication_rounded, label: 'Total Drugs', value: '${stats.totalDrugs}', trend: 'In the master'),
+                  CareStatCard(icon: Icons.warning_amber_rounded, label: 'Low Stock', value: '${stats.lowStock}', trend: 'Reorder soon', alert: stats.lowStock > 0),
+                  CareStatCard(icon: Icons.local_pharmacy_rounded, label: 'Dispensed Today', value: '${stats.dispensedToday}', trend: 'Handed out'),
+                  CareStatCard(icon: Icons.event_busy_rounded, label: 'Near Expiry', value: '${stats.nearExpiry}', trend: 'Check batches', alert: stats.nearExpiry > 0),
+                ],
               ),
             ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: _QuickActionTile(
-                icon: Icons.person_outline,
-                color: kSuccessFg,
-                bg: kSuccessBg,
-                label: 'My Profile',
-                sublabel: 'Account',
-                onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const PharmacyProfileScreen())),
-              ),
-            ),
+            const SizedBox(height: 28),
           ],
         ),
-        const SizedBox(height: 24),
-        const Text('Overall statistics', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: kMuted, letterSpacing: 0.3)),
-        const SizedBox(height: 10),
-        GridView.count(
-          crossAxisCount: 2,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          mainAxisSpacing: 10,
-          crossAxisSpacing: 10,
-          childAspectRatio: 1.5,
-          children: [
-            _StatCard(icon: Icons.medication_outlined, color: kTealDark, bg: kMint, label: 'Total Drugs', value: '${stats.totalDrugs}', trend: 'In stock'),
-            _StatCard(
-              icon: Icons.warning_amber_rounded,
-              color: stats.lowStock > 0 ? kDangerFg : kSuccessFg,
-              bg: stats.lowStock > 0 ? kDangerBg : kSuccessBg,
-              label: 'Low Stock',
-              value: '${stats.lowStock}',
-              trend: 'Need restock',
-            ),
-            _StatCard(icon: Icons.assignment_turned_in_outlined, color: kSuccessFg, bg: kSuccessBg, label: 'Dispensed Today', value: '${stats.dispensedToday}', trend: 'Today'),
-            _StatCard(icon: Icons.event_busy_outlined, color: kWarningFg, bg: kWarningBg, label: 'Near Expiry', value: '${stats.nearExpiry}', trend: 'Within 30 days'),
-          ],
-        ),
+        Positioned(top: 0, left: 0, right: 0, height: topInset, child: ColoredBox(color: kCare)),
       ],
     );
   }
 }
 
-class _QuickActionTile extends StatelessWidget {
-  final IconData icon;
-  final Color color;
-  final Color bg;
-  final String label;
-  final String sublabel;
-  final VoidCallback onTap;
+class _PharmacyHeader extends StatelessWidget {
+  final AppUser user;
+  final PharmacyDashboardStats stats;
 
-  const _QuickActionTile({required this.icon, required this.color, required this.bg, required this.label, required this.sublabel, required this.onTap});
+  const _PharmacyHeader({required this.user, required this.stats});
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 10),
-        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kFieldFill)),
-        child: Column(
-          children: [
-            Container(
-              width: 38,
-              height: 38,
-              decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(11)),
-              child: Icon(icon, color: color, size: 19),
+    watchCarePalette(context);
+    final topInset = MediaQuery.of(context).padding.top;
+
+    return Stack(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 46),
+          child: CareHeaderBackground(
+            radius: 32,
+            padding: EdgeInsets.fromLTRB(20, topInset + 16, 20, 24 + 62),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    CareAvatar(name: user.name, imageUrl: user.profilePhotoUrl, radius: 25, ring: true),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Hello 👋', style: TextStyle(color: Colors.white.withValues(alpha: 0.85), fontSize: 13)),
+                          const SizedBox(height: 2),
+                          Text(user.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: Colors.white, fontSize: 19, fontWeight: FontWeight.w800)),
+                          Text('Pharmacist', style: TextStyle(color: Colors.white.withValues(alpha: 0.8), fontSize: 11.5)),
+                        ],
+                      ),
+                    ),
+                    Builder(
+                      builder: (context) => Material(
+                        color: Colors.white.withValues(alpha: 0.18),
+                        shape: const CircleBorder(),
+                        child: InkWell(
+                          customBorder: const CircleBorder(),
+                          onTap: () => Scaffold.of(context).openDrawer(),
+                          child: const Padding(padding: EdgeInsets.all(10), child: Icon(Icons.menu_rounded, color: Colors.white, size: 22)),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 18),
+                Row(
+                  children: [
+                    Expanded(
+                      child: CareAlertPill(
+                        icon: Icons.warning_amber_rounded,
+                        label: 'Low stock',
+                        value: '${stats.lowStock}',
+                        urgent: stats.lowStock > 0,
+                        onTap: () => _open(context, _Target.drugs),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: CareAlertPill(
+                        icon: Icons.event_busy_rounded,
+                        label: 'Near expiry',
+                        value: '${stats.nearExpiry}',
+                        urgent: stats.nearExpiry > 0,
+                        onTap: () => _open(context, _Target.drugs),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-            const SizedBox(height: 8),
-            Text(label, textAlign: TextAlign.center, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: kInk)),
-            const SizedBox(height: 1),
-            Text(sublabel, textAlign: TextAlign.center, style: const TextStyle(fontSize: 10.5, color: kMuted)),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _StatCard extends StatelessWidget {
-  final IconData icon;
-  final Color color;
-  final Color bg;
-  final String label;
-  final String value;
-  final String trend;
-  const _StatCard({required this.icon, required this.color, required this.bg, required this.label, required this.value, required this.trend});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(18), border: Border.all(color: kFieldFill)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                width: 30,
-                height: 30,
-                decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(9)),
-                child: Icon(icon, color: color, size: 16),
-              ),
-              const Spacer(),
-              Text(trend, style: const TextStyle(fontSize: 10, color: kMuted)),
-            ],
           ),
-          const Spacer(),
-          Text(value, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w800, color: kInk)),
-          Text(label, style: const TextStyle(fontSize: 10.5, color: kMuted, fontWeight: FontWeight.w600)),
-        ],
-      ),
+        ),
+        Positioned(
+          left: 20,
+          right: 20,
+          bottom: 0,
+          child: Container(
+            height: 92,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: const [BoxShadow(color: Color(0x1A0E6B61), blurRadius: 24, offset: Offset(0, 10))],
+            ),
+            child: Row(
+              children: [
+                for (final item in [
+                  (Icons.medication_rounded, '${stats.totalDrugs}', 'Drugs'),
+                  (Icons.local_pharmacy_rounded, '${stats.dispensedToday}', 'Today'),
+                  (Icons.warning_amber_rounded, '${stats.lowStock}', 'Low stock'),
+                ]) ...[
+                  if (item.$3 != 'Drugs') VerticalDivider(width: 1, indent: 20, endIndent: 20, color: kCareBorder),
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(item.$1, size: 16, color: kCare),
+                            const SizedBox(width: 5),
+                            Text(item.$2, style: const TextStyle(fontSize: 21, fontWeight: FontWeight.w800, color: kInk)),
+                          ],
+                        ),
+                        const SizedBox(height: 3),
+                        Text(item.$3, style: const TextStyle(fontSize: 11.5, color: kMuted, fontWeight: FontWeight.w600)),
+                      ],
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
