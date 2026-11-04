@@ -146,7 +146,7 @@ class _ResultRow extends StatelessWidget {
               children: [
                 Text(
                   '${item.resultValue} ${item.unit ?? ''}'.trim(),
-                  style: TextStyle(fontSize: 17, fontWeight: CareText.heavy, color: kCareDark),
+                  style: TextStyle(fontSize: CareText.xxl, fontWeight: CareText.heavy, color: kCareDark),
                 ),
                 if ((item.normalRange ?? '').isNotEmpty && item.normalRange != 'N/A') ...[
                   const SizedBox(width: 10),

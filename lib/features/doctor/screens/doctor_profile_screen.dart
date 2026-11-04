@@ -65,7 +65,7 @@ class _ProfileView extends StatelessWidget {
                   children: [
                     CareAvatar(name: profile.name, imageUrl: profile.photoUrl, radius: 44),
                     const SizedBox(height: 12),
-                    Text(profile.name, style: const TextStyle(fontSize: 19, fontWeight: CareText.heavy, color: kInk)),
+                    Text(profile.name, style: const TextStyle(fontSize: CareText.h3, fontWeight: CareText.heavy, color: kInk)),
                     const SizedBox(height: 2),
                     Text(profile.email, style: CareText.mutedSm),
                     const SizedBox(height: 8),

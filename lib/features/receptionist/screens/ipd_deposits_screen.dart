@@ -129,7 +129,7 @@ class _StatTile extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(value, style: TextStyle(fontSize: 15, fontWeight: CareText.heavy, color: color)),
+          Text(value, style: TextStyle(fontSize: CareText.lg, fontWeight: CareText.heavy, color: color)),
           Text(label, style: CareText.tag(color)),
         ],
       ),
@@ -168,7 +168,7 @@ class _DepositCard extends StatelessWidget {
           const SizedBox(height: 8),
           Row(
             children: [
-              Text('${isAdvance ? '+' : '-'}₹${deposit.amount.toStringAsFixed(2)}', style: TextStyle(fontSize: 15, fontWeight: CareText.heavy, color: amountColor)),
+              Text('${isAdvance ? '+' : '-'}₹${deposit.amount.toStringAsFixed(2)}', style: TextStyle(fontSize: CareText.lg, fontWeight: CareText.heavy, color: amountColor)),
               const SizedBox(width: 10),
               Text(_titleCase(deposit.paymentMethod), style: CareText.mutedXs),
               const Spacer(),

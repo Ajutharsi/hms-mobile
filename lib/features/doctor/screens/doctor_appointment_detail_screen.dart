@@ -230,7 +230,7 @@ class _ConsultationCard extends StatelessWidget {
           children: [
             Text(label, style: const TextStyle(fontSize: CareText.xs, color: kMuted, fontWeight: CareText.bold)),
             const SizedBox(height: 2),
-            Text(value!, style: const TextStyle(fontSize: 14, color: kInk)),
+            Text(value!, style: const TextStyle(fontSize: CareText.md, color: kInk)),
           ],
         ),
       );

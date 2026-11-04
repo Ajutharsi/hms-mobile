@@ -323,7 +323,7 @@ class _PatientCard extends StatelessWidget {
   Widget _tag(String text) => Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
         decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(6)),
-        child: Text(text, style: const TextStyle(fontSize: 11, color: kMuted, fontWeight: CareText.medium)),
+        child: Text(text, style: const TextStyle(fontSize: CareText.xs, color: kMuted, fontWeight: CareText.medium)),
       );
 
   Widget _line(String text) => Padding(

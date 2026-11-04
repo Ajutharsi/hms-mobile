@@ -171,7 +171,7 @@ class _ClaimCard extends StatelessWidget {
             const SizedBox(height: 8),
             Row(
               children: [
-                Expanded(child: Text(claim.insuranceCompany, style: const TextStyle(fontSize: CareText.sm, color: kInk, fontWeight: CareText.medium))),
+                Expanded(child: Text(claim.insuranceCompany, style: CareText.titleSmMedium)),
                 Text('₹${claim.claimAmount.toStringAsFixed(0)}', style: CareText.brandSmBold),
               ],
             ),

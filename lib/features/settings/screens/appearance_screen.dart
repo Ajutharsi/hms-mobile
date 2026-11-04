@@ -85,7 +85,7 @@ class _Preview extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text('Hello 👋', style: CareText.onCareSoftXs),
-                        Text('Your app', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: CareText.heavy)),
+                        Text('Your app', style: TextStyle(color: Colors.white, fontSize: CareText.xl, fontWeight: CareText.heavy)),
                       ],
                     ),
                   ),

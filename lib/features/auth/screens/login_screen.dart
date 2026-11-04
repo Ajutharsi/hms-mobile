@@ -86,7 +86,7 @@ class _LoginViewState extends State<_LoginView> {
             const SizedBox(height: 8),
             const Text(
               "Let's get you signed in.",
-              style: TextStyle(fontSize: 15, color: kMuted),
+              style: CareText.mutedLg,
             ),
             const SizedBox(height: 24),
             if (kReleaseMode && ApiService.isInsecure) ...[
@@ -138,7 +138,7 @@ class _LoginViewState extends State<_LoginView> {
                 },
                 child: Text(
                   'Forgot password?',
-                  style: TextStyle(color: kCare, fontSize: 13, fontWeight: CareText.medium),
+                  style: TextStyle(color: kCare, fontSize: CareText.sm, fontWeight: CareText.medium),
                 ),
               ),
             ),

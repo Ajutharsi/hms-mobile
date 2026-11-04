@@ -186,7 +186,7 @@ class _OtCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
                 decoration: BoxDecoration(color: pBg, borderRadius: BorderRadius.circular(8)),
-                child: Text(ot.priority.toUpperCase(), style: TextStyle(color: pFg, fontSize: 10, fontWeight: CareText.bold)),
+                child: Text(ot.priority.toUpperCase(), style: TextStyle(color: pFg, fontSize: CareText.xxs, fontWeight: CareText.bold)),
               ),
             ],
           ),

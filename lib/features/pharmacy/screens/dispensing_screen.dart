@@ -242,7 +242,7 @@ class _DispensingDetailView extends StatelessWidget {
             children: [
               const Text('Total', style: CareText.titleMd),
               const Spacer(),
-              Text('₹${d.totalAmount.toStringAsFixed(2)}', style: TextStyle(fontSize: 16, fontWeight: CareText.heavy, color: kCareDark)),
+              Text('₹${d.totalAmount.toStringAsFixed(2)}', style: TextStyle(fontSize: CareText.xl, fontWeight: CareText.heavy, color: kCareDark)),
             ],
           ),
         ),

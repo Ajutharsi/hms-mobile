@@ -199,7 +199,7 @@ class _AdmissionCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
                 decoration: BoxDecoration(color: admitted ? kSuccessBg : kCareBg, borderRadius: BorderRadius.circular(8)),
-                child: Text(admission.status, style: TextStyle(color: admitted ? kSuccessFg : kMuted, fontSize: 11, fontWeight: CareText.bold)),
+                child: Text(admission.status, style: TextStyle(color: admitted ? kSuccessFg : kMuted, fontSize: CareText.xs, fontWeight: CareText.bold)),
               ),
             ],
           ),
@@ -219,7 +219,7 @@ class _AdmissionCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                TextButton(onPressed: onTransfer, child: const Text('Transfer', style: TextStyle(color: kMuted, fontSize: 13, fontWeight: CareText.medium))),
+                TextButton(onPressed: onTransfer, child: const Text('Transfer', style: TextStyle(color: kMuted, fontSize: CareText.sm, fontWeight: CareText.medium))),
                 const SizedBox(width: 4),
                 FilledButton(
                   onPressed: onDischarge,

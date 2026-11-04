@@ -53,6 +53,7 @@ abstract final class CareText {
   static const TextStyle mutedXxs = TextStyle(fontSize: xxs, color: kMuted);
   static const TextStyle mutedXs = TextStyle(fontSize: xs, color: kMuted);
   static const TextStyle mutedSm = TextStyle(fontSize: sm, color: kMuted);
+  static const TextStyle mutedLg = TextStyle(fontSize: lg, color: kMuted);
 
   static const TextStyle mutedXxsMedium = TextStyle(fontSize: xxs, color: kMuted, fontWeight: medium);
   static const TextStyle mutedXsMedium = TextStyle(fontSize: xs, color: kMuted, fontWeight: medium);

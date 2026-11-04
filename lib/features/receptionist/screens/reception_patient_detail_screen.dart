@@ -86,7 +86,7 @@ class _ReceptionPatientDetailScreenState extends State<ReceptionPatientDetailScr
                 radius: 40,
                 backgroundColor: kCareSoft,
                 backgroundImage: p.photoUrl != null ? NetworkImage(p.photoUrl!) : null,
-                child: p.photoUrl == null ? Text(p.name.isNotEmpty ? p.name[0].toUpperCase() : '?', style: TextStyle(fontSize: 28, color: kCareDark, fontWeight: CareText.bold)) : null,
+                child: p.photoUrl == null ? Text(p.name.isNotEmpty ? p.name[0].toUpperCase() : '?', style: TextStyle(fontSize: CareText.h1, color: kCareDark, fontWeight: CareText.bold)) : null,
               ),
               const SizedBox(height: 12),
               Text(p.name, style: CareText.titleH3),

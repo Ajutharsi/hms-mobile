@@ -157,7 +157,7 @@ class _StatTile extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(value, style: CareText.statValue(color)),
-          Text(label, textAlign: TextAlign.center, style: TextStyle(fontSize: 10, color: color, fontWeight: CareText.medium)),
+          Text(label, textAlign: TextAlign.center, style: TextStyle(fontSize: CareText.xxs, color: color, fontWeight: CareText.medium)),
         ],
       ),
     );
@@ -226,7 +226,7 @@ class _ErCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 8),
-          Text(reg.chiefComplaint, style: const TextStyle(fontSize: 13, color: kInk)),
+          Text(reg.chiefComplaint, style: const TextStyle(fontSize: CareText.sm, color: kInk)),
           const SizedBox(height: 6),
           Row(
             children: [

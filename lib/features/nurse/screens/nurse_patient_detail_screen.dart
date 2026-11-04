@@ -86,7 +86,7 @@ class _NursePatientDetailScreenState extends State<NursePatientDetailScreen> {
                 backgroundColor: kCareSoft,
                 backgroundImage: p.photoUrl != null ? NetworkImage(p.photoUrl!) : null,
                 child: p.photoUrl == null
-                    ? Text(p.name.isNotEmpty ? p.name[0].toUpperCase() : '?', style: TextStyle(fontSize: 28, fontWeight: CareText.bold, color: kCareDark))
+                    ? Text(p.name.isNotEmpty ? p.name[0].toUpperCase() : '?', style: TextStyle(fontSize: CareText.h1, fontWeight: CareText.bold, color: kCareDark))
                     : null,
               ),
               const SizedBox(height: 12),

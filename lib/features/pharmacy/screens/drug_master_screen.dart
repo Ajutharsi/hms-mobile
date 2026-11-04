@@ -236,14 +236,14 @@ class _DrugCard extends StatelessWidget {
                 decoration: BoxDecoration(color: stockBg, borderRadius: BorderRadius.circular(8)),
                 child: Text(
                   drug.isExpired ? 'Expired · ${drug.currentStock}' : 'Stock: ${drug.currentStock}',
-                  style: TextStyle(color: stockFg, fontSize: 11, fontWeight: CareText.bold),
+                  style: TextStyle(color: stockFg, fontSize: CareText.xs, fontWeight: CareText.bold),
                 ),
               ),
               const SizedBox(width: 8),
               Text('₹${drug.unitPrice.toStringAsFixed(2)}', style: TextStyle(fontSize: CareText.sm, color: kCareDark, fontWeight: CareText.medium)),
               const Spacer(),
               if ((drug.expiryDate ?? '').isNotEmpty)
-                Text('Exp: ${drug.expiryDate}', style: TextStyle(fontSize: 11, color: drug.isNearExpiry || drug.isExpired ? kDangerFg : kMuted)),
+                Text('Exp: ${drug.expiryDate}', style: TextStyle(fontSize: CareText.xs, color: drug.isNearExpiry || drug.isExpired ? kDangerFg : kMuted)),
             ],
           ),
         ],

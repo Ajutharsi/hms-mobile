@@ -118,7 +118,7 @@ class _StatTile extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(value, style: CareText.statValue(color)),
-          Text(label, textAlign: TextAlign.center, style: TextStyle(fontSize: 10, color: color, fontWeight: CareText.medium)),
+          Text(label, textAlign: TextAlign.center, style: TextStyle(fontSize: CareText.xxs, color: color, fontWeight: CareText.medium)),
         ],
       ),
     );
@@ -178,7 +178,7 @@ class _OrderCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                   decoration: BoxDecoration(color: pBg, borderRadius: BorderRadius.circular(7)),
-                  child: Text(order.priority, style: TextStyle(color: pFg, fontSize: 10, fontWeight: CareText.bold)),
+                  child: Text(order.priority, style: TextStyle(color: pFg, fontSize: CareText.xxs, fontWeight: CareText.bold)),
                 ),
                 const Spacer(),
                 Text(order.orderNo ?? '', style: CareText.mutedXs),

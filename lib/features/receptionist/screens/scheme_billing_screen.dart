@@ -128,7 +128,7 @@ class _StatTile extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(value, style: TextStyle(fontSize: 15, fontWeight: CareText.heavy, color: color)),
+          Text(value, style: TextStyle(fontSize: CareText.lg, fontWeight: CareText.heavy, color: color)),
           Text(label, style: CareText.tag(color)),
         ],
       ),
@@ -172,7 +172,7 @@ class _BillCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                   decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(7)),
-                  child: Text(bill.scheme.toUpperCase(), style: const TextStyle(fontSize: 10, fontWeight: CareText.bold, color: kInk)),
+                  child: Text(bill.scheme.toUpperCase(), style: const TextStyle(fontSize: CareText.xxs, fontWeight: CareText.bold, color: kInk)),
                 ),
                 const Spacer(),
                 Text('₹${bill.packageRate.toStringAsFixed(0)}', style: CareText.brandSmBold),

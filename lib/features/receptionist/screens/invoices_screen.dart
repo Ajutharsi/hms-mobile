@@ -167,7 +167,7 @@ class _StatTile extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(value, style: TextStyle(fontSize: 16, fontWeight: CareText.heavy, color: color)),
+          Text(value, style: TextStyle(fontSize: CareText.xl, fontWeight: CareText.heavy, color: color)),
           Text(label, style: CareText.tag(color)),
         ],
       ),
@@ -218,7 +218,7 @@ class _InvoiceCard extends StatelessWidget {
             const SizedBox(height: 8),
             Row(
               children: [
-                Text('Total ₹${invoice.total.toStringAsFixed(2)}', style: const TextStyle(fontSize: CareText.sm, color: kInk, fontWeight: CareText.medium)),
+                Text('Total ₹${invoice.total.toStringAsFixed(2)}', style: CareText.titleSmMedium),
                 const Spacer(),
                 Text(
                   'Balance ₹${invoice.balance.toStringAsFixed(2)}',

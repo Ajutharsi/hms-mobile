@@ -217,7 +217,7 @@ class _AvatarHeader extends StatelessWidget {
           const SizedBox(height: 12),
           Text(profile.name,
               style: const TextStyle(
-                  fontSize: 19, fontWeight: CareText.heavy, color: kInk)),
+                  fontSize: CareText.h3, fontWeight: CareText.heavy, color: kInk)),
           const SizedBox(height: 2),
           Text(profile.email,
               style: CareText.mutedSm),
@@ -229,7 +229,7 @@ class _AvatarHeader extends StatelessWidget {
                   color: kCareSoft, borderRadius: BorderRadius.circular(20)),
               child: Text(
                 'MRN: ${profile.mrn}',
-                style: TextStyle(fontSize: 12, color: kCareDark, fontWeight: CareText.bold),
+                style: TextStyle(fontSize: CareText.sm, color: kCareDark, fontWeight: CareText.bold),
               ),
             ),
           ],

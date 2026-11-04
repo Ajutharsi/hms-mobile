@@ -102,7 +102,7 @@ class _CompactAuthLayout extends StatelessWidget {
                   const SizedBox(height: 14),
                   const Text(
                     'HMS India',
-                    style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: CareText.heavy, letterSpacing: 0.3),
+                    style: TextStyle(color: Colors.white, fontSize: CareText.h2, fontWeight: CareText.heavy, letterSpacing: 0.3),
                   ),
                   const SizedBox(height: 4),
                   Text(

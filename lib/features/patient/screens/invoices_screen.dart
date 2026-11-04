@@ -116,7 +116,7 @@ class _BalanceSummary extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   '₹${outstanding.toStringAsFixed(2)}',
-                  style: const TextStyle(color: Colors.white, fontSize: 26, fontWeight: CareText.heavy),
+                  style: const TextStyle(color: Colors.white, fontSize: CareText.h1, fontWeight: CareText.heavy),
                 ),
                 const SizedBox(height: 4),
                 Text(
@@ -178,7 +178,7 @@ class _InvoiceCard extends StatelessWidget {
                 Text(
                   invoice.hasBalance ? 'Due ₹${invoice.balance.toStringAsFixed(2)}' : 'Paid',
                   style: TextStyle(
-                    fontSize: 13,
+                    fontSize: CareText.sm,
                     fontWeight: CareText.heavy,
                     color: invoice.hasBalance ? kCarePinkFg : kSuccessFg,
                   ),
@@ -199,7 +199,7 @@ class _InvoiceCard extends StatelessWidget {
                             Expanded(
                               child: Text(
                                 '${item.itemName}${item.quantity > 1 ? ' × ${item.quantity}' : ''}',
-                                style: const TextStyle(fontSize: 13, color: kInk),
+                                style: const TextStyle(fontSize: CareText.sm, color: kInk),
                               ),
                             ),
                             Text('₹${item.total.toStringAsFixed(2)}', style: CareText.mutedSm),
@@ -248,7 +248,7 @@ class _AmountRow extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: TextStyle(fontSize: 13, color: emphasize ? kInk : kMuted, fontWeight: emphasize ? FontWeight.w700 : FontWeight.w400)),
+          Text(label, style: TextStyle(fontSize: CareText.sm, color: emphasize ? kInk : kMuted, fontWeight: emphasize ? FontWeight.w700 : FontWeight.w400)),
           Text(
             '₹${value.toStringAsFixed(2)}',
             style: TextStyle(fontSize: emphasize ? 14 : 13, fontWeight: emphasize ? FontWeight.w800 : FontWeight.w500, color: emphasize ? kCareDark : kInk),

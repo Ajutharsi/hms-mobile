@@ -189,7 +189,7 @@ class _ReferralCard extends StatelessWidget {
           ),
           Text(referral.patientMrn ?? '', style: CareText.mutedXs),
           const SizedBox(height: 8),
-          Text('${referral.referredByName ?? '—'} → ${referral.referredToName ?? '—'}', style: const TextStyle(fontSize: CareText.sm, color: kInk, fontWeight: CareText.medium)),
+          Text('${referral.referredByName ?? '—'} → ${referral.referredToName ?? '—'}', style: CareText.titleSmMedium),
           const SizedBox(height: 4),
           Text(referral.reason, style: CareText.mutedSm),
           const SizedBox(height: 8),
@@ -198,7 +198,7 @@ class _ReferralCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                 decoration: BoxDecoration(color: pBg, borderRadius: BorderRadius.circular(7)),
-                child: Text(referral.priority, style: TextStyle(color: pFg, fontSize: 10, fontWeight: CareText.bold)),
+                child: Text(referral.priority, style: TextStyle(color: pFg, fontSize: CareText.xxs, fontWeight: CareText.bold)),
               ),
               const Spacer(),
               Text(referral.referralNo ?? '', style: CareText.mutedXs),

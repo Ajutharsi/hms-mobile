@@ -227,7 +227,7 @@ class _HomeHeader extends StatelessWidget {
                         Icon(Icons.search_rounded, color: kCare),
                         const SizedBox(width: 10),
                         const Expanded(
-                          child: Text('Find a doctor & book a visit', style: TextStyle(color: kCareHintQuiet, fontSize: 14)),
+                          child: Text('Find a doctor & book a visit', style: TextStyle(color: kCareHintQuiet, fontSize: CareText.md)),
                         ),
                         Icon(Icons.tune_rounded, color: kCare, size: 20),
                       ],

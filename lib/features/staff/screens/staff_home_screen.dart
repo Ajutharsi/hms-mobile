@@ -242,7 +242,7 @@ class _DashboardBody extends StatelessWidget {
                           CareIconBox(icon: action.$1, size: 38),
                           const SizedBox(height: 7),
                           Text(action.$2, textAlign: TextAlign.center, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: CareText.xs, fontWeight: CareText.bold, color: kInk)),
-                          Text(action.$3, textAlign: TextAlign.center, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 9.5, color: kMuted)),
+                          Text(action.$3, textAlign: TextAlign.center, maxLines: 1, overflow: TextOverflow.ellipsis, style: CareText.mutedXxs),
                         ],
                       ),
                     ),

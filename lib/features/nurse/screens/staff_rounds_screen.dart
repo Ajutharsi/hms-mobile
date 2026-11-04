@@ -100,7 +100,7 @@ class _StaffRoundsView extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
                     decoration: BoxDecoration(color: overdue ? kDangerBg : kSuccessBg, borderRadius: BorderRadius.circular(8)),
-                    child: Text(overdue ? 'Overdue' : 'On track', style: TextStyle(color: overdue ? kDangerFg : kSuccessFg, fontSize: 11, fontWeight: CareText.bold)),
+                    child: Text(overdue ? 'Overdue' : 'On track', style: TextStyle(color: overdue ? kDangerFg : kSuccessFg, fontSize: CareText.xs, fontWeight: CareText.bold)),
                   ),
                   const SizedBox(height: 6),
                   Text('Next: ${a['next_round_at'] ?? '—'}', style: CareText.mutedXxs),

@@ -133,7 +133,7 @@ class _BloodBankView extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(10)),
-                child: Text('$g: ${viewModel.byGroup[g] ?? 0}', style: const TextStyle(fontSize: 12, fontWeight: CareText.bold, color: kInk)),
+                child: Text('$g: ${viewModel.byGroup[g] ?? 0}', style: const TextStyle(fontSize: CareText.sm, fontWeight: CareText.bold, color: kInk)),
               ),
           ],
         ),
@@ -174,7 +174,7 @@ class _StatTile extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(value, style: TextStyle(fontSize: 20, fontWeight: CareText.heavy, color: color)),
+          Text(value, style: TextStyle(fontSize: CareText.h2, fontWeight: CareText.heavy, color: color)),
           Text(label, style: TextStyle(fontSize: CareText.xs, color: color, fontWeight: CareText.medium)),
         ],
       ),
@@ -213,7 +213,7 @@ class _UnitCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(color: kCareSoft, borderRadius: BorderRadius.circular(8)),
-                child: Text(unit.bloodGroup, style: TextStyle(color: kCareDark, fontSize: 13, fontWeight: CareText.heavy)),
+                child: Text(unit.bloodGroup, style: TextStyle(color: kCareDark, fontSize: CareText.sm, fontWeight: CareText.heavy)),
               ),
               const SizedBox(width: 8),
               Expanded(child: Text(_titleCase(unit.component), style: CareText.titleLg)),
@@ -229,7 +229,7 @@ class _UnitCard extends StatelessWidget {
           if ((unit.donorName ?? '').isNotEmpty) Text('Donor: ${unit.donorName}', style: CareText.mutedXs),
           Text(
             'Collected ${unit.collectionDate ?? '—'} · Expires ${unit.expiryDate ?? '—'}',
-            style: TextStyle(fontSize: 12, color: unit.isNearExpiry ? kDangerText : kMuted, fontWeight: unit.isNearExpiry ? FontWeight.w700 : FontWeight.w400),
+            style: TextStyle(fontSize: CareText.sm, color: unit.isNearExpiry ? kDangerText : kMuted, fontWeight: unit.isNearExpiry ? FontWeight.w700 : FontWeight.w400),
           ),
           if (unit.reservedForName != null) Text('Reserved for ${unit.reservedForName}', style: CareText.mutedXs),
           const SizedBox(height: 10),

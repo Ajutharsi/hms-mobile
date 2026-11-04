@@ -136,7 +136,7 @@ class _InvoiceDetailView extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Text('₹${p.amount.toStringAsFixed(2)}', style: const TextStyle(fontSize: 13, fontWeight: CareText.bold, color: kSuccessFg)),
+                  Text('₹${p.amount.toStringAsFixed(2)}', style: const TextStyle(fontSize: CareText.sm, fontWeight: CareText.bold, color: kSuccessFg)),
                 ],
               ),
             ),

@@ -64,7 +64,7 @@ class PatientPickerField extends StatelessWidget {
                 Expanded(
                   child: Text(
                     value == null ? 'Search a patient' : '${value!.name} (${value!.mrn})',
-                    style: TextStyle(color: value == null ? kCareHint : kInk, fontSize: 15),
+                    style: TextStyle(color: value == null ? kCareHint : kInk, fontSize: CareText.lg),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -74,7 +74,7 @@ class PatientPickerField extends StatelessWidget {
         ),
         if (errorText != null) ...[
           const SizedBox(height: 6),
-          Text(errorText!, style: const TextStyle(color: kDangerText, fontSize: 12)),
+          Text(errorText!, style: const TextStyle(color: kDangerText, fontSize: CareText.sm)),
         ],
       ],
     );
@@ -184,7 +184,7 @@ class _PatientPickerSheetState extends State<_PatientPickerSheet> {
                                         ? Text(p.name.isNotEmpty ? p.name[0].toUpperCase() : '?', style: CareText.brandBold)
                                         : null,
                                   ),
-                                  title: Text(p.name, style: const TextStyle(fontWeight: CareText.medium, fontSize: 14)),
+                                  title: Text(p.name, style: const TextStyle(fontWeight: CareText.medium, fontSize: CareText.md)),
                                   subtitle: Text(
                                     [p.mrn, if (p.wardName != null) '${p.wardName} · ${p.bedNo ?? ''}'].join('  ·  '),
                                     style: CareText.mutedXs,

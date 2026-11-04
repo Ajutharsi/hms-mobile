@@ -61,12 +61,12 @@ class _ForgotPasswordForm extends StatelessWidget {
           const SizedBox(height: 20),
           const Text(
             'Reset your password',
-            style: TextStyle(fontSize: 23, fontWeight: CareText.heavy, color: kInk, height: 1.15),
+            style: TextStyle(fontSize: CareText.h1, fontWeight: CareText.heavy, color: kInk, height: 1.15),
           ),
           const SizedBox(height: 8),
           const Text(
             "Enter your account email and we'll send you a link to set a new password.",
-            style: TextStyle(fontSize: CareText.lg, color: kMuted),
+            style: CareText.mutedLg,
           ),
           const SizedBox(height: 24),
           if (viewModel.errorMessage != null) ...[
@@ -133,7 +133,7 @@ class _SentConfirmation extends StatelessWidget {
         const SizedBox(height: 24),
         const Text(
           'Check your email',
-          style: TextStyle(fontSize: 22, fontWeight: CareText.heavy, color: kInk, height: 1.15),
+          style: TextStyle(fontSize: CareText.h2, fontWeight: CareText.heavy, color: kInk, height: 1.15),
         ),
         const SizedBox(height: 10),
         RichText(

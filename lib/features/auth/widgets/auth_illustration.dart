@@ -43,12 +43,12 @@ class AuthIllustrationPane extends StatelessWidget {
                 const SizedBox(height: 36),
                 Text(
                   headline,
-                  style: const TextStyle(fontSize: 22, fontWeight: CareText.bold, color: kInk),
+                  style: const TextStyle(fontSize: CareText.h2, fontWeight: CareText.bold, color: kInk),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   subtext,
-                  style: const TextStyle(fontSize: CareText.lg, color: kMuted),
+                  style: CareText.mutedLg,
                 ),
               ],
             ),

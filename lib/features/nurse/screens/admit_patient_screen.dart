@@ -100,7 +100,7 @@ class _AdmitPatientViewState extends State<_AdmitPatientView> {
                               return ListTile(
                                 dense: true,
                                 title: Text(p.name, style: const TextStyle(fontSize: CareText.md, fontWeight: CareText.medium)),
-                                subtitle: Text(p.mrn, style: const TextStyle(fontSize: 12)),
+                                subtitle: Text(p.mrn, style: const TextStyle(fontSize: CareText.sm)),
                                 onTap: () => viewModel.selectPatient(p),
                               );
                             },

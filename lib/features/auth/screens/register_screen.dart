@@ -57,12 +57,12 @@ class _RegisterViewState extends State<_RegisterView> {
             const SizedBox(height: 28),
             const Text(
               'Create your account',
-              style: TextStyle(fontSize: 23, fontWeight: CareText.heavy, color: kInk, height: 1.15),
+              style: TextStyle(fontSize: CareText.h1, fontWeight: CareText.heavy, color: kInk, height: 1.15),
             ),
             const SizedBox(height: 8),
             const Text(
               'Register as a patient to book appointments and view your records.',
-              style: TextStyle(fontSize: CareText.lg, color: kMuted),
+              style: CareText.mutedLg,
             ),
             const SizedBox(height: 24),
             if (viewModel.errorMessage != null) ...[
@@ -223,7 +223,7 @@ class _GenderOption extends StatelessWidget {
           child: Text(
             label,
             style: TextStyle(
-              fontSize: 14,
+              fontSize: CareText.md,
               fontWeight: CareText.medium,
               color: isSelected ? Colors.white : kMuted,
             ),

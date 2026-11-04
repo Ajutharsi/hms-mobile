@@ -123,7 +123,7 @@ class _OrderCard extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: Text(order.patientName ?? 'Patient', style: const TextStyle(fontSize: 13, fontWeight: CareText.medium, color: kMuted)),
+                child: Text(order.patientName ?? 'Patient', style: const TextStyle(fontSize: CareText.sm, fontWeight: CareText.medium, color: kMuted)),
               ),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -197,7 +197,7 @@ class _MiniBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
       decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(6)),
-      child: Text(label, style: TextStyle(color: color, fontSize: 9.5, fontWeight: CareText.bold)),
+      child: Text(label, style: TextStyle(color: color, fontSize: CareText.xxs, fontWeight: CareText.bold)),
     );
   }
 }
@@ -377,7 +377,7 @@ class _NewOrderScreenState extends State<_NewOrderScreen> {
                   child: Row(children: [
                     const Icon(Icons.access_time_rounded, size: 18, color: kMuted),
                     const SizedBox(width: 10),
-                    Text(_scheduledTime == null ? 'Choose a time' : _scheduledTime!.format(context), style: TextStyle(color: _scheduledTime == null ? kCareHint : kInk, fontSize: 15)),
+                    Text(_scheduledTime == null ? 'Choose a time' : _scheduledTime!.format(context), style: TextStyle(color: _scheduledTime == null ? kCareHint : kInk, fontSize: CareText.lg)),
                   ]),
                 ),
               ),
@@ -387,14 +387,14 @@ class _NewOrderScreenState extends State<_NewOrderScreen> {
               CheckboxListTile(
                 value: _isPrn,
                 onChanged: (v) => setState(() => _isPrn = v ?? false),
-                title: const Text('PRN (as needed)', style: TextStyle(fontSize: 14)),
+                title: const Text('PRN (as needed)', style: TextStyle(fontSize: CareText.md)),
                 controlAffinity: ListTileControlAffinity.leading,
                 contentPadding: EdgeInsets.zero,
               ),
               CheckboxListTile(
                 value: _isControlled,
                 onChanged: (v) => setState(() => _isControlled = v ?? false),
-                title: const Text('Controlled substance', style: TextStyle(fontSize: 14)),
+                title: const Text('Controlled substance', style: TextStyle(fontSize: CareText.md)),
                 controlAffinity: ListTileControlAffinity.leading,
                 contentPadding: EdgeInsets.zero,
               ),

@@ -347,7 +347,7 @@ class _PatientEditCardState extends State<_PatientEditCard> {
                     widget.onChanged();
                   },
                 ),
-                const Text('High priority', style: TextStyle(fontSize: 13, color: kInk)),
+                const Text('High priority', style: TextStyle(fontSize: CareText.sm, color: kInk)),
               ],
             ),
           ],

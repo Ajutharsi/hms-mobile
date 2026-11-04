@@ -204,7 +204,7 @@ class _DispensingCreateViewState extends State<_DispensingCreateView> {
                     children: [
                       const Text('Total', style: CareText.inkBold),
                       const Spacer(),
-                      Text('₹${total.toStringAsFixed(2)}', style: TextStyle(fontWeight: CareText.heavy, fontSize: 16, color: kCareDark)),
+                      Text('₹${total.toStringAsFixed(2)}', style: TextStyle(fontWeight: CareText.heavy, fontSize: CareText.xl, color: kCareDark)),
                     ],
                   ),
                 ],

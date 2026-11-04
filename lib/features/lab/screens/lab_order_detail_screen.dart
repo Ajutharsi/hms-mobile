@@ -151,7 +151,7 @@ class _ItemCard extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
                     decoration: BoxDecoration(color: flagColor.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(6)),
-                    child: Text(result.flag!.toUpperCase(), style: TextStyle(fontSize: 9.5, fontWeight: CareText.heavy, color: flagColor)),
+                    child: Text(result.flag!.toUpperCase(), style: TextStyle(fontSize: CareText.xxs, fontWeight: CareText.heavy, color: flagColor)),
                   ),
                 ],
               ],

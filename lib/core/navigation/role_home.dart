@@ -8,6 +8,7 @@ import 'package:hms_mobile/features/patient/screens/home_screen.dart';
 import 'package:hms_mobile/features/pharmacy/screens/pharmacist_home_screen.dart';
 import 'package:hms_mobile/features/receptionist/screens/receptionist_home_screen.dart';
 import 'package:hms_mobile/features/staff/screens/staff_home_screen.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 
 /// Routes a freshly-logged-in (or restored-session) user to the right
 /// role's home shell. Patient, doctor, nurse, staff, lab_assistant,
@@ -54,7 +55,7 @@ class RoleHome extends StatelessWidget {
               Text(
                 'The "${user.primaryRole}" role isn\'t available in this app yet.',
                 textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 15),
+                style: const TextStyle(fontSize: CareText.lg),
               ),
             ],
           ),
