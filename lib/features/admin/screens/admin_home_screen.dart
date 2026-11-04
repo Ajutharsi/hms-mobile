@@ -5,6 +5,15 @@ import 'package:hms_mobile/core/models/app_user.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
+import 'package:hms_mobile/features/admin/screens/admin_attendance_screen.dart';
+import 'package:hms_mobile/features/admin/screens/admin_doctors_screen.dart';
+import 'package:hms_mobile/features/admin/screens/admin_inventory_screen.dart';
+import 'package:hms_mobile/features/admin/screens/admin_leaves_screen.dart';
+import 'package:hms_mobile/features/admin/screens/admin_purchase_orders_screen.dart';
+import 'package:hms_mobile/features/admin/screens/admin_reports_screen.dart';
+import 'package:hms_mobile/features/admin/screens/admin_settings_screen.dart';
+import 'package:hms_mobile/features/admin/screens/admin_simple_screens.dart';
+import 'package:hms_mobile/features/admin/screens/admin_users_screen.dart';
 import 'package:hms_mobile/features/auth/screens/login_screen.dart';
 import 'package:hms_mobile/features/lab/screens/lab_orders_screen.dart';
 import 'package:hms_mobile/features/lab/screens/lab_tests_screen.dart';
@@ -71,6 +80,10 @@ enum AdminSection {
   drugs, dispensing, labTests, labOrders, radiology,
   invoices, insurance, deposits, schemeBilling,
   foodIntake, fluidIntake, staffRounds,
+  // Admin-only: these have no clinical owner, so they run on api/admin.
+  reports, doctorsAdmin, users, staffAdmin,
+  inventory, purchaseOrders, services,
+  attendance, leaves, notifications, activityLog, settings,
   profile, appearance,
 }
 
@@ -102,6 +115,18 @@ Widget _screenFor(AdminSection section) => switch (section) {
       AdminSection.foodIntake => const FoodIntakeScreen(),
       AdminSection.fluidIntake => const FluidIntakeScreen(),
       AdminSection.staffRounds => const StaffRoundsScreen(),
+      AdminSection.reports => const AdminReportsScreen(),
+      AdminSection.doctorsAdmin => const AdminDoctorsScreen(),
+      AdminSection.users => const AdminUsersScreen(),
+      AdminSection.staffAdmin => const AdminStaffScreen(),
+      AdminSection.inventory => const AdminInventoryScreen(),
+      AdminSection.purchaseOrders => const AdminPurchaseOrdersScreen(),
+      AdminSection.services => const AdminServicesScreen(),
+      AdminSection.attendance => const AdminAttendanceScreen(),
+      AdminSection.leaves => const AdminLeavesScreen(),
+      AdminSection.notifications => const AdminNotificationsScreen(),
+      AdminSection.activityLog => const AdminActivityLogScreen(),
+      AdminSection.settings => const AdminSettingsScreen(),
       AdminSection.profile => const ReceptionProfileScreen(),
       AdminSection.appearance => const AppearanceScreen(),
     };
@@ -391,6 +416,26 @@ class _AdminDrawer extends StatelessWidget {
                   _DrawerItem(icon: Icons.restaurant_rounded, label: 'Food Intake', target: AdminSection.foodIntake),
                   _DrawerItem(icon: Icons.water_drop_outlined, label: 'Fluid Intake', target: AdminSection.fluidIntake),
                   _DrawerItem(icon: Icons.groups_rounded, label: 'Staff Rounds', target: AdminSection.staffRounds),
+                ]),
+                _DrawerGroup(label: 'MANAGE', items: [
+                  _DrawerItem(icon: Icons.insert_chart_outlined_rounded, label: 'Reports', target: AdminSection.reports),
+                  _DrawerItem(icon: Icons.medical_information_rounded, label: 'Doctors', target: AdminSection.doctorsAdmin),
+                  _DrawerItem(icon: Icons.manage_accounts_rounded, label: 'User Management', target: AdminSection.users),
+                  _DrawerItem(icon: Icons.groups_2_rounded, label: 'Staff', target: AdminSection.staffAdmin),
+                  _DrawerItem(icon: Icons.local_offer_rounded, label: 'Billing Services', target: AdminSection.services),
+                ]),
+                _DrawerGroup(label: 'STORES', items: [
+                  _DrawerItem(icon: Icons.inventory_2_rounded, label: 'Inventory', target: AdminSection.inventory),
+                  _DrawerItem(icon: Icons.local_shipping_rounded, label: 'Purchase Orders', target: AdminSection.purchaseOrders),
+                ]),
+                _DrawerGroup(label: 'HR', items: [
+                  _DrawerItem(icon: Icons.how_to_reg_rounded, label: 'Attendance', target: AdminSection.attendance),
+                  _DrawerItem(icon: Icons.event_available_rounded, label: 'Leave Requests', target: AdminSection.leaves),
+                ]),
+                _DrawerGroup(label: 'SYSTEM', items: [
+                  _DrawerItem(icon: Icons.tune_rounded, label: 'Settings', target: AdminSection.settings),
+                  _DrawerItem(icon: Icons.history_rounded, label: 'Activity Log', target: AdminSection.activityLog),
+                  _DrawerItem(icon: Icons.notifications_rounded, label: 'Notifications', target: AdminSection.notifications),
                 ]),
                 _DrawerGroup(label: 'ACCOUNT', items: [
                   _DrawerItem(icon: Icons.person_rounded, label: 'My Profile', target: AdminSection.profile),
