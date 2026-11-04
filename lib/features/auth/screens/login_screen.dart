@@ -1,8 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/navigation/role_home.dart';
+import 'package:hms_mobile/core/services/api_service.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/auth/viewmodels/login_view_model.dart';
@@ -86,6 +88,10 @@ class _LoginViewState extends State<_LoginView> {
               style: TextStyle(fontSize: 15, color: kMuted),
             ),
             const SizedBox(height: 24),
+            if (kReleaseMode && ApiService.isInsecure) ...[
+              insecureConnectionNotice(Uri.parse(ApiService.baseUrl).host),
+              const SizedBox(height: 20),
+            ],
             if (viewModel.errorMessage != null) ...[
               authErrorBanner(viewModel.errorMessage!),
               const SizedBox(height: 20),

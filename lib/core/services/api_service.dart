@@ -26,17 +26,28 @@ class ApiException implements Exception {
 
 
 class ApiService {
-  /// Change this to wherever your Laravel app is actually reachable from
-  /// the device/emulator you're running on:
+  /// Where the Laravel app is reachable from this device. Set at build
+  /// time so a release build can't ship a developer's host:
+  ///
+  ///   flutter build apk --dart-define=API_URL=https://hms.example.com/api
+  ///
+  /// Without the flag it falls back to the local dev server, which suits:
   ///  - Chrome / desktop (this machine)             -> http://127.0.0.1:8000
-  ///  - Real Android phone over USB (adb reverse)   -> http://127.0.0.1:8000
-  ///    (run `adb reverse tcp:8000 tcp:8000` once per USB connection —
-  ///    that's what makes "127.0.0.1" on the phone actually reach this PC)
-  ///  - Android emulator reaching your own PC       -> http://10.0.2.2:8000
-  ///  - iOS simulator reaching your own PC          -> http://127.0.0.1:8000
-  ///  - a real phone over Wi-Fi (no USB/adb)        -> http://<your-pc-lan-ip>:8000
-  ///  - a deployed server                           -> https://your-domain.com
-  static String get baseUrl => 'http://127.0.0.1:8000/api';
+  ///  - Android emulator or a USB phone, after
+  ///    `adb reverse tcp:8000 tcp:8000`             -> http://127.0.0.1:8000
+  ///  - Android emulator reaching the host directly -> http://10.0.2.2:8000
+  ///  - a phone on the same Wi-Fi                   -> http://<pc-lan-ip>:8000
+  ///
+  /// Anything other than https:// is plain text on the wire — fine between
+  /// an emulator and this PC, not fine for real patient data.
+  static const String _devFallback = 'http://127.0.0.1:8000/api';
+
+  static String get baseUrl =>
+      const String.fromEnvironment('API_URL', defaultValue: _devFallback);
+
+  /// True when traffic leaves the device unencrypted; the login screen
+  /// says so rather than letting it pass unnoticed in a release build.
+  static bool get isInsecure => !baseUrl.startsWith('https://');
 
   final http.Client _client;
   ApiService({http.Client? client}) : _client = client ?? http.Client();
