@@ -186,7 +186,7 @@ class _Swatch extends StatelessWidget {
               label,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(fontSize: CareText.xs, color: selected ? kInk : kMuted, fontWeight: selected ? FontWeight.w700 : FontWeight.w500),
+              style: TextStyle(fontSize: CareText.xs, color: selected ? kInk : kMuted, fontWeight: selected ? CareText.bold : CareText.regular),
             ),
           ],
         ),

@@ -73,6 +73,30 @@ void main() {
     );
   });
 
+  test('screens name their font sizes and weights instead of spelling them', () {
+    // Every size outside core/theme is now a step of the scale, written
+    // as CareText.<step>. A bare number here is either a step spelled out
+    // again or, worse, a twelfth size nobody chose on purpose.
+    // Matching only what follows the colon would miss a raw value inside a
+    // conditional -- `fontSize: emphasize ? 14 : 13` hid from exactly that
+    // check. So the whole size expression is read, with the token names
+    // blanked out first because h1/h2/h3 carry digits of their own.
+    final offenders = <String>[];
+    for (final file in dartFiles.where(isScreenCode)) {
+      final source = file.readAsStringSync();
+      void flag(Match m) =>
+          offenders.add('${file.path}:${'\n'.allMatches(source.substring(0, m.start)).length + 1}: ${m[0]!.trim()}');
+
+      for (final m in RegExp(r'fontSize:([^,)]*)').allMatches(source)) {
+        if (RegExp(r'\d').hasMatch(m[1]!.replaceAll(RegExp(r'CareText\.\w+'), ''))) flag(m);
+      }
+      RegExp(r'FontWeight\.\w+').allMatches(source).forEach(flag);
+    }
+
+    expect(offenders, isEmpty,
+        reason: 'use a CareText step (xxs…stat) and medium/bold/heavy:\n${offenders.join('\n')}');
+  });
+
   test('screens do not hardcode colours', () {
     // The only literal colours left outside core/theme. The hue wheel in
     // Appearance really is six fixed primaries, and that card shadow is

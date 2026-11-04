@@ -248,10 +248,10 @@ class _AmountRow extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: TextStyle(fontSize: CareText.sm, color: emphasize ? kInk : kMuted, fontWeight: emphasize ? FontWeight.w700 : FontWeight.w400)),
+          Text(label, style: TextStyle(fontSize: CareText.sm, color: emphasize ? kInk : kMuted, fontWeight: emphasize ? CareText.bold : CareText.regular)),
           Text(
             '₹${value.toStringAsFixed(2)}',
-            style: TextStyle(fontSize: emphasize ? 14 : 13, fontWeight: emphasize ? FontWeight.w800 : FontWeight.w500, color: emphasize ? kCareDark : kInk),
+            style: TextStyle(fontSize: emphasize ? CareText.md : CareText.sm, fontWeight: emphasize ? CareText.heavy : CareText.regular, color: emphasize ? kCareDark : kInk),
           ),
         ],
       ),

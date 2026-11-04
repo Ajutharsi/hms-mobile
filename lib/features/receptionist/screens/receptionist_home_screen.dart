@@ -668,7 +668,7 @@ class _StatCard extends StatelessWidget {
                 child: Text(
                   trend,
                   textAlign: TextAlign.right,
-                  style: TextStyle(fontSize: CareText.xxs, color: alert ? kCarePinkFg : kMuted, fontWeight: alert ? FontWeight.w700 : FontWeight.w400),
+                  style: TextStyle(fontSize: CareText.xxs, color: alert ? kCarePinkFg : kMuted, fontWeight: alert ? CareText.bold : CareText.regular),
                 ),
               ),
             ],

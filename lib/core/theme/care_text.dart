@@ -42,6 +42,7 @@ abstract final class CareText {
   static const double h1 = 24;
   static const double stat = 32;
 
+  static const FontWeight regular = FontWeight.w400;
   static const FontWeight medium = FontWeight.w600;
   static const FontWeight bold = FontWeight.w700;
   static const FontWeight heavy = FontWeight.w800;

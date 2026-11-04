@@ -229,7 +229,7 @@ class _UnitCard extends StatelessWidget {
           if ((unit.donorName ?? '').isNotEmpty) Text('Donor: ${unit.donorName}', style: CareText.mutedXs),
           Text(
             'Collected ${unit.collectionDate ?? '—'} · Expires ${unit.expiryDate ?? '—'}',
-            style: TextStyle(fontSize: CareText.sm, color: unit.isNearExpiry ? kDangerText : kMuted, fontWeight: unit.isNearExpiry ? FontWeight.w700 : FontWeight.w400),
+            style: TextStyle(fontSize: CareText.sm, color: unit.isNearExpiry ? kDangerText : kMuted, fontWeight: unit.isNearExpiry ? CareText.bold : CareText.regular),
           ),
           if (unit.reservedForName != null) Text('Reserved for ${unit.reservedForName}', style: CareText.mutedXs),
           const SizedBox(height: 10),
