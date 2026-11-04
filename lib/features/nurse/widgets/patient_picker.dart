@@ -8,6 +8,7 @@ import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/nurse/models/nurse_patient.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 /// A tappable form field that opens a searchable bottom sheet of patients
 /// (backed by `NurseApiService.patients(token, q:)`) and reports back the
@@ -32,7 +33,7 @@ class PatientPickerField extends StatelessWidget {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(CareRadius.sheet))),
       builder: (_) => const _PatientPickerSheet(),
     );
     if (picked != null) onChanged(picked);
@@ -48,13 +49,13 @@ class PatientPickerField extends StatelessWidget {
         const SizedBox(height: 8),
         InkWell(
           onTap: () => _open(context),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(CareRadius.control),
           child: Container(
             width: double.infinity,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
             decoration: BoxDecoration(
               color: kCareBg,
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(CareRadius.control),
               border: errorText != null ? Border.all(color: kDangerText, width: 1.2) : null,
             ),
             child: Row(
@@ -145,7 +146,7 @@ class _PatientPickerSheetState extends State<_PatientPickerSheet> {
         child: Column(
           children: [
             const SizedBox(height: 12),
-            Container(width: 40, height: 4, decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(4))),
+            Container(width: 40, height: 4, decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(CareRadius.chip))),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
               child: TextField(
@@ -158,7 +159,7 @@ class _PatientPickerSheetState extends State<_PatientPickerSheet> {
                   filled: true,
                   fillColor: Colors.white,
                   contentPadding: const EdgeInsets.symmetric(vertical: 12),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(CareRadius.control), borderSide: BorderSide.none),
                 ),
               ),
             ),

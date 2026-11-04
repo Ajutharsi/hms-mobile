@@ -6,6 +6,7 @@ import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/nurse/models/ward.dart';
 import 'package:hms_mobile/features/nurse/viewmodels/admit_patient_view_model.dart';
 import 'package:hms_mobile/features/patient/models/doctor.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 class AdmitPatientScreen extends StatelessWidget {
   const AdmitPatientScreen({super.key});
@@ -90,7 +91,7 @@ class _AdmitPatientViewState extends State<_AdmitPatientView> {
                       if (viewModel.patientResults.isNotEmpty)
                         Container(
                           margin: const EdgeInsets.only(top: 6),
-                          decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(12)),
+                          decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(CareRadius.control)),
                           constraints: const BoxConstraints(maxHeight: 220),
                           child: ListView.builder(
                             shrinkWrap: true,
@@ -163,7 +164,7 @@ class _AdmitPatientViewState extends State<_AdmitPatientView> {
                       height: 48,
                       child: ElevatedButton(
                         onPressed: viewModel.canSubmit && !viewModel.isSubmitting ? () => _submit(viewModel) : null,
-                        style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+                        style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CareRadius.control))),
                         child: viewModel.isSubmitting
                             ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
                             : const Text('Admit patient', style: CareText.onCareBold),
@@ -185,7 +186,7 @@ class _SelectedChip extends StatelessWidget {
     watchCarePalette(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-      decoration: BoxDecoration(color: kCareSoft, borderRadius: BorderRadius.circular(12)),
+      decoration: BoxDecoration(color: kCareSoft, borderRadius: BorderRadius.circular(CareRadius.control)),
       child: Row(
         children: [
           Expanded(child: Text(label, style: TextStyle(fontSize: CareText.md, fontWeight: CareText.medium, color: kCareDark))),

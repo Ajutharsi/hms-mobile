@@ -8,6 +8,7 @@ import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/receptionist/models/reception_appointment.dart';
 import 'package:hms_mobile/features/receptionist/models/reception_patient.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 const _kModalities = ['X-Ray', 'CT', 'MRI', 'Ultrasound', 'Mammography', 'Fluoroscopy', 'Other'];
 const _kPriorities = ['routine', 'urgent', 'emergency'];
@@ -138,7 +139,7 @@ class _RadiologyOrderScreenState extends State<RadiologyOrderScreen> {
                   if (_selectedPatient != null)
                     Container(
                       padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(color: kCareSoft, borderRadius: BorderRadius.circular(12)),
+                      decoration: BoxDecoration(color: kCareSoft, borderRadius: BorderRadius.circular(CareRadius.control)),
                       child: Row(
                         children: [
                           Expanded(
@@ -163,7 +164,7 @@ class _RadiologyOrderScreenState extends State<RadiologyOrderScreen> {
                     if (_patientResults.isNotEmpty)
                       Container(
                         margin: const EdgeInsets.only(top: 6),
-                        decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(12)),
+                        decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(CareRadius.control)),
                         constraints: const BoxConstraints(maxHeight: 220),
                         child: ListView.builder(
                           shrinkWrap: true,
@@ -248,7 +249,7 @@ class _RadiologyOrderScreenState extends State<RadiologyOrderScreen> {
                     height: 48,
                     child: ElevatedButton(
                       onPressed: _isSaving ? null : _submit,
-                      style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+                      style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CareRadius.control))),
                       child: _isSaving
                           ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
                           : const Text('Create order', style: CareText.onCareBold),

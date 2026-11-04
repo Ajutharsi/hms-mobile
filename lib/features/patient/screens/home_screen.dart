@@ -19,6 +19,7 @@ import 'package:hms_mobile/features/patient/viewmodels/lab_results_view_model.da
 import 'package:hms_mobile/features/patient/viewmodels/prescriptions_view_model.dart';
 import 'package:hms_mobile/features/patient/viewmodels/profile_view_model.dart';
 import 'package:hms_mobile/features/settings/screens/appearance_screen.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 /// The patient's home shell — bottom nav (Home / Appointments / Lab /
 /// Profile) around a center "Book" button, plus a drawer that mirrors the
@@ -182,7 +183,7 @@ class _PatientDrawer extends StatelessWidget {
 
     return Drawer(
       backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.horizontal(right: Radius.circular(28))),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.horizontal(right: Radius.circular(CareRadius.drawer))),
       child: Column(
         children: [
           CareHeaderBackground(
@@ -266,7 +267,7 @@ class _DrawerTile extends StatelessWidget {
     watchCarePalette(context);
     return ListTile(
       onTap: onTap,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CareRadius.field)),
       leading: CareIconBox(icon: icon, size: 36, filled: false),
       title: Text(label, style: const TextStyle(fontSize: CareText.lg, color: kInk, fontWeight: CareText.medium)),
       trailing: const Icon(Icons.chevron_right_rounded, color: kCareChevron),
@@ -288,7 +289,7 @@ class _AppointmentsTabState extends State<_AppointmentsTab> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(22)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CareRadius.panel)),
         title: const Text('Cancel appointment?'),
         content: Text('Cancel your appointment with ${appointment.doctorName ?? 'the doctor'} on ${appointment.date}?'),
         actions: [
@@ -328,7 +329,7 @@ class _AppointmentsTabState extends State<_AppointmentsTab> {
           padding: const EdgeInsets.fromLTRB(20, 16, 20, 4),
           child: Container(
             padding: const EdgeInsets.all(4),
-            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14), border: Border.all(color: kCareBorder)),
+            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(CareRadius.field), border: Border.all(color: kCareBorder)),
             child: Row(
               children: [
                 _SegmentButton(label: 'Upcoming (${upcoming.length})', selected: _showUpcoming, onTap: () => setState(() => _showUpcoming = true)),
@@ -390,7 +391,7 @@ class _SegmentButton extends StatelessWidget {
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 180),
           padding: const EdgeInsets.symmetric(vertical: 10),
-          decoration: BoxDecoration(color: selected ? kCare : Colors.transparent, borderRadius: BorderRadius.circular(11)),
+          decoration: BoxDecoration(color: selected ? kCare : Colors.transparent, borderRadius: BorderRadius.circular(CareRadius.control)),
           alignment: Alignment.center,
           child: Text(
             label,
@@ -459,7 +460,7 @@ class AppointmentCard extends StatelessWidget {
                 style: OutlinedButton.styleFrom(
                   foregroundColor: kCarePinkFg,
                   side: BorderSide(color: kCarePinkBg, width: 1.4),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CareRadius.control)),
                 ),
                 child: const Text('Cancel appointment', style: TextStyle(fontSize: CareText.sm, fontWeight: CareText.bold)),
               ),

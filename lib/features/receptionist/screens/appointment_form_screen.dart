@@ -8,6 +8,7 @@ import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/receptionist/models/reception_appointment.dart';
 import 'package:hms_mobile/features/receptionist/models/reception_patient.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 const _kTypes = ['op', 'emergency', 'consult', 'followup'];
 const _kStatuses = ['scheduled', 'completed', 'cancelled', 'no_show'];
@@ -199,13 +200,13 @@ class _AppointmentFormScreenState extends State<AppointmentFormScreen> {
                 if (_isEdit)
                   Container(
                     padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(12)),
+                    decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(CareRadius.control)),
                     child: Text('${widget.existing!.patientName ?? ''} · ${widget.existing!.patientMrn ?? ''}', style: const TextStyle(fontWeight: CareText.medium, fontSize: CareText.md)),
                   )
                 else if (_selectedPatient != null)
                   Container(
                     padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(color: kCareSoft, borderRadius: BorderRadius.circular(12)),
+                    decoration: BoxDecoration(color: kCareSoft, borderRadius: BorderRadius.circular(CareRadius.control)),
                     child: Row(
                       children: [
                         Expanded(child: Text('${_selectedPatient!.name} · ${_selectedPatient!.mrn}', style: TextStyle(fontWeight: CareText.medium, color: kCareDark, fontSize: CareText.md))),
@@ -219,7 +220,7 @@ class _AppointmentFormScreenState extends State<AppointmentFormScreen> {
                   if (_patientResults.isNotEmpty)
                     Container(
                       margin: const EdgeInsets.only(top: 6),
-                      decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(12)),
+                      decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(CareRadius.control)),
                       constraints: const BoxConstraints(maxHeight: 220),
                       child: ListView.builder(
                         shrinkWrap: true,
@@ -325,7 +326,7 @@ class _AppointmentFormScreenState extends State<AppointmentFormScreen> {
                   height: 48,
                   child: ElevatedButton(
                     onPressed: (_canSubmit && !_isSaving) ? _submit : null,
-                    style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+                    style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CareRadius.control))),
                     child: _isSaving
                         ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
                         : Text(_isEdit ? 'Save changes' : 'Book appointment', style: CareText.onCareBold),

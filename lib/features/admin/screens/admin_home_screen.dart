@@ -45,6 +45,7 @@ import 'package:hms_mobile/features/receptionist/screens/referrals_screen.dart';
 import 'package:hms_mobile/features/receptionist/screens/scheme_billing_screen.dart';
 import 'package:hms_mobile/features/receptionist/viewmodels/reception_dashboard_view_model.dart';
 import 'package:hms_mobile/features/settings/screens/appearance_screen.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 /// The administrator's home.
 ///
@@ -200,7 +201,7 @@ class _AdminBody extends StatelessWidget {
               ),
               Builder(
                 builder: (context) => InkWell(
-                  borderRadius: BorderRadius.circular(22),
+                  borderRadius: BorderRadius.circular(CareRadius.panel),
                   onTap: () => Scaffold.of(context).openDrawer(),
                   child: Container(
                     padding: const EdgeInsets.all(11),
@@ -312,12 +313,12 @@ class _Shortcut extends StatelessWidget {
   Widget build(BuildContext context) {
     watchCarePalette(context);
     return InkWell(
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(CareRadius.card),
       onTap: () => _open(context, target),
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(CareRadius.card),
           border: Border.all(color: kCareBorder),
         ),
         child: Column(
@@ -348,7 +349,7 @@ class _AdminDrawer extends StatelessWidget {
 
     return Drawer(
       backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.horizontal(right: Radius.circular(28))),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.horizontal(right: Radius.circular(CareRadius.drawer))),
       child: Column(
         children: [
           CareHeaderBackground(
@@ -489,7 +490,7 @@ class _DrawerItem extends StatelessWidget {
     watchCarePalette(context);
     return ListTile(
       dense: true,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CareRadius.field)),
       leading: CareIconBox(icon: icon, size: 34, filled: false),
       title: Text(label, style: CareText.titleMdMedium),
       onTap: () {

@@ -12,6 +12,7 @@ import 'package:hms_mobile/features/nurse/models/nurse_patient.dart';
 import 'package:hms_mobile/features/nurse/viewmodels/er_view_model.dart';
 import 'package:hms_mobile/features/nurse/widgets/patient_picker.dart';
 import 'package:hms_mobile/features/patient/models/doctor.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 const _kTriageLevels = ['red', 'yellow', 'green', 'black'];
 const _kErStatuses = ['waiting', 'under_treatment', 'admitted', 'discharged', 'transferred', 'expired'];
@@ -147,7 +148,7 @@ class _StatTile extends StatelessWidget {
     watchCarePalette(context);
     return Container(
       padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(12)),
+      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(CareRadius.control)),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -192,7 +193,7 @@ class _ErCard extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kCareBorder)),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(CareRadius.card), border: Border.all(color: kCareBorder)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -209,13 +210,13 @@ class _ErCard extends StatelessWidget {
               ),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
-                decoration: BoxDecoration(color: tBg, borderRadius: BorderRadius.circular(8)),
+                decoration: BoxDecoration(color: tBg, borderRadius: BorderRadius.circular(CareRadius.chip)),
                 child: Text(reg.triageLevel.toUpperCase(), style: TextStyle(color: tFg, fontSize: CareText.xxs, fontWeight: CareText.bold)),
               ),
               const SizedBox(width: 6),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
-                decoration: BoxDecoration(color: sBg, borderRadius: BorderRadius.circular(8)),
+                decoration: BoxDecoration(color: sBg, borderRadius: BorderRadius.circular(CareRadius.chip)),
                 child: Text(_titleCase(reg.status), style: CareText.chip(sFg)),
               ),
             ],
@@ -549,7 +550,7 @@ class _RegisterErScreenState extends State<_RegisterErScreen> {
                 height: 48,
                 child: ElevatedButton(
                   onPressed: _isSaving ? null : _submit,
-                  style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+                  style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CareRadius.control))),
                   child: _isSaving
                       ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
                       : const Text('Register patient', style: CareText.onCareBold),

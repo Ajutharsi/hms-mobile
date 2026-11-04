@@ -6,6 +6,7 @@ import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/patient/models/invoice.dart';
 import 'package:hms_mobile/features/patient/viewmodels/invoices_view_model.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 /// The bills list body — shown on the "Bills & Payments" page the home
 /// shell pushes. There's no payment gateway wired up anywhere in this app,
@@ -19,7 +20,7 @@ class InvoicesTabBody extends StatelessWidget {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(22)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CareRadius.panel)),
         title: const Text('Request billing help?'),
         content: Text(
           'This sends invoice ${invoice.invoiceNo} to our billing team, who will contact you about the ₹${invoice.balance.toStringAsFixed(2)} balance. '
@@ -129,7 +130,7 @@ class _BalanceSummary extends StatelessWidget {
           Container(
             width: 52,
             height: 52,
-            decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(16)),
+            decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(CareRadius.card)),
             child: const Icon(Icons.account_balance_wallet_rounded, color: Colors.white, size: 28),
           ),
         ],
@@ -189,7 +190,7 @@ class _InvoiceCard extends StatelessWidget {
           children: [
             Container(
               padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(14)),
+              decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(CareRadius.field)),
               child: Column(
                 children: [
                   ...invoice.items.map((item) => Padding(

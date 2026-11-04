@@ -6,6 +6,7 @@ import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/patient/models/patient_profile.dart';
 import 'package:hms_mobile/features/patient/viewmodels/profile_view_model.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 /// The Profile tab body — embedded inside [HomeScreen]'s bottom-nav shell.
 /// Combines the web's separate patient-dashboard stats strip and
@@ -128,7 +129,7 @@ class ProfileTabBody extends StatelessWidget {
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
                       color: kCareSoft,
-                      borderRadius: BorderRadius.circular(10)),
+                      borderRadius: BorderRadius.circular(CareRadius.control)),
                   child: Text(
                     viewModel.successMessage!,
                     style: CareText.brandMdMedium,
@@ -200,7 +201,7 @@ class _AvatarHeader extends StatelessWidget {
                 bottom: 0,
                 child: InkWell(
                   onTap: viewModel.pickPhoto,
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(CareRadius.panel),
                   child: Container(
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
@@ -226,7 +227,7 @@ class _AvatarHeader extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
               decoration: BoxDecoration(
-                  color: kCareSoft, borderRadius: BorderRadius.circular(20)),
+                  color: kCareSoft, borderRadius: BorderRadius.circular(CareRadius.panel)),
               child: Text(
                 'MRN: ${profile.mrn}',
                 style: TextStyle(fontSize: CareText.sm, color: kCareDark, fontWeight: CareText.bold),

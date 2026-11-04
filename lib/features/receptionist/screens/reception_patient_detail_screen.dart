@@ -7,6 +7,7 @@ import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/receptionist/models/reception_patient.dart';
 import 'package:hms_mobile/features/receptionist/screens/patient_form_screen.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 class ReceptionPatientDetailScreen extends StatefulWidget {
   final int patientId;
@@ -87,7 +88,7 @@ class _ReceptionPatientDetailScreenState extends State<ReceptionPatientDetailScr
               const SizedBox(height: 4),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(8)),
+                decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(CareRadius.chip)),
                 child: Text('MRN: ${p.mrn}', style: CareText.mutedXsMedium),
               ),
             ],
@@ -96,7 +97,7 @@ class _ReceptionPatientDetailScreenState extends State<ReceptionPatientDetailScr
         const SizedBox(height: 20),
         Container(
           padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kCareBorder)),
+          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(CareRadius.card), border: Border.all(color: kCareBorder)),
           child: Column(
             children: [
               _Row('Status', p.status),

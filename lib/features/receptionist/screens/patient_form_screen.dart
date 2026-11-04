@@ -10,6 +10,7 @@ import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/receptionist/models/reception_patient.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 const _kMaritalStatuses = ['single', 'married', 'divorced', 'widowed'];
 
@@ -171,7 +172,7 @@ class _PatientFormScreenState extends State<PatientFormScreen> {
                     bottom: 0,
                     child: InkWell(
                       onTap: _pickPhoto,
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(CareRadius.panel),
                       child: Container(
                         padding: const EdgeInsets.all(6),
                         decoration: BoxDecoration(color: kCareDark, shape: BoxShape.circle),
@@ -253,7 +254,7 @@ class _PatientFormScreenState extends State<PatientFormScreen> {
               height: 48,
               child: ElevatedButton(
                 onPressed: _isSaving ? null : _submit,
-                style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+                style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CareRadius.control))),
                 child: _isSaving
                     ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
                     : Text(_isEdit ? 'Save changes' : 'Add patient', style: CareText.onCareBold),

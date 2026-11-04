@@ -7,6 +7,7 @@ import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/nurse/models/shift_handover.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 class ShiftHandoverDetailScreen extends StatefulWidget {
   final int handoverId;
@@ -124,7 +125,7 @@ class _ShiftHandoverDetailScreenState extends State<ShiftHandoverDetailScreen> {
       children: [
         Container(
           padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kCareBorder)),
+          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(CareRadius.card), border: Border.all(color: kCareBorder)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -161,7 +162,7 @@ class _ShiftHandoverDetailScreenState extends State<ShiftHandoverDetailScreen> {
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(color: kDangerBg, borderRadius: BorderRadius.circular(10)),
+                  decoration: BoxDecoration(color: kDangerBg, borderRadius: BorderRadius.circular(CareRadius.control)),
                   child: Text('Rejection reason: ${detail.rejectionReason}', style: const TextStyle(color: kDangerFg, fontSize: CareText.sm)),
                 ),
               ],
@@ -214,7 +215,7 @@ class _ShiftHandoverDetailScreenState extends State<ShiftHandoverDetailScreen> {
           const SizedBox(height: 10),
           Container(
             padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14), border: Border.all(color: kCareBorder)),
+            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(CareRadius.field), border: Border.all(color: kCareBorder)),
             child: Column(
               children: [
                 for (final t in detail.tasks) ...[
@@ -265,7 +266,7 @@ class _PatientCard extends StatelessWidget {
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(CareRadius.field),
         border: Border.all(color: card.isHighPriority ? kDangerFg : kCareBg, width: card.isHighPriority ? 1.4 : 1),
       ),
       child: Column(
@@ -288,7 +289,7 @@ class _PatientCard extends StatelessWidget {
               ],
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
-                decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(8)),
+                decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(CareRadius.chip)),
                 child: Text(card.condition, style: CareText.chip(fg)),
               ),
             ],
@@ -314,7 +315,7 @@ class _PatientCard extends StatelessWidget {
 
   Widget _tag(String text) => Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-        decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(6)),
+        decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(CareRadius.chip)),
         child: Text(text, style: const TextStyle(fontSize: CareText.xs, color: kMuted, fontWeight: CareText.medium)),
       );
 

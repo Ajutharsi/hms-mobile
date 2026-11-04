@@ -8,6 +8,7 @@ import 'package:hms_mobile/features/patient/models/appointment.dart';
 import 'package:hms_mobile/features/patient/models/patient_profile.dart';
 import 'package:hms_mobile/features/patient/viewmodels/home_view_model.dart';
 import 'package:hms_mobile/features/patient/viewmodels/profile_view_model.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 /// Every place the patient app can navigate to — the home shell decides
 /// whether each one is a bottom-nav tab or a pushed page.
@@ -221,7 +222,7 @@ class _HomeHeader extends StatelessWidget {
                   child: Container(
                     height: 48,
                     padding: const EdgeInsets.symmetric(horizontal: 14),
-                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14)),
+                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(CareRadius.field)),
                     child: Row(
                       children: [
                         Icon(Icons.search_rounded, color: kCare),
@@ -283,7 +284,7 @@ class _StatsStrip extends StatelessWidget {
       height: 92,
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(CareRadius.panel),
         boxShadow: careShadow(blur: 24, dy: 10, alpha: 0.1),
       ),
       child: Row(
@@ -293,7 +294,7 @@ class _StatsStrip extends StatelessWidget {
             Expanded(
               child: InkWell(
                 onTap: stats[i].onTap,
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(CareRadius.panel),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -361,7 +362,7 @@ class _UpcomingStrip extends StatelessWidget {
                 style: FilledButton.styleFrom(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   minimumSize: const Size(0, 38),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CareRadius.control)),
                 ),
                 child: const Text('Book', style: CareText.boldOnly),
               ),
@@ -422,7 +423,7 @@ class _UpcomingCard extends StatelessWidget {
               width: double.infinity,
               height: 32,
               alignment: Alignment.center,
-              decoration: BoxDecoration(color: kCare, borderRadius: BorderRadius.circular(10)),
+              decoration: BoxDecoration(color: kCare, borderRadius: BorderRadius.circular(CareRadius.control)),
               child: Text(
                 appointment.time.isEmpty ? 'View' : appointment.time,
                 style: const TextStyle(color: Colors.white, fontSize: CareText.sm, fontWeight: CareText.bold),

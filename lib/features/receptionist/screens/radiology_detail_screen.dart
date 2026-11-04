@@ -5,6 +5,7 @@ import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/receptionist/viewmodels/radiology_view_model.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 class RadiologyDetailScreen extends StatelessWidget {
   final int orderId;
@@ -87,7 +88,7 @@ class _RadiologyDetailView extends StatelessWidget {
       children: [
         Container(
           padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(16)),
+          decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(CareRadius.card)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -112,7 +113,7 @@ class _RadiologyDetailView extends StatelessWidget {
           const SizedBox(height: 10),
           Container(
             padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14), border: Border.all(color: kCareBorder)),
+            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(CareRadius.field), border: Border.all(color: kCareBorder)),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -138,7 +139,7 @@ class _RadiologyDetailView extends StatelessWidget {
             height: 46,
             child: ElevatedButton.icon(
               onPressed: () => _enterFindings(context, viewModel),
-              style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+              style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CareRadius.control))),
               icon: const Icon(Icons.edit_note, color: Colors.white),
               label: const Text('Enter findings', style: CareText.onCareBold),
             ),

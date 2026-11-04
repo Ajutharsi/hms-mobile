@@ -7,6 +7,7 @@ import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/doctor/models/doctor_models.dart';
 import 'package:hms_mobile/features/doctor/screens/prescription_form_screen.dart';
 import 'package:hms_mobile/features/doctor/viewmodels/doctor_view_models.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 /// Writing up a visit: complaint, diagnosis (with the ICD-10 lookup),
 /// plan and the vitals taken in the room. Saving also completes the
@@ -45,7 +46,7 @@ class _ConsultationFormView extends StatelessWidget {
     final wantsPrescription = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(22)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CareRadius.panel)),
         title: const Text('Consultation saved'),
         content: const Text('Write the prescription for this visit now?'),
         actions: [

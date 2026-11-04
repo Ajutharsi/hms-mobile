@@ -6,6 +6,7 @@ import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/lab/models/lab_test.dart';
 import 'package:hms_mobile/features/lab/viewmodels/lab_tests_view_model.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 const _kCategories = ['Biochemistry', 'Haematology', 'Microbiology', 'Serology', 'Immunology', 'Pathology', 'Radiology', 'Other'];
 
@@ -134,7 +135,7 @@ class _TestCard extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kCareBorder)),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(CareRadius.card), border: Border.all(color: kCareBorder)),
       child: Row(
         children: [
           Expanded(
@@ -146,7 +147,7 @@ class _TestCard extends StatelessWidget {
                     Expanded(child: Text(test.testName, style: CareText.titleLg)),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                      decoration: BoxDecoration(color: active ? kSuccessBg : kCareBg, borderRadius: BorderRadius.circular(7)),
+                      decoration: BoxDecoration(color: active ? kSuccessBg : kCareBg, borderRadius: BorderRadius.circular(CareRadius.chip)),
                       child: Text(test.status, style: TextStyle(color: active ? kSuccessFg : kMuted, fontSize: CareText.xxs, fontWeight: CareText.bold)),
                     ),
                   ],

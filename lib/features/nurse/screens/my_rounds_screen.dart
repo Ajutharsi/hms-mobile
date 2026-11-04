@@ -6,6 +6,7 @@ import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/nurse/models/round_assignment.dart';
 import 'package:hms_mobile/features/nurse/viewmodels/rounds_view_model.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 class MyRoundsScreen extends StatelessWidget {
   const MyRoundsScreen({super.key});
@@ -87,7 +88,7 @@ class _MyRoundsView extends StatelessWidget {
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(CareRadius.card),
             border: Border.all(color: assignment.alertStatus == 'danger' ? kDangerFg : kCareBg, width: assignment.alertStatus == 'danger' ? 1.4 : 1),
           ),
           child: Column(
@@ -98,7 +99,7 @@ class _MyRoundsView extends StatelessWidget {
                   Expanded(child: Text(assignment.wardName, style: CareText.titleXl)),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                    decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(8)),
+                    decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(CareRadius.chip)),
                     child: Text(label, style: CareText.chip(fg)),
                   ),
                 ],

@@ -8,6 +8,7 @@ import 'package:hms_mobile/features/lab/models/lab_order.dart';
 import 'package:hms_mobile/features/lab/screens/lab_order_create_screen.dart';
 import 'package:hms_mobile/features/lab/screens/lab_order_detail_screen.dart';
 import 'package:hms_mobile/features/lab/viewmodels/lab_orders_view_model.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 const _kStatusFilters = [null, 'pending', 'processing', 'completed', 'cancelled'];
 
@@ -131,10 +132,10 @@ class _OrderCard extends StatelessWidget {
 
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(CareRadius.card),
       child: Container(
         padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kCareBorder)),
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(CareRadius.card), border: Border.all(color: kCareBorder)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -143,7 +144,7 @@ class _OrderCard extends StatelessWidget {
                 Expanded(child: Text(order.patientName ?? 'Patient', style: CareText.titleLg)),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
-                  decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(8)),
+                  decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(CareRadius.chip)),
                   child: Text(order.status, style: CareText.chip(fg)),
                 ),
               ],

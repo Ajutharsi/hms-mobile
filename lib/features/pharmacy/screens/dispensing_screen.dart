@@ -7,6 +7,7 @@ import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/pharmacy/models/dispensing.dart';
 import 'package:hms_mobile/features/pharmacy/screens/dispensing_create_screen.dart';
 import 'package:hms_mobile/features/pharmacy/viewmodels/dispensing_view_model.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 /// Shared between the pharmacist app (canCreate: true) and the receptionist
 /// app (canCreate: false — receptionist can view dispensing but not create
@@ -110,10 +111,10 @@ class _DispensingCard extends StatelessWidget {
 
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(CareRadius.card),
       child: Container(
         padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kCareBorder)),
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(CareRadius.card), border: Border.all(color: kCareBorder)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -122,7 +123,7 @@ class _DispensingCard extends StatelessWidget {
                 Expanded(child: Text(dispensing.patientName ?? 'Patient', style: CareText.titleLg)),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
-                  decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(8)),
+                  decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(CareRadius.chip)),
                   child: Text(dispensing.status, style: CareText.chip(fg)),
                 ),
               ],
@@ -195,7 +196,7 @@ class _DispensingDetailView extends StatelessWidget {
       children: [
         Container(
           padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(16)),
+          decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(CareRadius.card)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -217,7 +218,7 @@ class _DispensingDetailView extends StatelessWidget {
         for (final item in d.items) ...[
           Container(
             padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14), border: Border.all(color: kCareBorder)),
+            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(CareRadius.field), border: Border.all(color: kCareBorder)),
             child: Row(
               children: [
                 Expanded(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 /// Neutral text tokens and the status badge colours shared by every role.
 /// The brand colour itself now lives in care_ui.dart / care_palette.dart,
@@ -71,7 +72,7 @@ Widget authErrorBanner(String message) {
   return Container(
     width: double.infinity,
     padding: const EdgeInsets.all(12),
-    decoration: BoxDecoration(color: kDangerSurface, borderRadius: BorderRadius.circular(10)),
+    decoration: BoxDecoration(color: kDangerSurface, borderRadius: BorderRadius.circular(CareRadius.control)),
     child: Text(message, style: const TextStyle(color: kDangerText, fontSize: 13.5)),
   );
 }
@@ -85,7 +86,7 @@ Widget insecureConnectionNotice(String host) {
   return Container(
     width: double.infinity,
     padding: const EdgeInsets.all(12),
-    decoration: BoxDecoration(color: kWarnSurface, borderRadius: BorderRadius.circular(10)),
+    decoration: BoxDecoration(color: kWarnSurface, borderRadius: BorderRadius.circular(CareRadius.control)),
     child: Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

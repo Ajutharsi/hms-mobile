@@ -6,6 +6,7 @@ import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/patient/models/prescription.dart';
 import 'package:hms_mobile/features/patient/viewmodels/prescriptions_view_model.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 /// The prescriptions list body — shown under a [CarePageHeader] on the
 /// "My Prescriptions" page the home shell pushes.
@@ -119,7 +120,7 @@ class _MedicineRow extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(14)),
+      decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(CareRadius.field)),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

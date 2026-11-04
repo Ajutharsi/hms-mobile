@@ -11,6 +11,7 @@ import 'package:hms_mobile/features/nurse/models/icu_chart.dart';
 import 'package:hms_mobile/features/nurse/models/nurse_patient.dart';
 import 'package:hms_mobile/features/nurse/viewmodels/icu_view_model.dart';
 import 'package:hms_mobile/features/nurse/widgets/patient_picker.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 class IcuScreen extends StatelessWidget {
   const IcuScreen({super.key});
@@ -112,7 +113,7 @@ class _IcuCard extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kCareBorder)),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(CareRadius.card), border: Border.all(color: kCareBorder)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -184,7 +185,7 @@ class _Chip extends StatelessWidget {
     watchCarePalette(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
-      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(8)),
+      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(CareRadius.chip)),
       child: Text(label, style: CareText.chip(fg)),
     );
   }
@@ -364,7 +365,7 @@ class _NewIcuChartScreenState extends State<_NewIcuChartScreen> {
             height: 48,
             child: ElevatedButton(
               onPressed: _submitting ? null : _submit,
-              style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+              style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CareRadius.control))),
               child: _submitting
                   ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
                   : const Text('Save chart', style: CareText.onCareBold),

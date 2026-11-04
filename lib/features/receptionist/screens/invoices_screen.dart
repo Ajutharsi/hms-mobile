@@ -8,6 +8,7 @@ import 'package:hms_mobile/features/receptionist/models/invoice.dart';
 import 'package:hms_mobile/features/receptionist/screens/invoice_create_screen.dart';
 import 'package:hms_mobile/features/receptionist/screens/invoice_detail_screen.dart';
 import 'package:hms_mobile/features/receptionist/viewmodels/invoices_view_model.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 const _kStatusFilters = [null, 'draft', 'sent', 'paid', 'partial', 'overdue', 'cancelled'];
 
@@ -158,7 +159,7 @@ class _StatTile extends StatelessWidget {
     watchCarePalette(context);
     return Container(
       padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(14)),
+      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(CareRadius.field)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -191,10 +192,10 @@ class _InvoiceCard extends StatelessWidget {
 
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(CareRadius.card),
       child: Container(
         padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kCareBorder)),
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(CareRadius.card), border: Border.all(color: kCareBorder)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -203,7 +204,7 @@ class _InvoiceCard extends StatelessWidget {
                 Expanded(child: Text(invoice.patientName ?? 'Patient', style: CareText.titleLg)),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
-                  decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(8)),
+                  decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(CareRadius.chip)),
                   child: Text(invoice.status, style: CareText.chip(fg)),
                 ),
               ],

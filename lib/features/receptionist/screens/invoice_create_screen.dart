@@ -8,6 +8,7 @@ import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/receptionist/models/invoice.dart';
 import 'package:hms_mobile/features/receptionist/models/reception_patient.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 class _InvoiceLineDraft {
   BillingServiceItem? service;
@@ -169,7 +170,7 @@ class _InvoiceCreateScreenState extends State<InvoiceCreateScreen> {
                 if (_selectedPatient != null)
                   Container(
                     padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(color: kCareSoft, borderRadius: BorderRadius.circular(12)),
+                    decoration: BoxDecoration(color: kCareSoft, borderRadius: BorderRadius.circular(CareRadius.control)),
                     child: Row(
                       children: [
                         Expanded(
@@ -194,7 +195,7 @@ class _InvoiceCreateScreenState extends State<InvoiceCreateScreen> {
                   if (_patientResults.isNotEmpty)
                     Container(
                       margin: const EdgeInsets.only(top: 6),
-                      decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(12)),
+                      decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(CareRadius.control)),
                       constraints: const BoxConstraints(maxHeight: 220),
                       child: ListView.builder(
                         shrinkWrap: true,
@@ -263,7 +264,7 @@ class _InvoiceCreateScreenState extends State<InvoiceCreateScreen> {
                   height: 48,
                   child: ElevatedButton(
                     onPressed: _isSaving ? null : _submit,
-                    style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+                    style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CareRadius.control))),
                     child: _isSaving
                         ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
                         : const Text('Create invoice', style: CareText.onCareBold),
@@ -292,7 +293,7 @@ class _LineEditorState extends State<_LineEditor> {
     return Container(
       margin: const EdgeInsets.only(top: 10),
       padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(12)),
+      decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(CareRadius.control)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

@@ -6,6 +6,7 @@ import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/nurse/models/nurse_profile.dart';
 import 'package:hms_mobile/features/nurse/viewmodels/nurse_profile_view_model.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 class NurseProfileScreen extends StatelessWidget {
   const NurseProfileScreen({super.key});
@@ -125,7 +126,7 @@ class _NurseProfileView extends StatelessWidget {
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(color: kCareSoft, borderRadius: BorderRadius.circular(10)),
+                  decoration: BoxDecoration(color: kCareSoft, borderRadius: BorderRadius.circular(CareRadius.control)),
                   child: Text(
                     viewModel.successMessage!,
                     style: CareText.brandMdMedium,
@@ -139,7 +140,7 @@ class _NurseProfileView extends StatelessWidget {
                   onPressed: viewModel.isSaving ? null : () => _save(context, viewModel),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: kCareDark,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CareRadius.control)),
                   ),
                   child: viewModel.isSaving
                       ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
@@ -193,7 +194,7 @@ class _AvatarHeader extends StatelessWidget {
                 bottom: 0,
                 child: InkWell(
                   onTap: viewModel.pickPhoto,
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(CareRadius.panel),
                   child: Container(
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(color: kCareDark, shape: BoxShape.circle),
@@ -209,7 +210,7 @@ class _AvatarHeader extends StatelessWidget {
             const SizedBox(height: 4),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-              decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(8)),
+              decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(CareRadius.chip)),
               child: Text(
                 profile.department!,
                 style: CareText.mutedXsMedium,

@@ -14,6 +14,7 @@ import 'package:hms_mobile/features/nurse/models/nurse_patient.dart';
 import 'package:hms_mobile/features/nurse/viewmodels/consent_forms_view_model.dart';
 import 'package:hms_mobile/features/nurse/widgets/patient_picker.dart';
 import 'package:hms_mobile/features/nurse/widgets/signature_pad.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 const _kConsentTypes = ['general', 'surgery', 'anesthesia', 'blood_transfusion', 'procedure', 'other'];
 
@@ -132,7 +133,7 @@ class _ConsentCard extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kCareBorder)),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(CareRadius.card), border: Border.all(color: kCareBorder)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -149,7 +150,7 @@ class _ConsentCard extends StatelessWidget {
               ),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(8)),
+                decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(CareRadius.chip)),
                 child: Text(form.status.toUpperCase(), style: CareText.chip(fg)),
               ),
             ],
@@ -238,7 +239,7 @@ class _SignDialogState extends State<_SignDialog> {
             const SizedBox(height: 8),
             Expanded(
               child: Container(
-                decoration: BoxDecoration(border: Border.all(color: kCareBorder), borderRadius: BorderRadius.circular(8)),
+                decoration: BoxDecoration(border: Border.all(color: kCareBorder), borderRadius: BorderRadius.circular(CareRadius.chip)),
                 child: SignaturePad(controller: _controller),
               ),
             ),
@@ -379,7 +380,7 @@ class _NewConsentFormScreenState extends State<_NewConsentFormScreen> {
               const SizedBox(height: 14),
               InkWell(
                 onTap: _pickDate,
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(CareRadius.control),
                 child: InputDecorator(
                   decoration: careFieldDecoration('Consent date', hint: '', icon: Icons.event_outlined),
                   child: Text('${_consentDate.year}-${_consentDate.month.toString().padLeft(2, '0')}-${_consentDate.day.toString().padLeft(2, '0')}'),
@@ -391,7 +392,7 @@ class _NewConsentFormScreenState extends State<_NewConsentFormScreen> {
                 height: 48,
                 child: ElevatedButton(
                   onPressed: _isSaving ? null : _submit,
-                  style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+                  style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CareRadius.control))),
                   child: _isSaving
                       ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
                       : const Text('Create form', style: CareText.onCareBold),

@@ -9,6 +9,7 @@ import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/core/theme/theme_controller.dart';
 import 'package:hms_mobile/features/auth/screens/login_screen.dart';
 import 'package:hms_mobile/features/auth/viewmodels/session_view_model.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 void main() {
   runApp(const HmsApp());
@@ -114,7 +115,7 @@ class _HmsAppState extends State<HmsApp> {
         cardTheme: CardThemeData(
           color: Colors.white,
           elevation: 0,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20), side: BorderSide(color: kCareBorder)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CareRadius.panel), side: BorderSide(color: kCareBorder)),
         ),
         floatingActionButtonTheme: FloatingActionButtonThemeData(backgroundColor: kCareDark, foregroundColor: Colors.white, elevation: 0),
       ),

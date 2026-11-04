@@ -14,6 +14,7 @@ import 'package:hms_mobile/features/nurse/screens/patients_screen.dart';
 import 'package:hms_mobile/features/settings/screens/appearance_screen.dart';
 import 'package:hms_mobile/features/staff/models/staff_dashboard_stats.dart';
 import 'package:hms_mobile/features/staff/viewmodels/staff_dashboard_view_model.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 /// The support staff's home shell — rounds, food and fluid logging. Every
 /// section reuses the nurse feature screens, since the backend serves both
@@ -114,7 +115,7 @@ class _StaffDrawer extends StatelessWidget {
 
     Widget tile(IconData icon, String label, _Target? target) => ListTile(
           dense: true,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CareRadius.field)),
           leading: CareIconBox(icon: icon, size: 34, filled: false),
           title: Text(label, style: CareText.titleMdMedium),
           onTap: () {
@@ -136,7 +137,7 @@ class _StaffDrawer extends StatelessWidget {
 
     return Drawer(
       backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.horizontal(right: Radius.circular(28))),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.horizontal(right: Radius.circular(CareRadius.drawer))),
       child: Column(
         children: [
           CareHeaderBackground(
@@ -403,7 +404,7 @@ class _StaffHeader extends StatelessWidget {
             height: 92,
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(CareRadius.panel),
               boxShadow: careShadow(blur: 24, dy: 10, alpha: 0.1),
             ),
             child: Row(

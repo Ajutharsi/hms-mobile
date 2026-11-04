@@ -6,6 +6,7 @@ import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/pharmacy/models/drug.dart';
 import 'package:hms_mobile/features/pharmacy/viewmodels/drug_master_view_model.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 class DrugMasterScreen extends StatelessWidget {
   const DrugMasterScreen({super.key});
@@ -61,7 +62,7 @@ class _DrugMasterViewState extends State<_DrugMasterView> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(CareRadius.sheet))),
       builder: (_) => _StockHistorySheet(drug: drug, viewModel: viewModel),
     );
   }
@@ -176,7 +177,7 @@ class _DrugCard extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kCareBorder)),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(CareRadius.card), border: Border.all(color: kCareBorder)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -233,7 +234,7 @@ class _DrugCard extends StatelessWidget {
             children: [
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
-                decoration: BoxDecoration(color: stockBg, borderRadius: BorderRadius.circular(8)),
+                decoration: BoxDecoration(color: stockBg, borderRadius: BorderRadius.circular(CareRadius.chip)),
                 child: Text(
                   drug.isExpired ? 'Expired · ${drug.currentStock}' : 'Stock: ${drug.currentStock}',
                   style: TextStyle(color: stockFg, fontSize: CareText.xs, fontWeight: CareText.bold),
@@ -263,7 +264,7 @@ class _Chip extends StatelessWidget {
     watchCarePalette(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(7)),
+      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(CareRadius.chip)),
       child: Text(label, style: TextStyle(color: fg, fontSize: CareText.xxs, fontWeight: CareText.medium)),
     );
   }

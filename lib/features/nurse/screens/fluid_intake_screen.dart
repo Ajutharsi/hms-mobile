@@ -6,6 +6,7 @@ import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/nurse/models/fluid_intake.dart';
 import 'package:hms_mobile/features/nurse/viewmodels/fluid_intake_view_model.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 const _kFlowTypes = ['intake', 'output'];
 const _kCategories = ['oral', 'iv', 'tube_feed', 'urine', 'vomit', 'drain', 'stool', 'other'];
@@ -81,10 +82,10 @@ class _PatientCard extends StatelessWidget {
 
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(CareRadius.card),
       child: Container(
         padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kCareBorder)),
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(CareRadius.card), border: Border.all(color: kCareBorder)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -227,14 +228,14 @@ class _FluidIntakeDetailView extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(12),
               margin: const EdgeInsets.only(bottom: 8),
-              decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(12)),
+              decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(CareRadius.control)),
               child: Row(
                 children: [
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                     decoration: BoxDecoration(
                       color: log.flowType == 'intake' ? kInfoBg : kWarningBg,
-                      borderRadius: BorderRadius.circular(6),
+                      borderRadius: BorderRadius.circular(CareRadius.chip),
                     ),
                     child: Text(
                       log.flowType == 'intake' ? 'IN' : 'OUT',
@@ -277,7 +278,7 @@ class _StatTile extends StatelessWidget {
     watchCarePalette(context);
     return Container(
       padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(14)),
+      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(CareRadius.field)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

@@ -5,6 +5,7 @@ import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/doctor/viewmodels/doctor_view_models.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 /// The doctor's account details, plus the registration details the Doctor
 /// record carries (specialisation, qualification, fee) shown read-only —
@@ -173,7 +174,7 @@ class _ProfileView extends StatelessWidget {
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(color: kCareSoft, borderRadius: BorderRadius.circular(12)),
+                  decoration: BoxDecoration(color: kCareSoft, borderRadius: BorderRadius.circular(CareRadius.control)),
                   child: Text(viewModel.successMessage!,
                       style: CareText.brandMdMedium),
                 ),

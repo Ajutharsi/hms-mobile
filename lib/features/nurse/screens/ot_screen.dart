@@ -12,6 +12,7 @@ import 'package:hms_mobile/features/nurse/models/ot_schedule.dart';
 import 'package:hms_mobile/features/nurse/viewmodels/ot_view_model.dart';
 import 'package:hms_mobile/features/nurse/widgets/patient_picker.dart';
 import 'package:hms_mobile/features/patient/models/doctor.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 class OtScreen extends StatelessWidget {
   const OtScreen({super.key});
@@ -150,7 +151,7 @@ class _OtCard extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kCareBorder)),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(CareRadius.card), border: Border.all(color: kCareBorder)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -159,7 +160,7 @@ class _OtCard extends StatelessWidget {
               Expanded(child: Text(ot.procedureName, style: CareText.titleXl)),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                decoration: BoxDecoration(color: sBg, borderRadius: BorderRadius.circular(8)),
+                decoration: BoxDecoration(color: sBg, borderRadius: BorderRadius.circular(CareRadius.chip)),
                 child: Text(ot.status.replaceAll('_', ' ').toUpperCase(), style: CareText.chip(sFg)),
               ),
             ],
@@ -175,7 +176,7 @@ class _OtCard extends StatelessWidget {
               Expanded(child: Text(ot.scheduledStart ?? '—', style: CareText.mutedSm)),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
-                decoration: BoxDecoration(color: pBg, borderRadius: BorderRadius.circular(8)),
+                decoration: BoxDecoration(color: pBg, borderRadius: BorderRadius.circular(CareRadius.chip)),
                 child: Text(ot.priority.toUpperCase(), style: TextStyle(color: pFg, fontSize: CareText.xxs, fontWeight: CareText.bold)),
               ),
             ],
@@ -440,7 +441,7 @@ class _ScheduleOtScreenState extends State<_ScheduleOtScreen> {
               height: 48,
               child: ElevatedButton(
                 onPressed: _submitting ? null : _submit,
-                style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+                style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CareRadius.control))),
                 child: _submitting
                     ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
                     : const Text('Schedule', style: CareText.onCareBold),

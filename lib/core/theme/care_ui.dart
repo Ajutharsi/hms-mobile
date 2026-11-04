@@ -5,6 +5,7 @@ import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_palette.dart';
 import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/theme_controller.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 /// "Care" design kit — the teal, curved-header look (modelled on the
 /// PatientCare Flutter UI kit) used by the patient app and the auth screens.
@@ -76,7 +77,7 @@ class CareTheme extends StatelessWidget {
             style: FilledButton.styleFrom(
               backgroundColor: palette.primary,
               foregroundColor: palette.onPrimary,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CareRadius.field)),
             ),
           ),
           elevatedButtonTheme: ElevatedButtonThemeData(
@@ -84,14 +85,14 @@ class CareTheme extends StatelessWidget {
               backgroundColor: palette.primary,
               foregroundColor: palette.onPrimary,
               elevation: 0,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CareRadius.field)),
             ),
           ),
           outlinedButtonTheme: OutlinedButtonThemeData(
             style: OutlinedButton.styleFrom(
               foregroundColor: palette.dark,
               side: BorderSide(color: palette.primary, width: 1.3),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CareRadius.field)),
             ),
           ),
           textButtonTheme: TextButtonThemeData(style: TextButton.styleFrom(foregroundColor: palette.dark)),
@@ -443,7 +444,7 @@ class CareChip extends StatelessWidget {
     watchCarePalette(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
-      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(20)),
+      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(CareRadius.panel)),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -554,7 +555,7 @@ class CarePrimaryButton extends StatelessWidget {
           backgroundColor: kCare,
           disabledBackgroundColor: kCare.withValues(alpha: 0.55),
           foregroundColor: Colors.white,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CareRadius.field)),
         ),
         child: loading
             ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2.4, color: Colors.white))
@@ -572,7 +573,7 @@ class CarePrimaryButton extends StatelessWidget {
 
 InputDecoration careFieldDecoration(String label, {required String hint, required IconData icon}) {
   OutlineInputBorder border(Color color, [double width = 1]) => OutlineInputBorder(
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(CareRadius.field),
         borderSide: BorderSide(color: color, width: width),
       );
   return InputDecoration(
@@ -614,7 +615,7 @@ class CareChoicePill extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
         decoration: BoxDecoration(
           color: selected ? kCare : (enabled ? Colors.white : kCareDisabledBg),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(CareRadius.control),
           border: Border.all(color: selected ? kCare : (enabled ? kCareBorder : Colors.transparent)),
         ),
         child: Center(
@@ -663,7 +664,7 @@ class CareAlertPill extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         decoration: BoxDecoration(
           color: urgent ? kCarePinkBg : Colors.white.withValues(alpha: 0.18),
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(CareRadius.field),
         ),
         child: Row(
           children: [
@@ -715,7 +716,7 @@ class CareStatCard extends StatelessWidget {
               Container(
                 width: 30,
                 height: 30,
-                decoration: BoxDecoration(color: alert ? kCarePinkBg : kCareSoft, borderRadius: BorderRadius.circular(9)),
+                decoration: BoxDecoration(color: alert ? kCarePinkBg : kCareSoft, borderRadius: BorderRadius.circular(CareRadius.chip)),
                 child: Icon(icon, color: alert ? kCarePinkFg : kCareDark, size: 16),
               ),
               const Spacer(),
@@ -770,7 +771,7 @@ class CareBottomNav extends StatelessWidget {
       return Expanded(
         child: InkWell(
           onTap: () => onSelected(i),
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(CareRadius.card),
           // Full bar height so taps on the label (not just the icon) count.
           child: SizedBox.expand(
             child: Column(
@@ -792,7 +793,7 @@ class CareBottomNav extends StatelessWidget {
     return Container(
       decoration: const BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(CareRadius.sheet)),
         boxShadow: [BoxShadow(color: Color(0x14000000), blurRadius: 20, offset: Offset(0, -4))],
       ),
       child: SafeArea(

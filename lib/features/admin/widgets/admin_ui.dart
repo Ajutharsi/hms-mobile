@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 /// The pieces every admin section is built from.
 ///
@@ -144,7 +145,7 @@ class AdminCard extends StatelessWidget {
               const SizedBox(width: 10),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                decoration: BoxDecoration(color: badgeBg ?? kCareSoft, borderRadius: BorderRadius.circular(999)),
+                decoration: BoxDecoration(color: badgeBg ?? kCareSoft, borderRadius: BorderRadius.circular(CareRadius.pill)),
                 child: Text(badge!, style: CareText.chip(badgeColor ?? kCareDark, size: CareText.xs)),
               ),
             ],
@@ -344,7 +345,7 @@ class _AdminFormSheetState extends State<_AdminFormSheet> {
       child: Container(
         decoration: const BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(CareRadius.sheet)),
         ),
         padding: const EdgeInsets.fromLTRB(20, 14, 20, 20),
         child: SafeArea(
@@ -359,7 +360,7 @@ class _AdminFormSheetState extends State<_AdminFormSheet> {
                   Center(
                     child: Container(
                       width: 38, height: 4,
-                      decoration: BoxDecoration(color: kCareBorder, borderRadius: BorderRadius.circular(999)),
+                      decoration: BoxDecoration(color: kCareBorder, borderRadius: BorderRadius.circular(CareRadius.pill)),
                     ),
                   ),
                   const SizedBox(height: 14),

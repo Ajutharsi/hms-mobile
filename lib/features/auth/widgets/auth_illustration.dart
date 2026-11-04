@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/core/theme/care_text.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 /// The illustration side panel shown only on wide (web/desktop) viewports,
 /// shared by the login and register screens with different copy.
@@ -98,7 +99,7 @@ class AuthCompactIllustration extends StatelessWidget {
   Widget build(BuildContext context) {
     watchCarePalette(context);
     return ClipRRect(
-      borderRadius: BorderRadius.circular(24),
+      borderRadius: BorderRadius.circular(CareRadius.hero),
       child: Container(
         color: kCareSoft,
         padding: const EdgeInsets.symmetric(vertical: 18),

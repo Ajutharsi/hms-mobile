@@ -12,6 +12,7 @@ import 'package:hms_mobile/features/receptionist/models/reception_patient.dart';
 import 'package:hms_mobile/features/receptionist/models/referral.dart';
 import 'package:hms_mobile/features/receptionist/screens/insurance_claims_screen.dart' show ReceptionPatientPickerField, titleCase;
 import 'package:hms_mobile/features/receptionist/viewmodels/referrals_view_model.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 const _kPriorities = ['routine', 'urgent', 'emergency'];
 const _kReferralStatuses = ['pending', 'accepted', 'completed', 'cancelled'];
@@ -163,7 +164,7 @@ class _ReferralCard extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kCareBorder)),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(CareRadius.card), border: Border.all(color: kCareBorder)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -172,7 +173,7 @@ class _ReferralCard extends StatelessWidget {
               Expanded(child: Text(referral.patientName ?? 'Patient', style: CareText.titleLg)),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
-                decoration: BoxDecoration(color: sBg, borderRadius: BorderRadius.circular(8)),
+                decoration: BoxDecoration(color: sBg, borderRadius: BorderRadius.circular(CareRadius.chip)),
                 child: Text(titleCase(referral.status), style: CareText.chip(sFg)),
               ),
             ],
@@ -187,7 +188,7 @@ class _ReferralCard extends StatelessWidget {
             children: [
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                decoration: BoxDecoration(color: pBg, borderRadius: BorderRadius.circular(7)),
+                decoration: BoxDecoration(color: pBg, borderRadius: BorderRadius.circular(CareRadius.chip)),
                 child: Text(referral.priority, style: TextStyle(color: pFg, fontSize: CareText.xxs, fontWeight: CareText.bold)),
               ),
               const Spacer(),
@@ -368,7 +369,7 @@ class _ReferralFormScreenState extends State<_ReferralFormScreen> {
                     height: 48,
                     child: ElevatedButton(
                       onPressed: _isSaving ? null : _submit,
-                      style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+                      style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CareRadius.control))),
                       child: _isSaving
                           ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
                           : const Text('Create referral', style: CareText.onCareBold),

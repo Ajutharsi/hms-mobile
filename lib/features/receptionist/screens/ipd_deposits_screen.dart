@@ -8,6 +8,7 @@ import 'package:hms_mobile/features/receptionist/models/ipd_deposit.dart';
 import 'package:hms_mobile/features/receptionist/models/reception_patient.dart';
 import 'package:hms_mobile/features/receptionist/screens/insurance_claims_screen.dart' show ReceptionPatientPickerField;
 import 'package:hms_mobile/features/receptionist/viewmodels/ipd_deposits_view_model.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 const _kPaymentMethods = ['cash', 'card', 'upi', 'bank_transfer', 'cheque'];
 
@@ -120,7 +121,7 @@ class _StatTile extends StatelessWidget {
     watchCarePalette(context);
     return Container(
       padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(14)),
+      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(CareRadius.field)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -145,7 +146,7 @@ class _DepositCard extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kCareBorder)),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(CareRadius.card), border: Border.all(color: kCareBorder)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -154,7 +155,7 @@ class _DepositCard extends StatelessWidget {
               Expanded(child: Text(deposit.patientName ?? 'Patient', style: CareText.titleLg)),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
-                decoration: BoxDecoration(color: isAdvance ? kSuccessBg : kWarningBg, borderRadius: BorderRadius.circular(8)),
+                decoration: BoxDecoration(color: isAdvance ? kSuccessBg : kWarningBg, borderRadius: BorderRadius.circular(CareRadius.chip)),
                 child: Text(_titleCase(deposit.type), style: TextStyle(color: amountColor, fontSize: CareText.xxs, fontWeight: CareText.bold)),
               ),
             ],

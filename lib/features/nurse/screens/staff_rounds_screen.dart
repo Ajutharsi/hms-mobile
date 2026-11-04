@@ -5,6 +5,7 @@ import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/nurse/viewmodels/rounds_view_model.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 /// Read-only charge-nurse view of every active round assignment across the
 /// hospital. The web's assign/deactivate actions aren't wired into the
@@ -61,7 +62,7 @@ class _StaffRoundsView extends StatelessWidget {
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(CareRadius.field),
             border: Border.all(color: overdue ? kDangerFg : kCareBg, width: overdue ? 1.4 : 1),
           ),
           child: Row(
@@ -83,7 +84,7 @@ class _StaffRoundsView extends StatelessWidget {
                 children: [
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
-                    decoration: BoxDecoration(color: overdue ? kDangerBg : kSuccessBg, borderRadius: BorderRadius.circular(8)),
+                    decoration: BoxDecoration(color: overdue ? kDangerBg : kSuccessBg, borderRadius: BorderRadius.circular(CareRadius.chip)),
                     child: Text(overdue ? 'Overdue' : 'On track', style: TextStyle(color: overdue ? kDangerFg : kSuccessFg, fontSize: CareText.xs, fontWeight: CareText.bold)),
                   ),
                   const SizedBox(height: 6),

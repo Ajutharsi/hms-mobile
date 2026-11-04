@@ -6,6 +6,7 @@ import 'package:hms_mobile/core/services/nurse_api_service.dart';
 import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/nurse/models/nurse_patient.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 class NursePatientDetailScreen extends StatefulWidget {
   final int patientId;
@@ -88,7 +89,7 @@ class _NursePatientDetailScreenState extends State<NursePatientDetailScreen> {
               const SizedBox(height: 4),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(8)),
+                decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(CareRadius.chip)),
                 child: Text('MRN: ${p.mrn}', style: CareText.mutedXsMedium),
               ),
             ],
@@ -132,7 +133,7 @@ class _SectionCard extends StatelessWidget {
     watchCarePalette(context);
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(18), border: Border.all(color: kCareBorder)),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(CareRadius.card), border: Border.all(color: kCareBorder)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [

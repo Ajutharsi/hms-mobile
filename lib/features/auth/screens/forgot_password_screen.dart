@@ -6,6 +6,7 @@ import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/auth/viewmodels/forgot_password_view_model.dart';
 import 'package:hms_mobile/features/auth/widgets/auth_scaffold.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 class ForgotPasswordScreen extends StatelessWidget {
   const ForgotPasswordScreen({super.key});
@@ -91,7 +92,7 @@ class _ForgotPasswordForm extends StatelessWidget {
               onPressed: viewModel.isLoading ? null : viewModel.submit,
               style: FilledButton.styleFrom(
                 backgroundColor: kCare,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CareRadius.control)),
               ),
               child: viewModel.isLoading
                   ? const SizedBox(
@@ -126,7 +127,7 @@ class _SentConfirmation extends StatelessWidget {
         Container(
           width: 56,
           height: 56,
-          decoration: BoxDecoration(color: kCareSoft, borderRadius: BorderRadius.circular(16)),
+          decoration: BoxDecoration(color: kCareSoft, borderRadius: BorderRadius.circular(CareRadius.card)),
           alignment: Alignment.center,
           child: Icon(Icons.mark_email_read_outlined, color: kCare, size: 28),
         ),
@@ -156,7 +157,7 @@ class _SentConfirmation extends StatelessWidget {
             onPressed: () => Navigator.of(context).pop(),
             style: OutlinedButton.styleFrom(
               side: BorderSide(color: kCare),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CareRadius.control)),
             ),
             child: Text(
               'Back to sign in',

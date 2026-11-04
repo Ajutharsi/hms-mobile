@@ -8,6 +8,7 @@ import 'package:hms_mobile/features/receptionist/models/reception_patient.dart';
 import 'package:hms_mobile/features/receptionist/screens/patient_form_screen.dart';
 import 'package:hms_mobile/features/receptionist/screens/reception_patient_detail_screen.dart';
 import 'package:hms_mobile/features/receptionist/viewmodels/reception_patients_view_model.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 class ReceptionPatientsScreen extends StatelessWidget {
   const ReceptionPatientsScreen({super.key});
@@ -129,10 +130,10 @@ class _FilterChip extends StatelessWidget {
     watchCarePalette(context);
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(CareRadius.panel),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-        decoration: BoxDecoration(color: selected ? kCareDark : kCareBg, borderRadius: BorderRadius.circular(20)),
+        decoration: BoxDecoration(color: selected ? kCareDark : kCareBg, borderRadius: BorderRadius.circular(CareRadius.panel)),
         child: Text(label, style: CareText.tag(selected ? Colors.white : kMuted, size: CareText.sm)),
       ),
     );
@@ -151,10 +152,10 @@ class _PatientCard extends StatelessWidget {
 
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(CareRadius.card),
       child: Container(
         padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kCareBorder)),
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(CareRadius.card), border: Border.all(color: kCareBorder)),
         child: Row(
           children: [
             CircleAvatar(
@@ -179,13 +180,13 @@ class _PatientCard extends StatelessWidget {
               children: [
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                  decoration: BoxDecoration(color: patient.patientType == 'ip' ? kWarningBg : kInfoBg, borderRadius: BorderRadius.circular(7)),
+                  decoration: BoxDecoration(color: patient.patientType == 'ip' ? kWarningBg : kInfoBg, borderRadius: BorderRadius.circular(CareRadius.chip)),
                   child: Text(patient.patientType.toUpperCase(), style: TextStyle(color: patient.patientType == 'ip' ? kWarningFg : kInfoFg, fontSize: CareText.xxs, fontWeight: CareText.bold)),
                 ),
                 const SizedBox(height: 4),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                  decoration: BoxDecoration(color: active ? kSuccessBg : kCareBg, borderRadius: BorderRadius.circular(7)),
+                  decoration: BoxDecoration(color: active ? kSuccessBg : kCareBg, borderRadius: BorderRadius.circular(CareRadius.chip)),
                   child: Text(patient.status, style: TextStyle(color: active ? kSuccessFg : kMuted, fontSize: CareText.xxs, fontWeight: CareText.bold)),
                 ),
               ],

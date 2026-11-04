@@ -6,6 +6,7 @@ import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/pharmacy/models/drug.dart';
 import 'package:hms_mobile/features/pharmacy/viewmodels/dispensing_create_view_model.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 class DispensingCreateScreen extends StatelessWidget {
   const DispensingCreateScreen({super.key});
@@ -55,7 +56,7 @@ class _DispensingCreateViewState extends State<_DispensingCreateView> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(CareRadius.sheet))),
       builder: (_) => SafeArea(
         child: SizedBox(
           height: MediaQuery.of(context).size.height * 0.6,
@@ -105,7 +106,7 @@ class _DispensingCreateViewState extends State<_DispensingCreateView> {
                 if (viewModel.selectedPatient != null)
                   Container(
                     padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(color: kCareSoft, borderRadius: BorderRadius.circular(12)),
+                    decoration: BoxDecoration(color: kCareSoft, borderRadius: BorderRadius.circular(CareRadius.control)),
                     child: Row(
                       children: [
                         Expanded(
@@ -130,7 +131,7 @@ class _DispensingCreateViewState extends State<_DispensingCreateView> {
                   if (viewModel.patientResults.isNotEmpty)
                     Container(
                       margin: const EdgeInsets.only(top: 6),
-                      decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(12)),
+                      decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(CareRadius.control)),
                       constraints: const BoxConstraints(maxHeight: 220),
                       child: ListView.builder(
                         shrinkWrap: true,
@@ -169,7 +170,7 @@ class _DispensingCreateViewState extends State<_DispensingCreateView> {
                     Container(
                       margin: const EdgeInsets.only(bottom: 8),
                       padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12), border: Border.all(color: kCareBorder)),
+                      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(CareRadius.control), border: Border.all(color: kCareBorder)),
                       child: Row(
                         children: [
                           Expanded(
@@ -219,7 +220,7 @@ class _DispensingCreateViewState extends State<_DispensingCreateView> {
                   height: 48,
                   child: ElevatedButton(
                     onPressed: viewModel.isSaving ? null : () => _submit(viewModel),
-                    style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+                    style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CareRadius.control))),
                     child: viewModel.isSaving
                         ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
                         : const Text('Complete dispensing', style: CareText.onCareBold),

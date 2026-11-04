@@ -7,6 +7,7 @@ import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/receptionist/models/insurance_claim.dart';
 import 'package:hms_mobile/features/receptionist/screens/insurance_claims_screen.dart';
 import 'package:hms_mobile/features/receptionist/viewmodels/insurance_claims_view_model.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 const _kClaimStatuses = [
   'draft', 'submitted', 'pre_auth_pending', 'pre_auth_approved', 'pre_auth_rejected',
@@ -113,7 +114,7 @@ class _DetailView extends StatelessWidget {
             Expanded(child: Text(claim.patientName ?? 'Patient', style: CareText.titleXxl)),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-              decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(8)),
+              decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(CareRadius.chip)),
               child: Text(titleCase(claim.status), style: TextStyle(color: fg, fontSize: CareText.xs, fontWeight: CareText.bold)),
             ),
           ],
@@ -149,7 +150,7 @@ class _DetailView extends StatelessWidget {
           const SizedBox(height: 14),
           Container(
             padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(color: kDangerBg, borderRadius: BorderRadius.circular(10)),
+            decoration: BoxDecoration(color: kDangerBg, borderRadius: BorderRadius.circular(CareRadius.control)),
             child: Text('Rejection reason: ${claim.rejectionReason}', style: const TextStyle(fontSize: CareText.sm, color: kDangerFg)),
           ),
         ],
@@ -167,7 +168,7 @@ class _InfoCard extends StatelessWidget {
     watchCarePalette(context);
     return Container(
       padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(14)),
+      decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(CareRadius.field)),
       child: Column(
         children: [
           for (int i = 0; i < rows.length; i++) ...[

@@ -6,6 +6,7 @@ import 'package:hms_mobile/core/theme/care_palette.dart';
 import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/core/theme/theme_controller.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 /// The app's colour customizer — the counterpart of the web template
 /// customizer's colour control. Pick a preset or mix your own; the choice
@@ -72,7 +73,7 @@ class _Preview extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           const ClipRRect(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(CareRadius.sheet)),
             child: CareHeaderBackground(
               radius: 22,
               padding: EdgeInsets.fromLTRB(16, 18, 16, 18),
@@ -283,7 +284,7 @@ class _SliderRow extends StatelessWidget {
               Container(
                 height: 10,
                 margin: const EdgeInsets.symmetric(horizontal: 10),
-                decoration: BoxDecoration(gradient: gradient, borderRadius: BorderRadius.circular(6)),
+                decoration: BoxDecoration(gradient: gradient, borderRadius: BorderRadius.circular(CareRadius.chip)),
               ),
               SliderTheme(
                 data: SliderTheme.of(context).copyWith(

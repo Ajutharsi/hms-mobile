@@ -8,6 +8,7 @@ import 'package:hms_mobile/features/nurse/models/medication_order.dart';
 import 'package:hms_mobile/features/nurse/models/nurse_patient.dart';
 import 'package:hms_mobile/features/nurse/viewmodels/emar_view_model.dart';
 import 'package:hms_mobile/features/nurse/widgets/patient_picker.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 class EmarScreen extends StatelessWidget {
   const EmarScreen({super.key});
@@ -106,7 +107,7 @@ class _OrderCard extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kCareBorder)),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(CareRadius.card), border: Border.all(color: kCareBorder)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -117,7 +118,7 @@ class _OrderCard extends StatelessWidget {
               ),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(8)),
+                decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(CareRadius.chip)),
                 child: Text(order.status.toUpperCase(), style: CareText.chip(fg)),
               ),
             ],
@@ -186,7 +187,7 @@ class _MiniBadge extends StatelessWidget {
     watchCarePalette(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
-      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(6)),
+      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(CareRadius.chip)),
       child: Text(label, style: TextStyle(color: color, fontSize: CareText.xxs, fontWeight: CareText.bold)),
     );
   }
@@ -240,7 +241,7 @@ class _AdministerDialogState extends State<_AdministerDialog> {
               hintText: 'Notes (optional)',
               filled: true,
               fillColor: Colors.white,
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide.none),
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(CareRadius.field), borderSide: BorderSide.none),
             ),
           ),
         ],
@@ -360,10 +361,10 @@ class _NewOrderScreenState extends State<_NewOrderScreen> {
               const SizedBox(height: 8),
               InkWell(
                 onTap: _pickTime,
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(CareRadius.control),
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                  decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(12)),
+                  decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(CareRadius.control)),
                   child: Row(children: [
                     const Icon(Icons.access_time_rounded, size: 18, color: kMuted),
                     const SizedBox(width: 10),
@@ -394,7 +395,7 @@ class _NewOrderScreenState extends State<_NewOrderScreen> {
                 height: 50,
                 child: FilledButton(
                   onPressed: _saving ? null : _submit,
-                  style: FilledButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+                  style: FilledButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CareRadius.control))),
                   child: _saving
                       ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2.4, color: Colors.white))
                       : const Text('Add order', style: CareText.xlMedium),

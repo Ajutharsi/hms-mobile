@@ -28,6 +28,7 @@ import 'package:hms_mobile/features/receptionist/screens/opd_queue_screen.dart';
 import 'package:hms_mobile/features/receptionist/screens/radiology_screen.dart';
 import 'package:hms_mobile/features/receptionist/screens/referrals_screen.dart';
 import 'package:hms_mobile/features/settings/screens/appearance_screen.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 /// The doctor's home shell — today's clinic at the top, then shortcuts.
 /// Appointments are the doctor's working list, so the centre button opens
@@ -155,7 +156,7 @@ class _DoctorDrawer extends StatelessWidget {
 
     Widget tile(IconData icon, String label, DoctorSection? section) => ListTile(
           dense: true,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CareRadius.field)),
           leading: CareIconBox(icon: icon, size: 34, filled: false),
           title: Text(label, style: CareText.titleMdMedium),
           onTap: () {
@@ -177,7 +178,7 @@ class _DoctorDrawer extends StatelessWidget {
 
     return Drawer(
       backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.horizontal(right: Radius.circular(28))),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.horizontal(right: Radius.circular(CareRadius.drawer))),
       child: Column(
         children: [
           CareHeaderBackground(
@@ -478,7 +479,7 @@ class _DoctorHeader extends StatelessWidget {
             height: 92,
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(CareRadius.panel),
               boxShadow: careShadow(blur: 24, dy: 10, alpha: 0.1),
             ),
             child: Row(

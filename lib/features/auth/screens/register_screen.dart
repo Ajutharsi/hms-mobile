@@ -8,6 +8,7 @@ import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/auth/screens/login_screen.dart';
 import 'package:hms_mobile/features/auth/viewmodels/register_view_model.dart';
 import 'package:hms_mobile/features/auth/widgets/auth_scaffold.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({super.key});
@@ -157,7 +158,7 @@ class _RegisterViewState extends State<_RegisterView> {
                 onPressed: viewModel.isLoading ? null : () => _handleSubmit(viewModel),
                 style: FilledButton.styleFrom(
                   backgroundColor: kCare,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CareRadius.field)),
                 ),
                 child: viewModel.isLoading
                     ? const SizedBox(
@@ -216,7 +217,7 @@ class _GenderOption extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
             color: isSelected ? kCare : kCareBg,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(CareRadius.control),
             border: Border.all(color: isSelected ? kCare : Colors.transparent),
           ),
           alignment: Alignment.center,

@@ -7,6 +7,7 @@ import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/receptionist/models/reception_appointment.dart';
 import 'package:hms_mobile/features/receptionist/screens/appointment_form_screen.dart';
 import 'package:hms_mobile/features/receptionist/viewmodels/reception_appointments_view_model.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 const _kStatusFilters = [null, 'scheduled', 'completed', 'cancelled', 'no_show'];
 
@@ -127,10 +128,10 @@ class _AppointmentCard extends StatelessWidget {
 
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(CareRadius.card),
       child: Container(
         padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kCareBorder)),
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(CareRadius.card), border: Border.all(color: kCareBorder)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -139,7 +140,7 @@ class _AppointmentCard extends StatelessWidget {
                 Expanded(child: Text(appointment.patientName ?? 'Patient', style: CareText.titleLg)),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
-                  decoration: BoxDecoration(color: sBg, borderRadius: BorderRadius.circular(8)),
+                  decoration: BoxDecoration(color: sBg, borderRadius: BorderRadius.circular(CareRadius.chip)),
                   child: Text(appointment.status.replaceAll('_', ' '), style: CareText.chip(sFg)),
                 ),
               ],
@@ -159,7 +160,7 @@ class _AppointmentCard extends StatelessWidget {
                 const Spacer(),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                  decoration: BoxDecoration(color: tBg, borderRadius: BorderRadius.circular(7)),
+                  decoration: BoxDecoration(color: tBg, borderRadius: BorderRadius.circular(CareRadius.chip)),
                   child: Text(appointment.type, style: TextStyle(color: tFg, fontSize: CareText.xxs, fontWeight: CareText.bold)),
                 ),
               ],

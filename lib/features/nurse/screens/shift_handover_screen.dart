@@ -8,6 +8,7 @@ import 'package:hms_mobile/features/nurse/models/shift_handover.dart';
 import 'package:hms_mobile/features/nurse/screens/shift_handover_create_screen.dart';
 import 'package:hms_mobile/features/nurse/screens/shift_handover_detail_screen.dart';
 import 'package:hms_mobile/features/nurse/viewmodels/shift_handover_view_model.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 class ShiftHandoverScreen extends StatelessWidget {
   const ShiftHandoverScreen({super.key});
@@ -130,12 +131,12 @@ class _FilterChip extends StatelessWidget {
     watchCarePalette(context);
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(CareRadius.panel),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
         decoration: BoxDecoration(
           color: selected ? kCareDark : kCareBg,
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(CareRadius.panel),
         ),
         child: Text(
           label,
@@ -164,11 +165,11 @@ class _HandoverCard extends StatelessWidget {
     final (fg, bg, label) = _statusStyle[handover.status] ?? (kMuted, kCareBg, handover.status);
 
     return InkWell(
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(CareRadius.card),
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kCareBorder)),
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(CareRadius.card), border: Border.all(color: kCareBorder)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -179,7 +180,7 @@ class _HandoverCard extends StatelessWidget {
                 ),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                  decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(8)),
+                  decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(CareRadius.chip)),
                   child: Text(label, style: CareText.chip(fg)),
                 ),
               ],

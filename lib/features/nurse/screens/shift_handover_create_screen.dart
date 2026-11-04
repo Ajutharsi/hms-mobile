@@ -6,6 +6,7 @@ import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/nurse/models/shift_handover.dart';
 import 'package:hms_mobile/features/nurse/viewmodels/handover_create_view_model.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 /// New-handover flow: pick ward/shifts/incoming nurse/date, edit a card per
 /// admitted patient in that ward, add optional tasks, then submit as a
@@ -55,7 +56,7 @@ class _CreateView extends StatelessWidget {
             height: 48,
             child: FilledButton(
               onPressed: viewModel.isSubmitting ? null : () => _submit(context, viewModel),
-              style: FilledButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+              style: FilledButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CareRadius.control))),
               child: viewModel.isSubmitting
                   ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
                   : const Text('Save as draft', style: CareText.onCareBold),
@@ -217,7 +218,7 @@ class _TaskRow extends StatelessWidget {
     final task = viewModel.tasks[index];
     return Container(
       padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(10)),
+      decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(CareRadius.control)),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -260,7 +261,7 @@ class _PatientEditCardState extends State<_PatientEditCard> {
 
     return Container(
       padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14), border: Border.all(color: kCareBorder)),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(CareRadius.field), border: Border.all(color: kCareBorder)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -364,7 +365,7 @@ class _PatientEditCardState extends State<_PatientEditCard> {
         isDense: true,
         filled: true,
         fillColor: Colors.white,
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide.none),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(CareRadius.field), borderSide: BorderSide.none),
       ),
       onChanged: (v) {
         onChangedField(v.isEmpty ? null : v);
@@ -393,7 +394,7 @@ class _MiniDropdown extends StatelessWidget {
         isDense: true,
         filled: true,
         fillColor: Colors.white,
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide.none),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(CareRadius.field), borderSide: BorderSide.none),
       ),
       items: [
         if (nullable) const DropdownMenuItem<String>(value: null, child: Text('—', overflow: TextOverflow.ellipsis)),

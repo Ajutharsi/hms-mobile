@@ -12,6 +12,7 @@ import 'package:hms_mobile/features/pharmacy/screens/drug_master_screen.dart';
 import 'package:hms_mobile/features/pharmacy/screens/pharmacy_profile_screen.dart';
 import 'package:hms_mobile/features/pharmacy/viewmodels/pharmacy_dashboard_view_model.dart';
 import 'package:hms_mobile/features/settings/screens/appearance_screen.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 /// The pharmacist's home shell — dispensing, the drug master and the
 /// profile, with the centre button starting a new dispensing.
@@ -116,7 +117,7 @@ class _PharmacyDrawer extends StatelessWidget {
 
     return Drawer(
       backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.horizontal(right: Radius.circular(28))),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.horizontal(right: Radius.circular(CareRadius.drawer))),
       child: Column(
         children: [
           CareHeaderBackground(
@@ -202,7 +203,7 @@ class _DrawerItem extends StatelessWidget {
     watchCarePalette(context);
     return ListTile(
       dense: true,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CareRadius.field)),
       leading: CareIconBox(icon: icon, size: 34, filled: false),
       title: Text(label, style: CareText.titleMdMedium),
       onTap: () {
@@ -379,7 +380,7 @@ class _PharmacyHeader extends StatelessWidget {
             height: 92,
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(CareRadius.panel),
               boxShadow: careShadow(blur: 24, dy: 10, alpha: 0.1),
             ),
             child: Row(

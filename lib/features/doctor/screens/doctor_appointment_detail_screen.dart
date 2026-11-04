@@ -10,6 +10,7 @@ import 'package:hms_mobile/features/doctor/screens/consultation_form_screen.dart
 import 'package:hms_mobile/features/doctor/screens/doctor_patient_detail_screen.dart';
 import 'package:hms_mobile/features/doctor/screens/prescription_form_screen.dart';
 import 'package:hms_mobile/features/doctor/viewmodels/doctor_view_models.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 /// One visit: who is being seen, the latest vitals nursing recorded, and
 /// the consultation — either written already, or the button to write it.
@@ -323,7 +324,7 @@ class _ConsultationCard extends StatelessWidget {
                   Container(
                     margin: const EdgeInsets.only(bottom: 8),
                     padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(14)),
+                    decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(CareRadius.field)),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [

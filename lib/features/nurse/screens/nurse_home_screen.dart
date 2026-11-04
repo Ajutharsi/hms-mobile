@@ -26,6 +26,7 @@ import 'package:hms_mobile/features/nurse/screens/vitals_screen.dart';
 import 'package:hms_mobile/features/nurse/screens/ward_screen.dart';
 import 'package:hms_mobile/features/nurse/viewmodels/nurse_dashboard_view_model.dart';
 import 'package:hms_mobile/features/settings/screens/appearance_screen.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 /// The nurse's home shell — teal header + dashboard, with a drawer that
 /// mirrors the web sidebar's MAIN/PATIENT/HOSPITAL/WARD/STAFF groups.
@@ -212,7 +213,7 @@ class _AlertPill extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         decoration: BoxDecoration(
           color: urgent ? kCarePinkBg : Colors.white.withValues(alpha: 0.18),
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(CareRadius.field),
         ),
         child: Row(
           children: [
@@ -248,7 +249,7 @@ class _NurseDrawer extends StatelessWidget {
 
     return Drawer(
       backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.horizontal(right: Radius.circular(28))),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.horizontal(right: Radius.circular(CareRadius.drawer))),
       child: Column(
         children: [
           CareHeaderBackground(
@@ -396,7 +397,7 @@ class _DrawerItem extends StatelessWidget {
     watchCarePalette(context);
     return ListTile(
       dense: true,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CareRadius.field)),
       leading: CareIconBox(icon: icon, size: 34, filled: false),
       title: Text(label, style: CareText.titleMdMedium),
       onTap: () {
@@ -565,7 +566,7 @@ class _StatsStrip extends StatelessWidget {
       height: 92,
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(CareRadius.panel),
         boxShadow: careShadow(blur: 24, dy: 10, alpha: 0.1),
       ),
       child: Row(
@@ -661,7 +662,7 @@ class _StatCard extends StatelessWidget {
               Container(
                 width: 30,
                 height: 30,
-                decoration: BoxDecoration(color: alert ? kCarePinkBg : kCareSoft, borderRadius: BorderRadius.circular(9)),
+                decoration: BoxDecoration(color: alert ? kCarePinkBg : kCareSoft, borderRadius: BorderRadius.circular(CareRadius.chip)),
                 child: Icon(icon, color: alert ? kCarePinkFg : kCareDark, size: 16),
               ),
               const Spacer(),

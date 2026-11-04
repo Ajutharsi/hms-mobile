@@ -11,6 +11,7 @@ import 'package:hms_mobile/features/lab/screens/lab_profile_screen.dart';
 import 'package:hms_mobile/features/lab/screens/lab_tests_screen.dart';
 import 'package:hms_mobile/features/lab/viewmodels/lab_dashboard_view_model.dart';
 import 'package:hms_mobile/features/settings/screens/appearance_screen.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 /// The lab assistant's home shell — orders, the test catalogue and the
 /// profile, with the centre button raising a new lab order.
@@ -115,7 +116,7 @@ class _LabDrawer extends StatelessWidget {
 
     return Drawer(
       backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.horizontal(right: Radius.circular(28))),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.horizontal(right: Radius.circular(CareRadius.drawer))),
       child: Column(
         children: [
           CareHeaderBackground(
@@ -201,7 +202,7 @@ class _DrawerItem extends StatelessWidget {
     watchCarePalette(context);
     return ListTile(
       dense: true,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CareRadius.field)),
       leading: CareIconBox(icon: icon, size: 34, filled: false),
       title: Text(label, style: CareText.titleMdMedium),
       onTap: () {
@@ -396,7 +397,7 @@ class _StatsStrip extends StatelessWidget {
       height: 92,
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(CareRadius.panel),
         boxShadow: careShadow(blur: 24, dy: 10, alpha: 0.1),
       ),
       child: Row(

@@ -5,6 +5,7 @@ import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/receptionist/viewmodels/invoices_view_model.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 const _kPaymentMethods = ['cash', 'card', 'upi', 'bank_transfer', 'cheque'];
 
@@ -70,7 +71,7 @@ class _InvoiceDetailView extends StatelessWidget {
       children: [
         Container(
           padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(16)),
+          decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(CareRadius.card)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -94,7 +95,7 @@ class _InvoiceDetailView extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(12),
             margin: const EdgeInsets.only(bottom: 8),
-            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12), border: Border.all(color: kCareBorder)),
+            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(CareRadius.control), border: Border.all(color: kCareBorder)),
             child: Row(
               children: [
                 Expanded(
@@ -119,7 +120,7 @@ class _InvoiceDetailView extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(12),
               margin: const EdgeInsets.only(bottom: 8),
-              decoration: BoxDecoration(color: kSuccessBg, borderRadius: BorderRadius.circular(12)),
+              decoration: BoxDecoration(color: kSuccessBg, borderRadius: BorderRadius.circular(CareRadius.control)),
               child: Row(
                 children: [
                   Expanded(
@@ -143,7 +144,7 @@ class _InvoiceDetailView extends StatelessWidget {
             height: 46,
             child: ElevatedButton.icon(
               onPressed: () => _addPayment(context, viewModel),
-              style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+              style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CareRadius.control))),
               icon: const Icon(Icons.payments_outlined, color: Colors.white),
               label: const Text('Add payment', style: CareText.onCareBold),
             ),

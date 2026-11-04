@@ -11,6 +11,7 @@ import 'package:hms_mobile/features/nurse/models/blood_bank.dart';
 import 'package:hms_mobile/features/nurse/models/nurse_patient.dart';
 import 'package:hms_mobile/features/nurse/viewmodels/blood_bank_view_model.dart';
 import 'package:hms_mobile/features/nurse/widgets/patient_picker.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 const _kBloodGroups = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
 const _kComponents = ['whole_blood', 'packed_rbc', 'ffp', 'platelets', 'cryoprecipitate'];
@@ -127,7 +128,7 @@ class _BloodBankView extends StatelessWidget {
             for (final g in _kBloodGroups)
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(10)),
+                decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(CareRadius.control)),
                 child: Text('$g: ${viewModel.byGroup[g] ?? 0}', style: const TextStyle(fontSize: CareText.sm, fontWeight: CareText.bold, color: kInk)),
               ),
           ],
@@ -162,7 +163,7 @@ class _StatTile extends StatelessWidget {
     watchCarePalette(context);
     return Container(
       padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(14)),
+      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(CareRadius.field)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -196,7 +197,7 @@ class _UnitCard extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kCareBorder)),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(CareRadius.card), border: Border.all(color: kCareBorder)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -204,14 +205,14 @@ class _UnitCard extends StatelessWidget {
             children: [
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                decoration: BoxDecoration(color: kCareSoft, borderRadius: BorderRadius.circular(8)),
+                decoration: BoxDecoration(color: kCareSoft, borderRadius: BorderRadius.circular(CareRadius.chip)),
                 child: Text(unit.bloodGroup, style: TextStyle(color: kCareDark, fontSize: CareText.sm, fontWeight: CareText.heavy)),
               ),
               const SizedBox(width: 8),
               Expanded(child: Text(_titleCase(unit.component), style: CareText.titleLg)),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(8)),
+                decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(CareRadius.chip)),
                 child: Text(unit.status.toUpperCase(), style: CareText.chip(fg)),
               ),
             ],
@@ -468,7 +469,7 @@ class _AddUnitScreenState extends State<_AddUnitScreen> {
               height: 48,
               child: ElevatedButton(
                 onPressed: _submitting ? null : _submit,
-                style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+                style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CareRadius.control))),
                 child: _submitting
                     ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
                     : const Text('Add unit', style: CareText.onCareBold),

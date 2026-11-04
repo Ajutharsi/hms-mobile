@@ -4,6 +4,7 @@ import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/auth/widgets/auth_illustration.dart';
 import 'package:hms_mobile/core/theme/care_text.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 /// Shared responsive shell for the login/register screens: a split
 /// illustration+form layout on wide viewports, form-only (with a compact
@@ -94,7 +95,7 @@ class _CompactAuthLayout extends StatelessWidget {
                     height: 64,
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(CareRadius.panel),
                       boxShadow: const [BoxShadow(color: Color(0x33000000), blurRadius: 16, offset: Offset(0, 6))],
                     ),
                     child: Icon(Icons.medical_services_rounded, color: kCare, size: 32),
@@ -123,7 +124,7 @@ class _CompactAuthLayout extends StatelessWidget {
                   padding: const EdgeInsets.fromLTRB(22, 4, 22, 24),
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(26),
+                    borderRadius: BorderRadius.circular(CareRadius.hero),
                     boxShadow: careShadow(blur: 30, dy: 12, alpha: 0.1),
                   ),
                   child: formPane,

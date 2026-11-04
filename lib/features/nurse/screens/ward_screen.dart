@@ -6,6 +6,7 @@ import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/nurse/models/ward.dart';
 import 'package:hms_mobile/features/nurse/viewmodels/ward_view_model.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 class WardScreen extends StatelessWidget {
   const WardScreen({super.key});
@@ -80,11 +81,11 @@ class _WardCard extends StatelessWidget {
     final occupied = ward.totalBeds - ward.availableBeds;
 
     return InkWell(
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(CareRadius.card),
       onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => WardDetailScreen(wardId: ward.id, wardName: ward.name))),
       child: Container(
         padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kCareBorder)),
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(CareRadius.card), border: Border.all(color: kCareBorder)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -93,7 +94,7 @@ class _WardCard extends StatelessWidget {
                 Expanded(child: Text(ward.name, style: CareText.titleXl)),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                  decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(8)),
+                  decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(CareRadius.chip)),
                   child: Text(
                     ward.type.replaceAll('_', ' ').toUpperCase(),
                     style: CareText.chip(fg),
@@ -190,13 +191,13 @@ class _BedTile extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14), border: Border.all(color: kCareBorder)),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(CareRadius.field), border: Border.all(color: kCareBorder)),
       child: Row(
         children: [
           Container(
             width: 36,
             height: 36,
-            decoration: BoxDecoration(color: available ? kSuccessBg : kCareBg, borderRadius: BorderRadius.circular(10)),
+            decoration: BoxDecoration(color: available ? kSuccessBg : kCareBg, borderRadius: BorderRadius.circular(CareRadius.control)),
             child: Icon(Icons.bed_outlined, color: available ? kSuccessFg : kMuted, size: 18),
           ),
           const SizedBox(width: 12),
@@ -214,7 +215,7 @@ class _BedTile extends StatelessWidget {
           ),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
-            decoration: BoxDecoration(color: available ? kSuccessBg : kCareBg, borderRadius: BorderRadius.circular(8)),
+            decoration: BoxDecoration(color: available ? kSuccessBg : kCareBg, borderRadius: BorderRadius.circular(CareRadius.chip)),
             child: Text(
               available ? 'Available' : 'Occupied',
               style: TextStyle(color: available ? kSuccessFg : kMuted, fontSize: CareText.xs, fontWeight: CareText.bold),

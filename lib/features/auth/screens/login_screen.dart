@@ -12,6 +12,7 @@ import 'package:hms_mobile/features/auth/screens/forgot_password_screen.dart';
 import 'package:hms_mobile/features/auth/screens/register_screen.dart';
 import 'package:hms_mobile/features/auth/viewmodels/login_view_model.dart';
 import 'package:hms_mobile/features/auth/widgets/auth_scaffold.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 /// View for the login screen — owns no business logic itself, just renders
 /// [LoginViewModel]'s state and forwards user actions to it.
@@ -150,7 +151,7 @@ class _LoginViewState extends State<_LoginView> {
                 onPressed: viewModel.isLoading ? null : () => _handleSubmit(viewModel),
                 style: FilledButton.styleFrom(
                   backgroundColor: kCare,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CareRadius.field)),
                 ),
                 child: viewModel.isLoading
                     ? const SizedBox(

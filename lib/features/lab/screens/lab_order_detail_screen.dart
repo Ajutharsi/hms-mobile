@@ -6,6 +6,7 @@ import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/lab/models/lab_order.dart';
 import 'package:hms_mobile/features/lab/viewmodels/lab_orders_view_model.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 class LabOrderDetailScreen extends StatelessWidget {
   final int orderId;
@@ -69,7 +70,7 @@ class _LabOrderDetailView extends StatelessWidget {
       children: [
         Container(
           padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(16)),
+          decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(CareRadius.card)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -97,7 +98,7 @@ class _LabOrderDetailView extends StatelessWidget {
             height: 46,
             child: ElevatedButton.icon(
               onPressed: viewModel.isSaving ? null : () => _enterResults(context, viewModel, pendingItems),
-              style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+              style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CareRadius.control))),
               icon: viewModel.isSaving
                   ? const SizedBox(height: 16, width: 16, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
                   : const Icon(Icons.science_outlined, color: Colors.white, size: 18),
@@ -127,7 +128,7 @@ class _ItemCard extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14), border: Border.all(color: kCareBorder)),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(CareRadius.field), border: Border.all(color: kCareBorder)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -136,7 +137,7 @@ class _ItemCard extends StatelessWidget {
               Expanded(child: Text(item.testName ?? 'Test', style: CareText.titleMd)),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                decoration: BoxDecoration(color: completed ? kSuccessBg : kWarningBg, borderRadius: BorderRadius.circular(7)),
+                decoration: BoxDecoration(color: completed ? kSuccessBg : kWarningBg, borderRadius: BorderRadius.circular(CareRadius.chip)),
                 child: Text(item.status, style: TextStyle(color: completed ? kSuccessFg : kWarningFg, fontSize: CareText.xxs, fontWeight: CareText.bold)),
               ),
             ],
@@ -150,7 +151,7 @@ class _ItemCard extends StatelessWidget {
                   const SizedBox(width: 8),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
-                    decoration: BoxDecoration(color: flagColor.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(6)),
+                    decoration: BoxDecoration(color: flagColor.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(CareRadius.chip)),
                     child: Text(result.flag!.toUpperCase(), style: TextStyle(fontSize: CareText.xxs, fontWeight: CareText.heavy, color: flagColor)),
                   ),
                 ],

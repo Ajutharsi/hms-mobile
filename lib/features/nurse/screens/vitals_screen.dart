@@ -10,6 +10,7 @@ import 'package:hms_mobile/features/nurse/models/nurse_vital.dart';
 import 'package:hms_mobile/features/nurse/viewmodels/vitals_view_model.dart';
 import 'package:hms_mobile/features/nurse/widgets/patient_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 class VitalsScreen extends StatelessWidget {
   const VitalsScreen({super.key});
@@ -96,10 +97,10 @@ class _VitalCard extends StatelessWidget {
 
     return InkWell(
       onTap: onTapTrend,
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(CareRadius.card),
       child: Container(
         padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kCareBorder)),
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(CareRadius.card), border: Border.all(color: kCareBorder)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -117,7 +118,7 @@ class _VitalCard extends StatelessWidget {
                 if (vital.newsScore != null)
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                    decoration: BoxDecoration(color: newsBg, borderRadius: BorderRadius.circular(8)),
+                    decoration: BoxDecoration(color: newsBg, borderRadius: BorderRadius.circular(CareRadius.chip)),
                     child: Text('NEWS ${vital.newsScore}', style: TextStyle(color: newsFg, fontSize: CareText.xs, fontWeight: CareText.bold)),
                   ),
               ],
@@ -287,7 +288,7 @@ class _RecordVitalsScreenState extends State<_RecordVitalsScreen> {
                 height: 50,
                 child: FilledButton(
                   onPressed: _saving ? null : _submit,
-                  style: FilledButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+                  style: FilledButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CareRadius.control))),
                   child: _saving
                       ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2.4, color: Colors.white))
                       : const Text('Save vitals', style: CareText.xlMedium),

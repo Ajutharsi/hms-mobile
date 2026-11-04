@@ -11,6 +11,7 @@ import 'package:hms_mobile/features/nurse/models/admission.dart';
 import 'package:hms_mobile/features/nurse/models/ward.dart';
 import 'package:hms_mobile/features/nurse/screens/admit_patient_screen.dart';
 import 'package:hms_mobile/features/nurse/viewmodels/admissions_view_model.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 class AdmissionsScreen extends StatelessWidget {
   const AdmissionsScreen({super.key});
@@ -139,10 +140,10 @@ class _FilterChip extends StatelessWidget {
     watchCarePalette(context);
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(CareRadius.panel),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-        decoration: BoxDecoration(color: selected ? kCareDark : kCareBg, borderRadius: BorderRadius.circular(20)),
+        decoration: BoxDecoration(color: selected ? kCareDark : kCareBg, borderRadius: BorderRadius.circular(CareRadius.panel)),
         child: Text(label, style: CareText.tag(selected ? Colors.white : kMuted, size: CareText.sm)),
       ),
     );
@@ -162,7 +163,7 @@ class _AdmissionCard extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kCareBorder)),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(CareRadius.card), border: Border.all(color: kCareBorder)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -188,7 +189,7 @@ class _AdmissionCard extends StatelessWidget {
               ),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
-                decoration: BoxDecoration(color: admitted ? kSuccessBg : kCareBg, borderRadius: BorderRadius.circular(8)),
+                decoration: BoxDecoration(color: admitted ? kSuccessBg : kCareBg, borderRadius: BorderRadius.circular(CareRadius.chip)),
                 child: Text(admission.status, style: TextStyle(color: admitted ? kSuccessFg : kMuted, fontSize: CareText.xs, fontWeight: CareText.bold)),
               ),
             ],

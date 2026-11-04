@@ -97,6 +97,26 @@ void main() {
         reason: 'use a CareText step (xxs…stat) and medium/bold/heavy:\n${offenders.join('\n')}');
   });
 
+  test('corners are named, not measured', () {
+    // 263 call sites once spread themselves over sixteen values — 4, 6, 7,
+    // 9, 10, 11, 18, 22, 24, 26 among them — so the same kind of surface
+    // came out rounded three different ways on three screens. Nothing
+    // about a bare number looks wrong at the call site, which is why this
+    // is a test and not a convention.
+    final offenders = <String>[];
+    for (final file in dartFiles) {
+      if (file.path.replaceAll(r'\', '/').endsWith('core/theme/care_radius.dart')) continue;
+      final source = file.readAsStringSync();
+      for (final m in RegExp(r'Radius\.circular\(\s*[0-9]').allMatches(source)) {
+        offenders.add('${file.path}:${'\n'.allMatches(source.substring(0, m.start)).length + 1}');
+      }
+    }
+
+    expect(offenders, isEmpty,
+        reason: 'use a CareRadius step (chip, control, field, card, panel, hero, sheet, '
+            'drawer, pill):\n${offenders.join('\n')}');
+  });
+
   test('form dropdowns are told to fit the width they are given', () {
     // Without isExpanded a DropdownButtonFormField sizes itself to its
     // widest item, so one long doctor name pushed the appointment form 78

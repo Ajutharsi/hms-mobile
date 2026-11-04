@@ -6,6 +6,7 @@ import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/nurse/models/food_intake.dart';
 import 'package:hms_mobile/features/nurse/viewmodels/food_intake_view_model.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 const _kDietTypes = ['normal', 'diabetic', 'liquid', 'soft', 'low_salt', 'npo', 'other'];
 const _kMealTypes = ['breakfast', 'lunch', 'snacks', 'dinner'];
@@ -81,10 +82,10 @@ class _PatientCard extends StatelessWidget {
     watchCarePalette(context);
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(CareRadius.card),
       child: Container(
         padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kCareBorder)),
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(CareRadius.card), border: Border.all(color: kCareBorder)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -93,7 +94,7 @@ class _PatientCard extends StatelessWidget {
                 Expanded(child: Text(patient.name, style: CareText.titleLg)),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
-                  decoration: BoxDecoration(color: kCareSoft, borderRadius: BorderRadius.circular(8)),
+                  decoration: BoxDecoration(color: kCareSoft, borderRadius: BorderRadius.circular(CareRadius.chip)),
                   child: Text(_titleCase(patient.dietType), style: TextStyle(color: kCareDark, fontSize: CareText.xxs, fontWeight: CareText.bold)),
                 ),
               ],
@@ -199,7 +200,7 @@ class _FoodIntakeDetailView extends StatelessWidget {
       children: [
         Container(
           padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: kCareBorder)),
+          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(CareRadius.card), border: Border.all(color: kCareBorder)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -228,7 +229,7 @@ class _FoodIntakeDetailView extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(12),
               margin: const EdgeInsets.only(bottom: 8),
-              decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(12)),
+              decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(CareRadius.control)),
               child: Row(
                 children: [
                   Expanded(

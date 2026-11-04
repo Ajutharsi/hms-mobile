@@ -8,6 +8,7 @@ import 'package:hms_mobile/features/nurse/models/nurse_patient.dart';
 import 'package:hms_mobile/features/nurse/models/nursing_note.dart';
 import 'package:hms_mobile/features/nurse/viewmodels/nursing_notes_view_model.dart';
 import 'package:hms_mobile/features/nurse/widgets/patient_picker.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 const _kNoteTypes = ['nursing', 'progress', 'handover', 'assessment', 'discharge_summary'];
 const _kShifts = ['morning', 'afternoon', 'night'];
@@ -138,7 +139,7 @@ class _NoteCardState extends State<_NoteCard> {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(CareRadius.card),
         border: Border(
           left: BorderSide(color: fg, width: 3),
           top: BorderSide(color: kCareBg),
@@ -163,7 +164,7 @@ class _NoteCardState extends State<_NoteCard> {
               ),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(8)),
+                decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(CareRadius.chip)),
                 child: Text(note.priority.toUpperCase(), style: CareText.chip(fg)),
               ),
             ],
@@ -228,7 +229,7 @@ class _MiniChip extends StatelessWidget {
     watchCarePalette(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-      decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(6)),
+      decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(CareRadius.chip)),
       child: Text(label, style: CareText.mutedXxsMedium),
     );
   }
@@ -328,7 +329,7 @@ class _NoteFormScreenState extends State<_NoteFormScreen> {
               DropdownButtonFormField<String>(
                 initialValue: _noteType,
                 isExpanded: true,
-                decoration: InputDecoration(filled: true, fillColor: Colors.white, contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4), border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none)),
+                decoration: InputDecoration(filled: true, fillColor: Colors.white, contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4), border: OutlineInputBorder(borderRadius: BorderRadius.circular(CareRadius.control), borderSide: BorderSide.none)),
                 items: _kNoteTypes.map((t) => DropdownMenuItem(value: t, child: Text(_titleCase(t), overflow: TextOverflow.ellipsis))).toList(),
                 onChanged: (v) => setState(() => _noteType = v ?? _noteType),
               ),
@@ -338,7 +339,7 @@ class _NoteFormScreenState extends State<_NoteFormScreen> {
               DropdownButtonFormField<String?>(
                 initialValue: _shift,
                 isExpanded: true,
-                decoration: InputDecoration(filled: true, fillColor: Colors.white, contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4), border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none)),
+                decoration: InputDecoration(filled: true, fillColor: Colors.white, contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4), border: OutlineInputBorder(borderRadius: BorderRadius.circular(CareRadius.control), borderSide: BorderSide.none)),
                 hint: const Text('None'),
                 items: [
                   const DropdownMenuItem<String?>(value: null, child: Text('None', overflow: TextOverflow.ellipsis)),
@@ -369,7 +370,7 @@ class _NoteFormScreenState extends State<_NoteFormScreen> {
                 height: 50,
                 child: FilledButton(
                   onPressed: _saving ? null : _submit,
-                  style: FilledButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+                  style: FilledButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CareRadius.control))),
                   child: _saving
                       ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2.4, color: Colors.white))
                       : Text(_isEdit ? 'Save changes' : 'Add note', style: CareText.xlMedium),

@@ -6,6 +6,7 @@ import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/patient/models/doctor.dart';
 import 'package:hms_mobile/features/patient/viewmodels/book_appointment_view_model.dart';
+import 'package:hms_mobile/core/theme/care_radius.dart';
 
 class BookAppointmentScreen extends StatelessWidget {
   const BookAppointmentScreen({super.key});
@@ -180,7 +181,7 @@ class _DoctorCard extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(10, 14, 10, 10),
         decoration: BoxDecoration(
           color: selected ? kCareSoft : Colors.white,
-          borderRadius: BorderRadius.circular(18),
+          borderRadius: BorderRadius.circular(CareRadius.card),
           border: Border.all(color: selected ? kCare : kCareBorder, width: selected ? 1.8 : 1),
           boxShadow: kCareShadow,
         ),
