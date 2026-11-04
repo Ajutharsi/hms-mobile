@@ -6,21 +6,27 @@ import 'package:hms_mobile/features/lab/screens/lab_home_screen.dart';
 import 'package:hms_mobile/features/nurse/screens/nurse_home_screen.dart';
 import 'package:hms_mobile/features/patient/screens/home_screen.dart';
 import 'package:hms_mobile/features/pharmacy/screens/pharmacist_home_screen.dart';
+import 'package:hms_mobile/features/admin/screens/admin_home_screen.dart';
 import 'package:hms_mobile/features/receptionist/screens/receptionist_home_screen.dart';
 import 'package:hms_mobile/features/staff/screens/staff_home_screen.dart';
 import 'package:hms_mobile/core/theme/care_text.dart';
 
 /// Routes a freshly-logged-in (or restored-session) user to the right
-/// role's home shell. Patient, doctor, nurse, staff, lab_assistant,
-/// receptionist and pharmacist have a mobile build; admin and super_admin
-/// stay web-only and see a plain "not available yet" screen rather than a
-/// crash or a silent wrong-role UI.
+/// role's home shell. Every role the web defines now has one. A role that
+/// somehow reaches here without a shell -- a new one added on the web, say
+/// -- gets a plain "not available yet" screen rather than a crash or a
+/// silent wrong-role UI.
 class RoleHome extends StatelessWidget {
   final AppUser user;
   const RoleHome({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {
+    // Checked before the clinical roles: an administrator may also hold
+    // one of them, and the admin shell is the superset.
+    if (user.roles.contains('admin') || user.roles.contains('super_admin')) {
+      return AdminHomeScreen(user: user);
+    }
     if (user.roles.contains('doctor')) {
       return DoctorHomeScreen(user: user);
     }
