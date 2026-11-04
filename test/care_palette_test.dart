@@ -22,6 +22,17 @@ void main() {
     }
   });
 
+  test('the neutral text colours stay readable on a card', () {
+    // Taken straight from the brand site, where the body grey is set at
+    // 19px. This app puts it at 10.5px on captions and chip labels, so it
+    // is pinned to the small-text floor rather than the large-text one.
+    // #767676 clears 4.5:1 by a hair; anything lighter would not.
+    expect(luminanceContrast(const Color(0xFF767676), Colors.white),
+        greaterThanOrEqualTo(4.5), reason: 'kMuted is too faint for caption-sized text');
+    expect(luminanceContrast(const Color(0xFF242424), Colors.white),
+        greaterThanOrEqualTo(7.0), reason: 'kInk should clear AAA for body text');
+  });
+
   test('derived shades order from background to deep', () {
     for (final preset in CarePalette.presets) {
       final p = CarePalette.fromSeed(preset.color);
@@ -47,6 +58,10 @@ void main() {
     final rose = CareColors.primary;
     CareColors.current = CarePalette.fallback;
     expect(CareColors.primary, isNot(rose));
-    expect(CareColors.current.seed, const Color(0xFF1FA99A));
+    // Naming the default's hex here just meant editing this line every time
+    // the brand changed. What matters is that the fallback is the colour
+    // Appearance offers first, so a fresh install and the first swatch agree.
+    expect(CareColors.current.seed, CarePalette.fallback.seed);
+    expect(CarePalette.fallback.seed, CarePalette.presets.first.color);
   });
 }

@@ -10,8 +10,9 @@ class CarePalette {
 
   const CarePalette._(this.seed);
 
-  /// The default look: the teal from the PatientCare kit.
-  static const CarePalette fallback = CarePalette._(Color(0xFF1FA99A));
+  /// The default look: the Connecting Aspirants brand blue, `rgb(15,145,227)`,
+  /// read from the site's own `--wd-primary-color`.
+  static const CarePalette fallback = CarePalette._(Color(0xFF0F91E3));
 
   factory CarePalette.fromSeed(Color seed) => CarePalette._(seed);
 
@@ -83,8 +84,10 @@ class CarePalette {
   /// Ready-made choices shown in Appearance, mirroring the web
   /// customizer's presets plus the app's own default.
   static const List<({String name, Color color})> presets = [
+    // The brand colour leads. The old 'Blue' preset was #2092EC, close
+    // enough to this one to look like a mistake next to it, so it goes.
+    (name: 'Brand', color: Color(0xFF0F91E3)),
     (name: 'Teal', color: Color(0xFF1FA99A)),
-    (name: 'Blue', color: Color(0xFF2092EC)),
     (name: 'Indigo', color: Color(0xFF3D6BFF)),
     (name: 'Violet', color: Color(0xFF7367F0)),
     (name: 'Rose', color: Color(0xFFEB3D63)),

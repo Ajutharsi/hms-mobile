@@ -3,8 +3,17 @@ import 'package:flutter/material.dart';
 /// Neutral text tokens and the status badge colours shared by every role.
 /// The brand colour itself now lives in care_ui.dart / care_palette.dart,
 /// where the user's Appearance choice drives it.
-const kInk = Color(0xFF12141A);
-const kMuted = Color(0xFF6B7280);
+/// Both taken from the Connecting Aspirants site: `--wd-title-color` and
+/// `--wd-text-color`. The old pair was a near-black and a blue-grey from
+/// the teal kit; these are the brand's own neutrals.
+const kInk = Color(0xFF242424);
+const kMuted = Color(0xFF767676);
+
+/// The brand's second colour, `--wd-alternative-color`. The site spends it
+/// sparingly — a highlighted word, a rating star — so it is here for the
+/// same job, not as a second primary.
+const kAccent = Color(0xFFFBBC34);
+const kAccentSurface = Color(0xFFFEF6E4);
 
 /// Subtle stat/status badge colors — matches the web dashboard's
 /// bg-label-* variants (success/info/warning/danger) so icon badges and
@@ -35,19 +44,24 @@ const kWarnSurface = Color(0xFFFFF4E5);
 const kOnCareSoft = Color(0xD9FFFFFF); // white @ 85%
 const kOnCareFaint = Color(0xCCFFFFFF); // white @ 80%
 
-/// Greys with a hint of teal, for furniture rather than content: a row's
-/// trailing chevron, and the placeholder in a field nobody has filled in.
-/// [kCareHint] is the darker of the two — it has to stay readable, where a
-/// chevron only has to be visible.
-const kCareChevron = Color(0xFFB5C2C0);
-const kCareHint = Color(0xFFAEB8B6);
-const kCareHintQuiet = Color(0xFF9AA6A4);
+/// Greys for furniture rather than content: a row's trailing chevron, and
+/// the placeholder in a field nobody has filled in. [kCareHint] is the
+/// darker of the two — it has to stay readable, where a chevron only has
+/// to be visible.
+///
+/// These used to carry a hint of teal, which worked while the brand was
+/// teal and looked faintly green beside a blue one. They are plain greys
+/// now, so they sit under any seed the user picks.
+const kCareChevron = Color(0xFFBDBDBD);
+const kCareHint = Color(0xFFB0B0B0);
+const kCareHintQuiet = Color(0xFF9A9A9A);
 
 /// Neutral fills that carry no status: the background of a chip for a
-/// cancelled or unknown state, and a control that is switched off.
-const kCareNeutralBg = Color(0xFFF0F2F2);
-const kCareDisabledBg = Color(0xFFF1F3F3);
-const kCareDisabledFg = Color(0xFFBFC5C3);
+/// cancelled or unknown state, and a control that is switched off. The two
+/// surfaces are the site's own `#f7f7f7` and `#efefef`.
+const kCareNeutralBg = Color(0xFFF7F7F7);
+const kCareDisabledBg = Color(0xFFEFEFEF);
+const kCareDisabledFg = Color(0xFFC4C4C4);
 
 /// Below this width, [AuthScaffold] drops the illustration side panel and
 /// shows only the form — there's no room for a split layout on a phone.
