@@ -3,7 +3,7 @@ import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
 
-import 'package:hms_mobile/core/services/api_service.dart' show ApiException, ApiService;
+import 'package:hms_mobile/core/services/api_service.dart' show ApiException, ApiService, sessionExpired;
 import 'package:hms_mobile/features/receptionist/models/insurance_claim.dart';
 import 'package:hms_mobile/features/receptionist/models/invoice.dart';
 import 'package:hms_mobile/features/receptionist/models/ipd_deposit.dart';
@@ -54,7 +54,7 @@ class ReceptionistApiService {
       throw ApiException(message);
     }
     if (response.statusCode == 401) {
-      throw ApiException('Your session has expired. Please log in again.');
+      throw sessionExpired();
     }
     if (response.statusCode == 403) {
       throw ApiException((body is Map ? body['message']?.toString() : null) ?? 'You are not allowed to do that.');

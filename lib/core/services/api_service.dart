@@ -18,10 +18,30 @@ import 'package:hms_mobile/features/patient/models/time_slot.dart';
 
 class ApiException implements Exception {
   final String message;
-  ApiException(this.message);
+
+  /// True when the server rejected the token itself. Until tokens had a
+  /// lifetime this only happened if someone revoked one by hand; now that
+  /// they expire after a week, any screen can meet it mid-session.
+  final bool isUnauthenticated;
+
+  ApiException(this.message, {this.isUnauthenticated = false});
 
   @override
   String toString() => message;
+}
+
+/// Called once when the server says the token is no longer good.
+///
+/// The app sets this at start-up to clear the stored token and return to
+/// the login screen. Without it a session that expires while someone is
+/// working leaves them on a screen showing "Your session has expired"
+/// with no way back except force-quitting.
+void Function()? onSessionExpired;
+
+/// Builds the 401 exception and lets the app know, once.
+ApiException sessionExpired() {
+  onSessionExpired?.call();
+  return ApiException('Your session has expired. Please log in again.', isUnauthenticated: true);
 }
 
 
@@ -318,7 +338,7 @@ class ApiService {
     }
 
     if (response.statusCode == 401) {
-      throw ApiException('Your session has expired. Please log in again.');
+      throw sessionExpired();
     }
 
     throw ApiException(body['message']?.toString() ?? 'Something went wrong (${response.statusCode}).');

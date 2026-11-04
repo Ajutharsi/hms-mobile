@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-import 'package:hms_mobile/core/services/api_service.dart' show ApiException, ApiService;
+import 'package:hms_mobile/core/services/api_service.dart' show ApiException, ApiService, sessionExpired;
 import 'package:hms_mobile/features/admin/models/admin_models.dart';
 
 /// JSON client for the administrator's endpoints — mirrors
@@ -40,7 +40,7 @@ class AdminApiService {
           ? first.first.toString()
           : (body?['message']?.toString() ?? 'Invalid request.'));
     }
-    if (response.statusCode == 401) throw ApiException('Your session has expired. Please log in again.');
+    if (response.statusCode == 401) throw sessionExpired();
     if (response.statusCode == 403) {
       throw ApiException((body is Map ? body['message']?.toString() : null) ?? 'You are not allowed to do that.');
     }

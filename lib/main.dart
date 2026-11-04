@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/navigation/role_home.dart';
+import 'package:hms_mobile/core/services/api_service.dart';
+import 'package:hms_mobile/core/services/auth_storage.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/core/theme/theme_controller.dart';
@@ -12,8 +14,42 @@ void main() {
   runApp(const HmsApp());
 }
 
-class HmsApp extends StatelessWidget {
+/// Lets the session-expiry hook reach the navigator from outside the
+/// widget tree — the hook fires from an API client, which has no context.
+final navigatorKey = GlobalKey<NavigatorState>();
+
+class HmsApp extends StatefulWidget {
   const HmsApp({super.key});
+
+  @override
+  State<HmsApp> createState() => _HmsAppState();
+}
+
+class _HmsAppState extends State<HmsApp> {
+  @override
+  void initState() {
+    super.initState();
+
+    // Tokens last a week. When one runs out while somebody is working,
+    // every screen would otherwise sit there showing "Your session has
+    // expired" with no way back; this clears the stored token and returns
+    // to the login screen instead.
+    onSessionExpired = () async {
+      await AuthStorage().clear();
+      final navigator = navigatorKey.currentState;
+      if (navigator == null) return;
+      navigator.pushAndRemoveUntil(
+        MaterialPageRoute(builder: (_) => const LoginScreen()),
+        (route) => false,
+      );
+    };
+  }
+
+  @override
+  void dispose() {
+    onSessionExpired = null;
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +65,7 @@ class HmsApp extends StatelessWidget {
 
   Widget _buildApp(BuildContext context) {
     return MaterialApp(
+      navigatorKey: navigatorKey,
       title: 'HMS India',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
