@@ -401,18 +401,20 @@ class _ScheduleOtScreenState extends State<_ScheduleOtScreen> {
             TextFormField(controller: _icd10Controller, decoration: careFieldDecoration('ICD-10 code', hint: 'Optional', icon: Icons.tag_outlined)),
             const SizedBox(height: 14),
             DropdownButtonFormField<String>(
+                  isExpanded: true,
               initialValue: _anaesthesiaType,
               decoration: careFieldDecoration('Anaesthesia type', hint: 'Optional', icon: Icons.healing_outlined),
               items: const ['general', 'spinal', 'epidural', 'local', 'sedation']
-                  .map((e) => DropdownMenuItem(value: e, child: Text(e[0].toUpperCase() + e.substring(1))))
+                  .map((e) => DropdownMenuItem(value: e, child: Text(e[0].toUpperCase() + e.substring(1), overflow: TextOverflow.ellipsis)))
                   .toList(),
               onChanged: (v) => setState(() => _anaesthesiaType = v),
             ),
             const SizedBox(height: 14),
             DropdownButtonFormField<String>(
+                  isExpanded: true,
               initialValue: _priority,
               decoration: careFieldDecoration('Priority', hint: '', icon: Icons.priority_high_outlined),
-              items: const ['elective', 'urgent', 'emergency'].map((e) => DropdownMenuItem(value: e, child: Text(e[0].toUpperCase() + e.substring(1)))).toList(),
+              items: const ['elective', 'urgent', 'emergency'].map((e) => DropdownMenuItem(value: e, child: Text(e[0].toUpperCase() + e.substring(1), overflow: TextOverflow.ellipsis))).toList(),
               onChanged: (v) => setState(() => _priority = v ?? 'elective'),
             ),
             const SizedBox(height: 14),

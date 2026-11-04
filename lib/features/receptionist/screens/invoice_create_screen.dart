@@ -304,8 +304,8 @@ class _LineEditorState extends State<_LineEditor> {
                   isExpanded: true,
                   decoration: const InputDecoration(labelText: 'Service (or manual below)', isDense: true),
                   items: [
-                    const DropdownMenuItem(value: null, child: Text('Manual item')),
-                    ...widget.services.map((s) => DropdownMenuItem(value: s, child: Text('${s.serviceName} (₹${s.price.toStringAsFixed(0)})'))),
+                    const DropdownMenuItem(value: null, child: Text('Manual item', overflow: TextOverflow.ellipsis)),
+                    ...widget.services.map((s) => DropdownMenuItem(value: s, child: Text('${s.serviceName} (₹${s.price.toStringAsFixed(0)})', overflow: TextOverflow.ellipsis))),
                   ],
                   onChanged: (v) => setState(() => widget.line.service = v),
                 ),

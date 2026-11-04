@@ -299,9 +299,10 @@ class _IssueTokenDialogState extends State<_IssueTokenDialog> {
                     ReceptionPatientPickerField(value: _patient, errorText: _patientError, onChanged: (p) => setState(() { _patient = p; _patientError = null; })),
                     const SizedBox(height: 12),
                     DropdownButtonFormField<ReceptionDoctor>(
+                  isExpanded: true,
                       initialValue: _doctor,
                       decoration: const InputDecoration(labelText: 'Doctor', border: OutlineInputBorder()),
-                      items: _doctors.map((d) => DropdownMenuItem(value: d, child: Text(d.name))).toList(),
+                      items: _doctors.map((d) => DropdownMenuItem(value: d, child: Text(d.name, overflow: TextOverflow.ellipsis))).toList(),
                       onChanged: (v) => setState(() => _doctor = v),
                     ),
                     const SizedBox(height: 12),

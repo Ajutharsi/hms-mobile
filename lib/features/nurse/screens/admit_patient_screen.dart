@@ -111,9 +111,10 @@ class _AdmitPatientViewState extends State<_AdmitPatientView> {
                     const Text('Ward', style: CareText.titleSm),
                     const SizedBox(height: 8),
                     DropdownButtonFormField<Ward>(
+                  isExpanded: true,
                       initialValue: viewModel.selectedWard,
                       decoration: careFieldDecoration('Ward', hint: 'Select ward', icon: Icons.holiday_village_outlined),
-                      items: viewModel.wards.map((w) => DropdownMenuItem(value: w, child: Text('${w.name} (${w.availableBeds} free)'))).toList(),
+                      items: viewModel.wards.map((w) => DropdownMenuItem(value: w, child: Text('${w.name} (${w.availableBeds} free)', overflow: TextOverflow.ellipsis))).toList(),
                       onChanged: viewModel.selectWard,
                     ),
                     const SizedBox(height: 16),
@@ -123,18 +124,20 @@ class _AdmitPatientViewState extends State<_AdmitPatientView> {
                       LinearProgressIndicator(color: kCare)
                     else
                       DropdownButtonFormField<Bed>(
+                  isExpanded: true,
                         initialValue: viewModel.selectedBed,
                         decoration: careFieldDecoration('Bed', hint: 'Select bed', icon: Icons.bed_outlined),
-                        items: viewModel.availableBeds.map((b) => DropdownMenuItem(value: b, child: Text(b.bedNo))).toList(),
+                        items: viewModel.availableBeds.map((b) => DropdownMenuItem(value: b, child: Text(b.bedNo, overflow: TextOverflow.ellipsis))).toList(),
                         onChanged: viewModel.selectedWard == null ? null : viewModel.selectBed,
                       ),
                     const SizedBox(height: 16),
                     const Text('Doctor', style: CareText.titleSm),
                     const SizedBox(height: 8),
                     DropdownButtonFormField<Doctor>(
+                  isExpanded: true,
                       initialValue: viewModel.selectedDoctor,
                       decoration: careFieldDecoration('Doctor', hint: 'Select doctor', icon: Icons.medical_information_outlined),
-                      items: viewModel.doctors.map((d) => DropdownMenuItem(value: d, child: Text(d.label))).toList(),
+                      items: viewModel.doctors.map((d) => DropdownMenuItem(value: d, child: Text(d.label, overflow: TextOverflow.ellipsis))).toList(),
                       onChanged: viewModel.selectDoctor,
                     ),
                     const SizedBox(height: 16),

@@ -118,9 +118,10 @@ class _LabOrderCreateViewState extends State<_LabOrderCreateView> {
                 const Text('Doctor', style: CareText.mutedSmBold),
                 const SizedBox(height: 8),
                 DropdownButtonFormField(
+                  isExpanded: true,
                   initialValue: viewModel.selectedDoctor,
                   decoration: careFieldDecoration('Doctor', hint: 'Select doctor', icon: Icons.medical_services_outlined),
-                  items: viewModel.doctors.map((d) => DropdownMenuItem(value: d, child: Text(d.name))).toList(),
+                  items: viewModel.doctors.map((d) => DropdownMenuItem(value: d, child: Text(d.name, overflow: TextOverflow.ellipsis))).toList(),
                   onChanged: viewModel.selectDoctor,
                 ),
                 const SizedBox(height: 20),

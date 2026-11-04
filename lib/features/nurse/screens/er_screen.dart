@@ -274,8 +274,9 @@ class _TriageDialogState extends State<_TriageDialog> {
     return AlertDialog(
       title: const Text('Update triage level'),
       content: DropdownButtonFormField<String>(
+                  isExpanded: true,
         initialValue: _level,
-        items: _kTriageLevels.map((l) => DropdownMenuItem(value: l, child: Text(l.toUpperCase()))).toList(),
+        items: _kTriageLevels.map((l) => DropdownMenuItem(value: l, child: Text(l.toUpperCase(), overflow: TextOverflow.ellipsis))).toList(),
         onChanged: (v) => setState(() => _level = v!),
       ),
       actions: [
@@ -332,14 +333,16 @@ class _UpdateDialogState extends State<_UpdateDialog> {
           mainAxisSize: MainAxisSize.min,
           children: [
             DropdownButtonFormField<String>(
+                  isExpanded: true,
               initialValue: _status,
               decoration: const InputDecoration(labelText: 'Status'),
-              items: _kErStatuses.map((s) => DropdownMenuItem(value: s, child: Text(_titleCase(s)))).toList(),
+              items: _kErStatuses.map((s) => DropdownMenuItem(value: s, child: Text(_titleCase(s), overflow: TextOverflow.ellipsis))).toList(),
               onChanged: (v) => setState(() => _status = v!),
             ),
             const SizedBox(height: 10),
             if (_doctors.isNotEmpty)
               DropdownButtonFormField<Doctor>(
+                  isExpanded: true,
                 initialValue: _doctor,
                 decoration: const InputDecoration(labelText: 'Attending doctor (optional)'),
                 items: _doctors.map((d) => DropdownMenuItem(value: d, child: Text(d.name, overflow: TextOverflow.ellipsis))).toList(),
@@ -395,9 +398,10 @@ class _DischargeDialogState extends State<_DischargeDialog> {
         mainAxisSize: MainAxisSize.min,
         children: [
           DropdownButtonFormField<String>(
+                  isExpanded: true,
             initialValue: _status,
             decoration: const InputDecoration(labelText: 'Outcome'),
-            items: _kCloseStatuses.map((s) => DropdownMenuItem(value: s, child: Text(_titleCase(s)))).toList(),
+            items: _kCloseStatuses.map((s) => DropdownMenuItem(value: s, child: Text(_titleCase(s), overflow: TextOverflow.ellipsis))).toList(),
             onChanged: (v) => setState(() => _status = v!),
           ),
           const SizedBox(height: 10),
@@ -515,16 +519,18 @@ class _RegisterErScreenState extends State<_RegisterErScreen> {
               TextFormField(controller: _ageController, keyboardType: TextInputType.number, decoration: careFieldDecoration('Age', hint: 'Optional', icon: Icons.cake_outlined)),
               const SizedBox(height: 14),
               DropdownButtonFormField<String>(
+                  isExpanded: true,
                 initialValue: _gender,
                 decoration: careFieldDecoration('Gender', hint: 'Optional', icon: Icons.wc_outlined),
-                items: const [DropdownMenuItem(value: 'male', child: Text('Male')), DropdownMenuItem(value: 'female', child: Text('Female')), DropdownMenuItem(value: 'other', child: Text('Other'))],
+                items: const [DropdownMenuItem(value: 'male', child: Text('Male', overflow: TextOverflow.ellipsis)), DropdownMenuItem(value: 'female', child: Text('Female', overflow: TextOverflow.ellipsis)), DropdownMenuItem(value: 'other', child: Text('Other', overflow: TextOverflow.ellipsis))],
                 onChanged: (v) => setState(() => _gender = v),
               ),
               const SizedBox(height: 14),
               DropdownButtonFormField<String>(
+                  isExpanded: true,
                 initialValue: _triageLevel,
                 decoration: careFieldDecoration('Triage level', hint: '', icon: Icons.emergency_outlined),
-                items: _kTriageLevels.map((l) => DropdownMenuItem(value: l, child: Text(l.toUpperCase()))).toList(),
+                items: _kTriageLevels.map((l) => DropdownMenuItem(value: l, child: Text(l.toUpperCase(), overflow: TextOverflow.ellipsis))).toList(),
                 onChanged: (v) => setState(() => _triageLevel = v!),
               ),
               const SizedBox(height: 14),

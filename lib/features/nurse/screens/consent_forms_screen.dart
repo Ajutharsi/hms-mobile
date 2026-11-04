@@ -348,9 +348,10 @@ class _NewConsentFormScreenState extends State<_NewConsentFormScreen> {
               PatientPickerField(value: _patient, onChanged: (p) => setState(() => _patient = p)),
               const SizedBox(height: 16),
               DropdownButtonFormField<String>(
+                  isExpanded: true,
                 initialValue: _consentType,
                 decoration: careFieldDecoration('Consent type', hint: '', icon: Icons.assignment_outlined),
-                items: _kConsentTypes.map((t) => DropdownMenuItem(value: t, child: Text(_titleCase(t)))).toList(),
+                items: _kConsentTypes.map((t) => DropdownMenuItem(value: t, child: Text(_titleCase(t), overflow: TextOverflow.ellipsis))).toList(),
                 onChanged: (v) => setState(() => _consentType = v!),
               ),
               const SizedBox(height: 14),

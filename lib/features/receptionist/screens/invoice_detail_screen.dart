@@ -206,9 +206,10 @@ class _PaymentDialogState extends State<_PaymentDialog> {
               TextField(controller: _amountController, decoration: const InputDecoration(labelText: 'Amount'), keyboardType: TextInputType.number),
               const SizedBox(height: 10),
               DropdownButtonFormField<String>(
+                  isExpanded: true,
                 initialValue: _method,
                 decoration: const InputDecoration(labelText: 'Payment method'),
-                items: _kPaymentMethods.map((m) => DropdownMenuItem(value: m, child: Text(m.replaceAll('_', ' ').toUpperCase()))).toList(),
+                items: _kPaymentMethods.map((m) => DropdownMenuItem(value: m, child: Text(m.replaceAll('_', ' ').toUpperCase(), overflow: TextOverflow.ellipsis))).toList(),
                 onChanged: (v) => setState(() => _method = v!),
               ),
               const SizedBox(height: 10),

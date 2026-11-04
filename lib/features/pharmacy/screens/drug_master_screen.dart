@@ -373,9 +373,10 @@ class _DrugDialogState extends State<_DrugDialog> {
                 ),
                 const SizedBox(height: 10),
                 DropdownButtonFormField<String>(
+                  isExpanded: true,
                   initialValue: _status,
                   decoration: const InputDecoration(labelText: 'Status'),
-                  items: const [DropdownMenuItem(value: 'active', child: Text('Active')), DropdownMenuItem(value: 'inactive', child: Text('Inactive'))],
+                  items: const [DropdownMenuItem(value: 'active', child: Text('Active', overflow: TextOverflow.ellipsis)), DropdownMenuItem(value: 'inactive', child: Text('Inactive', overflow: TextOverflow.ellipsis))],
                   onChanged: (v) => setState(() => _status = v!),
                 ),
               ],

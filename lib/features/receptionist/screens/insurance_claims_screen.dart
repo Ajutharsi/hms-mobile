@@ -395,9 +395,10 @@ class _ClaimFormScreenState extends State<_ClaimFormScreen> {
             ),
             const SizedBox(height: 14),
             DropdownButtonFormField<String>(
+                  isExpanded: true,
               initialValue: _claimType,
               decoration: careFieldDecoration('Claim type', hint: '', icon: Icons.category_outlined),
-              items: const [DropdownMenuItem(value: 'cashless', child: Text('Cashless')), DropdownMenuItem(value: 'reimbursement', child: Text('Reimbursement'))],
+              items: const [DropdownMenuItem(value: 'cashless', child: Text('Cashless', overflow: TextOverflow.ellipsis)), DropdownMenuItem(value: 'reimbursement', child: Text('Reimbursement', overflow: TextOverflow.ellipsis))],
               onChanged: (v) => setState(() => _claimType = v ?? _claimType),
             ),
             const SizedBox(height: 14),

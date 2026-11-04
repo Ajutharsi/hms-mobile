@@ -396,8 +396,8 @@ class _MiniDropdown extends StatelessWidget {
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide.none),
       ),
       items: [
-        if (nullable) const DropdownMenuItem<String>(value: null, child: Text('—')),
-        for (final o in options) DropdownMenuItem(value: o, child: Text(o[0].toUpperCase() + o.substring(1))),
+        if (nullable) const DropdownMenuItem<String>(value: null, child: Text('—', overflow: TextOverflow.ellipsis)),
+        for (final o in options) DropdownMenuItem(value: o, child: Text(o[0].toUpperCase() + o.substring(1), overflow: TextOverflow.ellipsis)),
       ],
       onChanged: onChanged,
     );

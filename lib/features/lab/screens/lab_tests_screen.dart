@@ -219,9 +219,10 @@ class _LabTestDialogState extends State<_LabTestDialog> {
                 TextFormField(controller: _nameController, decoration: const InputDecoration(labelText: 'Test name'), validator: (v) => (v == null || v.trim().length < 2) ? 'Required' : null),
                 const SizedBox(height: 10),
                 DropdownButtonFormField<String>(
+                  isExpanded: true,
                   initialValue: _category,
                   decoration: const InputDecoration(labelText: 'Category'),
-                  items: _kCategories.map((c) => DropdownMenuItem(value: c, child: Text(c))).toList(),
+                  items: _kCategories.map((c) => DropdownMenuItem(value: c, child: Text(c, overflow: TextOverflow.ellipsis))).toList(),
                   onChanged: (v) => setState(() => _category = v!),
                 ),
                 const SizedBox(height: 10),
@@ -243,9 +244,10 @@ class _LabTestDialogState extends State<_LabTestDialog> {
                 TextFormField(controller: _descController, decoration: const InputDecoration(labelText: 'Description (optional)'), maxLines: 2),
                 const SizedBox(height: 10),
                 DropdownButtonFormField<String>(
+                  isExpanded: true,
                   initialValue: _status,
                   decoration: const InputDecoration(labelText: 'Status'),
-                  items: const [DropdownMenuItem(value: 'active', child: Text('Active')), DropdownMenuItem(value: 'inactive', child: Text('Inactive'))],
+                  items: const [DropdownMenuItem(value: 'active', child: Text('Active', overflow: TextOverflow.ellipsis)), DropdownMenuItem(value: 'inactive', child: Text('Inactive', overflow: TextOverflow.ellipsis))],
                   onChanged: (v) => setState(() => _status = v!),
                 ),
               ],

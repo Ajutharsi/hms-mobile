@@ -319,9 +319,10 @@ class _UpdateStatusDialogState extends State<_UpdateStatusDialog> {
           mainAxisSize: MainAxisSize.min,
           children: [
             DropdownButtonFormField<String>(
+                  isExpanded: true,
               initialValue: _status,
               decoration: careFieldDecoration('Status', hint: '', icon: Icons.flag_outlined),
-              items: _kStatuses.map((s) => DropdownMenuItem(value: s, child: Text(_titleCase(s)))).toList(),
+              items: _kStatuses.map((s) => DropdownMenuItem(value: s, child: Text(_titleCase(s), overflow: TextOverflow.ellipsis))).toList(),
               onChanged: (v) => setState(() => _status = v ?? _status),
             ),
             if (_status == 'reserved') ...[
@@ -428,16 +429,18 @@ class _AddUnitScreenState extends State<_AddUnitScreen> {
           padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
           children: [
             DropdownButtonFormField<String>(
+                  isExpanded: true,
               initialValue: _bloodGroup,
               decoration: careFieldDecoration('Blood group', hint: '', icon: Icons.bloodtype_outlined),
-              items: _kBloodGroups.map((g) => DropdownMenuItem(value: g, child: Text(g))).toList(),
+              items: _kBloodGroups.map((g) => DropdownMenuItem(value: g, child: Text(g, overflow: TextOverflow.ellipsis))).toList(),
               onChanged: (v) => setState(() => _bloodGroup = v ?? _bloodGroup),
             ),
             const SizedBox(height: 14),
             DropdownButtonFormField<String>(
+                  isExpanded: true,
               initialValue: _component,
               decoration: careFieldDecoration('Component', hint: '', icon: Icons.science_outlined),
-              items: _kComponents.map((c) => DropdownMenuItem(value: c, child: Text(_titleCase(c)))).toList(),
+              items: _kComponents.map((c) => DropdownMenuItem(value: c, child: Text(_titleCase(c), overflow: TextOverflow.ellipsis))).toList(),
               onChanged: (v) => setState(() => _component = v ?? _component),
             ),
             const SizedBox(height: 14),

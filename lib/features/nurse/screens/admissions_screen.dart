@@ -385,9 +385,10 @@ class _TransferDialogState extends State<_TransferDialog> {
                   Text(widget.admission.patientName ?? '', style: const TextStyle(fontWeight: CareText.medium)),
                   const SizedBox(height: 12),
                   DropdownButtonFormField<Ward>(
+                  isExpanded: true,
                     initialValue: _selectedWard,
                     decoration: const InputDecoration(labelText: 'New ward', border: OutlineInputBorder()),
-                    items: _wards.map((w) => DropdownMenuItem(value: w, child: Text(w.name))).toList(),
+                    items: _wards.map((w) => DropdownMenuItem(value: w, child: Text(w.name, overflow: TextOverflow.ellipsis))).toList(),
                     onChanged: _selectWard,
                   ),
                   const SizedBox(height: 12),
@@ -395,9 +396,10 @@ class _TransferDialogState extends State<_TransferDialog> {
                     LinearProgressIndicator(color: kCare)
                   else
                     DropdownButtonFormField<Bed>(
+                  isExpanded: true,
                       initialValue: _selectedBed,
                       decoration: const InputDecoration(labelText: 'New bed', border: OutlineInputBorder()),
-                      items: _beds.map((b) => DropdownMenuItem(value: b, child: Text(b.bedNo))).toList(),
+                      items: _beds.map((b) => DropdownMenuItem(value: b, child: Text(b.bedNo, overflow: TextOverflow.ellipsis))).toList(),
                       onChanged: _selectedWard == null ? null : (b) => setState(() => _selectedBed = b),
                     ),
                   const SizedBox(height: 12),

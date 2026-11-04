@@ -222,9 +222,10 @@ class _CollectDialogState extends State<_CollectDialog> {
               TextField(controller: _amountController, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Amount')),
               const SizedBox(height: 10),
               DropdownButtonFormField<String>(
+                  isExpanded: true,
                 initialValue: _paymentMethod,
                 decoration: const InputDecoration(labelText: 'Payment method'),
-                items: _kPaymentMethods.map((m) => DropdownMenuItem(value: m, child: Text(_titleCase(m)))).toList(),
+                items: _kPaymentMethods.map((m) => DropdownMenuItem(value: m, child: Text(_titleCase(m), overflow: TextOverflow.ellipsis))).toList(),
                 onChanged: (v) => setState(() => _paymentMethod = v ?? _paymentMethod),
               ),
               const SizedBox(height: 10),
@@ -295,9 +296,10 @@ class _RefundDialogState extends State<_RefundDialog> {
             TextField(controller: _amountController, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Refund amount')),
             const SizedBox(height: 10),
             DropdownButtonFormField<String>(
+                  isExpanded: true,
               initialValue: _paymentMethod,
               decoration: const InputDecoration(labelText: 'Payment method'),
-              items: _kPaymentMethods.map((m) => DropdownMenuItem(value: m, child: Text(_titleCase(m)))).toList(),
+              items: _kPaymentMethods.map((m) => DropdownMenuItem(value: m, child: Text(_titleCase(m), overflow: TextOverflow.ellipsis))).toList(),
               onChanged: (v) => setState(() => _paymentMethod = v ?? _paymentMethod),
             ),
             const SizedBox(height: 10),

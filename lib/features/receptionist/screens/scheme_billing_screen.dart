@@ -256,9 +256,10 @@ class _SchemeBillFormScreenState extends State<_SchemeBillFormScreen> {
             ReceptionPatientPickerField(value: _patient, errorText: _patientError, onChanged: (p) => setState(() { _patient = p; _patientError = null; })),
             const SizedBox(height: 14),
             DropdownButtonFormField<String>(
+                  isExpanded: true,
               initialValue: _scheme,
               decoration: careFieldDecoration('Scheme', hint: '', icon: Icons.request_quote_outlined),
-              items: kSchemes.map((s) => DropdownMenuItem(value: s, child: Text(titleCase(s)))).toList(),
+              items: kSchemes.map((s) => DropdownMenuItem(value: s, child: Text(titleCase(s), overflow: TextOverflow.ellipsis))).toList(),
               onChanged: (v) => setState(() => _scheme = v ?? _scheme),
             ),
             const SizedBox(height: 14),

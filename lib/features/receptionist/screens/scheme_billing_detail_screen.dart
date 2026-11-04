@@ -202,9 +202,10 @@ class _EditDialogState extends State<_EditDialog> {
             mainAxisSize: MainAxisSize.min,
             children: [
               DropdownButtonFormField<String>(
+                  isExpanded: true,
                 initialValue: _scheme,
                 decoration: const InputDecoration(labelText: 'Scheme'),
-                items: kSchemes.map((s) => DropdownMenuItem(value: s, child: Text(titleCase(s)))).toList(),
+                items: kSchemes.map((s) => DropdownMenuItem(value: s, child: Text(titleCase(s), overflow: TextOverflow.ellipsis))).toList(),
                 onChanged: (v) => setState(() => _scheme = v ?? _scheme),
               ),
               const SizedBox(height: 10),
@@ -272,9 +273,10 @@ class _StatusDialogState extends State<_StatusDialog> {
           mainAxisSize: MainAxisSize.min,
           children: [
             DropdownButtonFormField<String>(
+                  isExpanded: true,
               initialValue: _status,
               decoration: const InputDecoration(labelText: 'Status'),
-              items: kSchemeStatuses.map((s) => DropdownMenuItem(value: s, child: Text(titleCase(s)))).toList(),
+              items: kSchemeStatuses.map((s) => DropdownMenuItem(value: s, child: Text(titleCase(s), overflow: TextOverflow.ellipsis))).toList(),
               onChanged: (v) => setState(() => _status = v ?? _status),
             ),
             const SizedBox(height: 10),

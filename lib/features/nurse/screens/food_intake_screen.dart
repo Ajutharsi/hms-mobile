@@ -281,9 +281,10 @@ class _DietPlanDialogState extends State<_DietPlanDialog> {
           mainAxisSize: MainAxisSize.min,
           children: [
             DropdownButtonFormField<String>(
+                  isExpanded: true,
               initialValue: _dietType,
               decoration: const InputDecoration(labelText: 'Diet type'),
-              items: _kDietTypes.map((t) => DropdownMenuItem(value: t, child: Text(_titleCase(t)))).toList(),
+              items: _kDietTypes.map((t) => DropdownMenuItem(value: t, child: Text(_titleCase(t), overflow: TextOverflow.ellipsis))).toList(),
               onChanged: (v) => setState(() => _dietType = v!),
             ),
             const SizedBox(height: 10),
@@ -334,23 +335,26 @@ class _LogMealDialogState extends State<_LogMealDialog> {
           mainAxisSize: MainAxisSize.min,
           children: [
             DropdownButtonFormField<String>(
+                  isExpanded: true,
               initialValue: _mealType,
               decoration: const InputDecoration(labelText: 'Meal'),
-              items: _kMealTypes.map((t) => DropdownMenuItem(value: t, child: Text(_titleCase(t)))).toList(),
+              items: _kMealTypes.map((t) => DropdownMenuItem(value: t, child: Text(_titleCase(t), overflow: TextOverflow.ellipsis))).toList(),
               onChanged: (v) => setState(() => _mealType = v!),
             ),
             const SizedBox(height: 10),
             DropdownButtonFormField<String>(
+                  isExpanded: true,
               initialValue: _status,
               decoration: const InputDecoration(labelText: 'Status'),
-              items: _kMealStatuses.map((s) => DropdownMenuItem(value: s, child: Text(_titleCase(s)))).toList(),
+              items: _kMealStatuses.map((s) => DropdownMenuItem(value: s, child: Text(_titleCase(s), overflow: TextOverflow.ellipsis))).toList(),
               onChanged: (v) => setState(() => _status = v!),
             ),
             const SizedBox(height: 10),
             DropdownButtonFormField<String>(
+                  isExpanded: true,
               initialValue: _quantity,
               decoration: const InputDecoration(labelText: 'Quantity (optional)'),
-              items: _kQuantities.map((q) => DropdownMenuItem(value: q, child: Text(_titleCase(q)))).toList(),
+              items: _kQuantities.map((q) => DropdownMenuItem(value: q, child: Text(_titleCase(q), overflow: TextOverflow.ellipsis))).toList(),
               onChanged: (v) => setState(() => _quantity = v),
             ),
             const SizedBox(height: 10),

@@ -325,16 +325,18 @@ class _LogFluidDialogState extends State<_LogFluidDialog> {
           mainAxisSize: MainAxisSize.min,
           children: [
             DropdownButtonFormField<String>(
+                  isExpanded: true,
               initialValue: _flowType,
               decoration: const InputDecoration(labelText: 'Flow type'),
-              items: _kFlowTypes.map((t) => DropdownMenuItem(value: t, child: Text(_titleCase(t)))).toList(),
+              items: _kFlowTypes.map((t) => DropdownMenuItem(value: t, child: Text(_titleCase(t), overflow: TextOverflow.ellipsis))).toList(),
               onChanged: (v) => setState(() => _flowType = v!),
             ),
             const SizedBox(height: 10),
             DropdownButtonFormField<String>(
+                  isExpanded: true,
               initialValue: _category,
               decoration: const InputDecoration(labelText: 'Category'),
-              items: _kCategories.map((c) => DropdownMenuItem(value: c, child: Text(_titleCase(c)))).toList(),
+              items: _kCategories.map((c) => DropdownMenuItem(value: c, child: Text(_titleCase(c), overflow: TextOverflow.ellipsis))).toList(),
               onChanged: (v) => setState(() => _category = v!),
             ),
             const SizedBox(height: 10),

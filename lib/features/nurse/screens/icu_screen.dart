@@ -401,9 +401,10 @@ class _GcsDropdown extends StatelessWidget {
   Widget build(BuildContext context) {
     watchCarePalette(context);
     return DropdownButtonFormField<int>(
+                  isExpanded: true,
       initialValue: value,
       decoration: careFieldDecoration(label, hint: '', icon: Icons.remove_red_eye_outlined),
-      items: List.generate(max, (i) => i + 1).map((v) => DropdownMenuItem(value: v, child: Text('$v'))).toList(),
+      items: List.generate(max, (i) => i + 1).map((v) => DropdownMenuItem(value: v, child: Text('$v', overflow: TextOverflow.ellipsis))).toList(),
       onChanged: onChanged,
     );
   }

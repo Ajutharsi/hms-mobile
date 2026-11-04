@@ -97,6 +97,36 @@ void main() {
         reason: 'use a CareText step (xxs…stat) and medium/bold/heavy:\n${offenders.join('\n')}');
   });
 
+  test('form dropdowns are told to fit the width they are given', () {
+    // Without isExpanded a DropdownButtonFormField sizes itself to its
+    // widest item, so one long doctor name pushed the appointment form 78
+    // pixels off the right edge and Flutter painted overflow bars over it.
+    // Nothing about the code looks wrong until real data arrives, which is
+    // why this is a test rather than a convention.
+    final offenders = <String>[];
+    for (final file in dartFiles) {
+      final source = file.readAsStringSync();
+      for (final m in RegExp(r'DropdownButtonFormField').allMatches(source)) {
+        var depth = 0;
+        var i = source.indexOf('(', m.start);
+        final open = i;
+        while (i < source.length) {
+          if (source[i] == '(') depth++;
+          if (source[i] == ')') {
+            depth--;
+            if (depth == 0) break;
+          }
+          i++;
+        }
+        if (!source.substring(open, i).contains('isExpanded')) {
+          offenders.add('${file.path}:${'\n'.allMatches(source.substring(0, m.start)).length + 1}');
+        }
+      }
+    }
+
+    expect(offenders, isEmpty, reason: 'add `isExpanded: true`:\n${offenders.join('\n')}');
+  });
+
   test('screens do not hardcode colours', () {
     // The only literal colours left outside core/theme. The hue wheel in
     // Appearance really is six fixed primaries, and that card shadow is

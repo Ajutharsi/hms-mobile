@@ -243,9 +243,10 @@ class _AppointmentFormScreenState extends State<AppointmentFormScreen> {
                 const Text('Doctor', style: CareText.titleSm),
                 const SizedBox(height: 8),
                 DropdownButtonFormField<ReceptionDoctor>(
+                  isExpanded: true,
                   initialValue: _selectedDoctor,
                   decoration: careFieldDecoration('Doctor', hint: 'Select doctor', icon: Icons.medical_services_outlined),
-                  items: _doctors.map((d) => DropdownMenuItem(value: d, child: Text(d.specialization != null ? '${d.name} (${d.specialization})' : d.name))).toList(),
+                  items: _doctors.map((d) => DropdownMenuItem(value: d, child: Text(d.specialization != null ? '${d.name} (${d.specialization})' : d.name, overflow: TextOverflow.ellipsis))).toList(),
                   onChanged: (v) {
                     setState(() => _selectedDoctor = v);
                     _loadSlots();
@@ -295,9 +296,10 @@ class _AppointmentFormScreenState extends State<AppointmentFormScreen> {
                 const Text('Type', style: CareText.titleSm),
                 const SizedBox(height: 8),
                 DropdownButtonFormField<String>(
+                  isExpanded: true,
                   initialValue: _type,
                   decoration: careFieldDecoration('Type', hint: '', icon: Icons.category_outlined),
-                  items: _kTypes.map((t) => DropdownMenuItem(value: t, child: Text(t[0].toUpperCase() + t.substring(1)))).toList(),
+                  items: _kTypes.map((t) => DropdownMenuItem(value: t, child: Text(t[0].toUpperCase() + t.substring(1), overflow: TextOverflow.ellipsis))).toList(),
                   onChanged: (v) => setState(() => _type = v!),
                 ),
                 if (_isEdit) ...[
@@ -305,9 +307,10 @@ class _AppointmentFormScreenState extends State<AppointmentFormScreen> {
                   const Text('Status', style: CareText.titleSm),
                   const SizedBox(height: 8),
                   DropdownButtonFormField<String>(
+                  isExpanded: true,
                     initialValue: _status,
                     decoration: careFieldDecoration('Status', hint: '', icon: Icons.info_outline),
-                    items: _kStatuses.map((s) => DropdownMenuItem(value: s, child: Text(s.replaceAll('_', ' ')))).toList(),
+                    items: _kStatuses.map((s) => DropdownMenuItem(value: s, child: Text(s.replaceAll('_', ' '), overflow: TextOverflow.ellipsis))).toList(),
                     onChanged: (v) => setState(() => _status = v!),
                   ),
                 ],
