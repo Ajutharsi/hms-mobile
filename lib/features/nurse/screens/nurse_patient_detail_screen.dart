@@ -4,6 +4,7 @@ import 'package:hms_mobile/core/services/api_service.dart' show ApiException, gu
 import 'package:hms_mobile/core/services/auth_storage.dart';
 import 'package:hms_mobile/core/services/nurse_api_service.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/nurse/models/nurse_patient.dart';
 
@@ -67,7 +68,7 @@ class _NursePatientDetailScreenState extends State<NursePatientDetailScreen> {
         const SizedBox(height: 80),
         const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
         const SizedBox(height: 12),
-        Text(_error!, textAlign: TextAlign.center, style: const TextStyle(color: kMuted)),
+        Text(_error!, textAlign: TextAlign.center, style: CareText.muted),
       ]);
     }
 
@@ -89,12 +90,12 @@ class _NursePatientDetailScreenState extends State<NursePatientDetailScreen> {
                     : null,
               ),
               const SizedBox(height: 12),
-              Text(p.name, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: kInk)),
+              Text(p.name, style: CareText.titleH3),
               const SizedBox(height: 4),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(8)),
-                child: Text('MRN: ${p.mrn}', style: const TextStyle(fontSize: 12, color: kMuted, fontWeight: FontWeight.w600)),
+                child: Text('MRN: ${p.mrn}', style: CareText.mutedXsMedium),
               ),
             ],
           ),
@@ -141,7 +142,7 @@ class _SectionCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(title, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: kInk)),
+          Text(title, style: CareText.titleLg),
           const SizedBox(height: 10),
           ...children,
         ],
@@ -163,13 +164,13 @@ class _InfoRow extends StatelessWidget {
       children: [
         Row(
           children: [
-            Text(label, style: const TextStyle(fontSize: 12.5, color: kMuted)),
+            Text(label, style: CareText.mutedSm),
             const Spacer(),
             Flexible(
               child: Text(
                 (value == null || value!.isEmpty) ? '—' : value!,
                 textAlign: TextAlign.right,
-                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: kInk),
+                style: CareText.titleSmMedium,
               ),
             ),
           ],

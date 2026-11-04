@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/pharmacy/models/drug.dart';
 import 'package:hms_mobile/features/pharmacy/viewmodels/drug_master_view_model.dart';
@@ -73,7 +74,7 @@ class _DrugMasterViewState extends State<_DrugMasterView> {
         content: Text('Delete "${drug.drugName}" from the catalog?'),
         actions: [
           TextButton(onPressed: () => Navigator.of(ctx).pop(false), child: const Text('Cancel')),
-          TextButton(onPressed: () => Navigator.of(ctx).pop(true), child: const Text('Delete', style: TextStyle(color: Color(0xFFB3261E)))),
+          TextButton(onPressed: () => Navigator.of(ctx).pop(true), child: const Text('Delete', style: CareText.danger)),
         ],
       ),
     );
@@ -96,7 +97,7 @@ class _DrugMasterViewState extends State<_DrugMasterView> {
         backgroundColor: kCareDark,
         foregroundColor: Colors.white,
         icon: const Icon(Icons.add, color: Colors.white),
-        label: const Text('Add drug', style: TextStyle(color: Colors.white)),
+        label: const Text('Add drug', style: CareText.onCare),
       ),
       body: Column(
         children: [
@@ -126,7 +127,7 @@ class _DrugMasterViewState extends State<_DrugMasterView> {
         const SizedBox(height: 80),
         const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
         const SizedBox(height: 12),
-        Text(viewModel.loadError!, textAlign: TextAlign.center, style: const TextStyle(color: kMuted)),
+        Text(viewModel.loadError!, textAlign: TextAlign.center, style: CareText.muted),
       ]);
     }
     if (viewModel.drugs.isEmpty) {
@@ -134,7 +135,7 @@ class _DrugMasterViewState extends State<_DrugMasterView> {
         SizedBox(height: 80),
         Icon(Icons.medication_outlined, color: kMuted, size: 40),
         SizedBox(height: 12),
-        Text('No drugs in the catalog yet', textAlign: TextAlign.center, style: TextStyle(color: kMuted)),
+        Text('No drugs in the catalog yet', textAlign: TextAlign.center, style: CareText.muted),
       ]);
     }
 
@@ -185,8 +186,8 @@ class _DrugCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(drug.drugName, style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w700, color: kInk)),
-                    if ((drug.genericName ?? '').isNotEmpty) Text(drug.genericName!, style: const TextStyle(fontSize: 12, color: kMuted)),
+                    Text(drug.drugName, style: CareText.titleLg),
+                    if ((drug.genericName ?? '').isNotEmpty) Text(drug.genericName!, style: CareText.mutedXs),
                   ],
                 ),
               ),
@@ -443,7 +444,7 @@ class _AddStockDialogState extends State<_AddStockDialog> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('Current stock: ${widget.drug.currentStock}', style: const TextStyle(fontSize: 12.5, color: kMuted)),
+            Text('Current stock: ${widget.drug.currentStock}', style: CareText.mutedSm),
             const SizedBox(height: 10),
             TextFormField(
               controller: _quantityController,
@@ -491,7 +492,7 @@ class _StockHistorySheet extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Stock history — ${drug.drugName}', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: kInk)),
+            Text('Stock history — ${drug.drugName}', style: CareText.titleXl),
             const SizedBox(height: 12),
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.5,
@@ -503,7 +504,7 @@ class _StockHistorySheet extends StatelessWidget {
                   }
                   final history = snapshot.data ?? [];
                   if (history.isEmpty) {
-                    return const Center(child: Text('No stock history yet.', style: TextStyle(color: kMuted)));
+                    return const Center(child: Text('No stock history yet.', style: CareText.muted));
                   }
                   return ListView.separated(
                     itemCount: history.length,
@@ -521,9 +522,9 @@ class _StockHistorySheet extends StatelessWidget {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text('${isIn ? '+' : '-'}${entry.quantity} · Balance: ${entry.balance}', style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: kInk)),
-                                  if ((entry.reason ?? '').isNotEmpty) Text(entry.reason!, style: const TextStyle(fontSize: 12, color: kMuted)),
-                                  if (entry.performedByName != null) Text('by ${entry.performedByName}', style: const TextStyle(fontSize: 11, color: kMuted)),
+                                  Text('${isIn ? '+' : '-'}${entry.quantity} · Balance: ${entry.balance}', style: CareText.titleSm),
+                                  if ((entry.reason ?? '').isNotEmpty) Text(entry.reason!, style: CareText.mutedXs),
+                                  if (entry.performedByName != null) Text('by ${entry.performedByName}', style: CareText.mutedXxs),
                                 ],
                               ),
                             ),

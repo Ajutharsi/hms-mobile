@@ -5,6 +5,7 @@ import 'package:hms_mobile/core/services/api_service.dart';
 import 'package:hms_mobile/core/services/auth_storage.dart';
 import 'package:hms_mobile/core/services/receptionist_api_service.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/receptionist/models/insurance_claim.dart';
 import 'package:hms_mobile/features/receptionist/models/reception_patient.dart';
@@ -54,7 +55,7 @@ class _InsuranceClaimsView extends StatelessWidget {
         backgroundColor: kCareDark,
         foregroundColor: Colors.white,
         icon: const Icon(Icons.add, color: Colors.white),
-        label: const Text('New claim', style: TextStyle(color: Colors.white)),
+        label: const Text('New claim', style: CareText.onCare),
       ),
       body: RefreshIndicator(color: kCare, onRefresh: viewModel.load, child: _buildBody(context, viewModel)),
     ));
@@ -69,7 +70,7 @@ class _InsuranceClaimsView extends StatelessWidget {
         const SizedBox(height: 80),
         const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
         const SizedBox(height: 12),
-        Text(viewModel.loadError!, textAlign: TextAlign.center, style: const TextStyle(color: kMuted)),
+        Text(viewModel.loadError!, textAlign: TextAlign.center, style: CareText.muted),
       ]);
     }
 
@@ -95,7 +96,7 @@ class _InsuranceClaimsView extends StatelessWidget {
           ),
         const SizedBox(height: 20),
         if (viewModel.claims.isEmpty)
-          const Padding(padding: EdgeInsets.only(top: 40), child: Center(child: Text('No insurance claims yet', style: TextStyle(color: kMuted))))
+          const Padding(padding: EdgeInsets.only(top: 40), child: Center(child: Text('No insurance claims yet', style: CareText.muted)))
         else
           for (final claim in viewModel.claims) ...[
             _ClaimCard(
@@ -128,8 +129,8 @@ class _StatTile extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(value, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: color)),
-          Text(label, style: TextStyle(fontSize: 11, color: color, fontWeight: FontWeight.w600)),
+          Text(value, style: CareText.statValue(color)),
+          Text(label, style: CareText.tag(color)),
         ],
       ),
     );
@@ -157,21 +158,21 @@ class _ClaimCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                Expanded(child: Text(claim.patientName ?? 'Patient', style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w700, color: kInk))),
+                Expanded(child: Text(claim.patientName ?? 'Patient', style: CareText.titleLg)),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
                   decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(8)),
-                  child: Text(titleCase(claim.status), style: TextStyle(color: fg, fontSize: 10.5, fontWeight: FontWeight.w700)),
+                  child: Text(titleCase(claim.status), style: CareText.chip(fg)),
                 ),
               ],
             ),
             const SizedBox(height: 3),
-            Text(claim.patientMrn ?? '', style: const TextStyle(fontSize: 12, color: kMuted)),
+            Text(claim.patientMrn ?? '', style: CareText.mutedXs),
             const SizedBox(height: 8),
             Row(
               children: [
                 Expanded(child: Text(claim.insuranceCompany, style: const TextStyle(fontSize: 12.5, color: kInk, fontWeight: FontWeight.w600))),
-                Text('₹${claim.claimAmount.toStringAsFixed(0)}', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: kCareDark)),
+                Text('₹${claim.claimAmount.toStringAsFixed(0)}', style: CareText.brandSmBold),
               ],
             ),
           ],
@@ -234,8 +235,8 @@ class _ReceptionPatientPickerFieldState extends State<ReceptionPatientPickerFiel
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(widget.value!.name, style: const TextStyle(fontWeight: FontWeight.w700, color: kInk)),
-                  Text(widget.value!.mrn, style: const TextStyle(fontSize: 12, color: kMuted)),
+                  Text(widget.value!.name, style: CareText.inkBold),
+                  Text(widget.value!.mrn, style: CareText.mutedXs),
                 ],
               ),
             ),
@@ -434,7 +435,7 @@ class _ClaimFormScreenState extends State<_ClaimFormScreen> {
                 style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
                 child: _submitting
                     ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                    : const Text('Create claim', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
+                    : const Text('Create claim', style: CareText.onCareBold),
               ),
             ),
           ],

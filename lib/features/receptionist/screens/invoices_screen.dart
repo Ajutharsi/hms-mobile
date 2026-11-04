@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/receptionist/models/invoice.dart';
 import 'package:hms_mobile/features/receptionist/screens/invoice_create_screen.dart';
@@ -57,7 +58,7 @@ class _InvoicesViewState extends State<_InvoicesView> {
         backgroundColor: kCareDark,
         foregroundColor: Colors.white,
         icon: const Icon(Icons.add, color: Colors.white),
-        label: const Text('New invoice', style: TextStyle(color: Colors.white)),
+        label: const Text('New invoice', style: CareText.onCare),
       ),
       body: Column(
         children: [
@@ -106,7 +107,7 @@ class _InvoicesViewState extends State<_InvoicesView> {
         const SizedBox(height: 80),
         const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
         const SizedBox(height: 12),
-        Text(viewModel.loadError!, textAlign: TextAlign.center, style: const TextStyle(color: kMuted)),
+        Text(viewModel.loadError!, textAlign: TextAlign.center, style: CareText.muted),
       ]);
     }
 
@@ -133,7 +134,7 @@ class _InvoicesViewState extends State<_InvoicesView> {
           const SizedBox(height: 16),
         ],
         if (viewModel.invoices.isEmpty)
-          const Padding(padding: EdgeInsets.only(top: 40), child: Center(child: Text('No invoices found', style: TextStyle(color: kMuted))))
+          const Padding(padding: EdgeInsets.only(top: 40), child: Center(child: Text('No invoices found', style: CareText.muted)))
         else
           for (final invoice in viewModel.invoices) ...[
             _InvoiceCard(
@@ -167,7 +168,7 @@ class _StatTile extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(value, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: color)),
-          Text(label, style: TextStyle(fontSize: 11, color: color, fontWeight: FontWeight.w600)),
+          Text(label, style: CareText.tag(color)),
         ],
       ),
     );
@@ -204,16 +205,16 @@ class _InvoiceCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                Expanded(child: Text(invoice.patientName ?? 'Patient', style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w700, color: kInk))),
+                Expanded(child: Text(invoice.patientName ?? 'Patient', style: CareText.titleLg)),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
                   decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(8)),
-                  child: Text(invoice.status, style: TextStyle(color: fg, fontSize: 11, fontWeight: FontWeight.w700)),
+                  child: Text(invoice.status, style: CareText.chip(fg)),
                 ),
               ],
             ),
             const SizedBox(height: 3),
-            Text('${invoice.invoiceNo ?? ''} · ${invoice.patientMrn ?? ''}', style: const TextStyle(fontSize: 12, color: kMuted)),
+            Text('${invoice.invoiceNo ?? ''} · ${invoice.patientMrn ?? ''}', style: CareText.mutedXs),
             const SizedBox(height: 8),
             Row(
               children: [
@@ -221,7 +222,7 @@ class _InvoiceCard extends StatelessWidget {
                 const Spacer(),
                 Text(
                   'Balance ₹${invoice.balance.toStringAsFixed(2)}',
-                  style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700, color: invoice.balance > 0 ? const Color(0xFFB3261E) : kSuccessFg),
+                  style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700, color: invoice.balance > 0 ? kDangerText : kSuccessFg),
                 ),
               ],
             ),

@@ -3,20 +3,21 @@ import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/models/app_user.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
+import 'package:hms_mobile/features/auth/screens/login_screen.dart';
 import 'package:hms_mobile/features/patient/models/appointment.dart';
+import 'package:hms_mobile/features/patient/screens/book_appointment_screen.dart';
+import 'package:hms_mobile/features/patient/screens/dashboard_screen.dart';
+import 'package:hms_mobile/features/patient/screens/invoices_screen.dart';
+import 'package:hms_mobile/features/patient/screens/lab_results_screen.dart';
+import 'package:hms_mobile/features/patient/screens/prescriptions_screen.dart';
+import 'package:hms_mobile/features/patient/screens/profile_screen.dart';
 import 'package:hms_mobile/features/patient/viewmodels/home_view_model.dart';
 import 'package:hms_mobile/features/patient/viewmodels/invoices_view_model.dart';
 import 'package:hms_mobile/features/patient/viewmodels/lab_results_view_model.dart';
 import 'package:hms_mobile/features/patient/viewmodels/prescriptions_view_model.dart';
 import 'package:hms_mobile/features/patient/viewmodels/profile_view_model.dart';
-import 'package:hms_mobile/features/patient/screens/book_appointment_screen.dart';
-import 'package:hms_mobile/features/patient/screens/dashboard_screen.dart';
-import 'package:hms_mobile/features/patient/screens/invoices_screen.dart';
-import 'package:hms_mobile/features/patient/screens/lab_results_screen.dart';
-import 'package:hms_mobile/features/auth/screens/login_screen.dart';
-import 'package:hms_mobile/features/patient/screens/prescriptions_screen.dart';
-import 'package:hms_mobile/features/patient/screens/profile_screen.dart';
 import 'package:hms_mobile/features/settings/screens/appearance_screen.dart';
 
 /// The patient's home shell — bottom nav (Home / Appointments / Lab /
@@ -268,7 +269,7 @@ class _DrawerTile extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
       leading: CareIconBox(icon: icon, size: 36, filled: false),
       title: Text(label, style: const TextStyle(fontSize: 14.5, color: kInk, fontWeight: FontWeight.w600)),
-      trailing: const Icon(Icons.chevron_right_rounded, color: Color(0xFFB5C2C0)),
+      trailing: const Icon(Icons.chevron_right_rounded, color: kCareChevron),
     );
   }
 }
@@ -425,10 +426,10 @@ class AppointmentCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(doctor, style: const TextStyle(fontSize: 15.5, fontWeight: FontWeight.w700, color: kInk)),
+                    Text(doctor, style: CareText.titleXl),
                     if ((appointment.doctorSpecialization ?? '').isNotEmpty) ...[
                       const SizedBox(height: 2),
-                      Text(appointment.doctorSpecialization!, style: const TextStyle(fontSize: 12.5, color: kMuted)),
+                      Text(appointment.doctorSpecialization!, style: CareText.mutedSm),
                     ],
                   ],
                 ),

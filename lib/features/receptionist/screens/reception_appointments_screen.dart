@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/receptionist/models/reception_appointment.dart';
 import 'package:hms_mobile/features/receptionist/screens/appointment_form_screen.dart';
@@ -48,7 +49,7 @@ class _ReceptionAppointmentsView extends StatelessWidget {
         backgroundColor: kCareDark,
         foregroundColor: Colors.white,
         icon: const Icon(Icons.add, color: Colors.white),
-        label: const Text('Book appointment', style: TextStyle(color: Colors.white)),
+        label: const Text('Book appointment', style: CareText.onCare),
       ),
       body: Column(
         children: [
@@ -85,7 +86,7 @@ class _ReceptionAppointmentsView extends StatelessWidget {
         const SizedBox(height: 80),
         const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
         const SizedBox(height: 12),
-        Text(viewModel.loadError!, textAlign: TextAlign.center, style: const TextStyle(color: kMuted)),
+        Text(viewModel.loadError!, textAlign: TextAlign.center, style: CareText.muted),
       ]);
     }
     if (viewModel.appointments.isEmpty) {
@@ -93,7 +94,7 @@ class _ReceptionAppointmentsView extends StatelessWidget {
         SizedBox(height: 80),
         Icon(Icons.event_outlined, color: kMuted, size: 40),
         SizedBox(height: 12),
-        Text('No appointments found', textAlign: TextAlign.center, style: TextStyle(color: kMuted)),
+        Text('No appointments found', textAlign: TextAlign.center, style: CareText.muted),
       ]);
     }
 
@@ -145,26 +146,26 @@ class _AppointmentCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                Expanded(child: Text(appointment.patientName ?? 'Patient', style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w700, color: kInk))),
+                Expanded(child: Text(appointment.patientName ?? 'Patient', style: CareText.titleLg)),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
                   decoration: BoxDecoration(color: sBg, borderRadius: BorderRadius.circular(8)),
-                  child: Text(appointment.status.replaceAll('_', ' '), style: TextStyle(color: sFg, fontSize: 10.5, fontWeight: FontWeight.w700)),
+                  child: Text(appointment.status.replaceAll('_', ' '), style: CareText.chip(sFg)),
                 ),
               ],
             ),
             const SizedBox(height: 3),
-            Text('${appointment.patientMrn ?? ''} · ${appointment.doctorName ?? ''}', style: const TextStyle(fontSize: 12, color: kMuted)),
+            Text('${appointment.patientMrn ?? ''} · ${appointment.doctorName ?? ''}', style: CareText.mutedXs),
             const SizedBox(height: 8),
             Row(
               children: [
                 const Icon(Icons.calendar_today_outlined, size: 13, color: kMuted),
                 const SizedBox(width: 6),
-                Text(appointment.date, style: const TextStyle(fontSize: 12, color: kMuted)),
+                Text(appointment.date, style: CareText.mutedXs),
                 const SizedBox(width: 12),
                 const Icon(Icons.access_time_rounded, size: 13, color: kMuted),
                 const SizedBox(width: 6),
-                Text(appointment.time, style: const TextStyle(fontSize: 12, color: kMuted)),
+                Text(appointment.time, style: CareText.mutedXs),
                 const Spacer(),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),

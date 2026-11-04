@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/doctor/models/doctor_models.dart';
 import 'package:hms_mobile/features/doctor/screens/prescription_form_screen.dart';
@@ -51,7 +52,7 @@ class _ConsultationFormView extends StatelessWidget {
           TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('Later')),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: Text('Write prescription', style: TextStyle(color: kCareDark, fontWeight: FontWeight.w700)),
+            child: Text('Write prescription', style: CareText.brandBold),
           ),
         ],
       ),
@@ -88,8 +89,8 @@ class _ConsultationFormView extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(patientName, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: kInk)),
-                        const Text('Writing up this visit', style: TextStyle(fontSize: 12.5, color: kMuted)),
+                        Text(patientName, style: CareText.titleLg),
+                        const Text('Writing up this visit', style: CareText.mutedSm),
                       ],
                     ),
                   ),
@@ -104,7 +105,7 @@ class _ConsultationFormView extends StatelessWidget {
             TextFormField(
               controller: viewModel.chiefComplaintController,
               maxLines: 3,
-              style: const TextStyle(color: kInk, fontSize: 14.5),
+              style: CareText.bodyLg,
               decoration: careFieldDecoration('Chief complaint', hint: 'What the patient came in with', icon: Icons.record_voice_over_rounded),
               validator: viewModel.validateChiefComplaint,
             ),
@@ -113,7 +114,7 @@ class _ConsultationFormView extends StatelessWidget {
               controller: viewModel.diagnosisController,
               maxLines: 2,
               onChanged: viewModel.searchIcd10,
-              style: const TextStyle(color: kInk, fontSize: 14.5),
+              style: CareText.bodyLg,
               decoration: careFieldDecoration('Diagnosis', hint: 'Type to search ICD-10 codes', icon: Icons.medical_information_rounded).copyWith(
                 suffixIcon: viewModel.searchingCodes
                     ? Padding(
@@ -132,7 +133,7 @@ class _ConsultationFormView extends StatelessWidget {
                     const SizedBox(width: 8),
                     GestureDetector(
                       onTap: viewModel.clearCode,
-                      child: const Text('Clear', style: TextStyle(fontSize: 12.5, color: kMuted, fontWeight: FontWeight.w600)),
+                      child: const Text('Clear', style: CareText.mutedSmMedium),
                     ),
                   ],
                 ),
@@ -147,8 +148,8 @@ class _ConsultationFormView extends StatelessWidget {
                       for (final suggestion in viewModel.suggestions)
                         ListTile(
                           dense: true,
-                          title: Text(suggestion.code, style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w700, color: kInk)),
-                          subtitle: Text(suggestion.description, maxLines: 2, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 12, color: kMuted)),
+                          title: Text(suggestion.code, style: CareText.titleMd),
+                          subtitle: Text(suggestion.description, maxLines: 2, overflow: TextOverflow.ellipsis, style: CareText.mutedXs),
                           onTap: () => viewModel.pickCode(suggestion),
                         ),
                     ],
@@ -159,14 +160,14 @@ class _ConsultationFormView extends StatelessWidget {
             TextFormField(
               controller: viewModel.treatmentController,
               maxLines: 3,
-              style: const TextStyle(color: kInk, fontSize: 14.5),
+              style: CareText.bodyLg,
               decoration: careFieldDecoration('Treatment plan', hint: 'What you advised', icon: Icons.assignment_turned_in_rounded),
             ),
             const SizedBox(height: 16),
             TextFormField(
               controller: viewModel.notesController,
               maxLines: 2,
-              style: const TextStyle(color: kInk, fontSize: 14.5),
+              style: CareText.bodyLg,
               decoration: careFieldDecoration('Notes (optional)', hint: 'Anything else worth recording', icon: Icons.notes_rounded),
             ),
             const SizedBox(height: 22),
@@ -174,7 +175,7 @@ class _ConsultationFormView extends StatelessWidget {
             const SizedBox(height: 4),
             const Text(
               "Pre-filled from nursing's latest reading — change them if you took your own.",
-              style: TextStyle(fontSize: 12.5, color: kMuted),
+              style: CareText.mutedSm,
             ),
             const SizedBox(height: 12),
             Row(
@@ -182,7 +183,7 @@ class _ConsultationFormView extends StatelessWidget {
                 Expanded(
                   child: TextFormField(
                     controller: viewModel.bloodPressureController,
-                    style: const TextStyle(color: kInk, fontSize: 14.5),
+                    style: CareText.bodyLg,
                     decoration: careFieldDecoration('BP', hint: '120/80', icon: Icons.monitor_heart_rounded),
                   ),
                 ),
@@ -191,7 +192,7 @@ class _ConsultationFormView extends StatelessWidget {
                   child: TextFormField(
                     controller: viewModel.temperatureController,
                     keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                    style: const TextStyle(color: kInk, fontSize: 14.5),
+                    style: CareText.bodyLg,
                     decoration: careFieldDecoration('Temp °C', hint: '37.0', icon: Icons.thermostat_rounded),
                   ),
                 ),
@@ -204,7 +205,7 @@ class _ConsultationFormView extends StatelessWidget {
                   child: TextFormField(
                     controller: viewModel.pulseController,
                     keyboardType: TextInputType.number,
-                    style: const TextStyle(color: kInk, fontSize: 14.5),
+                    style: CareText.bodyLg,
                     decoration: careFieldDecoration('Pulse', hint: '78', icon: Icons.favorite_rounded),
                   ),
                 ),
@@ -213,7 +214,7 @@ class _ConsultationFormView extends StatelessWidget {
                   child: TextFormField(
                     controller: viewModel.spo2Controller,
                     keyboardType: TextInputType.number,
-                    style: const TextStyle(color: kInk, fontSize: 14.5),
+                    style: CareText.bodyLg,
                     decoration: careFieldDecoration('SpO₂ %', hint: '98', icon: Icons.air_rounded),
                   ),
                 ),
@@ -226,7 +227,7 @@ class _ConsultationFormView extends StatelessWidget {
                   child: TextFormField(
                     controller: viewModel.weightController,
                     keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                    style: const TextStyle(color: kInk, fontSize: 14.5),
+                    style: CareText.bodyLg,
                     decoration: careFieldDecoration('Weight kg', hint: '70', icon: Icons.monitor_weight_rounded),
                   ),
                 ),
@@ -235,7 +236,7 @@ class _ConsultationFormView extends StatelessWidget {
                   child: TextFormField(
                     controller: viewModel.heightController,
                     keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                    style: const TextStyle(color: kInk, fontSize: 14.5),
+                    style: CareText.bodyLg,
                     decoration: careFieldDecoration('Height cm', hint: '170', icon: Icons.height_rounded),
                   ),
                 ),

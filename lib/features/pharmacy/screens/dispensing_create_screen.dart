@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/pharmacy/models/drug.dart';
 import 'package:hms_mobile/features/pharmacy/viewmodels/dispensing_create_view_model.dart';
@@ -60,10 +61,10 @@ class _DispensingCreateViewState extends State<_DispensingCreateView> {
           height: MediaQuery.of(context).size.height * 0.6,
           child: Column(
             children: [
-              const Padding(padding: EdgeInsets.all(16), child: Text('Select a drug', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: kInk))),
+              const Padding(padding: EdgeInsets.all(16), child: Text('Select a drug', style: CareText.titleLg)),
               Expanded(
                 child: remaining.isEmpty
-                    ? const Center(child: Text('No more drugs available', style: TextStyle(color: kMuted)))
+                    ? const Center(child: Text('No more drugs available', style: CareText.muted))
                     : ListView.builder(
                         itemCount: remaining.length,
                         itemBuilder: (context, index) {
@@ -99,7 +100,7 @@ class _DispensingCreateViewState extends State<_DispensingCreateView> {
           : ListView(
               padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
               children: [
-                const Text('Patient', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: kMuted)),
+                const Text('Patient', style: CareText.mutedSmBold),
                 const SizedBox(height: 8),
                 if (viewModel.selectedPatient != null)
                   Container(
@@ -111,8 +112,8 @@ class _DispensingCreateViewState extends State<_DispensingCreateView> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(viewModel.selectedPatient!.name, style: const TextStyle(fontWeight: FontWeight.w700, color: kInk)),
-                              Text(viewModel.selectedPatient!.mrn, style: const TextStyle(fontSize: 12, color: kMuted)),
+                              Text(viewModel.selectedPatient!.name, style: CareText.inkBold),
+                              Text(viewModel.selectedPatient!.mrn, style: CareText.mutedXs),
                             ],
                           ),
                         ),
@@ -152,7 +153,7 @@ class _DispensingCreateViewState extends State<_DispensingCreateView> {
                 const SizedBox(height: 20),
                 Row(
                   children: [
-                    const Text('Drugs', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: kMuted)),
+                    const Text('Drugs', style: CareText.mutedSmBold),
                     const Spacer(),
                     TextButton.icon(
                       onPressed: () => _pickDrug(context, viewModel),
@@ -162,7 +163,7 @@ class _DispensingCreateViewState extends State<_DispensingCreateView> {
                   ],
                 ),
                 if (viewModel.lines.isEmpty)
-                  const Padding(padding: EdgeInsets.symmetric(vertical: 12), child: Text('No drugs added yet.', style: TextStyle(color: kMuted, fontSize: 13)))
+                  const Padding(padding: EdgeInsets.symmetric(vertical: 12), child: Text('No drugs added yet.', style: CareText.mutedSm))
                 else
                   for (final line in viewModel.lines) ...[
                     Container(
@@ -176,7 +177,7 @@ class _DispensingCreateViewState extends State<_DispensingCreateView> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(line.drug.drugName, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13.5, color: kInk)),
-                                Text('Available: ${line.drug.currentStock} · ₹${line.drug.unitPrice.toStringAsFixed(2)}', style: const TextStyle(fontSize: 11.5, color: kMuted)),
+                                Text('Available: ${line.drug.currentStock} · ₹${line.drug.unitPrice.toStringAsFixed(2)}', style: CareText.mutedXs),
                               ],
                             ),
                           ),
@@ -184,7 +185,7 @@ class _DispensingCreateViewState extends State<_DispensingCreateView> {
                             icon: const Icon(Icons.remove_circle_outline, size: 20, color: kMuted),
                             onPressed: () => viewModel.setQuantity(line.drug.id, line.quantity - 1),
                           ),
-                          Text('${line.quantity}', style: const TextStyle(fontWeight: FontWeight.w700)),
+                          Text('${line.quantity}', style: CareText.boldOnly),
                           IconButton(
                             icon: const Icon(Icons.add_circle_outline, size: 20, color: kMuted),
                             onPressed: () => viewModel.setQuantity(line.drug.id, line.quantity + 1),
@@ -201,7 +202,7 @@ class _DispensingCreateViewState extends State<_DispensingCreateView> {
                   Divider(color: kCareBg),
                   Row(
                     children: [
-                      const Text('Total', style: TextStyle(fontWeight: FontWeight.w700, color: kInk)),
+                      const Text('Total', style: CareText.inkBold),
                       const Spacer(),
                       Text('₹${total.toStringAsFixed(2)}', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16, color: kCareDark)),
                     ],
@@ -221,7 +222,7 @@ class _DispensingCreateViewState extends State<_DispensingCreateView> {
                     style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
                     child: viewModel.isSaving
                         ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                        : const Text('Complete dispensing', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
+                        : const Text('Complete dispensing', style: CareText.onCareBold),
                   ),
                 ),
               ],

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/models/app_user.dart';
-import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/auth/screens/login_screen.dart';
 import 'package:hms_mobile/features/lab/screens/lab_order_create_screen.dart';
@@ -129,9 +129,9 @@ class _LabDrawer extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(user.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: Colors.white, fontSize: 16.5, fontWeight: FontWeight.w700)),
+                      Text(user.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: CareText.onCareTitle),
                       const SizedBox(height: 3),
-                      Text(user.email, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(color: Colors.white.withValues(alpha: 0.85), fontSize: 12)),
+                      Text(user.email, maxLines: 1, overflow: TextOverflow.ellipsis, style: CareText.onCareSoftXs),
                     ],
                   ),
                 ),
@@ -182,7 +182,7 @@ class _DrawerGroup extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.fromLTRB(14, 14, 14, 6),
-          child: Text(label, style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: kCare, letterSpacing: 0.8)),
+          child: Text(label, style: CareText.overline),
         ),
         ...items,
       ],
@@ -203,7 +203,7 @@ class _DrawerItem extends StatelessWidget {
       dense: true,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
       leading: CareIconBox(icon: icon, size: 34, filled: false),
-      title: Text(label, style: const TextStyle(fontSize: 14, color: kInk, fontWeight: FontWeight.w600)),
+      title: Text(label, style: CareText.titleMdMedium),
       onTap: () {
         Navigator.of(context).pop();
         if (target != null) _open(context, target!);
@@ -338,10 +338,10 @@ class _RoleHeader extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Hello 👋', style: TextStyle(color: Colors.white.withValues(alpha: 0.85), fontSize: 13)),
+                          const Text('Hello 👋', style: CareText.onCareSoftSm),
                           const SizedBox(height: 2),
-                          Text(user.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: Colors.white, fontSize: 19, fontWeight: FontWeight.w800)),
-                          Text(role, style: TextStyle(color: Colors.white.withValues(alpha: 0.8), fontSize: 11.5)),
+                          Text(user.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: CareText.onCareDisplay),
+                          Text(role, style: CareText.onCareFaintXs),
                         ],
                       ),
                     ),
@@ -397,7 +397,7 @@ class _StatsStrip extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
-        boxShadow: const [BoxShadow(color: Color(0x1A0E6B61), blurRadius: 24, offset: Offset(0, 10))],
+        boxShadow: careShadow(blur: 24, dy: 10, alpha: 0.1),
       ),
       child: Row(
         children: [
@@ -412,11 +412,11 @@ class _StatsStrip extends StatelessWidget {
                     children: [
                       Icon(items[i].$1, size: 16, color: kCare),
                       const SizedBox(width: 5),
-                      Text(items[i].$2, style: const TextStyle(fontSize: 21, fontWeight: FontWeight.w800, color: kInk)),
+                      Text(items[i].$2, style: CareText.display),
                     ],
                   ),
                   const SizedBox(height: 3),
-                  Text(items[i].$3, style: const TextStyle(fontSize: 11.5, color: kMuted, fontWeight: FontWeight.w600)),
+                  Text(items[i].$3, style: CareText.mutedXsMedium),
                 ],
               ),
             ),

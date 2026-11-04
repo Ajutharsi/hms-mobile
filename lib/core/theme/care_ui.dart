@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_palette.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/theme_controller.dart';
 
 /// "Care" design kit — the teal, curved-header look (modelled on the
@@ -22,7 +23,18 @@ Color get kCareOn => CareColors.onPrimary;
 Color get kCarePinkBg => CareColors.alertBg;
 Color get kCarePinkFg => CareColors.alertFg;
 
+/// Decorative background shapes — the blobs behind the auth illustration.
+/// They were fixed pale blues, so they stayed blue once the user picked
+/// another colour in Appearance; as tints of the brand they follow it.
+Color get kCareBlob => kCare.withValues(alpha: 0.12);
+Color get kCareBlobSoft => kCare.withValues(alpha: 0.08);
+
 List<BoxShadow> get kCareShadow => CareColors.shadow;
+
+/// The same shadow at another depth, for a card or sheet that should lift
+/// further off the page. Follows the brand colour like [kCareShadow].
+List<BoxShadow> careShadow({double blur = 18, double dy = 6, double alpha = 0.06}) =>
+    CareColors.shadowOf(blur: blur, dy: dy, alpha: alpha);
 
 LinearGradient get kCareGradient => CareColors.gradient;
 
@@ -384,10 +396,10 @@ class CareOptionTile extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w700, color: kInk)),
+                Text(title, style: CareText.titleLg),
                 if (subtitle != null) ...[
                   const SizedBox(height: 2),
-                  Text(subtitle!, style: const TextStyle(fontSize: 12.5, color: kMuted)),
+                  Text(subtitle!, style: CareText.mutedSm),
                 ],
               ],
             ),
@@ -420,8 +432,8 @@ class CareChip extends StatelessWidget {
       'processing' => (kInfoBg, kInfoFg, 'Processing'),
       'unpaid' => (kCarePinkBg, kCarePinkFg, 'Unpaid'),
       'no_show' => (kCarePinkBg, kCarePinkFg, 'No-show'),
-      'cancelled' => (const Color(0xFFF0F2F2), kMuted, 'Cancelled'),
-      _ => (const Color(0xFFF0F2F2), kMuted, status.isEmpty ? '—' : status[0].toUpperCase() + status.substring(1)),
+      'cancelled' => (kCareNeutralBg, kMuted, 'Cancelled'),
+      _ => (kCareNeutralBg, kMuted, status.isEmpty ? '—' : status[0].toUpperCase() + status.substring(1)),
     };
     return CareChip(label: label, bg: bg, fg: fg);
   }
@@ -439,7 +451,7 @@ class CareChip extends StatelessWidget {
             Icon(icon, size: 12, color: fg),
             const SizedBox(width: 4),
           ],
-          Text(label, style: TextStyle(color: fg, fontSize: 11, fontWeight: FontWeight.w700)),
+          Text(label, style: CareText.chip(fg)),
         ],
       ),
     );
@@ -490,7 +502,7 @@ class CareStateView extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 18),
-        Text(title, textAlign: TextAlign.center, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w700, color: kInk)),
+        Text(title, textAlign: TextAlign.center, style: CareText.titleXxl),
         if (message != null) ...[
           const SizedBox(height: 6),
           Text(message!, textAlign: TextAlign.center, style: const TextStyle(color: kMuted, fontSize: 13.5, height: 1.4)),
@@ -547,7 +559,7 @@ InputDecoration careFieldDecoration(String label, {required String hint, require
     floatingLabelBehavior: FloatingLabelBehavior.always,
     labelStyle: const TextStyle(color: kInk, fontSize: 13, fontWeight: FontWeight.w600),
     floatingLabelStyle: TextStyle(color: kCareDark, fontSize: 13, fontWeight: FontWeight.w700),
-    hintStyle: const TextStyle(color: Color(0xFFAEB8B6), fontSize: 14.5),
+    hintStyle: const TextStyle(color: kCareHint, fontSize: 14.5),
     prefixIcon: Icon(icon, color: kCare, size: 20),
     filled: true,
     fillColor: Colors.white,
@@ -555,8 +567,8 @@ InputDecoration careFieldDecoration(String label, {required String hint, require
     border: border(kCareBorder),
     enabledBorder: border(kCareBorder),
     focusedBorder: border(kCare, 1.6),
-    errorBorder: border(const Color(0xFFB3261E), 1.2),
-    focusedErrorBorder: border(const Color(0xFFB3261E), 1.6),
+    errorBorder: border(kDangerText, 1.2),
+    focusedErrorBorder: border(kDangerText, 1.6),
     errorStyle: const TextStyle(fontSize: 12),
   );
 }
@@ -579,7 +591,7 @@ class CareChoicePill extends StatelessWidget {
         duration: const Duration(milliseconds: 150),
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
         decoration: BoxDecoration(
-          color: selected ? kCare : (enabled ? Colors.white : const Color(0xFFF1F3F3)),
+          color: selected ? kCare : (enabled ? Colors.white : kCareDisabledBg),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(color: selected ? kCare : (enabled ? kCareBorder : Colors.transparent)),
         ),
@@ -592,7 +604,7 @@ class CareChoicePill extends StatelessWidget {
             style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w600,
-              color: selected ? Colors.white : (enabled ? kInk : const Color(0xFFBFC5C3)),
+              color: selected ? Colors.white : (enabled ? kInk : kCareDisabledFg),
               decoration: enabled ? null : TextDecoration.lineThrough,
             ),
           ),
@@ -696,7 +708,7 @@ class CareStatCard extends StatelessWidget {
           ),
           const Spacer(),
           Text(value, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w800, color: kInk)),
-          Text(label, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 10.5, color: kMuted, fontWeight: FontWeight.w600)),
+          Text(label, maxLines: 1, overflow: TextOverflow.ellipsis, style: CareText.mutedXxsMedium),
         ],
       ),
     );
@@ -742,11 +754,11 @@ class CareBottomNav extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(active ? it.activeIcon : it.icon, color: active ? kCare : const Color(0xFF9AA6A4), size: 24),
+                Icon(active ? it.activeIcon : it.icon, color: active ? kCare : kCareHintQuiet, size: 24),
                 const SizedBox(height: 3),
                 Text(
                   it.label,
-                  style: TextStyle(fontSize: 11, fontWeight: active ? FontWeight.w700 : FontWeight.w500, color: active ? kCare : const Color(0xFF9AA6A4)),
+                  style: TextStyle(fontSize: 11, fontWeight: active ? FontWeight.w700 : FontWeight.w500, color: active ? kCare : kCareHintQuiet),
                 ),
               ],
             ),
@@ -780,7 +792,7 @@ class CareBottomNav extends StatelessWidget {
                         gradient: kCareGradient,
                         shape: BoxShape.circle,
                         border: Border.all(color: kCareSoft, width: 4),
-                        boxShadow: const [BoxShadow(color: Color(0x551FA99A), blurRadius: 12, offset: Offset(0, 4))],
+                        boxShadow: [BoxShadow(color: kCare.withValues(alpha: 0.33), blurRadius: 12, offset: const Offset(0, 4))],
                       ),
                       child: Icon(centerIcon, color: Colors.white, size: 26),
                     ),

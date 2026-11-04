@@ -5,6 +5,7 @@ import 'package:hms_mobile/core/services/api_service.dart';
 import 'package:hms_mobile/core/services/auth_storage.dart';
 import 'package:hms_mobile/core/services/nurse_api_service.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/nurse/models/icu_chart.dart';
 import 'package:hms_mobile/features/nurse/models/nurse_patient.dart';
@@ -40,7 +41,7 @@ class _IcuView extends StatelessWidget {
         content: const Text('This cannot be undone.'),
         actions: [
           TextButton(onPressed: () => Navigator.of(ctx).pop(false), child: const Text('Cancel')),
-          TextButton(onPressed: () => Navigator.of(ctx).pop(true), child: const Text('Delete', style: TextStyle(color: Color(0xFFB3261E)))),
+          TextButton(onPressed: () => Navigator.of(ctx).pop(true), child: const Text('Delete', style: CareText.danger)),
         ],
       ),
     );
@@ -63,7 +64,7 @@ class _IcuView extends StatelessWidget {
         backgroundColor: kCareDark,
         foregroundColor: Colors.white,
         icon: const Icon(Icons.add, color: Colors.white),
-        label: const Text('New chart', style: TextStyle(color: Colors.white)),
+        label: const Text('New chart', style: CareText.onCare),
       ),
       body: RefreshIndicator(color: kCare, onRefresh: viewModel.load, child: _buildBody(context, viewModel)),
     ));
@@ -78,7 +79,7 @@ class _IcuView extends StatelessWidget {
         const SizedBox(height: 80),
         const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
         const SizedBox(height: 12),
-        Text(viewModel.loadError!, textAlign: TextAlign.center, style: const TextStyle(color: kMuted)),
+        Text(viewModel.loadError!, textAlign: TextAlign.center, style: CareText.muted),
       ]);
     }
     if (viewModel.charts.isEmpty) {
@@ -86,7 +87,7 @@ class _IcuView extends StatelessWidget {
         SizedBox(height: 80),
         Icon(Icons.monitor_heart_outlined, color: kMuted, size: 40),
         SizedBox(height: 12),
-        Text('No ICU charts recorded yet', textAlign: TextAlign.center, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: kInk)),
+        Text('No ICU charts recorded yet', textAlign: TextAlign.center, style: CareText.titleXlMedium),
       ]);
     }
 
@@ -131,8 +132,8 @@ class _IcuCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(chart.patientName ?? 'Patient', style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: kInk)),
-                    if (chart.patientMrn != null) Text(chart.patientMrn!, style: const TextStyle(fontSize: 11.5, color: kMuted)),
+                    Text(chart.patientName ?? 'Patient', style: CareText.titleLg),
+                    if (chart.patientMrn != null) Text(chart.patientMrn!, style: CareText.mutedXs),
                   ],
                 ),
               ),
@@ -160,19 +161,19 @@ class _IcuCard extends StatelessWidget {
           ),
           if ((chart.notes ?? '').isNotEmpty) ...[
             const SizedBox(height: 8),
-            Text(chart.notes!, style: const TextStyle(fontSize: 12.5, color: kMuted)),
+            Text(chart.notes!, style: CareText.mutedSm),
           ],
           const SizedBox(height: 10),
           Row(
             children: [
               const Icon(Icons.access_time_rounded, size: 13, color: kMuted),
               const SizedBox(width: 6),
-              Text(chart.chartedAt ?? '', style: const TextStyle(fontSize: 12, color: kMuted)),
+              Text(chart.chartedAt ?? '', style: CareText.mutedXs),
               if (chart.recordedByName != null) ...[
                 const SizedBox(width: 12),
                 const Icon(Icons.person_outline, size: 13, color: kMuted),
                 const SizedBox(width: 4),
-                Text(chart.recordedByName!, style: const TextStyle(fontSize: 12, color: kMuted)),
+                Text(chart.recordedByName!, style: CareText.mutedXs),
               ],
             ],
           ),
@@ -194,7 +195,7 @@ class _Chip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
       decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(8)),
-      child: Text(label, style: TextStyle(color: fg, fontSize: 11, fontWeight: FontWeight.w700)),
+      child: Text(label, style: CareText.chip(fg)),
     );
   }
 }
@@ -376,7 +377,7 @@ class _NewIcuChartScreenState extends State<_NewIcuChartScreen> {
               style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
               child: _submitting
                   ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                  : const Text('Save chart', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
+                  : const Text('Save chart', style: CareText.onCareBold),
             ),
           ),
         ],
@@ -394,7 +395,7 @@ class _SectionLabel extends StatelessWidget {
     watchCarePalette(context);
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
-      child: Text(label, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: kMuted, letterSpacing: 0.3)),
+      child: Text(label, style: CareText.mutedSmBoldWide),
     );
   }
 }

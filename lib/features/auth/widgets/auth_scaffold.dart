@@ -123,7 +123,7 @@ class _CompactAuthLayout extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(26),
-                    boxShadow: const [BoxShadow(color: Color(0x1A0E6B61), blurRadius: 30, offset: Offset(0, 12))],
+                    boxShadow: careShadow(blur: 30, dy: 12, alpha: 0.1),
                   ),
                   child: formPane,
                 ),

@@ -5,6 +5,7 @@ import 'package:hms_mobile/core/services/api_service.dart';
 import 'package:hms_mobile/core/services/auth_storage.dart';
 import 'package:hms_mobile/core/services/receptionist_api_service.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/receptionist/models/reception_appointment.dart';
 import 'package:hms_mobile/features/receptionist/models/reception_patient.dart';
@@ -73,7 +74,7 @@ class _ReferralsView extends StatelessWidget {
         title: const Text('Delete this referral?'),
         actions: [
           TextButton(onPressed: () => Navigator.of(ctx).pop(false), child: const Text('Cancel')),
-          TextButton(onPressed: () => Navigator.of(ctx).pop(true), child: const Text('Delete', style: TextStyle(color: Color(0xFFB3261E)))),
+          TextButton(onPressed: () => Navigator.of(ctx).pop(true), child: const Text('Delete', style: CareText.danger)),
         ],
       ),
     );
@@ -96,7 +97,7 @@ class _ReferralsView extends StatelessWidget {
         backgroundColor: kCareDark,
         foregroundColor: Colors.white,
         icon: const Icon(Icons.add, color: Colors.white),
-        label: const Text('New referral', style: TextStyle(color: Colors.white)),
+        label: const Text('New referral', style: CareText.onCare),
       ),
       body: Column(
         children: [
@@ -130,7 +131,7 @@ class _ReferralsView extends StatelessWidget {
         const SizedBox(height: 80),
         const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
         const SizedBox(height: 12),
-        Text(viewModel.loadError!, textAlign: TextAlign.center, style: const TextStyle(color: kMuted)),
+        Text(viewModel.loadError!, textAlign: TextAlign.center, style: CareText.muted),
       ]);
     }
     if (viewModel.referrals.isEmpty) {
@@ -138,7 +139,7 @@ class _ReferralsView extends StatelessWidget {
         SizedBox(height: 80),
         Icon(Icons.compare_arrows_outlined, color: kMuted, size: 40),
         SizedBox(height: 12),
-        Text('No referrals found', textAlign: TextAlign.center, style: TextStyle(color: kMuted)),
+        Text('No referrals found', textAlign: TextAlign.center, style: CareText.muted),
       ]);
     }
 
@@ -178,19 +179,19 @@ class _ReferralCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              Expanded(child: Text(referral.patientName ?? 'Patient', style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w700, color: kInk))),
+              Expanded(child: Text(referral.patientName ?? 'Patient', style: CareText.titleLg)),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
                 decoration: BoxDecoration(color: sBg, borderRadius: BorderRadius.circular(8)),
-                child: Text(titleCase(referral.status), style: TextStyle(color: sFg, fontSize: 10.5, fontWeight: FontWeight.w700)),
+                child: Text(titleCase(referral.status), style: CareText.chip(sFg)),
               ),
             ],
           ),
-          Text(referral.patientMrn ?? '', style: const TextStyle(fontSize: 12, color: kMuted)),
+          Text(referral.patientMrn ?? '', style: CareText.mutedXs),
           const SizedBox(height: 8),
           Text('${referral.referredByName ?? '—'} → ${referral.referredToName ?? '—'}', style: const TextStyle(fontSize: 12.5, color: kInk, fontWeight: FontWeight.w600)),
           const SizedBox(height: 4),
-          Text(referral.reason, style: const TextStyle(fontSize: 12.5, color: kMuted)),
+          Text(referral.reason, style: CareText.mutedSm),
           const SizedBox(height: 8),
           Row(
             children: [
@@ -200,15 +201,15 @@ class _ReferralCard extends StatelessWidget {
                 child: Text(referral.priority, style: TextStyle(color: pFg, fontSize: 10, fontWeight: FontWeight.w700)),
               ),
               const Spacer(),
-              Text(referral.referralNo ?? '', style: const TextStyle(fontSize: 11.5, color: kMuted)),
+              Text(referral.referralNo ?? '', style: CareText.mutedXs),
             ],
           ),
           const SizedBox(height: 8),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              TextButton(onPressed: onStatus, child: Text('Status', style: TextStyle(color: kCareDark, fontSize: 12.5, fontWeight: FontWeight.w600))),
-              TextButton(onPressed: onDelete, child: const Text('Delete', style: TextStyle(color: Color(0xFFB3261E), fontSize: 12.5, fontWeight: FontWeight.w600))),
+              TextButton(onPressed: onStatus, child: Text('Status', style: CareText.brandSmMedium)),
+              TextButton(onPressed: onDelete, child: const Text('Delete', style: TextStyle(color: kDangerText, fontSize: 12.5, fontWeight: FontWeight.w600))),
             ],
           ),
         ],
@@ -377,7 +378,7 @@ class _ReferralFormScreenState extends State<_ReferralFormScreen> {
                       style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
                       child: _isSaving
                           ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                          : const Text('Create referral', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
+                          : const Text('Create referral', style: CareText.onCareBold),
                     ),
                   ),
                 ],

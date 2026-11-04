@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/nurse/models/shift_handover.dart';
 import 'package:hms_mobile/features/nurse/screens/shift_handover_create_screen.dart';
@@ -52,7 +53,7 @@ class _ShiftHandoverView extends StatelessWidget {
         backgroundColor: kCareDark,
         foregroundColor: Colors.white,
         icon: const Icon(Icons.add, color: Colors.white),
-        label: const Text('New handover', style: TextStyle(color: Colors.white)),
+        label: const Text('New handover', style: CareText.onCare),
       ),
       body: Column(
         children: [
@@ -97,7 +98,7 @@ class _ShiftHandoverView extends StatelessWidget {
           const SizedBox(height: 80),
           const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
           const SizedBox(height: 12),
-          Text(viewModel.loadError!, textAlign: TextAlign.center, style: const TextStyle(color: kMuted)),
+          Text(viewModel.loadError!, textAlign: TextAlign.center, style: CareText.muted),
         ],
       );
     }
@@ -109,7 +110,7 @@ class _ShiftHandoverView extends StatelessWidget {
           SizedBox(height: 80),
           Icon(Icons.swap_horiz_rounded, color: kMuted, size: 40),
           SizedBox(height: 12),
-          Text('No handovers yet', textAlign: TextAlign.center, style: TextStyle(color: kMuted)),
+          Text('No handovers yet', textAlign: TextAlign.center, style: CareText.muted),
         ],
       );
     }
@@ -154,7 +155,7 @@ class _FilterChip extends StatelessWidget {
         ),
         child: Text(
           label,
-          style: TextStyle(color: selected ? Colors.white : kMuted, fontSize: 12.5, fontWeight: FontWeight.w600),
+          style: CareText.tag(selected ? Colors.white : kMuted, size: CareText.sm),
         ),
       ),
     );
@@ -190,30 +191,30 @@ class _HandoverCard extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: Text(handover.wardName ?? 'Ward', style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: kInk)),
+                  child: Text(handover.wardName ?? 'Ward', style: CareText.titleLg),
                 ),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(8)),
-                  child: Text(label, style: TextStyle(color: fg, fontSize: 11, fontWeight: FontWeight.w700)),
+                  child: Text(label, style: CareText.chip(fg)),
                 ),
               ],
             ),
             const SizedBox(height: 6),
             Text(
               '${handover.currentShift.toUpperCase()} → ${handover.nextShift.toUpperCase()} · ${handover.handoverDate ?? ''}',
-              style: const TextStyle(fontSize: 12.5, color: kMuted),
+              style: CareText.mutedSm,
             ),
             const SizedBox(height: 8),
             Row(
               children: [
                 const Icon(Icons.arrow_upward_rounded, size: 13, color: kMuted),
                 const SizedBox(width: 4),
-                Text(handover.outgoingNurseName ?? '—', style: const TextStyle(fontSize: 12, color: kMuted)),
+                Text(handover.outgoingNurseName ?? '—', style: CareText.mutedXs),
                 const SizedBox(width: 14),
                 const Icon(Icons.arrow_downward_rounded, size: 13, color: kMuted),
                 const SizedBox(width: 4),
-                Text(handover.incomingNurseName ?? '—', style: const TextStyle(fontSize: 12, color: kMuted)),
+                Text(handover.incomingNurseName ?? '—', style: CareText.mutedXs),
               ],
             ),
           ],

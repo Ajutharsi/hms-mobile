@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/models/app_user.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/auth/screens/login_screen.dart';
 import 'package:hms_mobile/features/doctor/models/doctor_models.dart';
@@ -118,7 +119,7 @@ class _DoctorDrawer extends StatelessWidget {
           dense: true,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
           leading: CareIconBox(icon: icon, size: 34, filled: false),
-          title: Text(label, style: const TextStyle(fontSize: 14, color: kInk, fontWeight: FontWeight.w600)),
+          title: Text(label, style: CareText.titleMdMedium),
           onTap: () {
             Navigator.of(context).pop();
             if (section != null) openDoctorSection(context, section);
@@ -130,7 +131,7 @@ class _DoctorDrawer extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(14, 14, 14, 6),
-              child: Text(label, style: TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: kCare, letterSpacing: 0.8)),
+              child: Text(label, style: CareText.overline),
             ),
             ...children,
           ],
@@ -152,9 +153,9 @@ class _DoctorDrawer extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(user.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: Colors.white, fontSize: 16.5, fontWeight: FontWeight.w700)),
+                      Text(user.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: CareText.onCareTitle),
                       const SizedBox(height: 3),
-                      Text(user.email, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(color: Colors.white.withValues(alpha: 0.85), fontSize: 12)),
+                      Text(user.email, maxLines: 1, overflow: TextOverflow.ellipsis, style: CareText.onCareSoftXs),
                     ],
                   ),
                 ),
@@ -231,9 +232,9 @@ class _DashboardBody extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('No visits today', style: TextStyle(fontSize: 14.5, fontWeight: FontWeight.w700, color: kInk)),
+                                Text('No visits today', style: CareText.titleLg),
                                 SizedBox(height: 2),
-                                Text('Your day is clear.', style: TextStyle(fontSize: 12.5, color: kMuted)),
+                                Text('Your day is clear.', style: CareText.mutedSm),
                               ],
                             ),
                           ),
@@ -309,12 +310,12 @@ class _DashboardBody extends StatelessWidget {
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Text(patient.name, style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w700, color: kInk)),
-                                      Text(patient.mrn, style: const TextStyle(fontSize: 12, color: kMuted)),
+                                      Text(patient.name, style: CareText.titleMd),
+                                      Text(patient.mrn, style: CareText.mutedXs),
                                     ],
                                   ),
                                 ),
-                                const Icon(Icons.chevron_right_rounded, color: Color(0xFFB5C2C0)),
+                                const Icon(Icons.chevron_right_rounded, color: kCareChevron),
                               ],
                             ),
                           ),
@@ -365,10 +366,10 @@ class _DoctorHeader extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Hello 👋', style: TextStyle(color: Colors.white.withValues(alpha: 0.85), fontSize: 13)),
+                          const Text('Hello 👋', style: CareText.onCareSoftSm),
                           const SizedBox(height: 2),
-                          Text(user.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(color: Colors.white, fontSize: 19, fontWeight: FontWeight.w800)),
-                          Text('Doctor', style: TextStyle(color: Colors.white.withValues(alpha: 0.8), fontSize: 11.5)),
+                          Text(user.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: CareText.onCareDisplay),
+                          const Text('Doctor', style: CareText.onCareFaintXs),
                         ],
                       ),
                     ),
@@ -422,7 +423,7 @@ class _DoctorHeader extends StatelessWidget {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(20),
-              boxShadow: const [BoxShadow(color: Color(0x1A0E6B61), blurRadius: 24, offset: Offset(0, 10))],
+              boxShadow: careShadow(blur: 24, dy: 10, alpha: 0.1),
             ),
             child: Row(
               children: [
@@ -441,11 +442,11 @@ class _DoctorHeader extends StatelessWidget {
                           children: [
                             Icon(item.$1, size: 16, color: kCare),
                             const SizedBox(width: 5),
-                            Text(item.$2, style: const TextStyle(fontSize: 21, fontWeight: FontWeight.w800, color: kInk)),
+                            Text(item.$2, style: CareText.display),
                           ],
                         ),
                         const SizedBox(height: 3),
-                        Text(item.$3, style: const TextStyle(fontSize: 11.5, color: kMuted, fontWeight: FontWeight.w600)),
+                        Text(item.$3, style: CareText.mutedXsMedium),
                       ],
                     ),
                   ),
@@ -484,9 +485,9 @@ class DoctorAppointmentCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(name, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: kInk)),
+                    Text(name, style: CareText.titleLg),
                     if ((appointment.patientMrn ?? '').isNotEmpty)
-                      Text(appointment.patientMrn!, style: const TextStyle(fontSize: 12, color: kMuted)),
+                      Text(appointment.patientMrn!, style: CareText.mutedXs),
                   ],
                 ),
               ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/doctor/screens/doctor_patient_detail_screen.dart';
 import 'package:hms_mobile/features/doctor/viewmodels/doctor_view_models.dart';
@@ -37,7 +38,7 @@ class _PatientsView extends StatelessWidget {
             child: TextField(
               controller: viewModel.searchController,
               onChanged: viewModel.onSearchChanged,
-              style: const TextStyle(color: kInk, fontSize: 14.5),
+              style: CareText.bodyLg,
               decoration: careFieldDecoration('Search', hint: 'Name or MRN', icon: Icons.search_rounded),
             ),
           ),
@@ -83,7 +84,7 @@ class _PatientsView extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(patient.name, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: kInk)),
+                    Text(patient.name, style: CareText.titleLg),
                     const SizedBox(height: 2),
                     Text(
                       [
@@ -91,7 +92,7 @@ class _PatientsView extends StatelessWidget {
                         if ((patient.gender ?? '').isNotEmpty) patient.gender!,
                         if (patient.age != null) '${patient.age} yrs',
                       ].join(' · '),
-                      style: const TextStyle(fontSize: 12.5, color: kMuted),
+                      style: CareText.mutedSm,
                     ),
                   ],
                 ),
@@ -99,7 +100,7 @@ class _PatientsView extends StatelessWidget {
               if ((patient.bloodGroup ?? '').isNotEmpty)
                 CareChip(label: patient.bloodGroup!, bg: kCarePinkBg, fg: kCarePinkFg),
               const SizedBox(width: 6),
-              const Icon(Icons.chevron_right_rounded, color: Color(0xFFB5C2C0)),
+              const Icon(Icons.chevron_right_rounded, color: kCareChevron),
             ],
           ),
         );

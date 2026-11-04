@@ -3,11 +3,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:hms_mobile/core/theme/app_style.dart';
-import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/core/services/api_service.dart' show ApiException, guardNetworkErrors;
 import 'package:hms_mobile/core/services/auth_storage.dart';
 import 'package:hms_mobile/core/services/nurse_api_service.dart';
+import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
+import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/nurse/models/consent_form.dart';
 import 'package:hms_mobile/features/nurse/models/nurse_patient.dart';
 import 'package:hms_mobile/features/nurse/viewmodels/consent_forms_view_model.dart';
@@ -55,7 +56,7 @@ class _ConsentFormsView extends StatelessWidget {
         title: const Text('Decline this consent?'),
         actions: [
           TextButton(onPressed: () => Navigator.of(ctx).pop(false), child: const Text('Cancel')),
-          TextButton(onPressed: () => Navigator.of(ctx).pop(true), child: const Text('Decline', style: TextStyle(color: Color(0xFFB3261E)))),
+          TextButton(onPressed: () => Navigator.of(ctx).pop(true), child: const Text('Decline', style: CareText.danger)),
         ],
       ),
     );
@@ -79,7 +80,7 @@ class _ConsentFormsView extends StatelessWidget {
         backgroundColor: kCareDark,
         foregroundColor: Colors.white,
         icon: const Icon(Icons.add, color: Colors.white),
-        label: const Text('New form', style: TextStyle(color: Colors.white)),
+        label: const Text('New form', style: CareText.onCare),
       ),
       body: RefreshIndicator(color: kCare, onRefresh: viewModel.load, child: _buildBody(context, viewModel)),
     ));
@@ -94,7 +95,7 @@ class _ConsentFormsView extends StatelessWidget {
         const SizedBox(height: 80),
         const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
         const SizedBox(height: 12),
-        Text(viewModel.loadError!, textAlign: TextAlign.center, style: const TextStyle(color: kMuted)),
+        Text(viewModel.loadError!, textAlign: TextAlign.center, style: CareText.muted),
       ]);
     }
     if (viewModel.forms.isEmpty) {
@@ -102,7 +103,7 @@ class _ConsentFormsView extends StatelessWidget {
         SizedBox(height: 80),
         Icon(Icons.assignment_outlined, color: kMuted, size: 40),
         SizedBox(height: 12),
-        Text('No consent forms yet', textAlign: TextAlign.center, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: kInk)),
+        Text('No consent forms yet', textAlign: TextAlign.center, style: CareText.titleXlMedium),
       ]);
     }
 
@@ -151,15 +152,15 @@ class _ConsentCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(form.patientName ?? 'Patient', style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: kInk)),
-                    if (form.patientMrn != null) Text(form.patientMrn!, style: const TextStyle(fontSize: 11.5, color: kMuted)),
+                    Text(form.patientName ?? 'Patient', style: CareText.titleLg),
+                    if (form.patientMrn != null) Text(form.patientMrn!, style: CareText.mutedXs),
                   ],
                 ),
               ),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(8)),
-                child: Text(form.status.toUpperCase(), style: TextStyle(color: fg, fontSize: 10.5, fontWeight: FontWeight.w700)),
+                child: Text(form.status.toUpperCase(), style: CareText.chip(fg)),
               ),
             ],
           ),
@@ -169,19 +170,19 @@ class _ConsentCard extends StatelessWidget {
             style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w600, color: kInk),
           ),
           const SizedBox(height: 4),
-          Text(form.description, maxLines: 3, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 12.5, color: kMuted)),
+          Text(form.description, maxLines: 3, overflow: TextOverflow.ellipsis, style: CareText.mutedSm),
           const SizedBox(height: 8),
           Row(
             children: [
               if (form.consentNo != null) ...[
                 const Icon(Icons.tag, size: 13, color: kMuted),
                 const SizedBox(width: 4),
-                Text(form.consentNo!, style: const TextStyle(fontSize: 12, color: kMuted)),
+                Text(form.consentNo!, style: CareText.mutedXs),
                 const SizedBox(width: 14),
               ],
               const Icon(Icons.event_outlined, size: 13, color: kMuted),
               const SizedBox(width: 4),
-              Text(form.consentDate ?? '', style: const TextStyle(fontSize: 12, color: kMuted)),
+              Text(form.consentDate ?? '', style: CareText.mutedXs),
             ],
           ),
           if (onSign != null || onDecline != null) ...[
@@ -190,13 +191,13 @@ class _ConsentCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 if (onDecline != null)
-                  TextButton(onPressed: onDecline, child: const Text('Decline', style: TextStyle(color: Color(0xFFB3261E)))),
+                  TextButton(onPressed: onDecline, child: const Text('Decline', style: CareText.danger)),
                 if (onSign != null)
                   FilledButton.icon(
                     onPressed: onSign,
                     icon: const Icon(Icons.draw_outlined, size: 16),
                     label: const Text('Sign'),
-                    style: FilledButton.styleFrom(backgroundColor: kCareDark, minimumSize: const Size(0, 34), textStyle: const TextStyle(fontSize: 13)),
+                    style: FilledButton.styleFrom(backgroundColor: kCareDark, minimumSize: const Size(0, 34), textStyle: CareText.plainSm),
                   ),
               ],
             ),
@@ -243,7 +244,7 @@ class _SignDialogState extends State<_SignDialog> {
         height: 220,
         child: Column(
           children: [
-            const Text('Have the patient sign below', style: TextStyle(fontSize: 12, color: kMuted)),
+            const Text('Have the patient sign below', style: CareText.mutedXs),
             const SizedBox(height: 8),
             Expanded(
               child: Container(
@@ -402,7 +403,7 @@ class _NewConsentFormScreenState extends State<_NewConsentFormScreen> {
                   style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
                   child: _isSaving
                       ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                      : const Text('Create form', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
+                      : const Text('Create form', style: CareText.onCareBold),
                 ),
               ),
             ],

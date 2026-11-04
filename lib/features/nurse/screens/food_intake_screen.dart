@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/nurse/models/food_intake.dart';
 import 'package:hms_mobile/features/nurse/viewmodels/food_intake_view_model.dart';
@@ -50,7 +51,7 @@ class _FoodIntakeView extends StatelessWidget {
         const SizedBox(height: 80),
         const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
         const SizedBox(height: 12),
-        Text(viewModel.loadError!, textAlign: TextAlign.center, style: const TextStyle(color: kMuted)),
+        Text(viewModel.loadError!, textAlign: TextAlign.center, style: CareText.muted),
       ]);
     }
     if (viewModel.patients.isEmpty) {
@@ -58,7 +59,7 @@ class _FoodIntakeView extends StatelessWidget {
         SizedBox(height: 80),
         Icon(Icons.restaurant_outlined, color: kMuted, size: 40),
         SizedBox(height: 12),
-        Text('No in-patients to feed right now', textAlign: TextAlign.center, style: TextStyle(color: kMuted)),
+        Text('No in-patients to feed right now', textAlign: TextAlign.center, style: CareText.muted),
       ]);
     }
 
@@ -99,7 +100,7 @@ class _PatientCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                Expanded(child: Text(patient.name, style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w700, color: kInk))),
+                Expanded(child: Text(patient.name, style: CareText.titleLg)),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
                   decoration: BoxDecoration(color: kCareSoft, borderRadius: BorderRadius.circular(8)),
@@ -110,7 +111,7 @@ class _PatientCard extends StatelessWidget {
             const SizedBox(height: 2),
             Text(
               [patient.mrn, if (patient.wardName != null) '${patient.wardName} · ${patient.bedNo ?? ''}'].join(' · '),
-              style: const TextStyle(fontSize: 12, color: kMuted),
+              style: CareText.mutedXs,
             ),
             const SizedBox(height: 8),
             Row(
@@ -119,10 +120,10 @@ class _PatientCard extends StatelessWidget {
                 const SizedBox(width: 6),
                 Text(
                   patient.lastMealType != null ? 'Last: ${_titleCase(patient.lastMealType!)} (${_titleCase(patient.lastMealStatus ?? '')})' : 'No meals logged',
-                  style: const TextStyle(fontSize: 12.5, color: kMuted),
+                  style: CareText.mutedSm,
                 ),
                 const Spacer(),
-                Text('${patient.mealsToday}/4 today', style: const TextStyle(fontSize: 12, color: kMuted, fontWeight: FontWeight.w600)),
+                Text('${patient.mealsToday}/4 today', style: CareText.mutedXsMedium),
               ],
             ),
           ],
@@ -189,7 +190,7 @@ class _FoodIntakeDetailView extends StatelessWidget {
         backgroundColor: kCareDark,
         foregroundColor: Colors.white,
         icon: const Icon(Icons.add, color: Colors.white),
-        label: const Text('Log a meal', style: TextStyle(color: Colors.white)),
+        label: const Text('Log a meal', style: CareText.onCare),
       ),
       body: RefreshIndicator(color: kCare, onRefresh: viewModel.load, child: _buildBody(context, viewModel)),
     ));
@@ -204,7 +205,7 @@ class _FoodIntakeDetailView extends StatelessWidget {
         const SizedBox(height: 80),
         const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
         const SizedBox(height: 12),
-        Text(viewModel.loadError!, textAlign: TextAlign.center, style: const TextStyle(color: kMuted)),
+        Text(viewModel.loadError!, textAlign: TextAlign.center, style: CareText.muted),
       ]);
     }
 
@@ -219,24 +220,24 @@ class _FoodIntakeDetailView extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  const Expanded(child: Text('Diet plan', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: kInk))),
+                  const Expanded(child: Text('Diet plan', style: CareText.titleLg)),
                   TextButton(onPressed: () => _updateDietPlan(context, viewModel), child: const Text('Update')),
                 ],
               ),
               if (viewModel.dietPlan != null) ...[
                 Text(_titleCase(viewModel.dietPlan!.dietType), style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: kCareDark)),
-                if ((viewModel.dietPlan!.restrictions ?? '').isNotEmpty) Text('Restrictions: ${viewModel.dietPlan!.restrictions}', style: const TextStyle(fontSize: 12.5, color: kMuted)),
-                if ((viewModel.dietPlan!.notes ?? '').isNotEmpty) Text(viewModel.dietPlan!.notes!, style: const TextStyle(fontSize: 12.5, color: kMuted)),
+                if ((viewModel.dietPlan!.restrictions ?? '').isNotEmpty) Text('Restrictions: ${viewModel.dietPlan!.restrictions}', style: CareText.mutedSm),
+                if ((viewModel.dietPlan!.notes ?? '').isNotEmpty) Text(viewModel.dietPlan!.notes!, style: CareText.mutedSm),
               ] else
-                const Text('No diet plan set.', style: TextStyle(fontSize: 13, color: kMuted)),
+                const Text('No diet plan set.', style: CareText.mutedSm),
             ],
           ),
         ),
         const SizedBox(height: 16),
-        const Text('Meal log', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: kMuted, letterSpacing: 0.3)),
+        const Text('Meal log', style: CareText.mutedSmBoldWide),
         const SizedBox(height: 10),
         if (viewModel.logs.isEmpty)
-          const Padding(padding: EdgeInsets.only(top: 20), child: Center(child: Text('No meals logged yet', style: TextStyle(color: kMuted))))
+          const Padding(padding: EdgeInsets.only(top: 20), child: Center(child: Text('No meals logged yet', style: CareText.muted)))
         else
           for (final log in viewModel.logs) ...[
             Container(
@@ -249,12 +250,12 @@ class _FoodIntakeDetailView extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('${_titleCase(log.mealType)} · ${log.logDate}', style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: kInk)),
-                        if ((log.notes ?? '').isNotEmpty) Text(log.notes!, style: const TextStyle(fontSize: 11.5, color: kMuted)),
+                        Text('${_titleCase(log.mealType)} · ${log.logDate}', style: CareText.titleSm),
+                        if ((log.notes ?? '').isNotEmpty) Text(log.notes!, style: CareText.mutedXs),
                       ],
                     ),
                   ),
-                  if (log.quantity != null) Padding(padding: const EdgeInsets.only(right: 8), child: Text(_titleCase(log.quantity!), style: const TextStyle(fontSize: 11.5, color: kMuted))),
+                  if (log.quantity != null) Padding(padding: const EdgeInsets.only(right: 8), child: Text(_titleCase(log.quantity!), style: CareText.mutedXs)),
                   Text(_titleCase(log.status), style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: kCareDark)),
                 ],
               ),

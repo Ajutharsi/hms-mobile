@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/nurse/models/ward.dart';
 import 'package:hms_mobile/features/nurse/viewmodels/admit_patient_view_model.dart';
@@ -66,11 +66,11 @@ class _AdmitPatientViewState extends State<_AdmitPatientView> {
       body: viewModel.isLoadingMeta
           ? Center(child: CircularProgressIndicator(color: kCare))
           : viewModel.metaError != null
-              ? Center(child: Text(viewModel.metaError!, style: const TextStyle(color: kMuted)))
+              ? Center(child: Text(viewModel.metaError!, style: CareText.muted))
               : ListView(
                   padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
                   children: [
-                    const Text('Patient', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: kInk)),
+                    const Text('Patient', style: CareText.titleSm),
                     const SizedBox(height: 8),
                     if (viewModel.selectedPatient != null)
                       _SelectedChip(
@@ -108,7 +108,7 @@ class _AdmitPatientViewState extends State<_AdmitPatientView> {
                         ),
                     ],
                     const SizedBox(height: 20),
-                    const Text('Ward', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: kInk)),
+                    const Text('Ward', style: CareText.titleSm),
                     const SizedBox(height: 8),
                     DropdownButtonFormField<Ward>(
                       initialValue: viewModel.selectedWard,
@@ -117,7 +117,7 @@ class _AdmitPatientViewState extends State<_AdmitPatientView> {
                       onChanged: viewModel.selectWard,
                     ),
                     const SizedBox(height: 16),
-                    const Text('Bed', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: kInk)),
+                    const Text('Bed', style: CareText.titleSm),
                     const SizedBox(height: 8),
                     if (viewModel.isLoadingBeds)
                       LinearProgressIndicator(color: kCare)
@@ -129,7 +129,7 @@ class _AdmitPatientViewState extends State<_AdmitPatientView> {
                         onChanged: viewModel.selectedWard == null ? null : viewModel.selectBed,
                       ),
                     const SizedBox(height: 16),
-                    const Text('Doctor', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: kInk)),
+                    const Text('Doctor', style: CareText.titleSm),
                     const SizedBox(height: 8),
                     DropdownButtonFormField<Doctor>(
                       initialValue: viewModel.selectedDoctor,
@@ -138,7 +138,7 @@ class _AdmitPatientViewState extends State<_AdmitPatientView> {
                       onChanged: viewModel.selectDoctor,
                     ),
                     const SizedBox(height: 16),
-                    const Text('Admission date', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: kInk)),
+                    const Text('Admission date', style: CareText.titleSm),
                     const SizedBox(height: 8),
                     InkWell(
                       onTap: () => _pickDate(viewModel),
@@ -163,7 +163,7 @@ class _AdmitPatientViewState extends State<_AdmitPatientView> {
                         style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
                         child: viewModel.isSubmitting
                             ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                            : const Text('Admit patient', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
+                            : const Text('Admit patient', style: CareText.onCareBold),
                       ),
                     ),
                   ],

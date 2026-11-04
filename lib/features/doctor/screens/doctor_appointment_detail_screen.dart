@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/models/date_display.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/doctor/models/doctor_models.dart';
 import 'package:hms_mobile/features/doctor/screens/consultation_form_screen.dart';
@@ -74,7 +75,7 @@ class _DetailView extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(patient?.name ?? appointment.patientName ?? 'Patient',
-                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: kInk)),
+                            style: CareText.titleXl),
                         const SizedBox(height: 2),
                         Text(
                           [
@@ -82,12 +83,12 @@ class _DetailView extends StatelessWidget {
                             if ((patient?.gender ?? '').isNotEmpty) patient!.gender!,
                             if (patient?.age != null) '${patient!.age} yrs',
                           ].where((s) => s.isNotEmpty).join(' · '),
-                          style: const TextStyle(fontSize: 12.5, color: kMuted),
+                          style: CareText.mutedSm,
                         ),
                       ],
                     ),
                   ),
-                  if (patient != null) const Icon(Icons.chevron_right_rounded, color: Color(0xFFB5C2C0)),
+                  if (patient != null) const Icon(Icons.chevron_right_rounded, color: kCareChevron),
                 ],
               ),
               const SizedBox(height: 12),
@@ -105,7 +106,7 @@ class _DetailView extends StatelessWidget {
               ),
               if ((appointment.notes ?? '').isNotEmpty) ...[
                 const SizedBox(height: 10),
-                Text(appointment.notes!, style: const TextStyle(fontSize: 13, color: kMuted, fontStyle: FontStyle.italic)),
+                Text(appointment.notes!, style: CareText.mutedSmItalic),
               ],
             ],
           ),
@@ -131,9 +132,9 @@ class _DetailView extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Not consulted yet', style: TextStyle(fontSize: 14.5, fontWeight: FontWeight.w700, color: kInk)),
+                          Text('Not consulted yet', style: CareText.titleLg),
                           SizedBox(height: 2),
-                          Text('Write the complaint, diagnosis and plan.', style: TextStyle(fontSize: 12.5, color: kMuted)),
+                          Text('Write the complaint, diagnosis and plan.', style: CareText.mutedSm),
                         ],
                       ),
                     ),
@@ -193,15 +194,15 @@ class _VitalsCard extends StatelessWidget {
                   children: [
                     Icon(entry.$1, size: 17, color: kCare),
                     const SizedBox(width: 6),
-                    Text('${entry.$2}: ', style: const TextStyle(fontSize: 12.5, color: kMuted)),
-                    Text(entry.$3!, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: kInk)),
+                    Text('${entry.$2}: ', style: CareText.mutedSm),
+                    Text(entry.$3!, style: CareText.titleMd),
                   ],
                 ),
             ],
           ),
           if ((vitals.recordedAt ?? '').isNotEmpty) ...[
             const SizedBox(height: 8),
-            Text('Recorded ${shortDateTime(vitals.recordedAt)}', style: const TextStyle(fontSize: 11.5, color: kMuted)),
+            Text('Recorded ${shortDateTime(vitals.recordedAt)}', style: CareText.mutedXs),
           ],
         ],
       ),
@@ -274,9 +275,9 @@ class _ConsultationCard extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('No prescription yet', style: TextStyle(fontSize: 14.5, fontWeight: FontWeight.w700, color: kInk)),
+                          Text('No prescription yet', style: CareText.titleLg),
                           SizedBox(height: 2),
-                          Text('The pharmacy dispenses against this.', style: TextStyle(fontSize: 12.5, color: kMuted)),
+                          Text('The pharmacy dispenses against this.', style: CareText.mutedSm),
                         ],
                       ),
                     ),
@@ -308,7 +309,7 @@ class _ConsultationCard extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(prescription.prescriptionNo,
-                          style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w700, color: kInk)),
+                          style: CareText.titleLg),
                     ),
                     CareChip(
                       label: '${prescription.items.length} medicine${prescription.items.length == 1 ? '' : 's'}',
@@ -332,17 +333,17 @@ class _ConsultationCard extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(item.medicineName, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: kInk)),
+                              Text(item.medicineName, style: CareText.titleMd),
                               const SizedBox(height: 4),
                               Text(
                                 [item.dosage, item.frequency, item.duration, if ((item.route ?? '').isNotEmpty) item.route!]
                                     .where((s) => s.isNotEmpty)
                                     .join(' · '),
-                                style: const TextStyle(fontSize: 12.5, color: kMuted),
+                                style: CareText.mutedSm,
                               ),
                               if ((item.instructions ?? '').isNotEmpty) ...[
                                 const SizedBox(height: 4),
-                                Text(item.instructions!, style: const TextStyle(fontSize: 12.5, color: kMuted)),
+                                Text(item.instructions!, style: CareText.mutedSm),
                               ],
                             ],
                           ),

@@ -21,8 +21,8 @@ class AuthIllustrationPane extends StatelessWidget {
         alignment: Alignment.center,
         clipBehavior: Clip.none,
         children: [
-          Positioned(top: -60, right: -80, child: _blob(220, const Color(0xFFD6E1FF))),
-          Positioned(bottom: -90, left: -60, child: _blob(260, const Color(0xFFDCE6FF))),
+          Positioned(top: -60, right: -80, child: _blob(220, kCareBlob)),
+          Positioned(bottom: -90, left: -60, child: _blob(260, kCareBlobSoft)),
           Padding(
             padding: const EdgeInsets.all(56),
             child: Column(
@@ -105,7 +105,7 @@ class AuthCompactIllustration extends StatelessWidget {
           alignment: Alignment.center,
           clipBehavior: Clip.none,
           children: [
-            Positioned(top: -30, right: -30, child: _blob(110, const Color(0xFFD6E1FF))),
+            Positioned(top: -30, right: -30, child: _blob(110, kCareBlob)),
             SizedBox(
               height: 160,
               child: Padding(

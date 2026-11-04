@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/nurse/models/nurse_patient.dart';
 import 'package:hms_mobile/features/nurse/models/nursing_note.dart';
@@ -48,7 +49,7 @@ class _NursingNotesView extends StatelessWidget {
         content: const Text('This cannot be undone.'),
         actions: [
           TextButton(onPressed: () => Navigator.of(ctx).pop(false), child: const Text('Cancel')),
-          TextButton(onPressed: () => Navigator.of(ctx).pop(true), child: const Text('Delete', style: TextStyle(color: Color(0xFFB3261E)))),
+          TextButton(onPressed: () => Navigator.of(ctx).pop(true), child: const Text('Delete', style: CareText.danger)),
         ],
       ),
     );
@@ -71,7 +72,7 @@ class _NursingNotesView extends StatelessWidget {
         backgroundColor: kCareDark,
         foregroundColor: Colors.white,
         icon: const Icon(Icons.add, color: Colors.white),
-        label: const Text('New note', style: TextStyle(color: Colors.white)),
+        label: const Text('New note', style: CareText.onCare),
       ),
       body: RefreshIndicator(
         color: kCare,
@@ -90,7 +91,7 @@ class _NursingNotesView extends StatelessWidget {
         const SizedBox(height: 80),
         const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
         const SizedBox(height: 12),
-        Text(viewModel.loadError!, textAlign: TextAlign.center, style: const TextStyle(color: kMuted)),
+        Text(viewModel.loadError!, textAlign: TextAlign.center, style: CareText.muted),
       ]);
     }
     if (viewModel.notes.isEmpty) {
@@ -98,7 +99,7 @@ class _NursingNotesView extends StatelessWidget {
         SizedBox(height: 80),
         Icon(Icons.description_outlined, color: kMuted, size: 40),
         SizedBox(height: 12),
-        Text('No nursing notes yet', textAlign: TextAlign.center, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: kInk)),
+        Text('No nursing notes yet', textAlign: TextAlign.center, style: CareText.titleXlMedium),
       ]);
     }
 
@@ -165,15 +166,15 @@ class _NoteCardState extends State<_NoteCard> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(note.patientName ?? 'Patient', style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: kInk)),
-                    if (note.patientMrn != null) Text(note.patientMrn!, style: const TextStyle(fontSize: 11.5, color: kMuted)),
+                    Text(note.patientName ?? 'Patient', style: CareText.titleLg),
+                    if (note.patientMrn != null) Text(note.patientMrn!, style: CareText.mutedXs),
                   ],
                 ),
               ),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(8)),
-                child: Text(note.priority.toUpperCase(), style: TextStyle(color: fg, fontSize: 10.5, fontWeight: FontWeight.w700)),
+                child: Text(note.priority.toUpperCase(), style: CareText.chip(fg)),
               ),
             ],
           ),
@@ -197,12 +198,12 @@ class _NoteCardState extends State<_NoteCard> {
             children: [
               const Icon(Icons.access_time_rounded, size: 13, color: kMuted),
               const SizedBox(width: 4),
-              Text(note.notedAt ?? '', style: const TextStyle(fontSize: 11.5, color: kMuted)),
+              Text(note.notedAt ?? '', style: CareText.mutedXs),
               if (note.writtenByName != null) ...[
                 const SizedBox(width: 10),
                 const Icon(Icons.person_outline, size: 13, color: kMuted),
                 const SizedBox(width: 4),
-                Text(note.writtenByName!, style: const TextStyle(fontSize: 11.5, color: kMuted)),
+                Text(note.writtenByName!, style: CareText.mutedXs),
               ],
               const Spacer(),
               IconButton(
@@ -215,7 +216,7 @@ class _NoteCardState extends State<_NoteCard> {
               const SizedBox(width: 14),
               IconButton(
                 onPressed: widget.onDelete,
-                icon: const Icon(Icons.delete_outline, size: 18, color: Color(0xFFB3261E)),
+                icon: const Icon(Icons.delete_outline, size: 18, color: kDangerText),
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints(),
                 visualDensity: VisualDensity.compact,
@@ -238,7 +239,7 @@ class _MiniChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(6)),
-      child: Text(label, style: const TextStyle(fontSize: 10.5, color: kMuted, fontWeight: FontWeight.w600)),
+      child: Text(label, style: CareText.mutedXxsMedium),
     );
   }
 }
@@ -332,7 +333,7 @@ class _NoteFormScreenState extends State<_NoteFormScreen> {
                 PatientPickerField(value: _patient, errorText: _patientError, onChanged: (p) => setState(() => _patient = p)),
                 const SizedBox(height: 16),
               ],
-              const Text('Note type', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: kInk)),
+              const Text('Note type', style: CareText.titleSmMedium),
               const SizedBox(height: 8),
               DropdownButtonFormField<String>(
                 initialValue: _noteType,
@@ -342,7 +343,7 @@ class _NoteFormScreenState extends State<_NoteFormScreen> {
                 onChanged: (v) => setState(() => _noteType = v ?? _noteType),
               ),
               const SizedBox(height: 16),
-              const Text('Shift (optional)', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: kInk)),
+              const Text('Shift (optional)', style: CareText.titleSmMedium),
               const SizedBox(height: 8),
               DropdownButtonFormField<String?>(
                 initialValue: _shift,
@@ -356,7 +357,7 @@ class _NoteFormScreenState extends State<_NoteFormScreen> {
                 onChanged: (v) => setState(() => _shift = v),
               ),
               const SizedBox(height: 16),
-              const Text('Priority', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: kInk)),
+              const Text('Priority', style: CareText.titleSmMedium),
               const SizedBox(height: 8),
               Wrap(
                 spacing: 8,
@@ -381,7 +382,7 @@ class _NoteFormScreenState extends State<_NoteFormScreen> {
                   style: FilledButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
                   child: _saving
                       ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2.4, color: Colors.white))
-                      : Text(_isEdit ? 'Save changes' : 'Add note', style: const TextStyle(fontSize: 15.5, fontWeight: FontWeight.w600)),
+                      : Text(_isEdit ? 'Save changes' : 'Add note', style: CareText.xlMedium),
                 ),
               ),
             ],

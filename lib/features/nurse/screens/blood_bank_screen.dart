@@ -5,6 +5,7 @@ import 'package:hms_mobile/core/services/api_service.dart';
 import 'package:hms_mobile/core/services/auth_storage.dart';
 import 'package:hms_mobile/core/services/nurse_api_service.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/nurse/models/blood_bank.dart';
 import 'package:hms_mobile/features/nurse/models/nurse_patient.dart';
@@ -64,7 +65,7 @@ class _BloodBankView extends StatelessWidget {
         content: Text('Delete blood unit ${unit.unitNo ?? '#${unit.id}'}?'),
         actions: [
           TextButton(onPressed: () => Navigator.of(ctx).pop(false), child: const Text('Cancel')),
-          TextButton(onPressed: () => Navigator.of(ctx).pop(true), child: const Text('Delete', style: TextStyle(color: Color(0xFFB3261E)))),
+          TextButton(onPressed: () => Navigator.of(ctx).pop(true), child: const Text('Delete', style: CareText.danger)),
         ],
       ),
     );
@@ -87,7 +88,7 @@ class _BloodBankView extends StatelessWidget {
         backgroundColor: kCareDark,
         foregroundColor: Colors.white,
         icon: const Icon(Icons.add, color: Colors.white),
-        label: const Text('Add unit', style: TextStyle(color: Colors.white)),
+        label: const Text('Add unit', style: CareText.onCare),
       ),
       body: RefreshIndicator(color: kCare, onRefresh: viewModel.load, child: _buildBody(context, viewModel)),
     ));
@@ -102,7 +103,7 @@ class _BloodBankView extends StatelessWidget {
         const SizedBox(height: 80),
         const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
         const SizedBox(height: 12),
-        Text(viewModel.loadError!, textAlign: TextAlign.center, style: const TextStyle(color: kMuted)),
+        Text(viewModel.loadError!, textAlign: TextAlign.center, style: CareText.muted),
       ]);
     }
 
@@ -140,7 +141,7 @@ class _BloodBankView extends StatelessWidget {
         if (viewModel.units.isEmpty)
           const Padding(
             padding: EdgeInsets.only(top: 40),
-            child: Center(child: Text('No blood units in inventory', style: TextStyle(color: kMuted))),
+            child: Center(child: Text('No blood units in inventory', style: CareText.muted)),
           )
         else
           for (final unit in viewModel.units) ...[
@@ -215,34 +216,34 @@ class _UnitCard extends StatelessWidget {
                 child: Text(unit.bloodGroup, style: TextStyle(color: kCareDark, fontSize: 13, fontWeight: FontWeight.w800)),
               ),
               const SizedBox(width: 8),
-              Expanded(child: Text(_titleCase(unit.component), style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w700, color: kInk))),
+              Expanded(child: Text(_titleCase(unit.component), style: CareText.titleLg)),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(8)),
-                child: Text(unit.status.toUpperCase(), style: TextStyle(color: fg, fontSize: 10.5, fontWeight: FontWeight.w700)),
+                child: Text(unit.status.toUpperCase(), style: CareText.chip(fg)),
               ),
             ],
           ),
           const SizedBox(height: 8),
-          if ((unit.unitNo ?? '').isNotEmpty) Text(unit.unitNo!, style: const TextStyle(fontSize: 12, color: kMuted)),
-          if ((unit.donorName ?? '').isNotEmpty) Text('Donor: ${unit.donorName}', style: const TextStyle(fontSize: 12, color: kMuted)),
+          if ((unit.unitNo ?? '').isNotEmpty) Text(unit.unitNo!, style: CareText.mutedXs),
+          if ((unit.donorName ?? '').isNotEmpty) Text('Donor: ${unit.donorName}', style: CareText.mutedXs),
           Text(
             'Collected ${unit.collectionDate ?? '—'} · Expires ${unit.expiryDate ?? '—'}',
-            style: TextStyle(fontSize: 12, color: unit.isNearExpiry ? const Color(0xFFB3261E) : kMuted, fontWeight: unit.isNearExpiry ? FontWeight.w700 : FontWeight.w400),
+            style: TextStyle(fontSize: 12, color: unit.isNearExpiry ? kDangerText : kMuted, fontWeight: unit.isNearExpiry ? FontWeight.w700 : FontWeight.w400),
           ),
-          if (unit.reservedForName != null) Text('Reserved for ${unit.reservedForName}', style: const TextStyle(fontSize: 12, color: kMuted)),
+          if (unit.reservedForName != null) Text('Reserved for ${unit.reservedForName}', style: CareText.mutedXs),
           const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              TextButton(onPressed: onDelete, child: const Text('Delete', style: TextStyle(color: Color(0xFFB3261E)))),
+              TextButton(onPressed: onDelete, child: const Text('Delete', style: CareText.danger)),
               TextButton(onPressed: onUpdateStatus, child: Text('Update status', style: TextStyle(color: kCareDark))),
               if (unit.isAvailable)
                 FilledButton.icon(
                   onPressed: onTransfuse,
                   icon: const Icon(Icons.water_drop_outlined, size: 15),
                   label: const Text('Transfuse'),
-                  style: FilledButton.styleFrom(backgroundColor: kCareDark, minimumSize: const Size(0, 34), textStyle: const TextStyle(fontSize: 12.5)),
+                  style: FilledButton.styleFrom(backgroundColor: kCareDark, minimumSize: const Size(0, 34), textStyle: CareText.plainSm),
                 ),
             ],
           ),
@@ -475,7 +476,7 @@ class _AddUnitScreenState extends State<_AddUnitScreen> {
                 style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
                 child: _submitting
                     ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                    : const Text('Add unit', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
+                    : const Text('Add unit', style: CareText.onCareBold),
               ),
             ),
           ],

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/auth/viewmodels/forgot_password_view_model.dart';
 import 'package:hms_mobile/features/auth/widgets/auth_scaffold.dart';
@@ -78,7 +79,7 @@ class _ForgotPasswordForm extends StatelessWidget {
             textInputAction: TextInputAction.done,
             autofillHints: const [AutofillHints.email],
             onFieldSubmitted: (_) => viewModel.submit(),
-            style: const TextStyle(color: kInk, fontSize: 15),
+            style: CareText.bodyLg,
             decoration: careFieldDecoration('Email', hint: 'you@example.com', icon: Icons.mail_outline_rounded),
             validator: viewModel.validateEmail,
           ),
@@ -100,7 +101,7 @@ class _ForgotPasswordForm extends StatelessWidget {
                     )
                   : const Text(
                       'Send reset link',
-                      style: TextStyle(fontSize: 15.5, fontWeight: FontWeight.w600),
+                      style: CareText.xlMedium,
                     ),
             ),
           ),

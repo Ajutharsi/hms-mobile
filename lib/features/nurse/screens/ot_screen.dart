@@ -5,6 +5,7 @@ import 'package:hms_mobile/core/services/api_service.dart';
 import 'package:hms_mobile/core/services/auth_storage.dart';
 import 'package:hms_mobile/core/services/nurse_api_service.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/nurse/models/nurse_patient.dart';
 import 'package:hms_mobile/features/nurse/models/ot_schedule.dart';
@@ -60,7 +61,7 @@ class _OtView extends StatelessWidget {
         content: Text('Cancel "${ot.procedureName}" for ${ot.patientName ?? 'this patient'}?'),
         actions: [
           TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('No')),
-          TextButton(onPressed: () => Navigator.of(context).pop(true), child: const Text('Yes, cancel', style: TextStyle(color: Color(0xFFB3261E)))),
+          TextButton(onPressed: () => Navigator.of(context).pop(true), child: const Text('Yes, cancel', style: CareText.danger)),
         ],
       ),
     );
@@ -86,7 +87,7 @@ class _OtView extends StatelessWidget {
         backgroundColor: kCareDark,
         foregroundColor: Colors.white,
         icon: const Icon(Icons.add, color: Colors.white),
-        label: const Text('Schedule surgery', style: TextStyle(color: Colors.white)),
+        label: const Text('Schedule surgery', style: CareText.onCare),
       ),
       body: RefreshIndicator(color: kCare, onRefresh: viewModel.load, child: _buildBody(context, viewModel)),
     ));
@@ -101,7 +102,7 @@ class _OtView extends StatelessWidget {
         const SizedBox(height: 80),
         const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
         const SizedBox(height: 12),
-        Text(viewModel.loadError!, textAlign: TextAlign.center, style: const TextStyle(color: kMuted)),
+        Text(viewModel.loadError!, textAlign: TextAlign.center, style: CareText.muted),
       ]);
     }
     if (viewModel.schedules.isEmpty) {
@@ -109,7 +110,7 @@ class _OtView extends StatelessWidget {
         SizedBox(height: 80),
         Icon(Icons.medical_services_outlined, color: kMuted, size: 40),
         SizedBox(height: 12),
-        Text('No surgeries scheduled', textAlign: TextAlign.center, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: kInk)),
+        Text('No surgeries scheduled', textAlign: TextAlign.center, style: CareText.titleXlMedium),
       ]);
     }
 
@@ -165,23 +166,23 @@ class _OtCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              Expanded(child: Text(ot.procedureName, style: const TextStyle(fontSize: 15.5, fontWeight: FontWeight.w700, color: kInk))),
+              Expanded(child: Text(ot.procedureName, style: CareText.titleXl)),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(color: sBg, borderRadius: BorderRadius.circular(8)),
-                child: Text(ot.status.replaceAll('_', ' ').toUpperCase(), style: TextStyle(color: sFg, fontSize: 10.5, fontWeight: FontWeight.w700)),
+                child: Text(ot.status.replaceAll('_', ' ').toUpperCase(), style: CareText.chip(sFg)),
               ),
             ],
           ),
           const SizedBox(height: 4),
-          Text('${ot.patientName ?? 'Patient'} · ${ot.patientMrn ?? ''}', style: const TextStyle(fontSize: 12.5, color: kMuted)),
-          if ((ot.surgeonName ?? '').isNotEmpty) Text('Surgeon: ${ot.surgeonName}', style: const TextStyle(fontSize: 12.5, color: kMuted)),
+          Text('${ot.patientName ?? 'Patient'} · ${ot.patientMrn ?? ''}', style: CareText.mutedSm),
+          if ((ot.surgeonName ?? '').isNotEmpty) Text('Surgeon: ${ot.surgeonName}', style: CareText.mutedSm),
           const SizedBox(height: 10),
           Row(
             children: [
               const Icon(Icons.event_outlined, size: 14, color: kMuted),
               const SizedBox(width: 6),
-              Expanded(child: Text(ot.scheduledStart ?? '—', style: const TextStyle(fontSize: 12.5, color: kMuted))),
+              Expanded(child: Text(ot.scheduledStart ?? '—', style: CareText.mutedSm)),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
                 decoration: BoxDecoration(color: pBg, borderRadius: BorderRadius.circular(8)),
@@ -191,28 +192,28 @@ class _OtCard extends StatelessWidget {
           ),
           if ((ot.theatreNo ?? '').isNotEmpty) ...[
             const SizedBox(height: 4),
-            Text('Theatre ${ot.theatreNo}', style: const TextStyle(fontSize: 12.5, color: kMuted)),
+            Text('Theatre ${ot.theatreNo}', style: CareText.mutedSm),
           ],
           if (ot.status == 'scheduled' || ot.status == 'in_progress' || ot.status == 'postponed') ...[
             const SizedBox(height: 12),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                TextButton(onPressed: onCancel, child: const Text('Cancel', style: TextStyle(color: Color(0xFFB3261E)))),
+                TextButton(onPressed: onCancel, child: const Text('Cancel', style: CareText.danger)),
                 const SizedBox(width: 4),
                 if (ot.status == 'scheduled')
                   FilledButton.icon(
                     onPressed: onStart,
                     icon: const Icon(Icons.play_arrow_rounded, size: 16),
                     label: const Text('Start'),
-                    style: FilledButton.styleFrom(backgroundColor: kCareDark, minimumSize: const Size(0, 34), textStyle: const TextStyle(fontSize: 13)),
+                    style: FilledButton.styleFrom(backgroundColor: kCareDark, minimumSize: const Size(0, 34), textStyle: CareText.plainSm),
                   ),
                 if (ot.status == 'in_progress')
                   FilledButton.icon(
                     onPressed: onComplete,
                     icon: const Icon(Icons.check_rounded, size: 16),
                     label: const Text('Complete'),
-                    style: FilledButton.styleFrom(backgroundColor: kCareDark, minimumSize: const Size(0, 34), textStyle: const TextStyle(fontSize: 13)),
+                    style: FilledButton.styleFrom(backgroundColor: kCareDark, minimumSize: const Size(0, 34), textStyle: CareText.plainSm),
                   ),
               ],
             ),
@@ -450,7 +451,7 @@ class _ScheduleOtScreenState extends State<_ScheduleOtScreen> {
                 style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
                 child: _submitting
                     ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                    : const Text('Schedule', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
+                    : const Text('Schedule', style: CareText.onCareBold),
               ),
             ),
           ],

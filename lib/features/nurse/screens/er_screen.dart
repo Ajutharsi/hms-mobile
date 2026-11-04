@@ -5,6 +5,7 @@ import 'package:hms_mobile/core/services/api_service.dart';
 import 'package:hms_mobile/core/services/auth_storage.dart';
 import 'package:hms_mobile/core/services/nurse_api_service.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/nurse/models/er_registration.dart';
 import 'package:hms_mobile/features/nurse/models/nurse_patient.dart';
@@ -82,7 +83,7 @@ class _ErView extends StatelessWidget {
         backgroundColor: kCareDark,
         foregroundColor: Colors.white,
         icon: const Icon(Icons.add, color: Colors.white),
-        label: const Text('Register patient', style: TextStyle(color: Colors.white)),
+        label: const Text('Register patient', style: CareText.onCare),
       ),
       body: RefreshIndicator(color: kCare, onRefresh: viewModel.load, child: _buildBody(context, viewModel)),
     ));
@@ -97,7 +98,7 @@ class _ErView extends StatelessWidget {
         const SizedBox(height: 80),
         const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
         const SizedBox(height: 12),
-        Text(viewModel.loadError!, textAlign: TextAlign.center, style: const TextStyle(color: kMuted)),
+        Text(viewModel.loadError!, textAlign: TextAlign.center, style: CareText.muted),
       ]);
     }
 
@@ -123,7 +124,7 @@ class _ErView extends StatelessWidget {
           ),
         const SizedBox(height: 16),
         if (viewModel.registrations.isEmpty)
-          const Padding(padding: EdgeInsets.only(top: 40), child: Center(child: Text('No ER registrations', style: TextStyle(color: kMuted))))
+          const Padding(padding: EdgeInsets.only(top: 40), child: Center(child: Text('No ER registrations', style: CareText.muted)))
         else
           for (final reg in viewModel.registrations) ...[
             _ErCard(
@@ -155,7 +156,7 @@ class _StatTile extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(value, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: color)),
+          Text(value, style: CareText.statValue(color)),
           Text(label, textAlign: TextAlign.center, style: TextStyle(fontSize: 10, color: color, fontWeight: FontWeight.w600)),
         ],
       ),
@@ -206,8 +207,8 @@ class _ErCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(reg.patientName, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: kInk)),
-                    if (reg.patientMrn != null) Text(reg.patientMrn!, style: const TextStyle(fontSize: 11.5, color: kMuted)),
+                    Text(reg.patientName, style: CareText.titleLg),
+                    if (reg.patientMrn != null) Text(reg.patientMrn!, style: CareText.mutedXs),
                   ],
                 ),
               ),
@@ -220,7 +221,7 @@ class _ErCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
                 decoration: BoxDecoration(color: sBg, borderRadius: BorderRadius.circular(8)),
-                child: Text(_titleCase(reg.status), style: TextStyle(color: sFg, fontSize: 10.5, fontWeight: FontWeight.w700)),
+                child: Text(_titleCase(reg.status), style: CareText.chip(sFg)),
               ),
             ],
           ),
@@ -229,15 +230,15 @@ class _ErCard extends StatelessWidget {
           const SizedBox(height: 6),
           Row(
             children: [
-              if (reg.age != null) Text('Age ${reg.age}', style: const TextStyle(fontSize: 12, color: kMuted)),
-              if (reg.age != null && (reg.gender ?? '').isNotEmpty) const Text('  ·  ', style: TextStyle(color: kMuted)),
-              if ((reg.gender ?? '').isNotEmpty) Text(reg.gender!, style: const TextStyle(fontSize: 12, color: kMuted)),
+              if (reg.age != null) Text('Age ${reg.age}', style: CareText.mutedXs),
+              if (reg.age != null && (reg.gender ?? '').isNotEmpty) const Text('  ·  ', style: CareText.muted),
+              if ((reg.gender ?? '').isNotEmpty) Text(reg.gender!, style: CareText.mutedXs),
             ],
           ),
           if ((reg.attendingDoctorName ?? '').isNotEmpty)
             Padding(
               padding: const EdgeInsets.only(top: 4),
-              child: Text('Attending: Dr. ${reg.attendingDoctorName}', style: const TextStyle(fontSize: 12, color: kMuted)),
+              child: Text('Attending: Dr. ${reg.attendingDoctorName}', style: CareText.mutedXs),
             ),
           if (!_isClosed) ...[
             const SizedBox(height: 12),
@@ -245,11 +246,11 @@ class _ErCard extends StatelessWidget {
               spacing: 8,
               runSpacing: 6,
               children: [
-                OutlinedButton(onPressed: onTriage, style: OutlinedButton.styleFrom(minimumSize: const Size(0, 32), textStyle: const TextStyle(fontSize: 12.5)), child: const Text('Triage')),
-                OutlinedButton(onPressed: onUpdate, style: OutlinedButton.styleFrom(minimumSize: const Size(0, 32), textStyle: const TextStyle(fontSize: 12.5)), child: const Text('Update')),
+                OutlinedButton(onPressed: onTriage, style: OutlinedButton.styleFrom(minimumSize: const Size(0, 32), textStyle: CareText.plainSm), child: const Text('Triage')),
+                OutlinedButton(onPressed: onUpdate, style: OutlinedButton.styleFrom(minimumSize: const Size(0, 32), textStyle: CareText.plainSm), child: const Text('Update')),
                 FilledButton(
                   onPressed: onDischarge,
-                  style: FilledButton.styleFrom(backgroundColor: kCareDark, minimumSize: const Size(0, 32), textStyle: const TextStyle(fontSize: 12.5)),
+                  style: FilledButton.styleFrom(backgroundColor: kCareDark, minimumSize: const Size(0, 32), textStyle: CareText.plainSm),
                   child: const Text('Close visit'),
                 ),
               ],
@@ -550,7 +551,7 @@ class _RegisterErScreenState extends State<_RegisterErScreen> {
                   style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
                   child: _isSaving
                       ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                      : const Text('Register patient', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
+                      : const Text('Register patient', style: CareText.onCareBold),
                 ),
               ),
             ],

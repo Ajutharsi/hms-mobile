@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/doctor/viewmodels/doctor_view_models.dart';
 
@@ -66,7 +67,7 @@ class _ProfileView extends StatelessWidget {
                     const SizedBox(height: 12),
                     Text(profile.name, style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w800, color: kInk)),
                     const SizedBox(height: 2),
-                    Text(profile.email, style: const TextStyle(fontSize: 13, color: kMuted)),
+                    Text(profile.email, style: CareText.mutedSm),
                     const SizedBox(height: 8),
                     Wrap(
                       spacing: 8,
@@ -94,7 +95,7 @@ class _ProfileView extends StatelessWidget {
                       Expanded(
                         child: Text(
                           'This login is not linked to a doctor record yet, so it has no appointments. An admin can link it on the web.',
-                          style: TextStyle(fontSize: 12.5, color: kMuted),
+                          style: CareText.mutedSm,
                         ),
                       ),
                     ],
@@ -107,7 +108,7 @@ class _ProfileView extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const Text('Account details', style: TextStyle(fontSize: 15.5, fontWeight: FontWeight.w700, color: kInk)),
+                    const Text('Account details', style: CareText.titleXl),
                     const SizedBox(height: 16),
                     TextFormField(
                       controller: viewModel.nameController,
@@ -136,9 +137,9 @@ class _ProfileView extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const Text('Change password', style: TextStyle(fontSize: 15.5, fontWeight: FontWeight.w700, color: kInk)),
+                    const Text('Change password', style: CareText.titleXl),
                     const SizedBox(height: 4),
-                    const Text('Leave blank to keep your current password.', style: TextStyle(fontSize: 12.5, color: kMuted)),
+                    const Text('Leave blank to keep your current password.', style: CareText.mutedSm),
                     const SizedBox(height: 16),
                     TextFormField(
                       controller: viewModel.currentPasswordController,
@@ -174,7 +175,7 @@ class _ProfileView extends StatelessWidget {
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(color: kCareSoft, borderRadius: BorderRadius.circular(12)),
                   child: Text(viewModel.successMessage!,
-                      style: TextStyle(color: kCareDark, fontSize: 13.5, fontWeight: FontWeight.w600)),
+                      style: CareText.brandMdMedium),
                 ),
                 const SizedBox(height: 14),
               ],

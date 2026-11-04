@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/lab/models/lab_order.dart';
 import 'package:hms_mobile/features/lab/screens/lab_order_create_screen.dart';
@@ -44,7 +45,7 @@ class _LabOrdersView extends StatelessWidget {
         backgroundColor: kCareDark,
         foregroundColor: Colors.white,
         icon: const Icon(Icons.add, color: Colors.white),
-        label: const Text('New order', style: TextStyle(color: Colors.white)),
+        label: const Text('New order', style: CareText.onCare),
       ),
       body: Column(
         children: [
@@ -81,7 +82,7 @@ class _LabOrdersView extends StatelessWidget {
         const SizedBox(height: 80),
         const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
         const SizedBox(height: 12),
-        Text(viewModel.loadError!, textAlign: TextAlign.center, style: const TextStyle(color: kMuted)),
+        Text(viewModel.loadError!, textAlign: TextAlign.center, style: CareText.muted),
       ]);
     }
     if (viewModel.orders.isEmpty) {
@@ -89,7 +90,7 @@ class _LabOrdersView extends StatelessWidget {
         SizedBox(height: 80),
         Icon(Icons.assignment_outlined, color: kMuted, size: 40),
         SizedBox(height: 12),
-        Text('No lab orders found', textAlign: TextAlign.center, style: TextStyle(color: kMuted)),
+        Text('No lab orders found', textAlign: TextAlign.center, style: CareText.muted),
       ]);
     }
 
@@ -139,24 +140,24 @@ class _OrderCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                Expanded(child: Text(order.patientName ?? 'Patient', style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w700, color: kInk))),
+                Expanded(child: Text(order.patientName ?? 'Patient', style: CareText.titleLg)),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
                   decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(8)),
-                  child: Text(order.status, style: TextStyle(color: fg, fontSize: 11, fontWeight: FontWeight.w700)),
+                  child: Text(order.status, style: CareText.chip(fg)),
                 ),
               ],
             ),
             const SizedBox(height: 3),
-            Text(order.patientMrn ?? '', style: const TextStyle(fontSize: 12, color: kMuted)),
+            Text(order.patientMrn ?? '', style: CareText.mutedXs),
             const SizedBox(height: 8),
             Row(
               children: [
-                Text(order.orderNo ?? '', style: const TextStyle(fontSize: 12, color: kMuted, fontWeight: FontWeight.w600)),
+                Text(order.orderNo ?? '', style: CareText.mutedXsMedium),
                 const Spacer(),
                 const Icon(Icons.science_outlined, size: 13, color: kMuted),
                 const SizedBox(width: 4),
-                Text('${order.testsCount} tests', style: const TextStyle(fontSize: 12, color: kMuted)),
+                Text('${order.testsCount} tests', style: CareText.mutedXs),
               ],
             ),
           ],

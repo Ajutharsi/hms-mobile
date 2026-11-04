@@ -59,7 +59,13 @@ class CarePalette {
         colors: [primary, dark],
       );
 
-  List<BoxShadow> get shadow => [BoxShadow(color: deep.withValues(alpha: 0.06), blurRadius: 18, offset: const Offset(0, 6))];
+  List<BoxShadow> get shadow => shadowOf();
+
+  /// A shadow tinted with the current brand colour. Screens used to write
+  /// `Color(0x1A0E6B61)` — the teal of the original palette, frozen — which
+  /// left a teal glow under their cards once the user picked, say, purple.
+  List<BoxShadow> shadowOf({double blur = 18, double dy = 6, double alpha = 0.06}) =>
+      [BoxShadow(color: deep.withValues(alpha: alpha), blurRadius: blur, offset: Offset(0, dy))];
 
   static Color _shift(Color c, double amount) {
     final hsl = HSLColor.fromColor(c);
@@ -106,4 +112,6 @@ class CareColors {
   static Color get alertFg => current.alertFg;
   static LinearGradient get gradient => current.gradient;
   static List<BoxShadow> get shadow => current.shadow;
+  static List<BoxShadow> shadowOf({double blur = 18, double dy = 6, double alpha = 0.06}) =>
+      current.shadowOf(blur: blur, dy: dy, alpha: alpha);
 }

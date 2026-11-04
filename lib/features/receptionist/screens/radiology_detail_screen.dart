@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/receptionist/viewmodels/radiology_view_model.dart';
 
@@ -42,7 +43,7 @@ class _RadiologyDetailView extends StatelessWidget {
         title: const Text('Delete this order?'),
         actions: [
           TextButton(onPressed: () => Navigator.of(ctx).pop(false), child: const Text('Cancel')),
-          TextButton(onPressed: () => Navigator.of(ctx).pop(true), child: const Text('Delete', style: TextStyle(color: Color(0xFFB3261E)))),
+          TextButton(onPressed: () => Navigator.of(ctx).pop(true), child: const Text('Delete', style: CareText.danger)),
         ],
       ),
     );
@@ -79,7 +80,7 @@ class _RadiologyDetailView extends StatelessWidget {
         const SizedBox(height: 80),
         const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
         const SizedBox(height: 12),
-        Text(viewModel.loadError!, textAlign: TextAlign.center, style: const TextStyle(color: kMuted)),
+        Text(viewModel.loadError!, textAlign: TextAlign.center, style: CareText.muted),
       ]);
     }
 
@@ -95,8 +96,8 @@ class _RadiologyDetailView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(order.patientName ?? 'Patient', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: kInk)),
-              Text(order.patientMrn ?? '', style: const TextStyle(fontSize: 12.5, color: kMuted)),
+              Text(order.patientName ?? 'Patient', style: CareText.titleXl),
+              Text(order.patientMrn ?? '', style: CareText.mutedSm),
               const SizedBox(height: 10),
               _row('Modality', order.modality),
               _row('Body part', order.bodyPart),
@@ -112,7 +113,7 @@ class _RadiologyDetailView extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         if (completed) ...[
-          const Text('Findings', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: kInk)),
+          const Text('Findings', style: CareText.titleMd),
           const SizedBox(height: 10),
           Container(
             padding: const EdgeInsets.all(14),
@@ -123,17 +124,17 @@ class _RadiologyDetailView extends StatelessWidget {
                 if ((order.findings ?? '').isNotEmpty) ...[
                   const Text('Findings', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: kMuted)),
                   const SizedBox(height: 4),
-                  Text(order.findings!, style: const TextStyle(fontSize: 13.5, color: kInk)),
+                  Text(order.findings!, style: CareText.bodyMd),
                   const SizedBox(height: 10),
                 ],
                 if ((order.impression ?? '').isNotEmpty) ...[
                   const Text('Impression', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: kMuted)),
                   const SizedBox(height: 4),
-                  Text(order.impression!, style: const TextStyle(fontSize: 13.5, color: kInk)),
+                  Text(order.impression!, style: CareText.bodyMd),
                   const SizedBox(height: 10),
                 ],
-                if ((order.radiologistName ?? '').isNotEmpty) Text('Radiologist: ${order.radiologistName}', style: const TextStyle(fontSize: 12, color: kMuted)),
-                if (order.completedAt != null) Text('Completed: ${order.completedAt}', style: const TextStyle(fontSize: 12, color: kMuted)),
+                if ((order.radiologistName ?? '').isNotEmpty) Text('Radiologist: ${order.radiologistName}', style: CareText.mutedXs),
+                if (order.completedAt != null) Text('Completed: ${order.completedAt}', style: CareText.mutedXs),
               ],
             ),
           ),
@@ -144,7 +145,7 @@ class _RadiologyDetailView extends StatelessWidget {
               onPressed: () => _enterFindings(context, viewModel),
               style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
               icon: const Icon(Icons.edit_note, color: Colors.white),
-              label: const Text('Enter findings', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
+              label: const Text('Enter findings', style: CareText.onCareBold),
             ),
           ),
       ],
@@ -157,7 +158,7 @@ class _RadiologyDetailView extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(width: 110, child: Text(label, style: const TextStyle(fontSize: 12.5, color: kMuted))),
+          SizedBox(width: 110, child: Text(label, style: CareText.mutedSm)),
           Expanded(child: Text(value, style: const TextStyle(fontSize: 13, color: kInk, fontWeight: FontWeight.w600))),
         ],
       ),

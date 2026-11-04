@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_palette.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/core/theme/theme_controller.dart';
 
@@ -36,7 +37,7 @@ class AppearanceScreen extends StatelessWidget {
             const SizedBox(height: 4),
             const Text(
               'Slide to mix your own shade. Text colour adjusts itself so it stays readable.',
-              style: TextStyle(fontSize: 12.5, color: kMuted),
+              style: CareText.mutedSm,
             ),
             const SizedBox(height: 12),
             _CustomPicker(seed: controller.seed, onChanged: controller.setSeed),
@@ -47,7 +48,7 @@ class AppearanceScreen extends StatelessWidget {
                 child: OutlinedButton.icon(
                   onPressed: controller.resetToDefault,
                   icon: const Icon(Icons.restart_alt_rounded, size: 19),
-                  label: const Text('Reset to default colour', style: TextStyle(fontWeight: FontWeight.w700)),
+                  label: const Text('Reset to default colour', style: CareText.boldOnly),
                 ),
               ),
           ],
@@ -70,25 +71,25 @@ class _Preview extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          ClipRRect(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(18)),
+          const ClipRRect(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
             child: CareHeaderBackground(
               radius: 22,
-              padding: const EdgeInsets.fromLTRB(16, 18, 16, 18),
+              padding: EdgeInsets.fromLTRB(16, 18, 16, 18),
               child: Row(
                 children: [
-                  const CareAvatar(name: 'Preview', radius: 20, ring: true),
-                  const SizedBox(width: 12),
+                  CareAvatar(name: 'Preview', radius: 20, ring: true),
+                  SizedBox(width: 12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Hello 👋', style: TextStyle(color: Colors.white.withValues(alpha: 0.85), fontSize: 12)),
-                        const Text('Your app', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w800)),
+                        Text('Hello 👋', style: CareText.onCareSoftXs),
+                        Text('Your app', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w800)),
                       ],
                     ),
                   ),
-                  const Icon(Icons.menu_rounded, color: Colors.white, size: 20),
+                  Icon(Icons.menu_rounded, color: Colors.white, size: 20),
                 ],
               ),
             ),
@@ -105,8 +106,8 @@ class _Preview extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Sample card', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: kInk)),
-                          Text('How lists will look', style: TextStyle(fontSize: 12, color: kMuted)),
+                          Text('Sample card', style: CareText.titleMd),
+                          Text('How lists will look', style: CareText.mutedXs),
                         ],
                       ),
                     ),
@@ -273,7 +274,7 @@ class _SliderRow extends StatelessWidget {
       children: [
         SizedBox(
           width: 62,
-          child: Text(label, style: const TextStyle(fontSize: 12.5, color: kMuted, fontWeight: FontWeight.w600)),
+          child: Text(label, style: CareText.mutedSmMedium),
         ),
         Expanded(
           child: Stack(

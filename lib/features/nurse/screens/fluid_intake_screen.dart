@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/nurse/models/fluid_intake.dart';
 import 'package:hms_mobile/features/nurse/viewmodels/fluid_intake_view_model.dart';
@@ -48,7 +49,7 @@ class _FluidIntakeView extends StatelessWidget {
         const SizedBox(height: 80),
         const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
         const SizedBox(height: 12),
-        Text(viewModel.loadError!, textAlign: TextAlign.center, style: const TextStyle(color: kMuted)),
+        Text(viewModel.loadError!, textAlign: TextAlign.center, style: CareText.muted),
       ]);
     }
     if (viewModel.patients.isEmpty) {
@@ -56,7 +57,7 @@ class _FluidIntakeView extends StatelessWidget {
         SizedBox(height: 80),
         Icon(Icons.opacity_outlined, color: kMuted, size: 40),
         SizedBox(height: 12),
-        Text('No in-patients to track right now', textAlign: TextAlign.center, style: TextStyle(color: kMuted)),
+        Text('No in-patients to track right now', textAlign: TextAlign.center, style: CareText.muted),
       ]);
     }
 
@@ -97,11 +98,11 @@ class _PatientCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(patient.name, style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w700, color: kInk)),
+            Text(patient.name, style: CareText.titleLg),
             const SizedBox(height: 2),
             Text(
               [patient.mrn, if (patient.wardName != null) '${patient.wardName} · ${patient.bedNo ?? ''}'].join(' · '),
-              style: const TextStyle(fontSize: 12, color: kMuted),
+              style: CareText.mutedXs,
             ),
             const SizedBox(height: 10),
             Row(
@@ -179,7 +180,7 @@ class _FluidIntakeDetailView extends StatelessWidget {
         title: const Text('Delete this entry?'),
         actions: [
           TextButton(onPressed: () => Navigator.of(ctx).pop(false), child: const Text('Cancel')),
-          TextButton(onPressed: () => Navigator.of(ctx).pop(true), child: const Text('Delete', style: TextStyle(color: Color(0xFFB3261E)))),
+          TextButton(onPressed: () => Navigator.of(ctx).pop(true), child: const Text('Delete', style: CareText.danger)),
         ],
       ),
     );
@@ -202,7 +203,7 @@ class _FluidIntakeDetailView extends StatelessWidget {
         backgroundColor: kCareDark,
         foregroundColor: Colors.white,
         icon: const Icon(Icons.add, color: Colors.white),
-        label: const Text('Log fluid', style: TextStyle(color: Colors.white)),
+        label: const Text('Log fluid', style: CareText.onCare),
       ),
       body: RefreshIndicator(color: kCare, onRefresh: viewModel.load, child: _buildBody(context, viewModel)),
     ));
@@ -217,7 +218,7 @@ class _FluidIntakeDetailView extends StatelessWidget {
         const SizedBox(height: 80),
         const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
         const SizedBox(height: 12),
-        Text(viewModel.loadError!, textAlign: TextAlign.center, style: const TextStyle(color: kMuted)),
+        Text(viewModel.loadError!, textAlign: TextAlign.center, style: CareText.muted),
       ]);
     }
 
@@ -232,10 +233,10 @@ class _FluidIntakeDetailView extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 20),
-        const Text('History', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: kMuted, letterSpacing: 0.3)),
+        const Text('History', style: CareText.mutedSmBoldWide),
         const SizedBox(height: 10),
         if (viewModel.logs.isEmpty)
-          const Padding(padding: EdgeInsets.only(top: 20), child: Center(child: Text('No fluid entries yet', style: TextStyle(color: kMuted))))
+          const Padding(padding: EdgeInsets.only(top: 20), child: Center(child: Text('No fluid entries yet', style: CareText.muted)))
         else
           for (final log in viewModel.logs) ...[
             Container(
@@ -260,8 +261,8 @@ class _FluidIntakeDetailView extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('${_titleCase(log.category)} · ${log.amountMl} ml', style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: kInk)),
-                        Text('${log.logDate} ${log.logTime}', style: const TextStyle(fontSize: 11.5, color: kMuted)),
+                        Text('${_titleCase(log.category)} · ${log.amountMl} ml', style: CareText.titleSm),
+                        Text('${log.logDate} ${log.logTime}', style: CareText.mutedXs),
                       ],
                     ),
                   ),
@@ -295,7 +296,7 @@ class _StatTile extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(value, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: color)),
+          Text(value, style: CareText.statValue(color)),
           Text(label, style: TextStyle(fontSize: 11.5, color: color, fontWeight: FontWeight.w600)),
         ],
       ),

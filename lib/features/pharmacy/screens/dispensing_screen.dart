@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/pharmacy/models/dispensing.dart';
 import 'package:hms_mobile/features/pharmacy/screens/dispensing_create_screen.dart';
@@ -48,7 +49,7 @@ class _DispensingView extends StatelessWidget {
               backgroundColor: kCareDark,
               foregroundColor: Colors.white,
               icon: const Icon(Icons.add, color: Colors.white),
-              label: const Text('New dispensing', style: TextStyle(color: Colors.white)),
+              label: const Text('New dispensing', style: CareText.onCare),
             )
           : null,
       body: RefreshIndicator(color: kCare, onRefresh: viewModel.load, child: _buildBody(context, viewModel)),
@@ -64,7 +65,7 @@ class _DispensingView extends StatelessWidget {
         const SizedBox(height: 80),
         const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
         const SizedBox(height: 12),
-        Text(viewModel.loadError!, textAlign: TextAlign.center, style: const TextStyle(color: kMuted)),
+        Text(viewModel.loadError!, textAlign: TextAlign.center, style: CareText.muted),
       ]);
     }
     if (viewModel.dispensings.isEmpty) {
@@ -72,7 +73,7 @@ class _DispensingView extends StatelessWidget {
         SizedBox(height: 80),
         Icon(Icons.local_pharmacy_outlined, color: kMuted, size: 40),
         SizedBox(height: 12),
-        Text('No dispensing records yet', textAlign: TextAlign.center, style: TextStyle(color: kMuted)),
+        Text('No dispensing records yet', textAlign: TextAlign.center, style: CareText.muted),
       ]);
     }
 
@@ -118,22 +119,22 @@ class _DispensingCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                Expanded(child: Text(dispensing.patientName ?? 'Patient', style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w700, color: kInk))),
+                Expanded(child: Text(dispensing.patientName ?? 'Patient', style: CareText.titleLg)),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
                   decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(8)),
-                  child: Text(dispensing.status, style: TextStyle(color: fg, fontSize: 11, fontWeight: FontWeight.w700)),
+                  child: Text(dispensing.status, style: CareText.chip(fg)),
                 ),
               ],
             ),
             const SizedBox(height: 3),
-            Text(dispensing.patientMrn ?? '', style: const TextStyle(fontSize: 12, color: kMuted)),
+            Text(dispensing.patientMrn ?? '', style: CareText.mutedXs),
             const SizedBox(height: 8),
             Row(
               children: [
-                Text(dispensing.dispensingNo ?? '', style: const TextStyle(fontSize: 12, color: kMuted, fontWeight: FontWeight.w600)),
+                Text(dispensing.dispensingNo ?? '', style: CareText.mutedXsMedium),
                 const Spacer(),
-                Text('${dispensing.itemsCount} items', style: const TextStyle(fontSize: 12, color: kMuted)),
+                Text('${dispensing.itemsCount} items', style: CareText.mutedXs),
                 const SizedBox(width: 10),
                 Text('₹${dispensing.totalAmount.toStringAsFixed(2)}', style: TextStyle(fontSize: 12.5, color: kCareDark, fontWeight: FontWeight.w700)),
               ],
@@ -183,7 +184,7 @@ class _DispensingDetailView extends StatelessWidget {
         const SizedBox(height: 80),
         const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
         const SizedBox(height: 12),
-        Text(viewModel.loadError!, textAlign: TextAlign.center, style: const TextStyle(color: kMuted)),
+        Text(viewModel.loadError!, textAlign: TextAlign.center, style: CareText.muted),
       ]);
     }
 
@@ -198,20 +199,20 @@ class _DispensingDetailView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(d.patientName ?? 'Patient', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: kInk)),
-              Text(d.patientMrn ?? '', style: const TextStyle(fontSize: 12.5, color: kMuted)),
+              Text(d.patientName ?? 'Patient', style: CareText.titleXl),
+              Text(d.patientMrn ?? '', style: CareText.mutedSm),
               const SizedBox(height: 8),
-              if ((d.prescriptionNo ?? '').isNotEmpty) Text('Prescription: ${d.prescriptionNo}', style: const TextStyle(fontSize: 12.5, color: kMuted)),
-              Text('Dispensed ${d.dispensedDate ?? ''}${d.dispensedByName != null ? ' by ${d.dispensedByName}' : ''}', style: const TextStyle(fontSize: 12.5, color: kMuted)),
+              if ((d.prescriptionNo ?? '').isNotEmpty) Text('Prescription: ${d.prescriptionNo}', style: CareText.mutedSm),
+              Text('Dispensed ${d.dispensedDate ?? ''}${d.dispensedByName != null ? ' by ${d.dispensedByName}' : ''}', style: CareText.mutedSm),
               if ((d.notes ?? '').isNotEmpty) ...[
                 const SizedBox(height: 8),
-                Text(d.notes!, style: const TextStyle(fontSize: 12.5, color: kMuted)),
+                Text(d.notes!, style: CareText.mutedSm),
               ],
             ],
           ),
         ),
         const SizedBox(height: 16),
-        const Text('Items', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: kInk)),
+        const Text('Items', style: CareText.titleMd),
         const SizedBox(height: 10),
         for (final item in d.items) ...[
           Container(
@@ -223,12 +224,12 @@ class _DispensingDetailView extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(item.medicineName, style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w700, color: kInk)),
-                      Text('Qty: ${item.quantityDispensed}${item.quantityPrescribed != null ? ' / ${item.quantityPrescribed} prescribed' : ''}', style: const TextStyle(fontSize: 12, color: kMuted)),
+                      Text(item.medicineName, style: CareText.titleMd),
+                      Text('Qty: ${item.quantityDispensed}${item.quantityPrescribed != null ? ' / ${item.quantityPrescribed} prescribed' : ''}', style: CareText.mutedXs),
                     ],
                   ),
                 ),
-                Text('₹${item.totalPrice.toStringAsFixed(2)}', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: kCareDark)),
+                Text('₹${item.totalPrice.toStringAsFixed(2)}', style: CareText.brandSmBold),
               ],
             ),
           ),
@@ -239,7 +240,7 @@ class _DispensingDetailView extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 10),
           child: Row(
             children: [
-              const Text('Total', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: kInk)),
+              const Text('Total', style: CareText.titleMd),
               const Spacer(),
               Text('₹${d.totalAmount.toStringAsFixed(2)}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: kCareDark)),
             ],

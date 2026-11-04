@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/patient/models/appointment.dart';
 import 'package:hms_mobile/features/patient/models/patient_profile.dart';
@@ -198,16 +199,16 @@ class _HomeHeader extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Hello 👋', style: TextStyle(color: Colors.white.withValues(alpha: 0.85), fontSize: 13)),
+                          const Text('Hello 👋', style: CareText.onCareSoftSm),
                           const SizedBox(height: 2),
                           Text(
                             name,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(color: Colors.white, fontSize: 19, fontWeight: FontWeight.w800),
+                            style: CareText.onCareDisplay,
                           ),
                           if ((mrn ?? '').isNotEmpty)
-                            Text('MRN: $mrn', style: TextStyle(color: Colors.white.withValues(alpha: 0.8), fontSize: 11.5)),
+                            Text('MRN: $mrn', style: CareText.onCareFaintXs),
                         ],
                       ),
                     ),
@@ -226,7 +227,7 @@ class _HomeHeader extends StatelessWidget {
                         Icon(Icons.search_rounded, color: kCare),
                         const SizedBox(width: 10),
                         const Expanded(
-                          child: Text('Find a doctor & book a visit', style: TextStyle(color: Color(0xFF9AA6A4), fontSize: 14)),
+                          child: Text('Find a doctor & book a visit', style: TextStyle(color: kCareHintQuiet, fontSize: 14)),
                         ),
                         Icon(Icons.tune_rounded, color: kCare, size: 20),
                       ],
@@ -283,7 +284,7 @@ class _StatsStrip extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
-        boxShadow: const [BoxShadow(color: Color(0x1A0E6B61), blurRadius: 24, offset: Offset(0, 10))],
+        boxShadow: careShadow(blur: 24, dy: 10, alpha: 0.1),
       ),
       child: Row(
         children: [
@@ -301,11 +302,11 @@ class _StatsStrip extends StatelessWidget {
                       children: [
                         Icon(stats[i].icon, size: 16, color: kCare),
                         const SizedBox(width: 5),
-                        Text(stats[i].value, style: const TextStyle(fontSize: 21, fontWeight: FontWeight.w800, color: kInk)),
+                        Text(stats[i].value, style: CareText.display),
                       ],
                     ),
                     const SizedBox(height: 3),
-                    Text(stats[i].label, style: const TextStyle(fontSize: 11.5, color: kMuted, fontWeight: FontWeight.w600)),
+                    Text(stats[i].label, style: CareText.mutedXsMedium),
                   ],
                 ),
               ),
@@ -349,9 +350,9 @@ class _UpcomingStrip extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('No upcoming visits', style: TextStyle(fontSize: 14.5, fontWeight: FontWeight.w700, color: kInk)),
+                    Text('No upcoming visits', style: CareText.titleLg),
                     SizedBox(height: 2),
-                    Text('Book one in a few taps.', style: TextStyle(fontSize: 12.5, color: kMuted)),
+                    Text('Book one in a few taps.', style: CareText.mutedSm),
                   ],
                 ),
               ),
@@ -362,7 +363,7 @@ class _UpcomingStrip extends StatelessWidget {
                   minimumSize: const Size(0, 38),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
-                child: const Text('Book', style: TextStyle(fontWeight: FontWeight.w700)),
+                child: const Text('Book', style: CareText.boldOnly),
               ),
             ],
           ),
@@ -405,14 +406,14 @@ class _UpcomingCard extends StatelessWidget {
               doctor,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: kInk),
+              style: CareText.titleMd,
             ),
             const SizedBox(height: 2),
             Text(
               (appointment.doctorSpecialization ?? '').isEmpty ? 'General' : appointment.doctorSpecialization!,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(fontSize: 12, color: kMuted),
+              style: CareText.mutedXs,
             ),
             const SizedBox(height: 8),
             CareChip(label: appointment.date, bg: kCarePinkBg, fg: kCarePinkFg),

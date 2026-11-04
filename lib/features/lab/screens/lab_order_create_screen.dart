@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/lab/viewmodels/lab_order_create_view_model.dart';
 
@@ -60,7 +61,7 @@ class _LabOrderCreateViewState extends State<_LabOrderCreateView> {
           : ListView(
               padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
               children: [
-                const Text('Patient', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: kMuted)),
+                const Text('Patient', style: CareText.mutedSmBold),
                 const SizedBox(height: 8),
                 if (viewModel.selectedPatient != null)
                   Container(
@@ -72,8 +73,8 @@ class _LabOrderCreateViewState extends State<_LabOrderCreateView> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(viewModel.selectedPatient!.name, style: const TextStyle(fontWeight: FontWeight.w700, color: kInk)),
-                              Text(viewModel.selectedPatient!.mrn, style: const TextStyle(fontSize: 12, color: kMuted)),
+                              Text(viewModel.selectedPatient!.name, style: CareText.inkBold),
+                              Text(viewModel.selectedPatient!.mrn, style: CareText.mutedXs),
                             ],
                           ),
                         ),
@@ -114,7 +115,7 @@ class _LabOrderCreateViewState extends State<_LabOrderCreateView> {
                     ),
                 ],
                 const SizedBox(height: 20),
-                const Text('Doctor', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: kMuted)),
+                const Text('Doctor', style: CareText.mutedSmBold),
                 const SizedBox(height: 8),
                 DropdownButtonFormField(
                   initialValue: viewModel.selectedDoctor,
@@ -123,10 +124,10 @@ class _LabOrderCreateViewState extends State<_LabOrderCreateView> {
                   onChanged: viewModel.selectDoctor,
                 ),
                 const SizedBox(height: 20),
-                const Text('Tests', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: kMuted)),
+                const Text('Tests', style: CareText.mutedSmBold),
                 const SizedBox(height: 8),
                 if (viewModel.availableTests.isEmpty)
-                  const Text('No active tests in the catalog.', style: TextStyle(color: kMuted, fontSize: 13))
+                  const Text('No active tests in the catalog.', style: CareText.mutedSm)
                 else
                   Wrap(
                     spacing: 8,
@@ -160,7 +161,7 @@ class _LabOrderCreateViewState extends State<_LabOrderCreateView> {
                     style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
                     child: viewModel.isSaving
                         ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                        : const Text('Create order', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
+                        : const Text('Create order', style: CareText.onCareBold),
                   ),
                 ),
               ],

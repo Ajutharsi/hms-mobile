@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/patient/models/doctor.dart';
 import 'package:hms_mobile/features/patient/viewmodels/book_appointment_view_model.dart';
@@ -61,7 +62,7 @@ class _BookAppointmentView extends StatelessWidget {
                 if (viewModel.doctors.isEmpty)
                   const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: Text('No doctors available right now.', style: TextStyle(color: kMuted)),
+                    child: Text('No doctors available right now.', style: CareText.muted),
                   )
                 else
                   SizedBox(
@@ -138,7 +139,7 @@ class _BookAppointmentView extends StatelessWidget {
                   child: TextField(
                     controller: viewModel.notesController,
                     maxLines: 3,
-                    style: const TextStyle(color: kInk, fontSize: 14.5),
+                    style: CareText.bodyLg,
                     decoration: careFieldDecoration('Notes (optional)', hint: 'Anything the doctor should know beforehand', icon: Icons.notes_rounded),
                   ),
                 ),
@@ -202,7 +203,7 @@ class _DoctorCard extends StatelessWidget {
                   (doctor.specialization ?? '').isEmpty ? 'General' : doctor.specialization!,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 11, color: kMuted),
+                  style: CareText.mutedXxs,
                 ),
               ],
             ),

@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 
-import 'package:hms_mobile/core/models/date_display.dart';
-import 'package:provider/provider.dart';
 
+import 'package:hms_mobile/core/models/date_display.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/nurse/models/nurse_patient.dart';
 import 'package:hms_mobile/features/nurse/models/nurse_vital.dart';
 import 'package:hms_mobile/features/nurse/viewmodels/vitals_view_model.dart';
 import 'package:hms_mobile/features/nurse/widgets/patient_picker.dart';
+import 'package:provider/provider.dart';
 
 class VitalsScreen extends StatelessWidget {
   const VitalsScreen({super.key});
@@ -44,7 +45,7 @@ class _VitalsView extends StatelessWidget {
         backgroundColor: kCareDark,
         foregroundColor: Colors.white,
         icon: const Icon(Icons.add, color: Colors.white),
-        label: const Text('Record vitals', style: TextStyle(color: Colors.white)),
+        label: const Text('Record vitals', style: CareText.onCare),
       ),
       body: RefreshIndicator(color: kCare, onRefresh: viewModel.load, child: _buildBody(context, viewModel)),
     ));
@@ -59,7 +60,7 @@ class _VitalsView extends StatelessWidget {
         const SizedBox(height: 80),
         const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
         const SizedBox(height: 12),
-        Text(viewModel.loadError!, textAlign: TextAlign.center, style: const TextStyle(color: kMuted)),
+        Text(viewModel.loadError!, textAlign: TextAlign.center, style: CareText.muted),
       ]);
     }
     if (viewModel.vitals.isEmpty) {
@@ -67,7 +68,7 @@ class _VitalsView extends StatelessWidget {
         SizedBox(height: 80),
         Icon(Icons.favorite_border, color: kMuted, size: 40),
         SizedBox(height: 12),
-        Text('No vitals recorded yet', textAlign: TextAlign.center, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: kInk)),
+        Text('No vitals recorded yet', textAlign: TextAlign.center, style: CareText.titleXlMedium),
       ]);
     }
 
@@ -118,8 +119,8 @@ class _VitalCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(vital.patientName ?? 'Patient', style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: kInk)),
-                      if (vital.patientMrn != null) Text(vital.patientMrn!, style: const TextStyle(fontSize: 11.5, color: kMuted)),
+                      Text(vital.patientName ?? 'Patient', style: CareText.titleLg),
+                      if (vital.patientMrn != null) Text(vital.patientMrn!, style: CareText.mutedXs),
                     ],
                   ),
                 ),
@@ -147,12 +148,12 @@ class _VitalCard extends StatelessWidget {
               children: [
                 const Icon(Icons.access_time_rounded, size: 13, color: kMuted),
                 const SizedBox(width: 6),
-                Text(shortDateTime(vital.recordedAt), style: const TextStyle(fontSize: 12, color: kMuted)),
+                Text(shortDateTime(vital.recordedAt), style: CareText.mutedXs),
                 if (vital.recordedByName != null) ...[
                   const SizedBox(width: 12),
                   const Icon(Icons.person_outline, size: 13, color: kMuted),
                   const SizedBox(width: 4),
-                  Text(vital.recordedByName!, style: const TextStyle(fontSize: 12, color: kMuted)),
+                  Text(vital.recordedByName!, style: CareText.mutedXs),
                 ],
               ],
             ),
@@ -177,7 +178,7 @@ class _Reading extends StatelessWidget {
       children: [
         Icon(icon, size: 14, color: kMuted),
         const SizedBox(width: 4),
-        Text('$label ', style: const TextStyle(fontSize: 12, color: kMuted)),
+        Text('$label ', style: CareText.mutedXs),
         Text(value, style: const TextStyle(fontSize: 12.5, color: kInk, fontWeight: FontWeight.w700)),
       ],
     );
@@ -299,7 +300,7 @@ class _RecordVitalsScreenState extends State<_RecordVitalsScreen> {
                   style: FilledButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
                   child: _saving
                       ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2.4, color: Colors.white))
-                      : const Text('Save vitals', style: TextStyle(fontSize: 15.5, fontWeight: FontWeight.w600)),
+                      : const Text('Save vitals', style: CareText.xlMedium),
                 ),
               ),
             ],
@@ -339,9 +340,9 @@ class _VitalsHistoryView extends StatelessWidget {
       body: viewModel.isLoading
           ? Center(child: CircularProgressIndicator(color: kCare))
           : viewModel.loadError != null
-              ? Center(child: Text(viewModel.loadError!, style: const TextStyle(color: kMuted)))
+              ? Center(child: Text(viewModel.loadError!, style: CareText.muted))
               : viewModel.history.isEmpty
-                  ? const Center(child: Text('No history yet.', style: TextStyle(color: kMuted)))
+                  ? const Center(child: Text('No history yet.', style: CareText.muted))
                   : ListView.separated(
                       padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
                       itemCount: viewModel.history.length,

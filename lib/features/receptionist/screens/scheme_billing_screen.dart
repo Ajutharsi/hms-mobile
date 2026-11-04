@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/receptionist/models/reception_patient.dart';
 import 'package:hms_mobile/features/receptionist/models/scheme_billing.dart';
@@ -53,7 +54,7 @@ class _SchemeBillingView extends StatelessWidget {
         backgroundColor: kCareDark,
         foregroundColor: Colors.white,
         icon: const Icon(Icons.add, color: Colors.white),
-        label: const Text('New scheme bill', style: TextStyle(color: Colors.white)),
+        label: const Text('New scheme bill', style: CareText.onCare),
       ),
       body: RefreshIndicator(color: kCare, onRefresh: viewModel.load, child: _buildBody(context, viewModel)),
     ));
@@ -68,7 +69,7 @@ class _SchemeBillingView extends StatelessWidget {
         const SizedBox(height: 80),
         const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
         const SizedBox(height: 12),
-        Text(viewModel.loadError!, textAlign: TextAlign.center, style: const TextStyle(color: kMuted)),
+        Text(viewModel.loadError!, textAlign: TextAlign.center, style: CareText.muted),
       ]);
     }
 
@@ -94,7 +95,7 @@ class _SchemeBillingView extends StatelessWidget {
           ),
         const SizedBox(height: 20),
         if (viewModel.bills.isEmpty)
-          const Padding(padding: EdgeInsets.only(top: 40), child: Center(child: Text('No scheme bills yet', style: TextStyle(color: kMuted))))
+          const Padding(padding: EdgeInsets.only(top: 40), child: Center(child: Text('No scheme bills yet', style: CareText.muted)))
         else
           for (final bill in viewModel.bills) ...[
             _BillCard(
@@ -128,7 +129,7 @@ class _StatTile extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(value, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: color)),
-          Text(label, style: TextStyle(fontSize: 11, color: color, fontWeight: FontWeight.w600)),
+          Text(label, style: CareText.tag(color)),
         ],
       ),
     );
@@ -156,15 +157,15 @@ class _BillCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                Expanded(child: Text(bill.patientName ?? 'Patient', style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w700, color: kInk))),
+                Expanded(child: Text(bill.patientName ?? 'Patient', style: CareText.titleLg)),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
                   decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(8)),
-                  child: Text(titleCase(bill.status), style: TextStyle(color: fg, fontSize: 10.5, fontWeight: FontWeight.w700)),
+                  child: Text(titleCase(bill.status), style: CareText.chip(fg)),
                 ),
               ],
             ),
-            Text(bill.patientMrn ?? '', style: const TextStyle(fontSize: 12, color: kMuted)),
+            Text(bill.patientMrn ?? '', style: CareText.mutedXs),
             const SizedBox(height: 8),
             Row(
               children: [
@@ -174,7 +175,7 @@ class _BillCard extends StatelessWidget {
                   child: Text(bill.scheme.toUpperCase(), style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: kInk)),
                 ),
                 const Spacer(),
-                Text('₹${bill.packageRate.toStringAsFixed(0)}', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: kCareDark)),
+                Text('₹${bill.packageRate.toStringAsFixed(0)}', style: CareText.brandSmBold),
               ],
             ),
           ],
@@ -292,7 +293,7 @@ class _SchemeBillFormScreenState extends State<_SchemeBillFormScreen> {
                 style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
                 child: _submitting
                     ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                    : const Text('Create bill', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
+                    : const Text('Create bill', style: CareText.onCareBold),
               ),
             ),
           ],

@@ -4,6 +4,7 @@ import 'package:hms_mobile/core/services/api_service.dart';
 import 'package:hms_mobile/core/services/auth_storage.dart';
 import 'package:hms_mobile/core/services/receptionist_api_service.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/receptionist/models/invoice.dart';
 import 'package:hms_mobile/features/receptionist/models/reception_patient.dart';
@@ -163,7 +164,7 @@ class _InvoiceCreateScreenState extends State<InvoiceCreateScreen> {
           : ListView(
               padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
               children: [
-                const Text('Patient', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: kMuted)),
+                const Text('Patient', style: CareText.mutedSmBold),
                 const SizedBox(height: 8),
                 if (_selectedPatient != null)
                   Container(
@@ -175,8 +176,8 @@ class _InvoiceCreateScreenState extends State<InvoiceCreateScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(_selectedPatient!.name, style: const TextStyle(fontWeight: FontWeight.w700, color: kInk)),
-                              Text(_selectedPatient!.mrn, style: const TextStyle(fontSize: 12, color: kMuted)),
+                              Text(_selectedPatient!.name, style: CareText.inkBold),
+                              Text(_selectedPatient!.mrn, style: CareText.mutedXs),
                             ],
                           ),
                         ),
@@ -217,7 +218,7 @@ class _InvoiceCreateScreenState extends State<InvoiceCreateScreen> {
                 const SizedBox(height: 20),
                 Row(
                   children: [
-                    const Text('Items', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: kMuted)),
+                    const Text('Items', style: CareText.mutedSmBold),
                     const Spacer(),
                     TextButton.icon(
                       onPressed: () => setState(() => _lines.add(_InvoiceLineDraft())),
@@ -265,7 +266,7 @@ class _InvoiceCreateScreenState extends State<InvoiceCreateScreen> {
                     style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
                     child: _isSaving
                         ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                        : const Text('Create invoice', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
+                        : const Text('Create invoice', style: CareText.onCareBold),
                   ),
                 ),
               ],

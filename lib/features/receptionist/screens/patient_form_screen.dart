@@ -7,6 +7,7 @@ import 'package:hms_mobile/core/services/api_service.dart';
 import 'package:hms_mobile/core/services/auth_storage.dart';
 import 'package:hms_mobile/core/services/receptionist_api_service.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/receptionist/models/reception_patient.dart';
 
@@ -251,7 +252,7 @@ class _PatientFormScreenState extends State<PatientFormScreen> {
                 style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
                 child: _isSaving
                     ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                    : Text(_isEdit ? 'Save changes' : 'Add patient', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
+                    : Text(_isEdit ? 'Save changes' : 'Add patient', style: CareText.onCareBold),
               ),
             ),
           ],

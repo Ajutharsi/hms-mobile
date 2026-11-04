@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/receptionist/models/scheme_billing.dart';
 import 'package:hms_mobile/features/receptionist/screens/insurance_claims_screen.dart' show titleCase;
@@ -48,7 +49,7 @@ class _DetailView extends StatelessWidget {
         title: const Text('Delete this scheme bill?'),
         actions: [
           TextButton(onPressed: () => Navigator.of(ctx).pop(false), child: const Text('Cancel')),
-          TextButton(onPressed: () => Navigator.of(ctx).pop(true), child: const Text('Delete', style: TextStyle(color: Color(0xFFB3261E)))),
+          TextButton(onPressed: () => Navigator.of(ctx).pop(true), child: const Text('Delete', style: CareText.danger)),
         ],
       ),
     );
@@ -83,7 +84,7 @@ class _DetailView extends StatelessWidget {
               backgroundColor: kCareDark,
               foregroundColor: Colors.white,
               icon: const Icon(Icons.flag_outlined, color: Colors.white),
-              label: const Text('Update status', style: TextStyle(color: Colors.white)),
+              label: const Text('Update status', style: CareText.onCare),
             ),
       body: _buildBody(viewModel),
     ));
@@ -98,7 +99,7 @@ class _DetailView extends StatelessWidget {
         const SizedBox(height: 80),
         const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
         const SizedBox(height: 12),
-        Text(viewModel.loadError!, textAlign: TextAlign.center, style: const TextStyle(color: kMuted)),
+        Text(viewModel.loadError!, textAlign: TextAlign.center, style: CareText.muted),
       ]);
     }
 
@@ -110,7 +111,7 @@ class _DetailView extends StatelessWidget {
       children: [
         Row(
           children: [
-            Expanded(child: Text(bill.patientName ?? 'Patient', style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w700, color: kInk))),
+            Expanded(child: Text(bill.patientName ?? 'Patient', style: CareText.titleXxl)),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(8)),
@@ -118,7 +119,7 @@ class _DetailView extends StatelessWidget {
             ),
           ],
         ),
-        Text(bill.patientMrn ?? '', style: const TextStyle(fontSize: 12.5, color: kMuted)),
+        Text(bill.patientMrn ?? '', style: CareText.mutedSm),
         const SizedBox(height: 16),
         Container(
           padding: const EdgeInsets.all(14),
@@ -156,8 +157,8 @@ class _DetailView extends StatelessWidget {
       children: [
         Row(
           children: [
-            Expanded(child: Text(label, style: const TextStyle(fontSize: 12.5, color: kMuted))),
-            Flexible(child: Text(value, textAlign: TextAlign.right, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: kInk))),
+            Expanded(child: Text(label, style: CareText.mutedSm)),
+            Flexible(child: Text(value, textAlign: TextAlign.right, style: CareText.titleSmMedium)),
           ],
         ),
         if (showDivider) const Padding(padding: EdgeInsets.symmetric(vertical: 8), child: Divider(height: 1, color: Colors.white)),

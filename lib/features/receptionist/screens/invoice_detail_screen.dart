@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/receptionist/viewmodels/invoices_view_model.dart';
 
@@ -62,7 +63,7 @@ class _InvoiceDetailView extends StatelessWidget {
         const SizedBox(height: 80),
         const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
         const SizedBox(height: 12),
-        Text(viewModel.loadError!, textAlign: TextAlign.center, style: const TextStyle(color: kMuted)),
+        Text(viewModel.loadError!, textAlign: TextAlign.center, style: CareText.muted),
       ]);
     }
 
@@ -78,8 +79,8 @@ class _InvoiceDetailView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(invoice.patientName ?? 'Patient', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: kInk)),
-              Text(invoice.patientMrn ?? '', style: const TextStyle(fontSize: 12.5, color: kMuted)),
+              Text(invoice.patientName ?? 'Patient', style: CareText.titleXl),
+              Text(invoice.patientMrn ?? '', style: CareText.mutedSm),
               const SizedBox(height: 10),
               _amountRow('Subtotal', invoice.subtotal),
               _amountRow('Discount', -invoice.discount),
@@ -87,12 +88,12 @@ class _InvoiceDetailView extends StatelessWidget {
               Divider(height: 20, color: kCareBg),
               _amountRow('Total', invoice.total, bold: true),
               _amountRow('Paid', invoice.paidAmount, color: kSuccessFg),
-              _amountRow('Balance', invoice.balance, color: invoice.balance > 0 ? const Color(0xFFB3261E) : kSuccessFg, bold: true),
+              _amountRow('Balance', invoice.balance, color: invoice.balance > 0 ? kDangerText : kSuccessFg, bold: true),
             ],
           ),
         ),
         const SizedBox(height: 16),
-        const Text('Items', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: kInk)),
+        const Text('Items', style: CareText.titleMd),
         const SizedBox(height: 10),
         for (final item in invoice.items) ...[
           Container(
@@ -105,19 +106,19 @@ class _InvoiceDetailView extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(item.itemName, style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w700, color: kInk)),
-                      Text('${item.quantity} × ₹${item.unitPrice.toStringAsFixed(2)}', style: const TextStyle(fontSize: 12, color: kMuted)),
+                      Text(item.itemName, style: CareText.titleMd),
+                      Text('${item.quantity} × ₹${item.unitPrice.toStringAsFixed(2)}', style: CareText.mutedXs),
                     ],
                   ),
                 ),
-                Text('₹${item.total.toStringAsFixed(2)}', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: kCareDark)),
+                Text('₹${item.total.toStringAsFixed(2)}', style: CareText.brandSmBold),
               ],
             ),
           ),
         ],
         if (invoice.payments.isNotEmpty) ...[
           const SizedBox(height: 8),
-          const Text('Payment history', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: kInk)),
+          const Text('Payment history', style: CareText.titleMd),
           const SizedBox(height: 10),
           for (final p in invoice.payments) ...[
             Container(
@@ -131,7 +132,7 @@ class _InvoiceDetailView extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(p.paymentMethod.toUpperCase(), style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700, color: kSuccessFg)),
-                        if (p.paymentDate != null) Text(p.paymentDate!, style: const TextStyle(fontSize: 11.5, color: kMuted)),
+                        if (p.paymentDate != null) Text(p.paymentDate!, style: CareText.mutedXs),
                       ],
                     ),
                   ),
@@ -149,7 +150,7 @@ class _InvoiceDetailView extends StatelessWidget {
               onPressed: () => _addPayment(context, viewModel),
               style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
               icon: const Icon(Icons.payments_outlined, color: Colors.white),
-              label: const Text('Add payment', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
+              label: const Text('Add payment', style: CareText.onCareBold),
             ),
           ),
         ],
@@ -162,7 +163,7 @@ class _InvoiceDetailView extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 3),
       child: Row(
         children: [
-          Text(label, style: const TextStyle(fontSize: 13, color: kMuted)),
+          Text(label, style: CareText.mutedSm),
           const Spacer(),
           Text(
             '₹${amount.toStringAsFixed(2)}',

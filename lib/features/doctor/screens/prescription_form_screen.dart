@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/doctor/viewmodels/doctor_view_models.dart';
 
@@ -59,8 +60,8 @@ class _PrescriptionFormView extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(patientName, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: kInk)),
-                      const Text('Medicines for this visit', style: TextStyle(fontSize: 12.5, color: kMuted)),
+                      Text(patientName, style: CareText.titleLg),
+                      const Text('Medicines for this visit', style: CareText.mutedSm),
                     ],
                   ),
                 ),
@@ -88,14 +89,14 @@ class _PrescriptionFormView extends StatelessWidget {
             child: OutlinedButton.icon(
               onPressed: viewModel.addMedicine,
               icon: const Icon(Icons.add_rounded, size: 19),
-              label: const Text('Add another medicine', style: TextStyle(fontWeight: FontWeight.w700)),
+              label: const Text('Add another medicine', style: CareText.boldOnly),
             ),
           ),
           const SizedBox(height: 18),
           TextField(
             controller: viewModel.notesController,
             maxLines: 2,
-            style: const TextStyle(color: kInk, fontSize: 14.5),
+            style: CareText.bodyLg,
             decoration: careFieldDecoration('Notes (optional)', hint: 'e.g. take after food', icon: Icons.notes_rounded),
           ),
         ],
@@ -144,7 +145,7 @@ class _MedicineCard extends StatelessWidget {
               const CareIconBox(icon: Icons.medication_rounded, size: 34),
               const SizedBox(width: 10),
               Expanded(
-                child: Text('Medicine ${index + 1}', style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w700, color: kInk)),
+                child: Text('Medicine ${index + 1}', style: CareText.titleLg),
               ),
               if (canRemove)
                 IconButton(
@@ -157,7 +158,7 @@ class _MedicineCard extends StatelessWidget {
           const SizedBox(height: 12),
           TextField(
             controller: draft.nameController,
-            style: const TextStyle(color: kInk, fontSize: 14.5),
+            style: CareText.bodyLg,
             decoration: careFieldDecoration('Medicine', hint: 'e.g. Paracetamol 500mg', icon: Icons.medication_liquid_rounded),
           ),
           const SizedBox(height: 12),
@@ -166,7 +167,7 @@ class _MedicineCard extends StatelessWidget {
               Expanded(
                 child: TextField(
                   controller: draft.dosageController,
-                  style: const TextStyle(color: kInk, fontSize: 14.5),
+                  style: CareText.bodyLg,
                   decoration: careFieldDecoration('Dosage', hint: '1 tablet', icon: Icons.straighten_rounded),
                 ),
               ),
@@ -174,7 +175,7 @@ class _MedicineCard extends StatelessWidget {
               Expanded(
                 child: TextField(
                   controller: draft.frequencyController,
-                  style: const TextStyle(color: kInk, fontSize: 14.5),
+                  style: CareText.bodyLg,
                   decoration: careFieldDecoration('Frequency', hint: 'BD / TDS', icon: Icons.repeat_rounded),
                 ),
               ),
@@ -183,11 +184,11 @@ class _MedicineCard extends StatelessWidget {
           const SizedBox(height: 12),
           TextField(
             controller: draft.durationController,
-            style: const TextStyle(color: kInk, fontSize: 14.5),
+            style: CareText.bodyLg,
             decoration: careFieldDecoration('Duration', hint: '5 days', icon: Icons.calendar_month_rounded),
           ),
           const SizedBox(height: 12),
-          const Text('Route', style: TextStyle(fontSize: 12.5, color: kMuted, fontWeight: FontWeight.w600)),
+          const Text('Route', style: CareText.mutedSmMedium),
           const SizedBox(height: 8),
           Wrap(
             spacing: 8,
@@ -204,7 +205,7 @@ class _MedicineCard extends StatelessWidget {
           const SizedBox(height: 12),
           TextField(
             controller: draft.instructionsController,
-            style: const TextStyle(color: kInk, fontSize: 14.5),
+            style: CareText.bodyLg,
             decoration: careFieldDecoration('Instructions (optional)', hint: 'After food', icon: Icons.info_outline_rounded),
           ),
         ],

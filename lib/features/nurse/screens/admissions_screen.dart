@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:hms_mobile/core/theme/app_style.dart';
-import 'package:hms_mobile/core/theme/care_ui.dart';
-import 'package:hms_mobile/core/services/auth_storage.dart';
 import 'package:hms_mobile/core/services/api_service.dart' show ApiException, guardNetworkErrors;
+import 'package:hms_mobile/core/services/auth_storage.dart';
 import 'package:hms_mobile/core/services/nurse_api_service.dart';
+import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
+import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/nurse/models/admission.dart';
 import 'package:hms_mobile/features/nurse/models/ward.dart';
 import 'package:hms_mobile/features/nurse/screens/admit_patient_screen.dart';
@@ -72,7 +73,7 @@ class _AdmissionsView extends StatelessWidget {
         backgroundColor: kCareDark,
         foregroundColor: Colors.white,
         icon: const Icon(Icons.add, color: Colors.white),
-        label: const Text('Admit patient', style: TextStyle(color: Colors.white)),
+        label: const Text('Admit patient', style: CareText.onCare),
       ),
       body: Column(
         children: [
@@ -109,7 +110,7 @@ class _AdmissionsView extends StatelessWidget {
         const SizedBox(height: 80),
         const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
         const SizedBox(height: 12),
-        Text(viewModel.loadError!, textAlign: TextAlign.center, style: const TextStyle(color: kMuted)),
+        Text(viewModel.loadError!, textAlign: TextAlign.center, style: CareText.muted),
       ]);
     }
     if (viewModel.admissions.isEmpty) {
@@ -117,7 +118,7 @@ class _AdmissionsView extends StatelessWidget {
         SizedBox(height: 80),
         Icon(Icons.bed_outlined, color: kMuted, size: 40),
         SizedBox(height: 12),
-        Text('No admissions found', textAlign: TextAlign.center, style: TextStyle(color: kMuted)),
+        Text('No admissions found', textAlign: TextAlign.center, style: CareText.muted),
       ]);
     }
 
@@ -152,7 +153,7 @@ class _FilterChip extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
         decoration: BoxDecoration(color: selected ? kCareDark : kCareBg, borderRadius: BorderRadius.circular(20)),
-        child: Text(label, style: TextStyle(color: selected ? Colors.white : kMuted, fontSize: 12.5, fontWeight: FontWeight.w600)),
+        child: Text(label, style: CareText.tag(selected ? Colors.white : kMuted, size: CareText.sm)),
       ),
     );
   }
@@ -182,7 +183,7 @@ class _AdmissionCard extends StatelessWidget {
                 backgroundColor: kCareSoft,
                 backgroundImage: admission.patientPhotoUrl != null ? NetworkImage(admission.patientPhotoUrl!) : null,
                 child: admission.patientPhotoUrl == null
-                    ? Text((admission.patientName ?? '?').isNotEmpty ? admission.patientName![0].toUpperCase() : '?', style: TextStyle(color: kCareDark, fontWeight: FontWeight.w700))
+                    ? Text((admission.patientName ?? '?').isNotEmpty ? admission.patientName![0].toUpperCase() : '?', style: CareText.brandBold)
                     : null,
               ),
               const SizedBox(width: 10),
@@ -190,8 +191,8 @@ class _AdmissionCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(admission.patientName ?? 'Patient', style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w700, color: kInk)),
-                    Text(admission.patientMrn ?? '', style: const TextStyle(fontSize: 12, color: kMuted)),
+                    Text(admission.patientName ?? 'Patient', style: CareText.titleLg),
+                    Text(admission.patientMrn ?? '', style: CareText.mutedXs),
                   ],
                 ),
               ),
@@ -222,7 +223,7 @@ class _AdmissionCard extends StatelessWidget {
                 const SizedBox(width: 4),
                 FilledButton(
                   onPressed: onDischarge,
-                  style: FilledButton.styleFrom(backgroundColor: kCareDark, minimumSize: const Size(0, 34), textStyle: const TextStyle(fontSize: 13)),
+                  style: FilledButton.styleFrom(backgroundColor: kCareDark, minimumSize: const Size(0, 34), textStyle: CareText.plainSm),
                   child: const Text('Discharge'),
                 ),
               ],
@@ -247,7 +248,7 @@ class _InfoBit extends StatelessWidget {
       children: [
         Icon(icon, size: 13, color: kMuted),
         const SizedBox(width: 4),
-        Text(text, style: const TextStyle(fontSize: 12, color: kMuted)),
+        Text(text, style: CareText.mutedXs),
       ],
     );
   }

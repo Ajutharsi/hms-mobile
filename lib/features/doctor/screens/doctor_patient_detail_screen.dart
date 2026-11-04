@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/doctor/screens/doctor_appointment_detail_screen.dart';
 import 'package:hms_mobile/features/doctor/viewmodels/doctor_view_models.dart';
@@ -67,7 +68,7 @@ class _PatientDetailView extends StatelessWidget {
                       children: [
                         Text(patient.name, style: const TextStyle(fontSize: 16.5, fontWeight: FontWeight.w800, color: kInk)),
                         const SizedBox(height: 2),
-                        Text(patient.mrn, style: const TextStyle(fontSize: 12.5, color: kMuted)),
+                        Text(patient.mrn, style: CareText.mutedSm),
                       ],
                     ),
                   ),
@@ -110,8 +111,8 @@ class _PatientDetailView extends StatelessWidget {
                     children: [
                       Icon(entry.$1, size: 17, color: kCare),
                       const SizedBox(width: 6),
-                      Text('${entry.$2}: ', style: const TextStyle(fontSize: 12.5, color: kMuted)),
-                      Text(entry.$3!, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: kInk)),
+                      Text('${entry.$2}: ', style: CareText.mutedSm),
+                      Text(entry.$3!, style: CareText.titleMd),
                     ],
                   ),
               ],
@@ -123,7 +124,7 @@ class _PatientDetailView extends StatelessWidget {
         const SizedBox(height: 10),
         if (detail.consultations.isEmpty)
           const CareCard(
-            child: Text('You have not consulted this patient yet.', style: TextStyle(fontSize: 13, color: kMuted)),
+            child: Text('You have not consulted this patient yet.', style: CareText.mutedSm),
           )
         else
           CareCard(
@@ -138,7 +139,7 @@ class _PatientDetailView extends StatelessWidget {
                         children: [
                           Expanded(
                             child: Text(consultation.chiefComplaint ?? 'Consultation',
-                                style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w700, color: kInk)),
+                                style: CareText.titleMd),
                           ),
                           if ((consultation.date ?? '').isNotEmpty)
                             CareChip(label: consultation.date!, bg: kCarePinkBg, fg: kCarePinkFg),
@@ -146,7 +147,7 @@ class _PatientDetailView extends StatelessWidget {
                       ),
                       if ((consultation.diagnosis ?? '').isNotEmpty) ...[
                         const SizedBox(height: 3),
-                        Text(consultation.diagnosis!, style: const TextStyle(fontSize: 12.5, color: kMuted)),
+                        Text(consultation.diagnosis!, style: CareText.mutedSm),
                       ],
                     ],
                   ),
@@ -160,7 +161,7 @@ class _PatientDetailView extends StatelessWidget {
         const CareSectionTitle(title: 'Visits'),
         const SizedBox(height: 10),
         if (detail.appointments.isEmpty)
-          const CareCard(child: Text('No visits with you yet.', style: TextStyle(fontSize: 13, color: kMuted)))
+          const CareCard(child: Text('No visits with you yet.', style: CareText.mutedSm))
         else
           for (final appointment in detail.appointments) ...[
             CareCard(
@@ -177,9 +178,9 @@ class _PatientDetailView extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text('${appointment.date}  ${appointment.time}'.trim(),
-                            style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w700, color: kInk)),
+                            style: CareText.titleMd),
                         if (appointment.type.isNotEmpty)
-                          Text(appointment.type.toUpperCase(), style: const TextStyle(fontSize: 11.5, color: kMuted)),
+                          Text(appointment.type.toUpperCase(), style: CareText.mutedXs),
                       ],
                     ),
                   ),

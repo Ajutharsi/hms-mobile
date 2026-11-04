@@ -6,11 +6,12 @@ import 'package:provider/provider.dart';
 import 'package:hms_mobile/core/navigation/role_home.dart';
 import 'package:hms_mobile/core/services/api_service.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
-import 'package:hms_mobile/features/auth/viewmodels/login_view_model.dart';
-import 'package:hms_mobile/features/auth/widgets/auth_scaffold.dart';
 import 'package:hms_mobile/features/auth/screens/forgot_password_screen.dart';
 import 'package:hms_mobile/features/auth/screens/register_screen.dart';
+import 'package:hms_mobile/features/auth/viewmodels/login_view_model.dart';
+import 'package:hms_mobile/features/auth/widgets/auth_scaffold.dart';
 
 /// View for the login screen — owns no business logic itself, just renders
 /// [LoginViewModel]'s state and forwards user actions to it.
@@ -101,7 +102,7 @@ class _LoginViewState extends State<_LoginView> {
               keyboardType: TextInputType.emailAddress,
               textInputAction: TextInputAction.next,
               autofillHints: const [AutofillHints.email],
-              style: const TextStyle(color: kInk, fontSize: 15),
+              style: CareText.bodyLg,
               decoration: careFieldDecoration('Email', hint: 'you@example.com', icon: Icons.mail_outline_rounded),
               validator: viewModel.validateEmail,
             ),
@@ -112,7 +113,7 @@ class _LoginViewState extends State<_LoginView> {
               textInputAction: TextInputAction.done,
               autofillHints: const [AutofillHints.password],
               onFieldSubmitted: (_) => _handleSubmit(viewModel),
-              style: const TextStyle(color: kInk, fontSize: 15),
+              style: CareText.bodyLg,
               decoration: careFieldDecoration('Password', hint: '••••••••', icon: Icons.lock_outline_rounded).copyWith(
                 suffixIcon: IconButton(
                   splashRadius: 20,
@@ -159,7 +160,7 @@ class _LoginViewState extends State<_LoginView> {
                       )
                     : const Text(
                         'Login',
-                        style: TextStyle(fontSize: 15.5, fontWeight: FontWeight.w600),
+                        style: CareText.xlMedium,
                       ),
               ),
             ),

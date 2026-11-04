@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/lab/models/lab_order.dart';
 import 'package:hms_mobile/features/lab/viewmodels/lab_orders_view_model.dart';
@@ -56,7 +57,7 @@ class _LabOrderDetailView extends StatelessWidget {
         const SizedBox(height: 80),
         const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
         const SizedBox(height: 12),
-        Text(viewModel.loadError!, textAlign: TextAlign.center, style: const TextStyle(color: kMuted)),
+        Text(viewModel.loadError!, textAlign: TextAlign.center, style: CareText.muted),
       ]);
     }
 
@@ -72,19 +73,19 @@ class _LabOrderDetailView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(order.patientName ?? 'Patient', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: kInk)),
-              Text(order.patientMrn ?? '', style: const TextStyle(fontSize: 12.5, color: kMuted)),
+              Text(order.patientName ?? 'Patient', style: CareText.titleXl),
+              Text(order.patientMrn ?? '', style: CareText.mutedSm),
               const SizedBox(height: 8),
-              Text('Ordered by ${order.doctorName ?? '—'} · ${order.orderDate ?? ''}', style: const TextStyle(fontSize: 12.5, color: kMuted)),
+              Text('Ordered by ${order.doctorName ?? '—'} · ${order.orderDate ?? ''}', style: CareText.mutedSm),
               if ((order.notes ?? '').isNotEmpty) ...[
                 const SizedBox(height: 8),
-                Text(order.notes!, style: const TextStyle(fontSize: 12.5, color: kMuted)),
+                Text(order.notes!, style: CareText.mutedSm),
               ],
             ],
           ),
         ),
         const SizedBox(height: 16),
-        const Text('Tests', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: kInk)),
+        const Text('Tests', style: CareText.titleMd),
         const SizedBox(height: 10),
         for (final item in order.items) ...[
           _ItemCard(item: item),
@@ -100,7 +101,7 @@ class _LabOrderDetailView extends StatelessWidget {
               icon: viewModel.isSaving
                   ? const SizedBox(height: 16, width: 16, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
                   : const Icon(Icons.science_outlined, color: Colors.white, size: 18),
-              label: Text(viewModel.isSaving ? 'Saving...' : 'Enter results (${pendingItems.length})', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
+              label: Text(viewModel.isSaving ? 'Saving...' : 'Enter results (${pendingItems.length})', style: CareText.onCareBold),
             ),
           ),
         ],
@@ -132,7 +133,7 @@ class _ItemCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              Expanded(child: Text(item.testName ?? 'Test', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: kInk))),
+              Expanded(child: Text(item.testName ?? 'Test', style: CareText.titleMd)),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                 decoration: BoxDecoration(color: completed ? kSuccessBg : kWarningBg, borderRadius: BorderRadius.circular(7)),
@@ -155,8 +156,8 @@ class _ItemCard extends StatelessWidget {
                 ],
               ],
             ),
-            if ((result.normalRange ?? '').isNotEmpty) Text('Normal: ${result.normalRange}', style: const TextStyle(fontSize: 11.5, color: kMuted)),
-            if ((result.remarks ?? '').isNotEmpty) Text(result.remarks!, style: const TextStyle(fontSize: 11.5, color: kMuted)),
+            if ((result.normalRange ?? '').isNotEmpty) Text('Normal: ${result.normalRange}', style: CareText.mutedXs),
+            if ((result.remarks ?? '').isNotEmpty) Text(result.remarks!, style: CareText.mutedXs),
           ],
         ],
       ),

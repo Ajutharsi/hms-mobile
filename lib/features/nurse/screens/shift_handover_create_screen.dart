@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/nurse/models/shift_handover.dart';
 import 'package:hms_mobile/features/nurse/viewmodels/handover_create_view_model.dart';
@@ -57,7 +58,7 @@ class _CreateView extends StatelessWidget {
               style: FilledButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
               child: viewModel.isSubmitting
                   ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                  : const Text('Save as draft', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
+                  : const Text('Save as draft', style: CareText.onCareBold),
             ),
           ),
         ),
@@ -65,7 +66,7 @@ class _CreateView extends StatelessWidget {
       body: viewModel.isLoadingMeta
           ? Center(child: CircularProgressIndicator(color: kCare))
           : viewModel.metaError != null
-              ? Center(child: Text(viewModel.metaError!, style: const TextStyle(color: kMuted)))
+              ? Center(child: Text(viewModel.metaError!, style: CareText.muted))
               : ListView(
                   padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
                   children: [
@@ -146,13 +147,13 @@ class _CreateView extends StatelessWidget {
                     const SizedBox(height: 24),
                     _section('Patients (${viewModel.patients.length})'),
                     if (viewModel.wardId == null)
-                      const Text('Pick a ward to load its admitted patients.', style: TextStyle(color: kMuted, fontSize: 13))
+                      const Text('Pick a ward to load its admitted patients.', style: CareText.mutedSm)
                     else if (viewModel.isLoadingPatients)
                       Center(child: Padding(padding: const EdgeInsets.all(20), child: CircularProgressIndicator(color: kCare)))
                     else if (viewModel.patientsError != null)
-                      Text(viewModel.patientsError!, style: const TextStyle(color: kMuted))
+                      Text(viewModel.patientsError!, style: CareText.muted)
                     else if (viewModel.patients.isEmpty)
-                      const Text('No admitted patients in this ward.', style: TextStyle(color: kMuted, fontSize: 13))
+                      const Text('No admitted patients in this ward.', style: CareText.mutedSm)
                     else
                       for (final card in viewModel.patients) ...[
                         _PatientEditCard(card: card, onChanged: viewModel.touch),
@@ -181,7 +182,7 @@ class _CreateView extends StatelessWidget {
 
   Widget _section(String title) => Padding(
         padding: const EdgeInsets.only(bottom: 10),
-        child: Text(title, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: kMuted, letterSpacing: 0.3)),
+        child: Text(title, style: CareText.mutedSmBoldWide),
       );
 }
 
@@ -271,15 +272,15 @@ class _PatientEditCardState extends State<_PatientEditCard> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(card.name, style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w700, color: kInk)),
-                      Text('${card.mrn} · Bed ${card.bedNo}', style: const TextStyle(fontSize: 11.5, color: kMuted)),
+                      Text(card.name, style: CareText.titleLg),
+                      Text('${card.mrn} · Bed ${card.bedNo}', style: CareText.mutedXs),
                     ],
                   ),
                 ),
                 if (card.vitals != null)
                   Text(
                     '${card.vitals!.bloodPressure ?? '—'} · SpO2 ${card.vitals!.spo2 ?? '—'}',
-                    style: const TextStyle(fontSize: 11, color: kMuted),
+                    style: CareText.mutedXxs,
                   ),
                 Icon(_expanded ? Icons.expand_less : Icons.expand_more, color: kMuted),
               ],

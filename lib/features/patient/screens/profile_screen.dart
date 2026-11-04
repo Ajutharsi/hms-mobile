@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:hms_mobile/features/patient/models/patient_profile.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
+import 'package:hms_mobile/features/patient/models/patient_profile.dart';
 import 'package:hms_mobile/features/patient/viewmodels/profile_view_model.dart';
 
 /// The Profile tab body — embedded inside [HomeScreen]'s bottom-nav shell.
@@ -51,10 +52,7 @@ class ProfileTabBody extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     const Text('Account details',
-                        style: TextStyle(
-                            fontSize: 15.5,
-                            fontWeight: FontWeight.w700,
-                            color: kInk)),
+                        style: CareText.titleXl),
                     const SizedBox(height: 16),
                     TextFormField(
                       controller: viewModel.nameController,
@@ -87,13 +85,10 @@ class ProfileTabBody extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     const Text('Change password',
-                        style: TextStyle(
-                            fontSize: 15.5,
-                            fontWeight: FontWeight.w700,
-                            color: kInk)),
+                        style: CareText.titleXl),
                     const SizedBox(height: 4),
                     const Text('Leave blank to keep your current password.',
-                        style: TextStyle(fontSize: 12.5, color: kMuted)),
+                        style: CareText.mutedSm),
                     const SizedBox(height: 16),
                     TextFormField(
                       controller: viewModel.currentPasswordController,
@@ -136,10 +131,7 @@ class ProfileTabBody extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10)),
                   child: Text(
                     viewModel.successMessage!,
-                    style: TextStyle(
-                        color: kCareDark,
-                        fontSize: 13.5,
-                        fontWeight: FontWeight.w600),
+                    style: CareText.brandMdMedium,
                   ),
                 ),
                 const SizedBox(height: 14),
@@ -198,10 +190,7 @@ class _AvatarHeader extends StatelessWidget {
                           profile.name.isNotEmpty
                               ? profile.name[0].toUpperCase()
                               : '?',
-                          style: TextStyle(
-                              fontSize: 32,
-                              fontWeight: FontWeight.w700,
-                              color: kCareDark),
+                          style: CareText.statBig,
                         )
                       : null,
                 ),
@@ -231,7 +220,7 @@ class _AvatarHeader extends StatelessWidget {
                   fontSize: 19, fontWeight: FontWeight.w800, color: kInk)),
           const SizedBox(height: 2),
           Text(profile.email,
-              style: const TextStyle(fontSize: 13, color: kMuted)),
+              style: CareText.mutedSm),
           if ((profile.mrn ?? '').isNotEmpty) ...[
             const SizedBox(height: 4),
             Container(

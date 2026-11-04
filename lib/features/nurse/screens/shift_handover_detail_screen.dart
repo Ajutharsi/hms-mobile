@@ -4,6 +4,7 @@ import 'package:hms_mobile/core/services/api_service.dart';
 import 'package:hms_mobile/core/services/auth_storage.dart';
 import 'package:hms_mobile/core/services/nurse_api_service.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/nurse/models/shift_handover.dart';
 
@@ -88,7 +89,7 @@ class _ShiftHandoverDetailScreenState extends State<ShiftHandoverDetailScreen> {
           TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Cancel')),
           TextButton(
             onPressed: () => Navigator.of(context).pop(controller.text.trim()),
-            child: const Text('Reject', style: TextStyle(color: Color(0xFFB3261E))),
+            child: const Text('Reject', style: CareText.danger),
           ),
         ],
       ),
@@ -117,7 +118,7 @@ class _ShiftHandoverDetailScreenState extends State<ShiftHandoverDetailScreen> {
           const SizedBox(height: 80),
           const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
           const SizedBox(height: 12),
-          Text(_loadError!, textAlign: TextAlign.center, style: const TextStyle(color: kMuted)),
+          Text(_loadError!, textAlign: TextAlign.center, style: CareText.muted),
         ],
       );
     }
@@ -135,18 +136,18 @@ class _ShiftHandoverDetailScreenState extends State<ShiftHandoverDetailScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(detail.wardName ?? 'Ward', style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w700, color: kInk)),
+              Text(detail.wardName ?? 'Ward', style: CareText.titleXxl),
               const SizedBox(height: 4),
               Text(
                 '${detail.currentShift.toUpperCase()} → ${detail.nextShift.toUpperCase()} · ${detail.handoverDate ?? ''}',
-                style: const TextStyle(fontSize: 13, color: kMuted),
+                style: CareText.mutedSm,
               ),
               const SizedBox(height: 8),
               Row(
                 children: [
                   const Icon(Icons.arrow_upward_rounded, size: 14, color: kMuted),
                   const SizedBox(width: 4),
-                  Text('Outgoing: ${detail.outgoingNurseName ?? '—'}', style: const TextStyle(fontSize: 12.5, color: kMuted)),
+                  Text('Outgoing: ${detail.outgoingNurseName ?? '—'}', style: CareText.mutedSm),
                 ],
               ),
               const SizedBox(height: 4),
@@ -154,14 +155,14 @@ class _ShiftHandoverDetailScreenState extends State<ShiftHandoverDetailScreen> {
                 children: [
                   const Icon(Icons.arrow_downward_rounded, size: 14, color: kMuted),
                   const SizedBox(width: 4),
-                  Text('Incoming: ${detail.incomingNurseName ?? '—'}', style: const TextStyle(fontSize: 12.5, color: kMuted)),
+                  Text('Incoming: ${detail.incomingNurseName ?? '—'}', style: CareText.mutedSm),
                 ],
               ),
               if ((detail.shiftSummary ?? '').isNotEmpty) ...[
                 const SizedBox(height: 12),
                 Divider(height: 1, color: kCareBorder),
                 const SizedBox(height: 12),
-                Text(detail.shiftSummary!, style: const TextStyle(fontSize: 13.5, color: kInk)),
+                Text(detail.shiftSummary!, style: CareText.bodyMd),
               ],
               if ((detail.rejectionReason ?? '').isNotEmpty) ...[
                 const SizedBox(height: 12),
@@ -193,7 +194,7 @@ class _ShiftHandoverDetailScreenState extends State<ShiftHandoverDetailScreen> {
               Expanded(
                 child: OutlinedButton(
                   onPressed: _isActing ? null : _reject,
-                  style: OutlinedButton.styleFrom(foregroundColor: const Color(0xFFB3261E), side: const BorderSide(color: Color(0xFFB3261E))),
+                  style: OutlinedButton.styleFrom(foregroundColor: kDangerText, side: const BorderSide(color: kDangerText)),
                   child: const Text('Reject'),
                 ),
               ),
@@ -209,7 +210,7 @@ class _ShiftHandoverDetailScreenState extends State<ShiftHandoverDetailScreen> {
           ),
         ],
         const SizedBox(height: 20),
-        Text('Patients (${detail.patients.length})', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: kInk)),
+        Text('Patients (${detail.patients.length})', style: CareText.titleMd),
         const SizedBox(height: 10),
         for (final p in detail.patients) ...[
           _PatientCard(card: p),
@@ -217,7 +218,7 @@ class _ShiftHandoverDetailScreenState extends State<ShiftHandoverDetailScreen> {
         ],
         if (detail.tasks.isNotEmpty) ...[
           const SizedBox(height: 8),
-          const Text('Tasks', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: kInk)),
+          const Text('Tasks', style: CareText.titleMd),
           const SizedBox(height: 10),
           Container(
             padding: const EdgeInsets.all(14),
@@ -234,8 +235,8 @@ class _ShiftHandoverDetailScreenState extends State<ShiftHandoverDetailScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(t.taskDescription, style: const TextStyle(fontSize: 13.5, color: kInk)),
-                            if (t.patientName != null) Text(t.patientName!, style: const TextStyle(fontSize: 11.5, color: kMuted)),
+                            Text(t.taskDescription, style: CareText.bodyMd),
+                            if (t.patientName != null) Text(t.patientName!, style: CareText.mutedXs),
                           ],
                         ),
                       ),
@@ -284,8 +285,8 @@ class _PatientCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(card.name, style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w700, color: kInk)),
-                    Text('${card.mrn} · Bed ${card.bedNo}', style: const TextStyle(fontSize: 11.5, color: kMuted)),
+                    Text(card.name, style: CareText.titleLg),
+                    Text('${card.mrn} · Bed ${card.bedNo}', style: CareText.mutedXs),
                   ],
                 ),
               ),
@@ -296,7 +297,7 @@ class _PatientCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
                 decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(8)),
-                child: Text(card.condition, style: TextStyle(color: fg, fontSize: 10.5, fontWeight: FontWeight.w700)),
+                child: Text(card.condition, style: CareText.chip(fg)),
               ),
             ],
           ),
@@ -327,6 +328,6 @@ class _PatientCard extends StatelessWidget {
 
   Widget _line(String text) => Padding(
         padding: const EdgeInsets.only(top: 6),
-        child: Text(text, style: const TextStyle(fontSize: 12, color: kMuted)),
+        child: Text(text, style: CareText.mutedXs),
       );
 }

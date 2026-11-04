@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/nurse/models/medication_order.dart';
 import 'package:hms_mobile/features/nurse/models/nurse_patient.dart';
@@ -56,7 +57,7 @@ class _EmarView extends StatelessWidget {
         backgroundColor: kCareDark,
         foregroundColor: Colors.white,
         icon: const Icon(Icons.add, color: Colors.white),
-        label: const Text('New order', style: TextStyle(color: Colors.white)),
+        label: const Text('New order', style: CareText.onCare),
       ),
       body: RefreshIndicator(color: kCare, onRefresh: viewModel.load, child: _buildBody(context, viewModel)),
     ));
@@ -71,7 +72,7 @@ class _EmarView extends StatelessWidget {
         const SizedBox(height: 80),
         const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
         const SizedBox(height: 12),
-        Text(viewModel.loadError!, textAlign: TextAlign.center, style: const TextStyle(color: kMuted)),
+        Text(viewModel.loadError!, textAlign: TextAlign.center, style: CareText.muted),
       ]);
     }
     if (viewModel.orders.isEmpty) {
@@ -79,7 +80,7 @@ class _EmarView extends StatelessWidget {
         SizedBox(height: 80),
         Icon(Icons.medication_outlined, color: kMuted, size: 40),
         SizedBox(height: 12),
-        Text('No medication orders yet', textAlign: TextAlign.center, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: kInk)),
+        Text('No medication orders yet', textAlign: TextAlign.center, style: CareText.titleXlMedium),
       ]);
     }
 
@@ -127,7 +128,7 @@ class _OrderCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(8)),
-                child: Text(order.status.toUpperCase(), style: TextStyle(color: fg, fontSize: 10.5, fontWeight: FontWeight.w700)),
+                child: Text(order.status.toUpperCase(), style: CareText.chip(fg)),
               ),
             ],
           ),
@@ -135,7 +136,7 @@ class _OrderCard extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: Text('${order.drugName} — ${order.dosage}', style: const TextStyle(fontSize: 15.5, fontWeight: FontWeight.w700, color: kInk)),
+                child: Text('${order.drugName} — ${order.dosage}', style: CareText.titleXl),
               ),
               if (order.isPrn) const _MiniBadge(label: 'PRN', color: kWarningFg, bg: kWarningBg),
               if (order.isControlled) ...[
@@ -146,19 +147,19 @@ class _OrderCard extends StatelessWidget {
           ),
           if ((order.route ?? '').isNotEmpty || (order.frequency ?? '').isNotEmpty) ...[
             const SizedBox(height: 2),
-            Text([order.route, order.frequency].where((e) => (e ?? '').isNotEmpty).join(' · '), style: const TextStyle(fontSize: 12.5, color: kMuted)),
+            Text([order.route, order.frequency].where((e) => (e ?? '').isNotEmpty).join(' · '), style: CareText.mutedSm),
           ],
           const SizedBox(height: 10),
           Row(
             children: [
               const Icon(Icons.access_time_rounded, size: 14, color: kMuted),
               const SizedBox(width: 6),
-              Text(order.scheduledTime ?? '—', style: const TextStyle(fontSize: 13, color: kMuted)),
+              Text(order.scheduledTime ?? '—', style: CareText.mutedSm),
               if (order.nurseName != null) ...[
                 const SizedBox(width: 16),
                 const Icon(Icons.person_outline, size: 14, color: kMuted),
                 const SizedBox(width: 6),
-                Text(order.nurseName!, style: const TextStyle(fontSize: 13, color: kMuted)),
+                Text(order.nurseName!, style: CareText.mutedSm),
               ],
             ],
           ),
@@ -174,7 +175,7 @@ class _OrderCard extends StatelessWidget {
                 onPressed: onAdminister,
                 icon: const Icon(Icons.medication_liquid_outlined, size: 16),
                 label: const Text('Administer'),
-                style: FilledButton.styleFrom(backgroundColor: kCareDark, minimumSize: const Size(0, 34), textStyle: const TextStyle(fontSize: 13)),
+                style: FilledButton.styleFrom(backgroundColor: kCareDark, minimumSize: const Size(0, 34), textStyle: CareText.plainSm),
               ),
             ),
           ],
@@ -365,7 +366,7 @@ class _NewOrderScreenState extends State<_NewOrderScreen> {
               const SizedBox(height: 14),
               TextField(controller: _frequencyController, decoration: careFieldDecoration('Frequency (optional)', hint: 'e.g. Twice daily', icon: Icons.repeat_rounded)),
               const SizedBox(height: 14),
-              const Text('Scheduled time (optional)', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: kInk)),
+              const Text('Scheduled time (optional)', style: CareText.titleSmMedium),
               const SizedBox(height: 8),
               InkWell(
                 onTap: _pickTime,
@@ -376,7 +377,7 @@ class _NewOrderScreenState extends State<_NewOrderScreen> {
                   child: Row(children: [
                     const Icon(Icons.access_time_rounded, size: 18, color: kMuted),
                     const SizedBox(width: 10),
-                    Text(_scheduledTime == null ? 'Choose a time' : _scheduledTime!.format(context), style: TextStyle(color: _scheduledTime == null ? const Color(0xFFAEB8B6) : kInk, fontSize: 15)),
+                    Text(_scheduledTime == null ? 'Choose a time' : _scheduledTime!.format(context), style: TextStyle(color: _scheduledTime == null ? kCareHint : kInk, fontSize: 15)),
                   ]),
                 ),
               ),
@@ -406,7 +407,7 @@ class _NewOrderScreenState extends State<_NewOrderScreen> {
                   style: FilledButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
                   child: _saving
                       ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2.4, color: Colors.white))
-                      : const Text('Add order', style: TextStyle(fontSize: 15.5, fontWeight: FontWeight.w600)),
+                      : const Text('Add order', style: CareText.xlMedium),
                 ),
               ),
             ],

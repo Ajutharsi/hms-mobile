@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/patient/models/prescription.dart';
 import 'package:hms_mobile/features/patient/viewmodels/prescriptions_view_model.dart';
@@ -63,7 +64,7 @@ class _PrescriptionCard extends StatelessWidget {
           iconColor: kCare,
           collapsedIconColor: kMuted,
           leading: CareAvatar(name: doctor, radius: 23),
-          title: Text(doctor, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: kInk)),
+          title: Text(doctor, style: CareText.titleLg),
           subtitle: Padding(
             padding: const EdgeInsets.only(top: 6),
             child: Wrap(
@@ -87,16 +88,16 @@ class _PrescriptionCard extends StatelessWidget {
                 child: Row(
                   children: [
                     if ((prescription.doctorSpecialization ?? '').isNotEmpty)
-                      Expanded(child: Text(prescription.doctorSpecialization!, style: const TextStyle(fontSize: 12.5, color: kMuted))),
+                      Expanded(child: Text(prescription.doctorSpecialization!, style: CareText.mutedSm)),
                     if (prescription.prescriptionNo.isNotEmpty)
-                      Text(prescription.prescriptionNo, style: const TextStyle(fontSize: 12, color: kMuted, fontWeight: FontWeight.w600)),
+                      Text(prescription.prescriptionNo, style: CareText.mutedXsMedium),
                   ],
                 ),
               ),
             if ((prescription.notes ?? '').isNotEmpty) ...[
               Align(
                 alignment: Alignment.centerLeft,
-                child: Text(prescription.notes!, style: const TextStyle(fontSize: 13, color: kMuted, fontStyle: FontStyle.italic)),
+                child: Text(prescription.notes!, style: CareText.mutedSmItalic),
               ),
               const SizedBox(height: 10),
             ],
@@ -128,7 +129,7 @@ class _MedicineRow extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(item.medicineName, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: kInk)),
+                Text(item.medicineName, style: CareText.titleMd),
                 const SizedBox(height: 6),
                 Wrap(
                   spacing: 12,
@@ -142,7 +143,7 @@ class _MedicineRow extends StatelessWidget {
                 ),
                 if ((item.instructions ?? '').isNotEmpty) ...[
                   const SizedBox(height: 6),
-                  Text(item.instructions!, style: const TextStyle(fontSize: 12.5, color: kMuted)),
+                  Text(item.instructions!, style: CareText.mutedSm),
                 ],
               ],
             ),
@@ -158,7 +159,7 @@ class _MedicineRow extends StatelessWidget {
       children: [
         Icon(icon, size: 13, color: kCare),
         const SizedBox(width: 4),
-        Text(text, style: const TextStyle(fontSize: 12.5, color: kMuted)),
+        Text(text, style: CareText.mutedSm),
       ],
     );
   }

@@ -4,6 +4,7 @@ import 'package:hms_mobile/core/services/api_service.dart';
 import 'package:hms_mobile/core/services/auth_storage.dart';
 import 'package:hms_mobile/core/services/receptionist_api_service.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/receptionist/models/reception_patient.dart';
 import 'package:hms_mobile/features/receptionist/screens/patient_form_screen.dart';
@@ -69,7 +70,7 @@ class _ReceptionPatientDetailScreenState extends State<ReceptionPatientDetailScr
         const SizedBox(height: 80),
         const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
         const SizedBox(height: 12),
-        Text(_error!, textAlign: TextAlign.center, style: const TextStyle(color: kMuted)),
+        Text(_error!, textAlign: TextAlign.center, style: CareText.muted),
       ]);
     }
 
@@ -88,12 +89,12 @@ class _ReceptionPatientDetailScreenState extends State<ReceptionPatientDetailScr
                 child: p.photoUrl == null ? Text(p.name.isNotEmpty ? p.name[0].toUpperCase() : '?', style: TextStyle(fontSize: 28, color: kCareDark, fontWeight: FontWeight.w700)) : null,
               ),
               const SizedBox(height: 12),
-              Text(p.name, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: kInk)),
+              Text(p.name, style: CareText.titleH3),
               const SizedBox(height: 4),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(8)),
-                child: Text('MRN: ${p.mrn}', style: const TextStyle(fontSize: 12, color: kMuted, fontWeight: FontWeight.w600)),
+                child: Text('MRN: ${p.mrn}', style: CareText.mutedXsMedium),
               ),
             ],
           ),
@@ -138,8 +139,8 @@ class _Row extends StatelessWidget {
       children: [
         Row(
           children: [
-            Expanded(child: Text(label, style: const TextStyle(fontSize: 12.5, color: kMuted))),
-            Flexible(child: Text(value, textAlign: TextAlign.right, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: kInk))),
+            Expanded(child: Text(label, style: CareText.mutedSm)),
+            Flexible(child: Text(value, textAlign: TextAlign.right, style: CareText.titleSmMedium)),
           ],
         ),
         if (showDivider) Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Divider(height: 1, color: kCareBorder)),

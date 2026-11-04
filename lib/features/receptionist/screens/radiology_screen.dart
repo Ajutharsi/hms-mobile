@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/receptionist/models/radiology_order.dart';
 import 'package:hms_mobile/features/receptionist/screens/radiology_detail_screen.dart';
@@ -42,7 +43,7 @@ class _RadiologyView extends StatelessWidget {
         backgroundColor: kCareDark,
         foregroundColor: Colors.white,
         icon: const Icon(Icons.add, color: Colors.white),
-        label: const Text('New order', style: TextStyle(color: Colors.white)),
+        label: const Text('New order', style: CareText.onCare),
       ),
       body: RefreshIndicator(color: kCare, onRefresh: viewModel.load, child: _buildBody(context, viewModel)),
     ));
@@ -57,7 +58,7 @@ class _RadiologyView extends StatelessWidget {
         const SizedBox(height: 80),
         const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
         const SizedBox(height: 12),
-        Text(viewModel.loadError!, textAlign: TextAlign.center, style: const TextStyle(color: kMuted)),
+        Text(viewModel.loadError!, textAlign: TextAlign.center, style: CareText.muted),
       ]);
     }
 
@@ -83,7 +84,7 @@ class _RadiologyView extends StatelessWidget {
           ),
         const SizedBox(height: 16),
         if (viewModel.orders.isEmpty)
-          const Padding(padding: EdgeInsets.only(top: 40), child: Center(child: Text('No radiology orders', style: TextStyle(color: kMuted))))
+          const Padding(padding: EdgeInsets.only(top: 40), child: Center(child: Text('No radiology orders', style: CareText.muted)))
         else
           for (final order in viewModel.orders) ...[
             _OrderCard(
@@ -116,7 +117,7 @@ class _StatTile extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(value, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: color)),
+          Text(value, style: CareText.statValue(color)),
           Text(label, textAlign: TextAlign.center, style: TextStyle(fontSize: 10, color: color, fontWeight: FontWeight.w600)),
         ],
       ),
@@ -160,17 +161,17 @@ class _OrderCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                Expanded(child: Text(order.patientName ?? 'Patient', style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w700, color: kInk))),
+                Expanded(child: Text(order.patientName ?? 'Patient', style: CareText.titleLg)),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
                   decoration: BoxDecoration(color: sBg, borderRadius: BorderRadius.circular(8)),
-                  child: Text(order.status.replaceAll('_', ' '), style: TextStyle(color: sFg, fontSize: 10.5, fontWeight: FontWeight.w700)),
+                  child: Text(order.status.replaceAll('_', ' '), style: CareText.chip(sFg)),
                 ),
               ],
             ),
             const SizedBox(height: 3),
-            Text('${order.modality} · ${order.bodyPart}', style: const TextStyle(fontSize: 12.5, color: kMuted)),
-            Text(order.studyDescription, style: const TextStyle(fontSize: 12, color: kMuted)),
+            Text('${order.modality} · ${order.bodyPart}', style: CareText.mutedSm),
+            Text(order.studyDescription, style: CareText.mutedXs),
             const SizedBox(height: 8),
             Row(
               children: [
@@ -180,7 +181,7 @@ class _OrderCard extends StatelessWidget {
                   child: Text(order.priority, style: TextStyle(color: pFg, fontSize: 10, fontWeight: FontWeight.w700)),
                 ),
                 const Spacer(),
-                Text(order.orderNo ?? '', style: const TextStyle(fontSize: 11.5, color: kMuted)),
+                Text(order.orderNo ?? '', style: CareText.mutedXs),
               ],
             ),
           ],

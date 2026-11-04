@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:hms_mobile/core/services/auth_storage.dart';
 import 'package:hms_mobile/core/services/nurse_api_service.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/nurse/models/nurse_patient.dart';
 
@@ -43,7 +44,7 @@ class PatientPickerField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: kInk)),
+        Text(label, style: CareText.titleSmMedium),
         const SizedBox(height: 8),
         InkWell(
           onTap: () => _open(context),
@@ -54,7 +55,7 @@ class PatientPickerField extends StatelessWidget {
             decoration: BoxDecoration(
               color: kCareBg,
               borderRadius: BorderRadius.circular(12),
-              border: errorText != null ? Border.all(color: const Color(0xFFB3261E), width: 1.2) : null,
+              border: errorText != null ? Border.all(color: kDangerText, width: 1.2) : null,
             ),
             child: Row(
               children: [
@@ -63,7 +64,7 @@ class PatientPickerField extends StatelessWidget {
                 Expanded(
                   child: Text(
                     value == null ? 'Search a patient' : '${value!.name} (${value!.mrn})',
-                    style: TextStyle(color: value == null ? const Color(0xFFAEB8B6) : kInk, fontSize: 15),
+                    style: TextStyle(color: value == null ? kCareHint : kInk, fontSize: 15),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -73,7 +74,7 @@ class PatientPickerField extends StatelessWidget {
         ),
         if (errorText != null) ...[
           const SizedBox(height: 6),
-          Text(errorText!, style: const TextStyle(color: Color(0xFFB3261E), fontSize: 12)),
+          Text(errorText!, style: const TextStyle(color: kDangerText, fontSize: 12)),
         ],
       ],
     );
@@ -165,9 +166,9 @@ class _PatientPickerSheetState extends State<_PatientPickerSheet> {
               child: _loading
                   ? Center(child: CircularProgressIndicator(color: kCare))
                   : _error != null
-                      ? Center(child: Text(_error!, style: const TextStyle(color: kMuted)))
+                      ? Center(child: Text(_error!, style: CareText.muted))
                       : _results.isEmpty
-                          ? const Center(child: Text('No patients found.', style: TextStyle(color: kMuted)))
+                          ? const Center(child: Text('No patients found.', style: CareText.muted))
                           : ListView.separated(
                               padding: const EdgeInsets.fromLTRB(12, 4, 12, 20),
                               itemCount: _results.length,
@@ -180,13 +181,13 @@ class _PatientPickerSheetState extends State<_PatientPickerSheet> {
                                     backgroundColor: kCareSoft,
                                     backgroundImage: p.photoUrl != null ? NetworkImage(p.photoUrl!) : null,
                                     child: p.photoUrl == null
-                                        ? Text(p.name.isNotEmpty ? p.name[0].toUpperCase() : '?', style: TextStyle(color: kCareDark, fontWeight: FontWeight.w700))
+                                        ? Text(p.name.isNotEmpty ? p.name[0].toUpperCase() : '?', style: CareText.brandBold)
                                         : null,
                                   ),
                                   title: Text(p.name, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
                                   subtitle: Text(
                                     [p.mrn, if (p.wardName != null) '${p.wardName} · ${p.bedNo ?? ''}'].join('  ·  '),
-                                    style: const TextStyle(fontSize: 12, color: kMuted),
+                                    style: CareText.mutedXs,
                                   ),
                                   onTap: () => Navigator.of(context).pop(p),
                                 );

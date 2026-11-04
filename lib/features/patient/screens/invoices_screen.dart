@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/patient/models/invoice.dart';
 import 'package:hms_mobile/features/patient/viewmodels/invoices_view_model.dart';
@@ -28,7 +29,7 @@ class InvoicesTabBody extends StatelessWidget {
           TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('Cancel')),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: Text('Send request', style: TextStyle(color: kCareDark, fontWeight: FontWeight.w700)),
+            child: Text('Send request', style: CareText.brandBold),
           ),
         ],
       ),
@@ -111,7 +112,7 @@ class _BalanceSummary extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Outstanding balance', style: TextStyle(color: Colors.white.withValues(alpha: 0.85), fontSize: 13)),
+                const Text('Outstanding balance', style: CareText.onCareSoftSm),
                 const SizedBox(height: 4),
                 Text(
                   '₹${outstanding.toStringAsFixed(2)}',
@@ -161,7 +162,7 @@ class _InvoiceCard extends StatelessWidget {
           title: Row(
             children: [
               Expanded(
-                child: Text(invoice.invoiceNo, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: kInk)),
+                child: Text(invoice.invoiceNo, style: CareText.titleLg),
               ),
               CareChip.status(invoice.status),
             ],
@@ -172,7 +173,7 @@ class _InvoiceCard extends StatelessWidget {
               children: [
                 const Icon(Icons.calendar_today_rounded, size: 12, color: kMuted),
                 const SizedBox(width: 4),
-                Text(invoice.date, style: const TextStyle(fontSize: 12.5, color: kMuted)),
+                Text(invoice.date, style: CareText.mutedSm),
                 const Spacer(),
                 Text(
                   invoice.hasBalance ? 'Due ₹${invoice.balance.toStringAsFixed(2)}' : 'Paid',
@@ -201,7 +202,7 @@ class _InvoiceCard extends StatelessWidget {
                                 style: const TextStyle(fontSize: 13, color: kInk),
                               ),
                             ),
-                            Text('₹${item.total.toStringAsFixed(2)}', style: const TextStyle(fontSize: 13, color: kMuted)),
+                            Text('₹${item.total.toStringAsFixed(2)}', style: CareText.mutedSm),
                           ],
                         ),
                       )),

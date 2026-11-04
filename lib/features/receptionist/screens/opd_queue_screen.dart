@@ -5,6 +5,7 @@ import 'package:hms_mobile/core/services/api_service.dart';
 import 'package:hms_mobile/core/services/auth_storage.dart';
 import 'package:hms_mobile/core/services/receptionist_api_service.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/receptionist/models/opd_token.dart';
 import 'package:hms_mobile/features/receptionist/models/reception_appointment.dart';
@@ -64,7 +65,7 @@ class _OpdQueueView extends StatelessWidget {
         title: const Text('Remove this token?'),
         actions: [
           TextButton(onPressed: () => Navigator.of(ctx).pop(false), child: const Text('Cancel')),
-          TextButton(onPressed: () => Navigator.of(ctx).pop(true), child: const Text('Remove', style: TextStyle(color: Color(0xFFB3261E)))),
+          TextButton(onPressed: () => Navigator.of(ctx).pop(true), child: const Text('Remove', style: CareText.danger)),
         ],
       ),
     );
@@ -87,7 +88,7 @@ class _OpdQueueView extends StatelessWidget {
         backgroundColor: kCareDark,
         foregroundColor: Colors.white,
         icon: const Icon(Icons.add, color: Colors.white),
-        label: const Text('Issue token', style: TextStyle(color: Colors.white)),
+        label: const Text('Issue token', style: CareText.onCare),
       ),
       body: RefreshIndicator(color: kCare, onRefresh: viewModel.load, child: _buildBody(context, viewModel)),
     ));
@@ -102,7 +103,7 @@ class _OpdQueueView extends StatelessWidget {
         const SizedBox(height: 80),
         const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
         const SizedBox(height: 12),
-        Text(viewModel.loadError!, textAlign: TextAlign.center, style: const TextStyle(color: kMuted)),
+        Text(viewModel.loadError!, textAlign: TextAlign.center, style: CareText.muted),
       ]);
     }
 
@@ -132,16 +133,16 @@ class _OpdQueueView extends StatelessWidget {
           ),
         const SizedBox(height: 16),
         if (viewModel.tokens.isEmpty)
-          const Padding(padding: EdgeInsets.only(top: 40), child: Center(child: Text('No tokens in today\'s queue', style: TextStyle(color: kMuted))))
+          const Padding(padding: EdgeInsets.only(top: 40), child: Center(child: Text('No tokens in today\'s queue', style: CareText.muted)))
         else
           for (final entry in byDoctor.entries) ...[
             Row(
               children: [
-                Expanded(child: Text(entry.value.first.doctorName ?? 'Doctor', style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w700, color: kInk))),
+                Expanded(child: Text(entry.value.first.doctorName ?? 'Doctor', style: CareText.titleMd)),
                 TextButton.icon(
                   onPressed: () => _callNext(context, viewModel, entry.key),
                   icon: Icon(Icons.skip_next_rounded, size: 16, color: kCareDark),
-                  label: Text('Call Next', style: TextStyle(color: kCareDark, fontSize: 12.5, fontWeight: FontWeight.w600)),
+                  label: Text('Call Next', style: CareText.brandSmMedium),
                 ),
               ],
             ),
@@ -178,7 +179,7 @@ class _StatTile extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(value, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: color)),
+          Text(value, style: CareText.statValue(color)),
           Text(label, textAlign: TextAlign.center, style: TextStyle(fontSize: 10, color: color, fontWeight: FontWeight.w600)),
         ],
       ),
@@ -213,19 +214,19 @@ class _TokenCard extends StatelessWidget {
                 child: Text('#${token.queuePosition}', style: const TextStyle(fontSize: 10.5, fontWeight: FontWeight.w700, color: kInk)),
               ),
               const SizedBox(width: 8),
-              Expanded(child: Text(token.patientName ?? 'Patient', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: kInk))),
+              Expanded(child: Text(token.patientName ?? 'Patient', style: CareText.titleMd)),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
                 decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(8)),
-                child: Text(titleCase(token.status), style: TextStyle(color: fg, fontSize: 10.5, fontWeight: FontWeight.w700)),
+                child: Text(titleCase(token.status), style: CareText.chip(fg)),
               ),
             ],
           ),
           const SizedBox(height: 3),
-          Text(token.patientMrn ?? '', style: const TextStyle(fontSize: 12, color: kMuted)),
+          Text(token.patientMrn ?? '', style: CareText.mutedXs),
           if ((token.notes ?? '').isNotEmpty) ...[
             const SizedBox(height: 4),
-            Text(token.notes!, style: const TextStyle(fontSize: 12, color: kMuted)),
+            Text(token.notes!, style: CareText.mutedXs),
           ],
           const SizedBox(height: 8),
           Row(
@@ -233,11 +234,11 @@ class _TokenCard extends StatelessWidget {
             children: [
               if (token.status == 'waiting') ...[
                 TextButton(onPressed: onSkip, child: const Text('Skip', style: TextStyle(color: kMuted, fontSize: 12.5, fontWeight: FontWeight.w600))),
-                TextButton(onPressed: onCallIn, child: Text('Call In', style: TextStyle(color: kCareDark, fontSize: 12.5, fontWeight: FontWeight.w600))),
+                TextButton(onPressed: onCallIn, child: Text('Call In', style: CareText.brandSmMedium)),
               ],
               if (token.status == 'in_consultation')
-                TextButton(onPressed: onComplete, child: Text('Complete', style: TextStyle(color: kCareDark, fontSize: 12.5, fontWeight: FontWeight.w600))),
-              TextButton(onPressed: onDelete, child: const Text('Remove', style: TextStyle(color: Color(0xFFB3261E), fontSize: 12.5, fontWeight: FontWeight.w600))),
+                TextButton(onPressed: onComplete, child: Text('Complete', style: CareText.brandSmMedium)),
+              TextButton(onPressed: onDelete, child: const Text('Remove', style: TextStyle(color: kDangerText, fontSize: 12.5, fontWeight: FontWeight.w600))),
             ],
           ),
         ],

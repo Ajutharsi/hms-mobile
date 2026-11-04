@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/patient/models/lab_order.dart';
 import 'package:hms_mobile/features/patient/viewmodels/lab_results_view_model.dart';
@@ -65,7 +66,7 @@ class _LabOrderCard extends StatelessWidget {
           leading: const CareIconBox(icon: Icons.biotech_rounded, size: 44),
           title: Text(
             order.orderNo.isNotEmpty ? order.orderNo : 'Lab Order',
-            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: kInk),
+            style: CareText.titleLg,
           ),
           subtitle: Padding(
             padding: const EdgeInsets.only(top: 4),
@@ -73,7 +74,7 @@ class _LabOrderCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if ((order.doctorName ?? '').isNotEmpty)
-                  Text(order.doctorName!, style: const TextStyle(fontSize: 12.5, color: kMuted)),
+                  Text(order.doctorName!, style: CareText.mutedSm),
                 const SizedBox(height: 6),
                 Wrap(
                   spacing: 6,
@@ -91,7 +92,7 @@ class _LabOrderCard extends StatelessWidget {
             if ((order.notes ?? '').isNotEmpty) ...[
               Align(
                 alignment: Alignment.centerLeft,
-                child: Text(order.notes!, style: const TextStyle(fontSize: 13, color: kMuted, fontStyle: FontStyle.italic)),
+                child: Text(order.notes!, style: CareText.mutedSmItalic),
               ),
               const SizedBox(height: 10),
             ],
@@ -129,14 +130,14 @@ class _ResultRow extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: Text(item.testName ?? 'Test', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: kInk)),
+                child: Text(item.testName ?? 'Test', style: CareText.titleMd),
               ),
               if (flagLabel.isNotEmpty) CareChip(label: flagLabel, bg: flagBg, fg: flagFg),
             ],
           ),
           if ((item.category ?? '').isNotEmpty) ...[
             const SizedBox(height: 2),
-            Text(item.category!, style: const TextStyle(fontSize: 12, color: kMuted)),
+            Text(item.category!, style: CareText.mutedXs),
           ],
           const SizedBox(height: 8),
           if (hasResult)
@@ -151,7 +152,7 @@ class _ResultRow extends StatelessWidget {
                   const SizedBox(width: 10),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 2),
-                    child: Text('Normal: ${item.normalRange}', style: const TextStyle(fontSize: 12, color: kMuted)),
+                    child: Text('Normal: ${item.normalRange}', style: CareText.mutedXs),
                   ),
                 ],
               ],
@@ -161,12 +162,12 @@ class _ResultRow extends StatelessWidget {
               children: [
                 Icon(Icons.hourglass_top_rounded, size: 14, color: kMuted),
                 SizedBox(width: 4),
-                Text('Awaiting results', style: TextStyle(fontSize: 13, color: kMuted, fontStyle: FontStyle.italic)),
+                Text('Awaiting results', style: CareText.mutedSmItalic),
               ],
             ),
           if ((item.remarks ?? '').isNotEmpty) ...[
             const SizedBox(height: 6),
-            Text(item.remarks!, style: const TextStyle(fontSize: 12.5, color: kMuted)),
+            Text(item.remarks!, style: CareText.mutedSm),
           ],
         ],
       ),

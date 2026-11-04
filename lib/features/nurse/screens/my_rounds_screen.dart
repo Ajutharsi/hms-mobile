@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/nurse/models/round_assignment.dart';
 import 'package:hms_mobile/features/nurse/viewmodels/rounds_view_model.dart';
@@ -73,7 +74,7 @@ class _MyRoundsView extends StatelessWidget {
           const SizedBox(height: 80),
           const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
           const SizedBox(height: 12),
-          Text(viewModel.loadError!, textAlign: TextAlign.center, style: const TextStyle(color: kMuted)),
+          Text(viewModel.loadError!, textAlign: TextAlign.center, style: CareText.muted),
         ],
       );
     }
@@ -85,7 +86,7 @@ class _MyRoundsView extends StatelessWidget {
           SizedBox(height: 80),
           Icon(Icons.schedule_outlined, color: kMuted, size: 40),
           SizedBox(height: 12),
-          Text('You have no active round assignments', textAlign: TextAlign.center, style: TextStyle(color: kMuted)),
+          Text('You have no active round assignments', textAlign: TextAlign.center, style: CareText.muted),
         ],
       );
     }
@@ -110,11 +111,11 @@ class _MyRoundsView extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Expanded(child: Text(assignment.wardName, style: const TextStyle(fontSize: 15.5, fontWeight: FontWeight.w700, color: kInk))),
+                  Expanded(child: Text(assignment.wardName, style: CareText.titleXl)),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                     decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(8)),
-                    child: Text(label, style: TextStyle(color: fg, fontSize: 11, fontWeight: FontWeight.w700)),
+                    child: Text(label, style: CareText.chip(fg)),
                   ),
                 ],
               ),
@@ -123,7 +124,7 @@ class _MyRoundsView extends StatelessWidget {
                 assignment.isOverdue
                     ? 'Round was due at ${assignment.nextRoundAt ?? '—'}'
                     : 'Next round: ${assignment.nextRoundAt ?? '—'}${assignment.minutesLeft != null ? ' (${assignment.minutesLeft}m left)' : ''}',
-                style: const TextStyle(fontSize: 12.5, color: kMuted),
+                style: CareText.mutedSm,
               ),
               const SizedBox(height: 12),
               Divider(height: 1, color: kCareBorder),
@@ -138,7 +139,7 @@ class _MyRoundsView extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(patient.name, style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w600, color: kInk)),
-                            Text('${patient.mrn} · Bed ${patient.bedNo}', style: const TextStyle(fontSize: 11.5, color: kMuted)),
+                            Text('${patient.mrn} · Bed ${patient.bedNo}', style: CareText.mutedXs),
                           ],
                         ),
                       ),
@@ -148,7 +149,7 @@ class _MyRoundsView extends StatelessWidget {
                           foregroundColor: kCareDark,
                           side: BorderSide(color: kCareDark),
                           minimumSize: const Size(0, 32),
-                          textStyle: const TextStyle(fontSize: 12.5),
+                          textStyle: CareText.plainSm,
                         ),
                         child: const Text('Mark round'),
                       ),

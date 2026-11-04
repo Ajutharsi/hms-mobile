@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/lab/models/lab_test.dart';
 import 'package:hms_mobile/features/lab/viewmodels/lab_tests_view_model.dart';
@@ -54,7 +55,7 @@ class _LabTestsView extends StatelessWidget {
         content: Text('Delete "${test.testName}" from the catalog?'),
         actions: [
           TextButton(onPressed: () => Navigator.of(ctx).pop(false), child: const Text('Cancel')),
-          TextButton(onPressed: () => Navigator.of(ctx).pop(true), child: const Text('Delete', style: TextStyle(color: Color(0xFFB3261E)))),
+          TextButton(onPressed: () => Navigator.of(ctx).pop(true), child: const Text('Delete', style: CareText.danger)),
         ],
       ),
     );
@@ -77,7 +78,7 @@ class _LabTestsView extends StatelessWidget {
         backgroundColor: kCareDark,
         foregroundColor: Colors.white,
         icon: const Icon(Icons.add, color: Colors.white),
-        label: const Text('Add test', style: TextStyle(color: Colors.white)),
+        label: const Text('Add test', style: CareText.onCare),
       ),
       body: RefreshIndicator(color: kCare, onRefresh: viewModel.load, child: _buildBody(context, viewModel)),
     ));
@@ -92,7 +93,7 @@ class _LabTestsView extends StatelessWidget {
         const SizedBox(height: 80),
         const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
         const SizedBox(height: 12),
-        Text(viewModel.loadError!, textAlign: TextAlign.center, style: const TextStyle(color: kMuted)),
+        Text(viewModel.loadError!, textAlign: TextAlign.center, style: CareText.muted),
       ]);
     }
     if (viewModel.tests.isEmpty) {
@@ -100,7 +101,7 @@ class _LabTestsView extends StatelessWidget {
         SizedBox(height: 80),
         Icon(Icons.science_outlined, color: kMuted, size: 40),
         SizedBox(height: 12),
-        Text('No lab tests in the catalog yet', textAlign: TextAlign.center, style: TextStyle(color: kMuted)),
+        Text('No lab tests in the catalog yet', textAlign: TextAlign.center, style: CareText.muted),
       ]);
     }
 
@@ -142,7 +143,7 @@ class _TestCard extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Expanded(child: Text(test.testName, style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w700, color: kInk))),
+                    Expanded(child: Text(test.testName, style: CareText.titleLg)),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                       decoration: BoxDecoration(color: active ? kSuccessBg : kCareBg, borderRadius: BorderRadius.circular(7)),
@@ -151,7 +152,7 @@ class _TestCard extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 3),
-                Text('${test.category} · ${test.sampleType}', style: const TextStyle(fontSize: 12, color: kMuted)),
+                Text('${test.category} · ${test.sampleType}', style: CareText.mutedXs),
                 const SizedBox(height: 4),
                 Text('₹${test.price.toStringAsFixed(0)}${test.unit != null ? ' · ${test.unit}' : ''}', style: TextStyle(fontSize: 12.5, color: kCareDark, fontWeight: FontWeight.w600)),
               ],

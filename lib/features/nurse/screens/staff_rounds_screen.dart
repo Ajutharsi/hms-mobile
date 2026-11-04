@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/nurse/viewmodels/rounds_view_model.dart';
 
@@ -47,7 +48,7 @@ class _StaffRoundsView extends StatelessWidget {
           const SizedBox(height: 80),
           const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
           const SizedBox(height: 12),
-          Text(viewModel.loadError!, textAlign: TextAlign.center, style: const TextStyle(color: kMuted)),
+          Text(viewModel.loadError!, textAlign: TextAlign.center, style: CareText.muted),
         ],
       );
     }
@@ -59,7 +60,7 @@ class _StaffRoundsView extends StatelessWidget {
           SizedBox(height: 80),
           Icon(Icons.groups_outlined, color: kMuted, size: 40),
           SizedBox(height: 12),
-          Text('No active round assignments', textAlign: TextAlign.center, style: TextStyle(color: kMuted)),
+          Text('No active round assignments', textAlign: TextAlign.center, style: CareText.muted),
         ],
       );
     }
@@ -85,11 +86,11 @@ class _StaffRoundsView extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('${a['ward_name'] ?? 'Ward'}', style: const TextStyle(fontSize: 14.5, fontWeight: FontWeight.w700, color: kInk)),
+                    Text('${a['ward_name'] ?? 'Ward'}', style: CareText.titleLg),
                     const SizedBox(height: 2),
-                    Text('${a['staff_name'] ?? 'Staff'} · every ${a['frequency_hours'] ?? '?'}h', style: const TextStyle(fontSize: 12.5, color: kMuted)),
+                    Text('${a['staff_name'] ?? 'Staff'} · every ${a['frequency_hours'] ?? '?'}h', style: CareText.mutedSm),
                     const SizedBox(height: 2),
-                    Text('Assigned by ${a['assigned_by'] ?? '—'}', style: const TextStyle(fontSize: 11.5, color: kMuted)),
+                    Text('Assigned by ${a['assigned_by'] ?? '—'}', style: CareText.mutedXs),
                   ],
                 ),
               ),
@@ -102,7 +103,7 @@ class _StaffRoundsView extends StatelessWidget {
                     child: Text(overdue ? 'Overdue' : 'On track', style: TextStyle(color: overdue ? kDangerFg : kSuccessFg, fontSize: 11, fontWeight: FontWeight.w700)),
                   ),
                   const SizedBox(height: 6),
-                  Text('Next: ${a['next_round_at'] ?? '—'}', style: const TextStyle(fontSize: 11, color: kMuted)),
+                  Text('Next: ${a['next_round_at'] ?? '—'}', style: CareText.mutedXxs),
                 ],
               ),
             ],

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/nurse/models/ward.dart';
 import 'package:hms_mobile/features/nurse/viewmodels/ward_view_model.dart';
@@ -49,7 +50,7 @@ class _WardListView extends StatelessWidget {
           const SizedBox(height: 80),
           const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
           const SizedBox(height: 12),
-          Text(viewModel.loadError!, textAlign: TextAlign.center, style: const TextStyle(color: kMuted)),
+          Text(viewModel.loadError!, textAlign: TextAlign.center, style: CareText.muted),
         ],
       );
     }
@@ -61,7 +62,7 @@ class _WardListView extends StatelessWidget {
           SizedBox(height: 80),
           Icon(Icons.holiday_village_outlined, color: kMuted, size: 40),
           SizedBox(height: 12),
-          Text('No wards found', textAlign: TextAlign.center, style: TextStyle(color: kMuted)),
+          Text('No wards found', textAlign: TextAlign.center, style: CareText.muted),
         ],
       );
     }
@@ -105,13 +106,13 @@ class _WardCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                Expanded(child: Text(ward.name, style: const TextStyle(fontSize: 15.5, fontWeight: FontWeight.w700, color: kInk))),
+                Expanded(child: Text(ward.name, style: CareText.titleXl)),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(8)),
                   child: Text(
                     ward.type.replaceAll('_', ' ').toUpperCase(),
-                    style: TextStyle(color: fg, fontSize: 10.5, fontWeight: FontWeight.w700),
+                    style: CareText.chip(fg),
                   ),
                 ),
               ],
@@ -120,7 +121,7 @@ class _WardCard extends StatelessWidget {
               const SizedBox(height: 4),
               Text(
                 [if ((ward.floor ?? '').isNotEmpty) 'Floor ${ward.floor}', if ((ward.building ?? '').isNotEmpty) ward.building!].join(' · '),
-                style: const TextStyle(fontSize: 12.5, color: kMuted),
+                style: CareText.mutedSm,
               ),
             ],
             const SizedBox(height: 12),
@@ -128,9 +129,9 @@ class _WardCard extends StatelessWidget {
               children: [
                 const Icon(Icons.bed_outlined, size: 15, color: kMuted),
                 const SizedBox(width: 6),
-                Text('$occupied / ${ward.totalBeds} beds occupied', style: const TextStyle(fontSize: 12.5, color: kMuted)),
+                Text('$occupied / ${ward.totalBeds} beds occupied', style: CareText.mutedSm),
                 const Spacer(),
-                Text('₹${ward.chargePerDay.toStringAsFixed(0)}/day', style: const TextStyle(fontSize: 12.5, color: kMuted, fontWeight: FontWeight.w600)),
+                Text('₹${ward.chargePerDay.toStringAsFixed(0)}/day', style: CareText.mutedSmMedium),
               ],
             ),
           ],
@@ -186,7 +187,7 @@ class _WardDetailView extends StatelessWidget {
           const SizedBox(height: 80),
           const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
           const SizedBox(height: 12),
-          Text(viewModel.loadError!, textAlign: TextAlign.center, style: const TextStyle(color: kMuted)),
+          Text(viewModel.loadError!, textAlign: TextAlign.center, style: CareText.muted),
         ],
       );
     }
@@ -227,11 +228,11 @@ class _BedTile extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(bed.bedNo, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: kInk)),
+                Text(bed.bedNo, style: CareText.titleMd),
                 if (bed.patientName != null)
-                  Text(bed.patientName!, style: const TextStyle(fontSize: 12.5, color: kMuted))
+                  Text(bed.patientName!, style: CareText.mutedSm)
                 else if ((bed.type ?? '').isNotEmpty)
-                  Text(bed.type!, style: const TextStyle(fontSize: 12.5, color: kMuted)),
+                  Text(bed.type!, style: CareText.mutedSm),
               ],
             ),
           ),

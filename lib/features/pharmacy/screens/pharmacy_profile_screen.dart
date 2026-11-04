@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/pharmacy/models/pharmacy_profile.dart';
 import 'package:hms_mobile/features/pharmacy/viewmodels/pharmacy_profile_view_model.dart';
@@ -49,7 +50,7 @@ class _PharmacyProfileView extends StatelessWidget {
             const SizedBox(height: 80),
             const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
             const SizedBox(height: 12),
-            Text(viewModel.loadError!, textAlign: TextAlign.center, style: const TextStyle(color: kMuted)),
+            Text(viewModel.loadError!, textAlign: TextAlign.center, style: CareText.muted),
           ],
         ),
       );
@@ -70,7 +71,7 @@ class _PharmacyProfileView extends StatelessWidget {
             children: [
               _AvatarHeader(profile: profile, viewModel: viewModel),
               const SizedBox(height: 24),
-              const Text('Account details', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: kInk)),
+              const Text('Account details', style: CareText.titleLg),
               const SizedBox(height: 12),
               TextFormField(
                 controller: viewModel.nameController,
@@ -91,9 +92,9 @@ class _PharmacyProfileView extends StatelessWidget {
                 decoration: careFieldDecoration('Phone', hint: 'Optional', icon: Icons.phone_outlined),
               ),
               const SizedBox(height: 24),
-              const Text('Change password', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: kInk)),
+              const Text('Change password', style: CareText.titleLg),
               const SizedBox(height: 4),
-              const Text('Leave blank to keep your current password.', style: TextStyle(fontSize: 12.5, color: kMuted)),
+              const Text('Leave blank to keep your current password.', style: CareText.mutedSm),
               const SizedBox(height: 12),
               TextFormField(
                 controller: viewModel.currentPasswordController,
@@ -127,7 +128,7 @@ class _PharmacyProfileView extends StatelessWidget {
                   decoration: BoxDecoration(color: kCareSoft, borderRadius: BorderRadius.circular(10)),
                   child: Text(
                     viewModel.successMessage!,
-                    style: TextStyle(color: kCareDark, fontSize: 13.5, fontWeight: FontWeight.w600),
+                    style: CareText.brandMdMedium,
                   ),
                 ),
                 const SizedBox(height: 14),
@@ -142,7 +143,7 @@ class _PharmacyProfileView extends StatelessWidget {
                   ),
                   child: viewModel.isSaving
                       ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                      : const Text('Save changes', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
+                      : const Text('Save changes', style: CareText.onCareBold),
                 ),
               ),
             ],
@@ -183,7 +184,7 @@ class _AvatarHeader extends StatelessWidget {
                 child: viewModel.pendingPhotoBytes == null && profile.profilePhotoUrl == null
                     ? Text(
                         profile.name.isNotEmpty ? profile.name[0].toUpperCase() : '?',
-                        style: TextStyle(fontSize: 32, fontWeight: FontWeight.w700, color: kCareDark),
+                        style: CareText.statBig,
                       )
                     : null,
               ),
@@ -203,7 +204,7 @@ class _AvatarHeader extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 12),
-          Text(profile.name, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: kInk)),
+          Text(profile.name, style: CareText.titleH3),
           if ((profile.department ?? '').isNotEmpty) ...[
             const SizedBox(height: 4),
             Container(
@@ -211,7 +212,7 @@ class _AvatarHeader extends StatelessWidget {
               decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(8)),
               child: Text(
                 profile.department!,
-                style: const TextStyle(fontSize: 12, color: kMuted, fontWeight: FontWeight.w600),
+                style: CareText.mutedXsMedium,
               ),
             ),
           ],

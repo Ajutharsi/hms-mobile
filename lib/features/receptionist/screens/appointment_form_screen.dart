@@ -4,6 +4,7 @@ import 'package:hms_mobile/core/services/api_service.dart';
 import 'package:hms_mobile/core/services/auth_storage.dart';
 import 'package:hms_mobile/core/services/receptionist_api_service.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/receptionist/models/reception_appointment.dart';
 import 'package:hms_mobile/features/receptionist/models/reception_patient.dart';
@@ -193,7 +194,7 @@ class _AppointmentFormScreenState extends State<AppointmentFormScreen> {
           : ListView(
               padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
               children: [
-                const Text('Patient', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: kInk)),
+                const Text('Patient', style: CareText.titleSm),
                 const SizedBox(height: 8),
                 if (_isEdit)
                   Container(
@@ -239,7 +240,7 @@ class _AppointmentFormScreenState extends State<AppointmentFormScreen> {
                     ),
                 ],
                 const SizedBox(height: 20),
-                const Text('Doctor', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: kInk)),
+                const Text('Doctor', style: CareText.titleSm),
                 const SizedBox(height: 8),
                 DropdownButtonFormField<ReceptionDoctor>(
                   initialValue: _selectedDoctor,
@@ -251,14 +252,14 @@ class _AppointmentFormScreenState extends State<AppointmentFormScreen> {
                   },
                 ),
                 const SizedBox(height: 16),
-                const Text('Date', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: kInk)),
+                const Text('Date', style: CareText.titleSm),
                 const SizedBox(height: 8),
                 InkWell(
                   onTap: _pickDate,
                   child: InputDecorator(decoration: careFieldDecoration('Date', hint: '', icon: Icons.calendar_today_outlined), child: Text(_fmtDate(_date))),
                 ),
                 const SizedBox(height: 16),
-                const Text('Time', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: kInk)),
+                const Text('Time', style: CareText.titleSm),
                 const SizedBox(height: 8),
                 if (_isEdit)
                   InkWell(
@@ -291,7 +292,7 @@ class _AppointmentFormScreenState extends State<AppointmentFormScreen> {
                     ],
                   ),
                 const SizedBox(height: 16),
-                const Text('Type', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: kInk)),
+                const Text('Type', style: CareText.titleSm),
                 const SizedBox(height: 8),
                 DropdownButtonFormField<String>(
                   initialValue: _type,
@@ -301,7 +302,7 @@ class _AppointmentFormScreenState extends State<AppointmentFormScreen> {
                 ),
                 if (_isEdit) ...[
                   const SizedBox(height: 16),
-                  const Text('Status', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: kInk)),
+                  const Text('Status', style: CareText.titleSm),
                   const SizedBox(height: 8),
                   DropdownButtonFormField<String>(
                     initialValue: _status,
@@ -324,7 +325,7 @@ class _AppointmentFormScreenState extends State<AppointmentFormScreen> {
                     style: ElevatedButton.styleFrom(backgroundColor: kCareDark, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
                     child: _isSaving
                         ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                        : Text(_isEdit ? 'Save changes' : 'Book appointment', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
+                        : Text(_isEdit ? 'Save changes' : 'Book appointment', style: CareText.onCareBold),
                   ),
                 ),
               ],
