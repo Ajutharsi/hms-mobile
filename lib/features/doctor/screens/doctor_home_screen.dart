@@ -13,6 +13,20 @@ import 'package:hms_mobile/features/doctor/screens/doctor_patient_detail_screen.
 import 'package:hms_mobile/features/doctor/screens/doctor_patients_screen.dart';
 import 'package:hms_mobile/features/doctor/screens/doctor_profile_screen.dart';
 import 'package:hms_mobile/features/doctor/viewmodels/doctor_view_models.dart';
+import 'package:hms_mobile/features/lab/screens/lab_orders_screen.dart';
+import 'package:hms_mobile/features/lab/screens/lab_tests_screen.dart';
+import 'package:hms_mobile/features/nurse/screens/admissions_screen.dart';
+import 'package:hms_mobile/features/nurse/screens/blood_bank_screen.dart';
+import 'package:hms_mobile/features/nurse/screens/consent_forms_screen.dart';
+import 'package:hms_mobile/features/nurse/screens/emar_screen.dart';
+import 'package:hms_mobile/features/nurse/screens/er_screen.dart';
+import 'package:hms_mobile/features/nurse/screens/icu_screen.dart';
+import 'package:hms_mobile/features/nurse/screens/nursing_notes_screen.dart';
+import 'package:hms_mobile/features/nurse/screens/ot_screen.dart';
+import 'package:hms_mobile/features/nurse/screens/vitals_screen.dart';
+import 'package:hms_mobile/features/receptionist/screens/opd_queue_screen.dart';
+import 'package:hms_mobile/features/receptionist/screens/radiology_screen.dart';
+import 'package:hms_mobile/features/receptionist/screens/referrals_screen.dart';
 import 'package:hms_mobile/features/settings/screens/appearance_screen.dart';
 
 /// The doctor's home shell — today's clinic at the top, then shortcuts.
@@ -31,12 +45,36 @@ class DoctorHomeScreen extends StatelessWidget {
   }
 }
 
-enum DoctorSection { appointments, todayAppointments, patients, profile, appearance }
+/// The doctor's menu follows the web sidebar's own role list: every module
+/// `verticalMenu.json` marks for `doctor`. Most of these screens were
+/// already here, built for the nurse, the lab or the front desk — the
+/// doctor simply had no way in.
+enum DoctorSection {
+  appointments, todayAppointments, patients,
+  referrals, consent, opdQueue, er, admissions,
+  emar, vitals, nursingNotes, ot, icu, bloodBank,
+  labTests, labOrders, radiology,
+  profile, appearance,
+}
 
 Widget _screenFor(DoctorSection section) => switch (section) {
       DoctorSection.appointments => const DoctorAppointmentsScreen(),
       DoctorSection.todayAppointments => const DoctorAppointmentsScreen(initialFilter: 'today'),
       DoctorSection.patients => const DoctorPatientsScreen(),
+      DoctorSection.referrals => const ReferralsScreen(),
+      DoctorSection.consent => const ConsentFormsScreen(),
+      DoctorSection.opdQueue => const OpdQueueScreen(),
+      DoctorSection.er => const ErScreen(),
+      DoctorSection.admissions => const AdmissionsScreen(),
+      DoctorSection.emar => const EmarScreen(),
+      DoctorSection.vitals => const VitalsScreen(),
+      DoctorSection.nursingNotes => const NursingNotesScreen(),
+      DoctorSection.ot => const OtScreen(),
+      DoctorSection.icu => const IcuScreen(),
+      DoctorSection.bloodBank => const BloodBankScreen(),
+      DoctorSection.labTests => const LabTestsScreen(),
+      DoctorSection.labOrders => const LabOrdersScreen(),
+      DoctorSection.radiology => const RadiologyScreen(),
       DoctorSection.profile => const DoctorProfileScreen(),
       DoctorSection.appearance => const AppearanceScreen(),
     };
@@ -171,6 +209,24 @@ class _DoctorDrawer extends StatelessWidget {
                   tile(Icons.today_rounded, "Today's Visits", DoctorSection.todayAppointments),
                   tile(Icons.calendar_month_rounded, 'All Appointments', DoctorSection.appointments),
                   tile(Icons.people_rounded, 'Patients', DoctorSection.patients),
+                  tile(Icons.compare_arrows_rounded, 'Referrals', DoctorSection.referrals),
+                  tile(Icons.assignment_rounded, 'Consent Forms', DoctorSection.consent),
+                  tile(Icons.confirmation_number_rounded, 'OPD Queue', DoctorSection.opdQueue),
+                  tile(Icons.local_hospital_rounded, 'Emergency (ER)', DoctorSection.er),
+                ]),
+                group('WARD', [
+                  tile(Icons.bed_rounded, 'Admissions', DoctorSection.admissions),
+                  tile(Icons.medication_rounded, 'eMAR', DoctorSection.emar),
+                  tile(Icons.favorite_rounded, 'Vitals', DoctorSection.vitals),
+                  tile(Icons.description_rounded, 'Nursing Notes', DoctorSection.nursingNotes),
+                  tile(Icons.medical_services_rounded, 'Operation Theatre', DoctorSection.ot),
+                  tile(Icons.monitor_heart_rounded, 'ICU Charting', DoctorSection.icu),
+                  tile(Icons.water_drop_rounded, 'Blood Bank', DoctorSection.bloodBank),
+                ]),
+                group('DIAGNOSTICS', [
+                  tile(Icons.science_rounded, 'Lab Tests', DoctorSection.labTests),
+                  tile(Icons.assignment_turned_in_rounded, 'Lab Orders', DoctorSection.labOrders),
+                  tile(Icons.camera_rounded, 'Radiology', DoctorSection.radiology),
                 ]),
                 group('ACCOUNT', [
                   tile(Icons.person_rounded, 'My Profile', DoctorSection.profile),
