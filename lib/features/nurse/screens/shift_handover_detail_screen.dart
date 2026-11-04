@@ -109,18 +109,10 @@ class _ShiftHandoverDetailScreenState extends State<ShiftHandoverDetailScreen> {
 
   Widget _buildBody() {
     if (_isLoading && _detail == null) {
-      return Center(child: CircularProgressIndicator(color: kCare));
+      return const CareStateView.loading();
     }
     if (_loadError != null && _detail == null) {
-      return ListView(
-        padding: const EdgeInsets.all(24),
-        children: [
-          const SizedBox(height: 80),
-          const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
-          const SizedBox(height: 12),
-          Text(_loadError!, textAlign: TextAlign.center, style: CareText.muted),
-        ],
-      );
+      return CareStateView.error(_loadError!);
     }
 
     final detail = _detail!;

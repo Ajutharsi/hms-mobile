@@ -74,15 +74,10 @@ class _IpdDepositsView extends StatelessWidget {
 
   Widget _buildBody(BuildContext context, IpdDepositsViewModel viewModel) {
     if (viewModel.isLoading && viewModel.deposits.isEmpty) {
-      return Center(child: CircularProgressIndicator(color: kCare));
+      return const CareStateView.loading();
     }
     if (viewModel.loadError != null && viewModel.deposits.isEmpty) {
-      return ListView(padding: const EdgeInsets.all(24), children: [
-        const SizedBox(height: 80),
-        const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
-        const SizedBox(height: 12),
-        Text(viewModel.loadError!, textAlign: TextAlign.center, style: CareText.muted),
-      ]);
+      return CareStateView.error(viewModel.loadError!);
     }
 
     final stats = viewModel.stats;
@@ -102,7 +97,7 @@ class _IpdDepositsView extends StatelessWidget {
           ),
         const SizedBox(height: 20),
         if (viewModel.deposits.isEmpty)
-          const Padding(padding: EdgeInsets.only(top: 40), child: Center(child: Text('No deposits recorded yet', style: CareText.muted)))
+          const CareStateView.inline(icon: Icons.savings_outlined, title: "No deposits recorded yet", message: "Advance payments taken at admission show up here.")
         else
           for (final deposit in viewModel.deposits) ...[
             _DepositCard(deposit: deposit, onRefund: deposit.type == 'advance' ? () => _refund(context, viewModel, deposit) : null),

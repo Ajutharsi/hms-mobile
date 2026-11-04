@@ -84,23 +84,13 @@ class _NursingNotesView extends StatelessWidget {
 
   Widget _buildBody(BuildContext context, NursingNotesViewModel viewModel) {
     if (viewModel.isLoading && viewModel.notes.isEmpty) {
-      return Center(child: CircularProgressIndicator(color: kCare));
+      return const CareStateView.loading();
     }
     if (viewModel.loadError != null && viewModel.notes.isEmpty) {
-      return ListView(padding: const EdgeInsets.all(24), children: [
-        const SizedBox(height: 80),
-        const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
-        const SizedBox(height: 12),
-        Text(viewModel.loadError!, textAlign: TextAlign.center, style: CareText.muted),
-      ]);
+      return CareStateView.error(viewModel.loadError!);
     }
     if (viewModel.notes.isEmpty) {
-      return ListView(padding: const EdgeInsets.all(24), children: const [
-        SizedBox(height: 80),
-        Icon(Icons.description_outlined, color: kMuted, size: 40),
-        SizedBox(height: 12),
-        Text('No nursing notes yet', textAlign: TextAlign.center, style: CareText.titleXlMedium),
-      ]);
+      return const CareStateView(icon: Icons.description_outlined, title: 'No nursing notes yet');
     }
 
     return ListView.separated(

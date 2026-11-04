@@ -73,6 +73,10 @@ abstract final class CareText {
 
   // ---- primary body copy ----------------------------------------------
   static const TextStyle bodyMd = TextStyle(fontSize: md, color: kInk);
+
+  /// Quiet explanatory copy under a heading — the line height is what
+  /// makes a two-line empty-state message readable rather than cramped.
+  static const TextStyle bodyMdMuted = TextStyle(fontSize: md, color: kMuted, height: 1.4);
   static const TextStyle bodyLg = TextStyle(fontSize: lg, color: kInk);
 
   // ---- titles ----------------------------------------------------------

@@ -88,23 +88,13 @@ class _ConsentFormsView extends StatelessWidget {
 
   Widget _buildBody(BuildContext context, ConsentFormsViewModel viewModel) {
     if (viewModel.isLoading && viewModel.forms.isEmpty) {
-      return Center(child: CircularProgressIndicator(color: kCare));
+      return const CareStateView.loading();
     }
     if (viewModel.loadError != null && viewModel.forms.isEmpty) {
-      return ListView(padding: const EdgeInsets.all(24), children: [
-        const SizedBox(height: 80),
-        const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
-        const SizedBox(height: 12),
-        Text(viewModel.loadError!, textAlign: TextAlign.center, style: CareText.muted),
-      ]);
+      return CareStateView.error(viewModel.loadError!);
     }
     if (viewModel.forms.isEmpty) {
-      return ListView(padding: const EdgeInsets.all(24), children: const [
-        SizedBox(height: 80),
-        Icon(Icons.assignment_outlined, color: kMuted, size: 40),
-        SizedBox(height: 12),
-        Text('No consent forms yet', textAlign: TextAlign.center, style: CareText.titleXlMedium),
-      ]);
+      return const CareStateView(icon: Icons.assignment_outlined, title: 'No consent forms yet');
     }
 
     return ListView.separated(

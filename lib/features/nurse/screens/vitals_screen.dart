@@ -53,23 +53,13 @@ class _VitalsView extends StatelessWidget {
 
   Widget _buildBody(BuildContext context, VitalsViewModel viewModel) {
     if (viewModel.isLoading && viewModel.vitals.isEmpty) {
-      return Center(child: CircularProgressIndicator(color: kCare));
+      return const CareStateView.loading();
     }
     if (viewModel.loadError != null && viewModel.vitals.isEmpty) {
-      return ListView(padding: const EdgeInsets.all(24), children: [
-        const SizedBox(height: 80),
-        const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
-        const SizedBox(height: 12),
-        Text(viewModel.loadError!, textAlign: TextAlign.center, style: CareText.muted),
-      ]);
+      return CareStateView.error(viewModel.loadError!);
     }
     if (viewModel.vitals.isEmpty) {
-      return ListView(padding: const EdgeInsets.all(24), children: const [
-        SizedBox(height: 80),
-        Icon(Icons.favorite_border, color: kMuted, size: 40),
-        SizedBox(height: 12),
-        Text('No vitals recorded yet', textAlign: TextAlign.center, style: CareText.titleXlMedium),
-      ]);
+      return const CareStateView(icon: Icons.favorite_border, title: 'No vitals recorded yet');
     }
 
     return ListView.separated(

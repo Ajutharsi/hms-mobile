@@ -100,15 +100,10 @@ class _InvoicesViewState extends State<_InvoicesView> {
 
   Widget _buildBody(BuildContext context, InvoicesViewModel viewModel) {
     if (viewModel.isLoading && viewModel.invoices.isEmpty) {
-      return Center(child: CircularProgressIndicator(color: kCare));
+      return const CareStateView.loading();
     }
     if (viewModel.loadError != null && viewModel.invoices.isEmpty) {
-      return ListView(padding: const EdgeInsets.all(24), children: [
-        const SizedBox(height: 80),
-        const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
-        const SizedBox(height: 12),
-        Text(viewModel.loadError!, textAlign: TextAlign.center, style: CareText.muted),
-      ]);
+      return CareStateView.error(viewModel.loadError!);
     }
 
     final stats = viewModel.stats;
@@ -134,7 +129,7 @@ class _InvoicesViewState extends State<_InvoicesView> {
           const SizedBox(height: 16),
         ],
         if (viewModel.invoices.isEmpty)
-          const Padding(padding: EdgeInsets.only(top: 40), child: Center(child: Text('No invoices found', style: CareText.muted)))
+          const CareStateView.inline(icon: Icons.receipt_long_outlined, title: "No invoices found", message: "Invoices you create for a patient will be listed here.")
         else
           for (final invoice in viewModel.invoices) ...[
             _InvoiceCard(

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:hms_mobile/core/services/api_service.dart';
 import 'package:hms_mobile/core/services/auth_storage.dart';
 import 'package:hms_mobile/core/services/receptionist_api_service.dart';
-import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/receptionist/models/reception_patient.dart';
@@ -63,15 +62,10 @@ class _ReceptionPatientDetailScreenState extends State<ReceptionPatientDetailScr
 
   Widget _buildBody() {
     if (_isLoading && _patient == null) {
-      return Center(child: CircularProgressIndicator(color: kCare));
+      return const CareStateView.loading();
     }
     if (_error != null && _patient == null) {
-      return ListView(padding: const EdgeInsets.all(24), children: [
-        const SizedBox(height: 80),
-        const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
-        const SizedBox(height: 12),
-        Text(_error!, textAlign: TextAlign.center, style: CareText.muted),
-      ]);
+      return CareStateView.error(_error!);
     }
 
     final p = _patient!;

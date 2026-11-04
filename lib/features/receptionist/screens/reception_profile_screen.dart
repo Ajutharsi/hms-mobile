@@ -37,7 +37,7 @@ class _ReceptionProfileView extends StatelessWidget {
 
   Widget _buildBody(BuildContext context, ReceptionProfileViewModel viewModel) {
     if (viewModel.isLoading && viewModel.profile == null) {
-      return Center(child: CircularProgressIndicator(color: kCare));
+      return const CareStateView.loading();
     }
 
     if (viewModel.loadError != null && viewModel.profile == null) {

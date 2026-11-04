@@ -91,23 +91,13 @@ class _ReceptionPatientsViewState extends State<_ReceptionPatientsView> {
 
   Widget _buildBody(BuildContext context, ReceptionPatientsViewModel viewModel) {
     if (viewModel.isLoading && viewModel.patients.isEmpty) {
-      return Center(child: CircularProgressIndicator(color: kCare));
+      return const CareStateView.loading();
     }
     if (viewModel.loadError != null && viewModel.patients.isEmpty) {
-      return ListView(padding: const EdgeInsets.all(24), children: [
-        const SizedBox(height: 80),
-        const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
-        const SizedBox(height: 12),
-        Text(viewModel.loadError!, textAlign: TextAlign.center, style: CareText.muted),
-      ]);
+      return CareStateView.error(viewModel.loadError!);
     }
     if (viewModel.patients.isEmpty) {
-      return ListView(padding: const EdgeInsets.all(24), children: const [
-        SizedBox(height: 80),
-        Icon(Icons.people_outline, color: kMuted, size: 40),
-        SizedBox(height: 12),
-        Text('No patients found', textAlign: TextAlign.center, style: CareText.muted),
-      ]);
+      return const CareStateView(icon: Icons.people_outline, title: 'No patients found');
     }
 
     return ListView.separated(

@@ -466,13 +466,26 @@ class CareStateView extends StatelessWidget {
   final String? message;
   final bool loading;
 
-  const CareStateView({super.key, required this.icon, required this.title, this.message}) : loading = false;
+  /// False when the view is already inside a scrollable — a list that has
+  /// stat tiles above it still wants to show those, so the empty state has
+  /// to sit in the list rather than replace it.
+  final bool scrollable;
+
+  const CareStateView({super.key, required this.icon, required this.title, this.message})
+      : loading = false,
+        scrollable = true;
+
+  /// The same state, laid out to be dropped into an existing list.
+  const CareStateView.inline({super.key, required this.icon, required this.title, this.message})
+      : loading = false,
+        scrollable = false;
 
   const CareStateView.loading({super.key})
       : icon = Icons.hourglass_empty_rounded,
         title = '',
         message = null,
-        loading = true;
+        loading = true,
+        scrollable = true;
 
   factory CareStateView.error(String message) => CareStateView(icon: Icons.wifi_off_rounded, title: "Couldn't load", message: message);
 
@@ -488,26 +501,35 @@ class CareStateView extends StatelessWidget {
         ],
       );
     }
+
+    final body = <Widget>[
+      SizedBox(height: scrollable ? 90 : 40),
+      Center(
+        child: Container(
+          width: 84,
+          height: 84,
+          decoration: BoxDecoration(color: kCareSoft, shape: BoxShape.circle),
+          child: Icon(icon, color: kCare, size: 38),
+        ),
+      ),
+      const SizedBox(height: 18),
+      Text(title, textAlign: TextAlign.center, style: CareText.titleXxl),
+      if (message != null) ...[
+        const SizedBox(height: 6),
+        Text(message!, textAlign: TextAlign.center, style: CareText.bodyMdMuted),
+      ],
+    ];
+
+    if (!scrollable) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 32),
+        child: Column(mainAxisSize: MainAxisSize.min, children: body),
+      );
+    }
     return ListView(
       physics: const AlwaysScrollableScrollPhysics(),
       padding: const EdgeInsets.symmetric(horizontal: 32),
-      children: [
-        const SizedBox(height: 90),
-        Center(
-          child: Container(
-            width: 84,
-            height: 84,
-            decoration: BoxDecoration(color: kCareSoft, shape: BoxShape.circle),
-            child: Icon(icon, color: kCare, size: 38),
-          ),
-        ),
-        const SizedBox(height: 18),
-        Text(title, textAlign: TextAlign.center, style: CareText.titleXxl),
-        if (message != null) ...[
-          const SizedBox(height: 6),
-          Text(message!, textAlign: TextAlign.center, style: const TextStyle(color: kMuted, fontSize: 13.5, height: 1.4)),
-        ],
-      ],
+      children: body,
     );
   }
 }

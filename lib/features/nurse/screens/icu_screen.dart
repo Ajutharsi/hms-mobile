@@ -72,23 +72,13 @@ class _IcuView extends StatelessWidget {
 
   Widget _buildBody(BuildContext context, IcuViewModel viewModel) {
     if (viewModel.isLoading && viewModel.charts.isEmpty) {
-      return Center(child: CircularProgressIndicator(color: kCare));
+      return const CareStateView.loading();
     }
     if (viewModel.loadError != null && viewModel.charts.isEmpty) {
-      return ListView(padding: const EdgeInsets.all(24), children: [
-        const SizedBox(height: 80),
-        const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
-        const SizedBox(height: 12),
-        Text(viewModel.loadError!, textAlign: TextAlign.center, style: CareText.muted),
-      ]);
+      return CareStateView.error(viewModel.loadError!);
     }
     if (viewModel.charts.isEmpty) {
-      return ListView(padding: const EdgeInsets.all(24), children: const [
-        SizedBox(height: 80),
-        Icon(Icons.monitor_heart_outlined, color: kMuted, size: 40),
-        SizedBox(height: 12),
-        Text('No ICU charts recorded yet', textAlign: TextAlign.center, style: CareText.titleXlMedium),
-      ]);
+      return const CareStateView(icon: Icons.monitor_heart_outlined, title: 'No ICU charts recorded yet');
     }
 
     return ListView.separated(

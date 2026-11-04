@@ -51,15 +51,10 @@ class _RadiologyView extends StatelessWidget {
 
   Widget _buildBody(BuildContext context, RadiologyViewModel viewModel) {
     if (viewModel.isLoading && viewModel.orders.isEmpty) {
-      return Center(child: CircularProgressIndicator(color: kCare));
+      return const CareStateView.loading();
     }
     if (viewModel.loadError != null && viewModel.orders.isEmpty) {
-      return ListView(padding: const EdgeInsets.all(24), children: [
-        const SizedBox(height: 80),
-        const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
-        const SizedBox(height: 12),
-        Text(viewModel.loadError!, textAlign: TextAlign.center, style: CareText.muted),
-      ]);
+      return CareStateView.error(viewModel.loadError!);
     }
 
     final stats = viewModel.stats;
@@ -84,7 +79,7 @@ class _RadiologyView extends StatelessWidget {
           ),
         const SizedBox(height: 16),
         if (viewModel.orders.isEmpty)
-          const Padding(padding: EdgeInsets.only(top: 40), child: Center(child: Text('No radiology orders', style: CareText.muted)))
+          const CareStateView.inline(icon: Icons.camera_outlined, title: "No radiology orders", message: "Imaging you order for a patient will be listed here.")
         else
           for (final order in viewModel.orders) ...[
             _OrderCard(

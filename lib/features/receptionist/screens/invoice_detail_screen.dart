@@ -56,15 +56,10 @@ class _InvoiceDetailView extends StatelessWidget {
 
   Widget _buildBody(BuildContext context, InvoiceDetailViewModel viewModel) {
     if (viewModel.isLoading && viewModel.invoice == null) {
-      return Center(child: CircularProgressIndicator(color: kCare));
+      return const CareStateView.loading();
     }
     if (viewModel.loadError != null && viewModel.invoice == null) {
-      return ListView(padding: const EdgeInsets.all(24), children: [
-        const SizedBox(height: 80),
-        const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
-        const SizedBox(height: 12),
-        Text(viewModel.loadError!, textAlign: TextAlign.center, style: CareText.muted),
-      ]);
+      return CareStateView.error(viewModel.loadError!);
     }
 
     final invoice = viewModel.invoice!;

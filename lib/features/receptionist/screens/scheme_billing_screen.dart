@@ -62,15 +62,10 @@ class _SchemeBillingView extends StatelessWidget {
 
   Widget _buildBody(BuildContext context, SchemeBillingViewModel viewModel) {
     if (viewModel.isLoading && viewModel.bills.isEmpty) {
-      return Center(child: CircularProgressIndicator(color: kCare));
+      return const CareStateView.loading();
     }
     if (viewModel.loadError != null && viewModel.bills.isEmpty) {
-      return ListView(padding: const EdgeInsets.all(24), children: [
-        const SizedBox(height: 80),
-        const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
-        const SizedBox(height: 12),
-        Text(viewModel.loadError!, textAlign: TextAlign.center, style: CareText.muted),
-      ]);
+      return CareStateView.error(viewModel.loadError!);
     }
 
     final stats = viewModel.stats;
@@ -95,7 +90,7 @@ class _SchemeBillingView extends StatelessWidget {
           ),
         const SizedBox(height: 20),
         if (viewModel.bills.isEmpty)
-          const Padding(padding: EdgeInsets.only(top: 40), child: Center(child: Text('No scheme bills yet', style: CareText.muted)))
+          const CareStateView.inline(icon: Icons.local_offer_outlined, title: "No scheme bills yet", message: "Bills raised under a government or corporate scheme appear here.")
         else
           for (final bill in viewModel.bills) ...[
             _BillCard(

@@ -96,15 +96,10 @@ class _OpdQueueView extends StatelessWidget {
 
   Widget _buildBody(BuildContext context, OpdQueueViewModel viewModel) {
     if (viewModel.isLoading && viewModel.tokens.isEmpty) {
-      return Center(child: CircularProgressIndicator(color: kCare));
+      return const CareStateView.loading();
     }
     if (viewModel.loadError != null && viewModel.tokens.isEmpty) {
-      return ListView(padding: const EdgeInsets.all(24), children: [
-        const SizedBox(height: 80),
-        const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
-        const SizedBox(height: 12),
-        Text(viewModel.loadError!, textAlign: TextAlign.center, style: CareText.muted),
-      ]);
+      return CareStateView.error(viewModel.loadError!);
     }
 
     final stats = viewModel.stats;
@@ -133,7 +128,7 @@ class _OpdQueueView extends StatelessWidget {
           ),
         const SizedBox(height: 16),
         if (viewModel.tokens.isEmpty)
-          const Padding(padding: EdgeInsets.only(top: 40), child: Center(child: Text('No tokens in today\'s queue', style: CareText.muted)))
+          const CareStateView.inline(icon: Icons.confirmation_number_outlined, title: "Nobody in today's queue", message: "Tokens issued today appear here in call order.")
         else
           for (final entry in byDoctor.entries) ...[
             Row(

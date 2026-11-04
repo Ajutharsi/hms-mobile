@@ -44,23 +44,13 @@ class _FoodIntakeView extends StatelessWidget {
 
   Widget _buildBody(BuildContext context, FoodIntakeViewModel viewModel) {
     if (viewModel.isLoading && viewModel.patients.isEmpty) {
-      return Center(child: CircularProgressIndicator(color: kCare));
+      return const CareStateView.loading();
     }
     if (viewModel.loadError != null && viewModel.patients.isEmpty) {
-      return ListView(padding: const EdgeInsets.all(24), children: [
-        const SizedBox(height: 80),
-        const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
-        const SizedBox(height: 12),
-        Text(viewModel.loadError!, textAlign: TextAlign.center, style: CareText.muted),
-      ]);
+      return CareStateView.error(viewModel.loadError!);
     }
     if (viewModel.patients.isEmpty) {
-      return ListView(padding: const EdgeInsets.all(24), children: const [
-        SizedBox(height: 80),
-        Icon(Icons.restaurant_outlined, color: kMuted, size: 40),
-        SizedBox(height: 12),
-        Text('No in-patients to feed right now', textAlign: TextAlign.center, style: CareText.muted),
-      ]);
+      return const CareStateView(icon: Icons.restaurant_outlined, title: 'No in-patients to feed right now');
     }
 
     return ListView.separated(
@@ -198,15 +188,10 @@ class _FoodIntakeDetailView extends StatelessWidget {
 
   Widget _buildBody(BuildContext context, FoodIntakeDetailViewModel viewModel) {
     if (viewModel.isLoading && viewModel.logs.isEmpty && viewModel.dietPlan == null) {
-      return Center(child: CircularProgressIndicator(color: kCare));
+      return const CareStateView.loading();
     }
     if (viewModel.loadError != null) {
-      return ListView(padding: const EdgeInsets.all(24), children: [
-        const SizedBox(height: 80),
-        const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
-        const SizedBox(height: 12),
-        Text(viewModel.loadError!, textAlign: TextAlign.center, style: CareText.muted),
-      ]);
+      return CareStateView.error(viewModel.loadError!);
     }
 
     return ListView(

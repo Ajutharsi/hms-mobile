@@ -63,15 +63,10 @@ class _InsuranceClaimsView extends StatelessWidget {
 
   Widget _buildBody(BuildContext context, InsuranceClaimsViewModel viewModel) {
     if (viewModel.isLoading && viewModel.claims.isEmpty) {
-      return Center(child: CircularProgressIndicator(color: kCare));
+      return const CareStateView.loading();
     }
     if (viewModel.loadError != null && viewModel.claims.isEmpty) {
-      return ListView(padding: const EdgeInsets.all(24), children: [
-        const SizedBox(height: 80),
-        const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
-        const SizedBox(height: 12),
-        Text(viewModel.loadError!, textAlign: TextAlign.center, style: CareText.muted),
-      ]);
+      return CareStateView.error(viewModel.loadError!);
     }
 
     final stats = viewModel.stats;
@@ -96,7 +91,7 @@ class _InsuranceClaimsView extends StatelessWidget {
           ),
         const SizedBox(height: 20),
         if (viewModel.claims.isEmpty)
-          const Padding(padding: EdgeInsets.only(top: 40), child: Center(child: Text('No insurance claims yet', style: CareText.muted)))
+          const CareStateView.inline(icon: Icons.verified_user_outlined, title: "No insurance claims yet", message: "Claims raised against a patient's policy are tracked here.")
         else
           for (final claim in viewModel.claims) ...[
             _ClaimCard(

@@ -96,15 +96,10 @@ class _BloodBankView extends StatelessWidget {
 
   Widget _buildBody(BuildContext context, BloodBankViewModel viewModel) {
     if (viewModel.isLoading && viewModel.units.isEmpty) {
-      return Center(child: CircularProgressIndicator(color: kCare));
+      return const CareStateView.loading();
     }
     if (viewModel.loadError != null && viewModel.units.isEmpty) {
-      return ListView(padding: const EdgeInsets.all(24), children: [
-        const SizedBox(height: 80),
-        const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
-        const SizedBox(height: 12),
-        Text(viewModel.loadError!, textAlign: TextAlign.center, style: CareText.muted),
-      ]);
+      return CareStateView.error(viewModel.loadError!);
     }
 
     return ListView(
@@ -139,10 +134,7 @@ class _BloodBankView extends StatelessWidget {
         ),
         const SizedBox(height: 20),
         if (viewModel.units.isEmpty)
-          const Padding(
-            padding: EdgeInsets.only(top: 40),
-            child: Center(child: Text('No blood units in inventory', style: CareText.muted)),
-          )
+          const CareStateView.inline(icon: Icons.water_drop_outlined, title: "No blood units in inventory", message: "Units you register will be listed here with their expiry.")
         else
           for (final unit in viewModel.units) ...[
             _UnitCard(
