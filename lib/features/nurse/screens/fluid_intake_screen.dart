@@ -133,8 +133,8 @@ class _Reading extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(fontSize: 10.5, color: kMuted)),
-        Text(value, style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: color)),
+        Text(label, style: const TextStyle(fontSize: CareText.xxs, color: kMuted)),
+        Text(value, style: TextStyle(fontSize: 13, fontWeight: CareText.bold, color: color)),
       ],
     );
   }
@@ -253,7 +253,7 @@ class _FluidIntakeDetailView extends StatelessWidget {
                     ),
                     child: Text(
                       log.flowType == 'intake' ? 'IN' : 'OUT',
-                      style: TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: log.flowType == 'intake' ? kInfoFg : kWarningFg),
+                      style: TextStyle(fontSize: 10, fontWeight: CareText.bold, color: log.flowType == 'intake' ? kInfoFg : kWarningFg),
                     ),
                   ),
                   const SizedBox(width: 10),
@@ -297,7 +297,7 @@ class _StatTile extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(value, style: CareText.statValue(color)),
-          Text(label, style: TextStyle(fontSize: 11.5, color: color, fontWeight: FontWeight.w600)),
+          Text(label, style: TextStyle(fontSize: CareText.xs, color: color, fontWeight: CareText.medium)),
         ],
       ),
     );

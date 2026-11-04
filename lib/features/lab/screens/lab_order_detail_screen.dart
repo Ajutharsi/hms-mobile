@@ -137,7 +137,7 @@ class _ItemCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                 decoration: BoxDecoration(color: completed ? kSuccessBg : kWarningBg, borderRadius: BorderRadius.circular(7)),
-                child: Text(item.status, style: TextStyle(color: completed ? kSuccessFg : kWarningFg, fontSize: 10.5, fontWeight: FontWeight.w700)),
+                child: Text(item.status, style: TextStyle(color: completed ? kSuccessFg : kWarningFg, fontSize: CareText.xxs, fontWeight: CareText.bold)),
               ),
             ],
           ),
@@ -145,13 +145,13 @@ class _ItemCard extends StatelessWidget {
             const SizedBox(height: 8),
             Row(
               children: [
-                Text('${result.resultValue} ${result.unit ?? ''}', style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w700, color: flagColor)),
+                Text('${result.resultValue} ${result.unit ?? ''}', style: TextStyle(fontSize: CareText.md, fontWeight: CareText.bold, color: flagColor)),
                 if (result.flag != null && result.flag != 'normal') ...[
                   const SizedBox(width: 8),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
                     decoration: BoxDecoration(color: flagColor.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(6)),
-                    child: Text(result.flag!.toUpperCase(), style: TextStyle(fontSize: 9.5, fontWeight: FontWeight.w800, color: flagColor)),
+                    child: Text(result.flag!.toUpperCase(), style: TextStyle(fontSize: 9.5, fontWeight: CareText.heavy, color: flagColor)),
                   ),
                 ],
               ],
@@ -203,7 +203,7 @@ class _EnterResultsDialogState extends State<_EnterResultsDialog> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 for (final item in widget.items) ...[
-                  Text(item.testName ?? 'Test', style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13.5)),
+                  Text(item.testName ?? 'Test', style: const TextStyle(fontWeight: CareText.bold, fontSize: CareText.md)),
                   const SizedBox(height: 6),
                   TextFormField(
                     controller: _valueControllers[item.id],

@@ -190,13 +190,13 @@ class _PatientCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                   decoration: BoxDecoration(color: patient.patientType == 'ip' ? kWarningBg : kInfoBg, borderRadius: BorderRadius.circular(7)),
-                  child: Text(patient.patientType.toUpperCase(), style: TextStyle(color: patient.patientType == 'ip' ? kWarningFg : kInfoFg, fontSize: 10, fontWeight: FontWeight.w700)),
+                  child: Text(patient.patientType.toUpperCase(), style: TextStyle(color: patient.patientType == 'ip' ? kWarningFg : kInfoFg, fontSize: 10, fontWeight: CareText.bold)),
                 ),
                 const SizedBox(height: 4),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                   decoration: BoxDecoration(color: active ? kSuccessBg : kCareBg, borderRadius: BorderRadius.circular(7)),
-                  child: Text(patient.status, style: TextStyle(color: active ? kSuccessFg : kMuted, fontSize: 10, fontWeight: FontWeight.w700)),
+                  child: Text(patient.status, style: TextStyle(color: active ? kSuccessFg : kMuted, fontSize: 10, fontWeight: CareText.bold)),
                 ),
               ],
             ),

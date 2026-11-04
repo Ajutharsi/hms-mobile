@@ -170,7 +170,7 @@ class _ShiftHandoverDetailScreenState extends State<ShiftHandoverDetailScreen> {
                   width: double.infinity,
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(color: kDangerBg, borderRadius: BorderRadius.circular(10)),
-                  child: Text('Rejection reason: ${detail.rejectionReason}', style: const TextStyle(color: kDangerFg, fontSize: 12.5)),
+                  child: Text('Rejection reason: ${detail.rejectionReason}', style: const TextStyle(color: kDangerFg, fontSize: CareText.sm)),
                 ),
               ],
             ],
@@ -323,7 +323,7 @@ class _PatientCard extends StatelessWidget {
   Widget _tag(String text) => Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
         decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(6)),
-        child: Text(text, style: const TextStyle(fontSize: 11, color: kMuted, fontWeight: FontWeight.w600)),
+        child: Text(text, style: const TextStyle(fontSize: 11, color: kMuted, fontWeight: CareText.medium)),
       );
 
   Widget _line(String text) => Padding(

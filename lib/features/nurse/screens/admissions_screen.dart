@@ -199,7 +199,7 @@ class _AdmissionCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
                 decoration: BoxDecoration(color: admitted ? kSuccessBg : kCareBg, borderRadius: BorderRadius.circular(8)),
-                child: Text(admission.status, style: TextStyle(color: admitted ? kSuccessFg : kMuted, fontSize: 11, fontWeight: FontWeight.w700)),
+                child: Text(admission.status, style: TextStyle(color: admitted ? kSuccessFg : kMuted, fontSize: 11, fontWeight: CareText.bold)),
               ),
             ],
           ),
@@ -219,7 +219,7 @@ class _AdmissionCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                TextButton(onPressed: onTransfer, child: const Text('Transfer', style: TextStyle(color: kMuted, fontSize: 13, fontWeight: FontWeight.w600))),
+                TextButton(onPressed: onTransfer, child: const Text('Transfer', style: TextStyle(color: kMuted, fontSize: 13, fontWeight: CareText.medium))),
                 const SizedBox(width: 4),
                 FilledButton(
                   onPressed: onDischarge,
@@ -284,7 +284,7 @@ class _DischargeDialogState extends State<_DischargeDialog> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(widget.admission.patientName ?? '', style: const TextStyle(fontWeight: FontWeight.w600)),
+            Text(widget.admission.patientName ?? '', style: const TextStyle(fontWeight: CareText.medium)),
             const SizedBox(height: 12),
             InkWell(
               onTap: () async {
@@ -392,7 +392,7 @@ class _TransferDialogState extends State<_TransferDialog> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text(widget.admission.patientName ?? '', style: const TextStyle(fontWeight: FontWeight.w600)),
+                  Text(widget.admission.patientName ?? '', style: const TextStyle(fontWeight: CareText.medium)),
                   const SizedBox(height: 12),
                   DropdownButtonFormField<Ward>(
                     initialValue: _selectedWard,

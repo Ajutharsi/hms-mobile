@@ -61,12 +61,12 @@ class _ForgotPasswordForm extends StatelessWidget {
           const SizedBox(height: 20),
           const Text(
             'Reset your password',
-            style: TextStyle(fontSize: 23, fontWeight: FontWeight.w800, color: kInk, height: 1.15),
+            style: TextStyle(fontSize: 23, fontWeight: CareText.heavy, color: kInk, height: 1.15),
           ),
           const SizedBox(height: 8),
           const Text(
             "Enter your account email and we'll send you a link to set a new password.",
-            style: TextStyle(fontSize: 14.5, color: kMuted),
+            style: TextStyle(fontSize: CareText.lg, color: kMuted),
           ),
           const SizedBox(height: 24),
           if (viewModel.errorMessage != null) ...[
@@ -133,15 +133,15 @@ class _SentConfirmation extends StatelessWidget {
         const SizedBox(height: 24),
         const Text(
           'Check your email',
-          style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800, color: kInk, height: 1.15),
+          style: TextStyle(fontSize: 22, fontWeight: CareText.heavy, color: kInk, height: 1.15),
         ),
         const SizedBox(height: 10),
         RichText(
           text: TextSpan(
-            style: const TextStyle(fontSize: 14.5, color: kMuted, height: 1.5),
+            style: const TextStyle(fontSize: CareText.lg, color: kMuted, height: 1.5),
             children: [
               const TextSpan(text: "We've sent a password reset link to "),
-              TextSpan(text: email, style: const TextStyle(color: kInk, fontWeight: FontWeight.w600)),
+              TextSpan(text: email, style: const TextStyle(color: kInk, fontWeight: CareText.medium)),
               const TextSpan(
                 text: '. Open it on this device to set a new password, then come back and sign in.',
               ),
@@ -160,7 +160,7 @@ class _SentConfirmation extends StatelessWidget {
             ),
             child: Text(
               'Back to sign in',
-              style: TextStyle(fontSize: 15.5, fontWeight: FontWeight.w600, color: kCare),
+              style: TextStyle(fontSize: CareText.xl, fontWeight: CareText.medium, color: kCare),
             ),
           ),
         ),

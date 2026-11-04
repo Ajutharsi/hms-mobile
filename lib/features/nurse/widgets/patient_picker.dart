@@ -184,7 +184,7 @@ class _PatientPickerSheetState extends State<_PatientPickerSheet> {
                                         ? Text(p.name.isNotEmpty ? p.name[0].toUpperCase() : '?', style: CareText.brandBold)
                                         : null,
                                   ),
-                                  title: Text(p.name, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                                  title: Text(p.name, style: const TextStyle(fontWeight: CareText.medium, fontSize: 14)),
                                   subtitle: Text(
                                     [p.mrn, if (p.wardName != null) '${p.wardName} · ${p.bedNo ?? ''}'].join('  ·  '),
                                     style: CareText.mutedXs,

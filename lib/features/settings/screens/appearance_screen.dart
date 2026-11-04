@@ -85,7 +85,7 @@ class _Preview extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text('Hello 👋', style: CareText.onCareSoftXs),
-                        Text('Your app', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w800)),
+                        Text('Your app', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: CareText.heavy)),
                       ],
                     ),
                   ),
@@ -186,7 +186,7 @@ class _Swatch extends StatelessWidget {
               label,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(fontSize: 11.5, color: selected ? kInk : kMuted, fontWeight: selected ? FontWeight.w700 : FontWeight.w500),
+              style: TextStyle(fontSize: CareText.xs, color: selected ? kInk : kMuted, fontWeight: selected ? FontWeight.w700 : FontWeight.w500),
             ),
           ],
         ),

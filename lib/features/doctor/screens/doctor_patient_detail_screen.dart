@@ -66,7 +66,7 @@ class _PatientDetailView extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(patient.name, style: const TextStyle(fontSize: 16.5, fontWeight: FontWeight.w800, color: kInk)),
+                        Text(patient.name, style: const TextStyle(fontSize: CareText.xxl, fontWeight: CareText.heavy, color: kInk)),
                         const SizedBox(height: 2),
                         Text(patient.mrn, style: CareText.mutedSm),
                       ],

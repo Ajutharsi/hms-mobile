@@ -200,7 +200,7 @@ class _AppointmentFormScreenState extends State<AppointmentFormScreen> {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(12)),
-                    child: Text('${widget.existing!.patientName ?? ''} · ${widget.existing!.patientMrn ?? ''}', style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13.5)),
+                    child: Text('${widget.existing!.patientName ?? ''} · ${widget.existing!.patientMrn ?? ''}', style: const TextStyle(fontWeight: CareText.medium, fontSize: CareText.md)),
                   )
                 else if (_selectedPatient != null)
                   Container(
@@ -208,7 +208,7 @@ class _AppointmentFormScreenState extends State<AppointmentFormScreen> {
                     decoration: BoxDecoration(color: kCareSoft, borderRadius: BorderRadius.circular(12)),
                     child: Row(
                       children: [
-                        Expanded(child: Text('${_selectedPatient!.name} · ${_selectedPatient!.mrn}', style: TextStyle(fontWeight: FontWeight.w600, color: kCareDark, fontSize: 13.5))),
+                        Expanded(child: Text('${_selectedPatient!.name} · ${_selectedPatient!.mrn}', style: TextStyle(fontWeight: CareText.medium, color: kCareDark, fontSize: CareText.md))),
                         InkWell(onTap: () => setState(() => _selectedPatient = null), child: Icon(Icons.close, size: 18, color: kCareDark)),
                       ],
                     ),
@@ -228,7 +228,7 @@ class _AppointmentFormScreenState extends State<AppointmentFormScreen> {
                           final p = _patientResults[i];
                           return ListTile(
                             dense: true,
-                            title: Text(p.name, style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w600)),
+                            title: Text(p.name, style: const TextStyle(fontSize: CareText.md, fontWeight: CareText.medium)),
                             subtitle: Text(p.mrn, style: const TextStyle(fontSize: 12)),
                             onTap: () => setState(() {
                               _selectedPatient = p;
@@ -272,9 +272,9 @@ class _AppointmentFormScreenState extends State<AppointmentFormScreen> {
                 else if (_isLoadingSlots)
                   Padding(padding: const EdgeInsets.symmetric(vertical: 12), child: LinearProgressIndicator(color: kCare))
                 else if (_selectedDoctor == null)
-                  const Text('Pick a doctor to see available slots.', style: TextStyle(color: kMuted, fontSize: 12.5))
+                  const Text('Pick a doctor to see available slots.', style: TextStyle(color: kMuted, fontSize: CareText.sm))
                 else if (_slots.isEmpty)
-                  const Text('No slots available for this date.', style: TextStyle(color: kMuted, fontSize: 12.5))
+                  const Text('No slots available for this date.', style: TextStyle(color: kMuted, fontSize: CareText.sm))
                 else
                   Wrap(
                     spacing: 8,

@@ -122,13 +122,13 @@ class _RadiologyDetailView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if ((order.findings ?? '').isNotEmpty) ...[
-                  const Text('Findings', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: kMuted)),
+                  const Text('Findings', style: TextStyle(fontSize: 12, fontWeight: CareText.bold, color: kMuted)),
                   const SizedBox(height: 4),
                   Text(order.findings!, style: CareText.bodyMd),
                   const SizedBox(height: 10),
                 ],
                 if ((order.impression ?? '').isNotEmpty) ...[
-                  const Text('Impression', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: kMuted)),
+                  const Text('Impression', style: TextStyle(fontSize: 12, fontWeight: CareText.bold, color: kMuted)),
                   const SizedBox(height: 4),
                   Text(order.impression!, style: CareText.bodyMd),
                   const SizedBox(height: 10),
@@ -159,7 +159,7 @@ class _RadiologyDetailView extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(width: 110, child: Text(label, style: CareText.mutedSm)),
-          Expanded(child: Text(value, style: const TextStyle(fontSize: 13, color: kInk, fontWeight: FontWeight.w600))),
+          Expanded(child: Text(value, style: const TextStyle(fontSize: 13, color: kInk, fontWeight: CareText.medium))),
         ],
       ),
     );

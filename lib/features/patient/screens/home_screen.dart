@@ -200,14 +200,14 @@ class _PatientDrawer extends StatelessWidget {
                         user.name,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w700),
+                        style: const TextStyle(color: Colors.white, fontSize: 17, fontWeight: CareText.bold),
                       ),
                       const SizedBox(height: 3),
                       Text(
                         user.email,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(color: Colors.white.withValues(alpha: 0.85), fontSize: 12.5),
+                        style: TextStyle(color: Colors.white.withValues(alpha: 0.85), fontSize: CareText.sm),
                       ),
                     ],
                   ),
@@ -268,7 +268,7 @@ class _DrawerTile extends StatelessWidget {
       onTap: onTap,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
       leading: CareIconBox(icon: icon, size: 36, filled: false),
-      title: Text(label, style: const TextStyle(fontSize: 14.5, color: kInk, fontWeight: FontWeight.w600)),
+      title: Text(label, style: const TextStyle(fontSize: CareText.lg, color: kInk, fontWeight: CareText.medium)),
       trailing: const Icon(Icons.chevron_right_rounded, color: kCareChevron),
     );
   }
@@ -295,7 +295,7 @@ class _AppointmentsTabState extends State<_AppointmentsTab> {
           TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('No, keep it')),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: Text('Yes, cancel', style: TextStyle(color: kCarePinkFg, fontWeight: FontWeight.w700)),
+            child: Text('Yes, cancel', style: TextStyle(color: kCarePinkFg, fontWeight: CareText.bold)),
           ),
         ],
       ),
@@ -394,7 +394,7 @@ class _SegmentButton extends StatelessWidget {
           alignment: Alignment.center,
           child: Text(
             label,
-            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: selected ? Colors.white : kMuted),
+            style: TextStyle(fontSize: 13, fontWeight: CareText.bold, color: selected ? Colors.white : kMuted),
           ),
         ),
       ),
@@ -461,7 +461,7 @@ class AppointmentCard extends StatelessWidget {
                   side: BorderSide(color: kCarePinkBg, width: 1.4),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
-                child: const Text('Cancel appointment', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700)),
+                child: const Text('Cancel appointment', style: TextStyle(fontSize: 13, fontWeight: CareText.bold)),
               ),
             ),
           ],

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/auth/widgets/auth_illustration.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 
 /// Shared responsive shell for the login/register screens: a split
 /// illustration+form layout on wide viewports, form-only (with a compact
@@ -101,13 +102,13 @@ class _CompactAuthLayout extends StatelessWidget {
                   const SizedBox(height: 14),
                   const Text(
                     'HMS India',
-                    style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.w800, letterSpacing: 0.3),
+                    style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: CareText.heavy, letterSpacing: 0.3),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     subtext,
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.white.withValues(alpha: 0.85), fontSize: 13.5),
+                    style: TextStyle(color: Colors.white.withValues(alpha: 0.85), fontSize: CareText.md),
                   ),
                 ],
               ),

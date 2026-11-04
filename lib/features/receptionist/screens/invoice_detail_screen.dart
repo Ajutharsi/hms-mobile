@@ -131,12 +131,12 @@ class _InvoiceDetailView extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(p.paymentMethod.toUpperCase(), style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700, color: kSuccessFg)),
+                        Text(p.paymentMethod.toUpperCase(), style: const TextStyle(fontSize: CareText.sm, fontWeight: CareText.bold, color: kSuccessFg)),
                         if (p.paymentDate != null) Text(p.paymentDate!, style: CareText.mutedXs),
                       ],
                     ),
                   ),
-                  Text('₹${p.amount.toStringAsFixed(2)}', style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: kSuccessFg)),
+                  Text('₹${p.amount.toStringAsFixed(2)}', style: const TextStyle(fontSize: 13, fontWeight: CareText.bold, color: kSuccessFg)),
                 ],
               ),
             ),

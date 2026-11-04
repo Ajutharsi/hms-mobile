@@ -138,7 +138,7 @@ class _MyRoundsView extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(patient.name, style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w600, color: kInk)),
+                            Text(patient.name, style: const TextStyle(fontSize: CareText.md, fontWeight: CareText.medium, color: kInk)),
                             Text('${patient.mrn} · Bed ${patient.bedNo}', style: CareText.mutedXs),
                           ],
                         ),
@@ -158,7 +158,7 @@ class _MyRoundsView extends StatelessWidget {
                 ),
                 if (patient != assignment.patients.last) Divider(height: 16, color: kCareBg),
               ],
-              if (assignment.patients.isEmpty) const Text('No admitted patients in this ward right now.', style: TextStyle(color: kMuted, fontSize: 12.5)),
+              if (assignment.patients.isEmpty) const Text('No admitted patients in this ward right now.', style: TextStyle(color: kMuted, fontSize: CareText.sm)),
             ],
           ),
         );

@@ -180,7 +180,7 @@ class _StatTile extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(value, style: CareText.statValue(color)),
-          Text(label, textAlign: TextAlign.center, style: TextStyle(fontSize: 10, color: color, fontWeight: FontWeight.w600)),
+          Text(label, textAlign: TextAlign.center, style: TextStyle(fontSize: 10, color: color, fontWeight: CareText.medium)),
         ],
       ),
     );
@@ -211,7 +211,7 @@ class _TokenCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                 decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(7)),
-                child: Text('#${token.queuePosition}', style: const TextStyle(fontSize: 10.5, fontWeight: FontWeight.w700, color: kInk)),
+                child: Text('#${token.queuePosition}', style: const TextStyle(fontSize: CareText.xxs, fontWeight: CareText.bold, color: kInk)),
               ),
               const SizedBox(width: 8),
               Expanded(child: Text(token.patientName ?? 'Patient', style: CareText.titleMd)),
@@ -233,12 +233,12 @@ class _TokenCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               if (token.status == 'waiting') ...[
-                TextButton(onPressed: onSkip, child: const Text('Skip', style: TextStyle(color: kMuted, fontSize: 12.5, fontWeight: FontWeight.w600))),
+                TextButton(onPressed: onSkip, child: const Text('Skip', style: TextStyle(color: kMuted, fontSize: CareText.sm, fontWeight: CareText.medium))),
                 TextButton(onPressed: onCallIn, child: Text('Call In', style: CareText.brandSmMedium)),
               ],
               if (token.status == 'in_consultation')
                 TextButton(onPressed: onComplete, child: Text('Complete', style: CareText.brandSmMedium)),
-              TextButton(onPressed: onDelete, child: const Text('Remove', style: TextStyle(color: kDangerText, fontSize: 12.5, fontWeight: FontWeight.w600))),
+              TextButton(onPressed: onDelete, child: const Text('Remove', style: TextStyle(color: kDangerText, fontSize: CareText.sm, fontWeight: CareText.medium))),
             ],
           ),
         ],

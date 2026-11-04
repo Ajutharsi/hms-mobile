@@ -176,14 +176,14 @@ class _PatientCard extends StatelessWidget {
                 decoration: BoxDecoration(color: kInfoBg, borderRadius: BorderRadius.circular(8)),
                 child: Text(
                   '${patient.wardName}${patient.bedNo != null ? ' · ${patient.bedNo}' : ''}',
-                  style: const TextStyle(color: kInfoFg, fontSize: 10.5, fontWeight: FontWeight.w700),
+                  style: const TextStyle(color: kInfoFg, fontSize: CareText.xxs, fontWeight: CareText.bold),
                 ),
               )
             else
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
                 decoration: BoxDecoration(color: kCareBg, borderRadius: BorderRadius.circular(8)),
-                child: Text(patient.patientType.toUpperCase(), style: const TextStyle(color: kMuted, fontSize: 10.5, fontWeight: FontWeight.w700)),
+                child: Text(patient.patientType.toUpperCase(), style: const TextStyle(color: kMuted, fontSize: CareText.xxs, fontWeight: CareText.bold)),
               ),
           ],
         ),

@@ -228,7 +228,7 @@ class _ConsultationCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(label, style: const TextStyle(fontSize: 11.5, color: kMuted, fontWeight: FontWeight.w700)),
+            Text(label, style: const TextStyle(fontSize: CareText.xs, color: kMuted, fontWeight: CareText.bold)),
             const SizedBox(height: 2),
             Text(value!, style: const TextStyle(fontSize: 14, color: kInk)),
           ],
@@ -352,7 +352,7 @@ class _ConsultationCard extends StatelessWidget {
                     ),
                   ),
                 if ((prescription.notes ?? '').isNotEmpty)
-                  Text(prescription.notes!, style: const TextStyle(fontSize: 12.5, color: kMuted, fontStyle: FontStyle.italic)),
+                  Text(prescription.notes!, style: const TextStyle(fontSize: CareText.sm, color: kMuted, fontStyle: FontStyle.italic)),
               ],
             ),
           ),

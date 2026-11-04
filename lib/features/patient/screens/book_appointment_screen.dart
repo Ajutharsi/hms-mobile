@@ -196,7 +196,7 @@ class _DoctorCard extends StatelessWidget {
                   maxLines: 2,
                   textAlign: TextAlign.center,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700, color: kInk, height: 1.2),
+                  style: const TextStyle(fontSize: CareText.sm, fontWeight: CareText.bold, color: kInk, height: 1.2),
                 ),
                 const SizedBox(height: 3),
                 Text(
@@ -228,7 +228,7 @@ class _SlotsSection extends StatelessWidget {
   Widget build(BuildContext context) {
     watchCarePalette(context);
     if (viewModel.selectedDoctor == null) {
-      return const Text('Choose a doctor above to see available times.', style: TextStyle(color: kMuted, fontSize: 13.5));
+      return const Text('Choose a doctor above to see available times.', style: TextStyle(color: kMuted, fontSize: CareText.md));
     }
     if (viewModel.loadingSlots) {
       return Padding(
@@ -237,7 +237,7 @@ class _SlotsSection extends StatelessWidget {
       );
     }
     if (viewModel.slots.isEmpty) {
-      return const Text('No slots available that day — try another date.', style: TextStyle(color: kMuted, fontSize: 13.5));
+      return const Text('No slots available that day — try another date.', style: TextStyle(color: kMuted, fontSize: CareText.md));
     }
 
     return LayoutBuilder(

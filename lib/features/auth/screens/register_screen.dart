@@ -57,12 +57,12 @@ class _RegisterViewState extends State<_RegisterView> {
             const SizedBox(height: 28),
             const Text(
               'Create your account',
-              style: TextStyle(fontSize: 23, fontWeight: FontWeight.w800, color: kInk, height: 1.15),
+              style: TextStyle(fontSize: 23, fontWeight: CareText.heavy, color: kInk, height: 1.15),
             ),
             const SizedBox(height: 8),
             const Text(
               'Register as a patient to book appointments and view your records.',
-              style: TextStyle(fontSize: 14.5, color: kMuted),
+              style: TextStyle(fontSize: CareText.lg, color: kMuted),
             ),
             const SizedBox(height: 24),
             if (viewModel.errorMessage != null) ...[
@@ -172,12 +172,12 @@ class _RegisterViewState extends State<_RegisterView> {
             Center(
               child: RichText(
                 text: TextSpan(
-                  style: const TextStyle(fontSize: 13.5, color: kMuted),
+                  style: const TextStyle(fontSize: CareText.md, color: kMuted),
                   children: [
                     const TextSpan(text: 'Already have an account? '),
                     TextSpan(
                       text: 'Sign in',
-                      style: TextStyle(color: kCare, fontWeight: FontWeight.w600),
+                      style: TextStyle(color: kCare, fontWeight: CareText.medium),
                       recognizer: TapGestureRecognizer()..onTap = () => Navigator.of(context).pop(),
                     ),
                   ],
@@ -224,7 +224,7 @@ class _GenderOption extends StatelessWidget {
             label,
             style: TextStyle(
               fontSize: 14,
-              fontWeight: FontWeight.w600,
+              fontWeight: CareText.medium,
               color: isSelected ? Colors.white : kMuted,
             ),
           ),

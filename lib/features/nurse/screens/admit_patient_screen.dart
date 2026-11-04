@@ -99,7 +99,7 @@ class _AdmitPatientViewState extends State<_AdmitPatientView> {
                               final p = viewModel.patientResults[i];
                               return ListTile(
                                 dense: true,
-                                title: Text(p.name, style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w600)),
+                                title: Text(p.name, style: const TextStyle(fontSize: CareText.md, fontWeight: CareText.medium)),
                                 subtitle: Text(p.mrn, style: const TextStyle(fontSize: 12)),
                                 onTap: () => viewModel.selectPatient(p),
                               );
@@ -185,7 +185,7 @@ class _SelectedChip extends StatelessWidget {
       decoration: BoxDecoration(color: kCareSoft, borderRadius: BorderRadius.circular(12)),
       child: Row(
         children: [
-          Expanded(child: Text(label, style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w600, color: kCareDark))),
+          Expanded(child: Text(label, style: TextStyle(fontSize: CareText.md, fontWeight: CareText.medium, color: kCareDark))),
           InkWell(onTap: onClear, child: Icon(Icons.close, size: 18, color: kCareDark)),
         ],
       ),

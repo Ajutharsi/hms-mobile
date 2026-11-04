@@ -128,7 +128,7 @@ class _VitalCard extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                     decoration: BoxDecoration(color: newsBg, borderRadius: BorderRadius.circular(8)),
-                    child: Text('NEWS ${vital.newsScore}', style: TextStyle(color: newsFg, fontSize: 11, fontWeight: FontWeight.w700)),
+                    child: Text('NEWS ${vital.newsScore}', style: TextStyle(color: newsFg, fontSize: 11, fontWeight: CareText.bold)),
                   ),
               ],
             ),
@@ -179,7 +179,7 @@ class _Reading extends StatelessWidget {
         Icon(icon, size: 14, color: kMuted),
         const SizedBox(width: 4),
         Text('$label ', style: CareText.mutedXs),
-        Text(value, style: const TextStyle(fontSize: 12.5, color: kInk, fontWeight: FontWeight.w700)),
+        Text(value, style: const TextStyle(fontSize: CareText.sm, color: kInk, fontWeight: CareText.bold)),
       ],
     );
   }

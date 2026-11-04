@@ -170,7 +170,7 @@ class _AppointmentCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                   decoration: BoxDecoration(color: tBg, borderRadius: BorderRadius.circular(7)),
-                  child: Text(appointment.type, style: TextStyle(color: tFg, fontSize: 10, fontWeight: FontWeight.w700)),
+                  child: Text(appointment.type, style: TextStyle(color: tFg, fontSize: 10, fontWeight: CareText.bold)),
                 ),
               ],
             ),

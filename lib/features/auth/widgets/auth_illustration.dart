@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
+import 'package:hms_mobile/core/theme/care_text.dart';
 
 /// The illustration side panel shown only on wide (web/desktop) viewports,
 /// shared by the login and register screens with different copy.
@@ -42,12 +43,12 @@ class AuthIllustrationPane extends StatelessWidget {
                 const SizedBox(height: 36),
                 Text(
                   headline,
-                  style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700, color: kInk),
+                  style: const TextStyle(fontSize: 22, fontWeight: CareText.bold, color: kInk),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   subtext,
-                  style: const TextStyle(fontSize: 14.5, color: kMuted),
+                  style: const TextStyle(fontSize: CareText.lg, color: kMuted),
                 ),
               ],
             ),

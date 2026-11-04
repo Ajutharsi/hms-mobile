@@ -116,12 +116,12 @@ class _BalanceSummary extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   '₹${outstanding.toStringAsFixed(2)}',
-                  style: const TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.w800),
+                  style: const TextStyle(color: Colors.white, fontSize: 26, fontWeight: CareText.heavy),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   unpaidCount == 0 ? 'All $total invoices are paid' : '$unpaidCount of $total invoices pending',
-                  style: TextStyle(color: Colors.white.withValues(alpha: 0.85), fontSize: 12.5),
+                  style: TextStyle(color: Colors.white.withValues(alpha: 0.85), fontSize: CareText.sm),
                 ),
               ],
             ),
@@ -179,7 +179,7 @@ class _InvoiceCard extends StatelessWidget {
                   invoice.hasBalance ? 'Due ₹${invoice.balance.toStringAsFixed(2)}' : 'Paid',
                   style: TextStyle(
                     fontSize: 13,
-                    fontWeight: FontWeight.w800,
+                    fontWeight: CareText.heavy,
                     color: invoice.hasBalance ? kCarePinkFg : kSuccessFg,
                   ),
                 ),
@@ -223,7 +223,7 @@ class _InvoiceCard extends StatelessWidget {
                   icon: isRequestingHelp
                       ? SizedBox(height: 16, width: 16, child: CircularProgressIndicator(strokeWidth: 2, color: kCare))
                       : const Icon(Icons.support_agent_rounded, size: 19),
-                  label: const Text('Request payment help', style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w700)),
+                  label: const Text('Request payment help', style: TextStyle(fontSize: CareText.md, fontWeight: CareText.bold)),
                 ),
               ),
             ],

@@ -425,7 +425,7 @@ class _UpcomingCard extends StatelessWidget {
               decoration: BoxDecoration(color: kCare, borderRadius: BorderRadius.circular(10)),
               child: Text(
                 appointment.time.isEmpty ? 'View' : appointment.time,
-                style: const TextStyle(color: Colors.white, fontSize: 12.5, fontWeight: FontWeight.w700),
+                style: const TextStyle(color: Colors.white, fontSize: CareText.sm, fontWeight: CareText.bold),
               ),
             ),
           ],

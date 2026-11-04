@@ -129,7 +129,7 @@ class _StatTile extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(value, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: color)),
+          Text(value, style: TextStyle(fontSize: 15, fontWeight: CareText.heavy, color: color)),
           Text(label, style: CareText.tag(color)),
         ],
       ),
@@ -160,7 +160,7 @@ class _DepositCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
                 decoration: BoxDecoration(color: isAdvance ? kSuccessBg : kWarningBg, borderRadius: BorderRadius.circular(8)),
-                child: Text(_titleCase(deposit.type), style: TextStyle(color: amountColor, fontSize: 10.5, fontWeight: FontWeight.w700)),
+                child: Text(_titleCase(deposit.type), style: TextStyle(color: amountColor, fontSize: CareText.xxs, fontWeight: CareText.bold)),
               ),
             ],
           ),
@@ -168,7 +168,7 @@ class _DepositCard extends StatelessWidget {
           const SizedBox(height: 8),
           Row(
             children: [
-              Text('${isAdvance ? '+' : '-'}₹${deposit.amount.toStringAsFixed(2)}', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: amountColor)),
+              Text('${isAdvance ? '+' : '-'}₹${deposit.amount.toStringAsFixed(2)}', style: TextStyle(fontSize: 15, fontWeight: CareText.heavy, color: amountColor)),
               const SizedBox(width: 10),
               Text(_titleCase(deposit.paymentMethod), style: CareText.mutedXs),
               const Spacer(),

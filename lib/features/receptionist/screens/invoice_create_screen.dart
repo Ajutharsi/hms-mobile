@@ -231,7 +231,7 @@ class _InvoiceCreateScreenState extends State<InvoiceCreateScreen> {
                 const SizedBox(height: 8),
                 Align(
                   alignment: Alignment.centerRight,
-                  child: Text('Subtotal: ₹${_subtotal.toStringAsFixed(2)}', style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w700, color: kCareDark)),
+                  child: Text('Subtotal: ₹${_subtotal.toStringAsFixed(2)}', style: TextStyle(fontSize: CareText.md, fontWeight: CareText.bold, color: kCareDark)),
                 ),
                 const SizedBox(height: 20),
                 Row(
@@ -332,7 +332,7 @@ class _LineEditorState extends State<_LineEditor> {
             ],
           ),
           const SizedBox(height: 6),
-          Align(alignment: Alignment.centerRight, child: Text('₹${widget.line.total.toStringAsFixed(2)}', style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700, color: kCareDark))),
+          Align(alignment: Alignment.centerRight, child: Text('₹${widget.line.total.toStringAsFixed(2)}', style: TextStyle(fontSize: CareText.sm, fontWeight: CareText.bold, color: kCareDark))),
         ],
       ),
     );

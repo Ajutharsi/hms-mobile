@@ -123,7 +123,7 @@ class _OrderCard extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: Text(order.patientName ?? 'Patient', style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: kMuted)),
+                child: Text(order.patientName ?? 'Patient', style: const TextStyle(fontSize: 13, fontWeight: CareText.medium, color: kMuted)),
               ),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -165,7 +165,7 @@ class _OrderCard extends StatelessWidget {
           ),
           if ((order.notes ?? '').isNotEmpty) ...[
             const SizedBox(height: 6),
-            Text(order.notes!, style: const TextStyle(fontSize: 12.5, color: kMuted, fontStyle: FontStyle.italic)),
+            Text(order.notes!, style: const TextStyle(fontSize: CareText.sm, color: kMuted, fontStyle: FontStyle.italic)),
           ],
           if (order.isScheduled) ...[
             const SizedBox(height: 12),
@@ -197,7 +197,7 @@ class _MiniBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
       decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(6)),
-      child: Text(label, style: TextStyle(color: color, fontSize: 9.5, fontWeight: FontWeight.w700)),
+      child: Text(label, style: TextStyle(color: color, fontSize: 9.5, fontWeight: CareText.bold)),
     );
   }
 }

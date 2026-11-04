@@ -189,7 +189,7 @@ class _ReferralCard extends StatelessWidget {
           ),
           Text(referral.patientMrn ?? '', style: CareText.mutedXs),
           const SizedBox(height: 8),
-          Text('${referral.referredByName ?? '—'} → ${referral.referredToName ?? '—'}', style: const TextStyle(fontSize: 12.5, color: kInk, fontWeight: FontWeight.w600)),
+          Text('${referral.referredByName ?? '—'} → ${referral.referredToName ?? '—'}', style: const TextStyle(fontSize: CareText.sm, color: kInk, fontWeight: CareText.medium)),
           const SizedBox(height: 4),
           Text(referral.reason, style: CareText.mutedSm),
           const SizedBox(height: 8),
@@ -198,7 +198,7 @@ class _ReferralCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                 decoration: BoxDecoration(color: pBg, borderRadius: BorderRadius.circular(7)),
-                child: Text(referral.priority, style: TextStyle(color: pFg, fontSize: 10, fontWeight: FontWeight.w700)),
+                child: Text(referral.priority, style: TextStyle(color: pFg, fontSize: 10, fontWeight: CareText.bold)),
               ),
               const Spacer(),
               Text(referral.referralNo ?? '', style: CareText.mutedXs),
@@ -209,7 +209,7 @@ class _ReferralCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               TextButton(onPressed: onStatus, child: Text('Status', style: CareText.brandSmMedium)),
-              TextButton(onPressed: onDelete, child: const Text('Delete', style: TextStyle(color: kDangerText, fontSize: 12.5, fontWeight: FontWeight.w600))),
+              TextButton(onPressed: onDelete, child: const Text('Delete', style: TextStyle(color: kDangerText, fontSize: CareText.sm, fontWeight: CareText.medium))),
             ],
           ),
         ],

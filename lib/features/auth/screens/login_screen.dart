@@ -81,7 +81,7 @@ class _LoginViewState extends State<_LoginView> {
             const SizedBox(height: 28),
             const Text(
               'Welcome back',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.w800, color: kInk, height: 1.15),
+              style: TextStyle(fontSize: CareText.h1, fontWeight: CareText.heavy, color: kInk, height: 1.15),
             ),
             const SizedBox(height: 8),
             const Text(
@@ -138,7 +138,7 @@ class _LoginViewState extends State<_LoginView> {
                 },
                 child: Text(
                   'Forgot password?',
-                  style: TextStyle(color: kCare, fontSize: 13, fontWeight: FontWeight.w600),
+                  style: TextStyle(color: kCare, fontSize: 13, fontWeight: CareText.medium),
                 ),
               ),
             ),
@@ -168,12 +168,12 @@ class _LoginViewState extends State<_LoginView> {
             Center(
               child: RichText(
                 text: TextSpan(
-                  style: const TextStyle(fontSize: 13.5, color: kMuted),
+                  style: const TextStyle(fontSize: CareText.md, color: kMuted),
                   children: [
                     const TextSpan(text: 'New patient? '),
                     TextSpan(
                       text: 'Create an account',
-                      style: TextStyle(color: kCare, fontWeight: FontWeight.w600),
+                      style: TextStyle(color: kCare, fontWeight: CareText.medium),
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
                           Navigator.of(context).push(
@@ -189,7 +189,7 @@ class _LoginViewState extends State<_LoginView> {
             Center(
               child: Text(
                 'Hospital Management System',
-                style: TextStyle(color: kMuted.withValues(alpha: 0.7), fontSize: 12.5),
+                style: TextStyle(color: kMuted.withValues(alpha: 0.7), fontSize: CareText.sm),
               ),
             ),
           ],

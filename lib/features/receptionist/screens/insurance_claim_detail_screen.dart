@@ -119,7 +119,7 @@ class _DetailView extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(8)),
-              child: Text(titleCase(claim.status), style: TextStyle(color: fg, fontSize: 11.5, fontWeight: FontWeight.w700)),
+              child: Text(titleCase(claim.status), style: TextStyle(color: fg, fontSize: CareText.xs, fontWeight: CareText.bold)),
             ),
           ],
         ),
@@ -155,7 +155,7 @@ class _DetailView extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(color: kDangerBg, borderRadius: BorderRadius.circular(10)),
-            child: Text('Rejection reason: ${claim.rejectionReason}', style: const TextStyle(fontSize: 12.5, color: kDangerFg)),
+            child: Text('Rejection reason: ${claim.rejectionReason}', style: const TextStyle(fontSize: CareText.sm, color: kDangerFg)),
           ),
         ],
       ],

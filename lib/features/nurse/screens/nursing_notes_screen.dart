@@ -190,7 +190,7 @@ class _NoteCardState extends State<_NoteCard> {
               note.note,
               maxLines: _expanded ? null : 3,
               overflow: _expanded ? TextOverflow.visible : TextOverflow.ellipsis,
-              style: const TextStyle(fontSize: 13.5, color: kInk, height: 1.4),
+              style: const TextStyle(fontSize: CareText.md, color: kInk, height: 1.4),
             ),
           ),
           const SizedBox(height: 10),

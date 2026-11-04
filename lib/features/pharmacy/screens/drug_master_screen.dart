@@ -236,11 +236,11 @@ class _DrugCard extends StatelessWidget {
                 decoration: BoxDecoration(color: stockBg, borderRadius: BorderRadius.circular(8)),
                 child: Text(
                   drug.isExpired ? 'Expired · ${drug.currentStock}' : 'Stock: ${drug.currentStock}',
-                  style: TextStyle(color: stockFg, fontSize: 11, fontWeight: FontWeight.w700),
+                  style: TextStyle(color: stockFg, fontSize: 11, fontWeight: CareText.bold),
                 ),
               ),
               const SizedBox(width: 8),
-              Text('₹${drug.unitPrice.toStringAsFixed(2)}', style: TextStyle(fontSize: 12.5, color: kCareDark, fontWeight: FontWeight.w600)),
+              Text('₹${drug.unitPrice.toStringAsFixed(2)}', style: TextStyle(fontSize: CareText.sm, color: kCareDark, fontWeight: CareText.medium)),
               const Spacer(),
               if ((drug.expiryDate ?? '').isNotEmpty)
                 Text('Exp: ${drug.expiryDate}', style: TextStyle(fontSize: 11, color: drug.isNearExpiry || drug.isExpired ? kDangerFg : kMuted)),
@@ -264,7 +264,7 @@ class _Chip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(7)),
-      child: Text(label, style: TextStyle(color: fg, fontSize: 10.5, fontWeight: FontWeight.w600)),
+      child: Text(label, style: TextStyle(color: fg, fontSize: CareText.xxs, fontWeight: CareText.medium)),
     );
   }
 }

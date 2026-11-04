@@ -167,7 +167,7 @@ class _ConsentCard extends StatelessWidget {
           const SizedBox(height: 6),
           Text(
             [_titleCase(form.consentType), if ((form.procedureName ?? '').isNotEmpty) form.procedureName!].join(' · '),
-            style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w600, color: kInk),
+            style: const TextStyle(fontSize: CareText.md, fontWeight: CareText.medium, color: kInk),
           ),
           const SizedBox(height: 4),
           Text(form.description, maxLines: 3, overflow: TextOverflow.ellipsis, style: CareText.mutedSm),

@@ -176,7 +176,7 @@ class _DispensingCreateViewState extends State<_DispensingCreateView> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(line.drug.drugName, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13.5, color: kInk)),
+                                Text(line.drug.drugName, style: const TextStyle(fontWeight: CareText.bold, fontSize: CareText.md, color: kInk)),
                                 Text('Available: ${line.drug.currentStock} · ₹${line.drug.unitPrice.toStringAsFixed(2)}', style: CareText.mutedXs),
                               ],
                             ),
@@ -204,7 +204,7 @@ class _DispensingCreateViewState extends State<_DispensingCreateView> {
                     children: [
                       const Text('Total', style: CareText.inkBold),
                       const Spacer(),
-                      Text('₹${total.toStringAsFixed(2)}', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16, color: kCareDark)),
+                      Text('₹${total.toStringAsFixed(2)}', style: TextStyle(fontWeight: CareText.heavy, fontSize: 16, color: kCareDark)),
                     ],
                   ),
                 ],

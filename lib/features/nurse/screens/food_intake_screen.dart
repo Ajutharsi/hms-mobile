@@ -104,7 +104,7 @@ class _PatientCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
                   decoration: BoxDecoration(color: kCareSoft, borderRadius: BorderRadius.circular(8)),
-                  child: Text(_titleCase(patient.dietType), style: TextStyle(color: kCareDark, fontSize: 10.5, fontWeight: FontWeight.w700)),
+                  child: Text(_titleCase(patient.dietType), style: TextStyle(color: kCareDark, fontSize: CareText.xxs, fontWeight: CareText.bold)),
                 ),
               ],
             ),
@@ -225,7 +225,7 @@ class _FoodIntakeDetailView extends StatelessWidget {
                 ],
               ),
               if (viewModel.dietPlan != null) ...[
-                Text(_titleCase(viewModel.dietPlan!.dietType), style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: kCareDark)),
+                Text(_titleCase(viewModel.dietPlan!.dietType), style: TextStyle(fontSize: 14, fontWeight: CareText.medium, color: kCareDark)),
                 if ((viewModel.dietPlan!.restrictions ?? '').isNotEmpty) Text('Restrictions: ${viewModel.dietPlan!.restrictions}', style: CareText.mutedSm),
                 if ((viewModel.dietPlan!.notes ?? '').isNotEmpty) Text(viewModel.dietPlan!.notes!, style: CareText.mutedSm),
               ] else
@@ -256,7 +256,7 @@ class _FoodIntakeDetailView extends StatelessWidget {
                     ),
                   ),
                   if (log.quantity != null) Padding(padding: const EdgeInsets.only(right: 8), child: Text(_titleCase(log.quantity!), style: CareText.mutedXs)),
-                  Text(_titleCase(log.status), style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: kCareDark)),
+                  Text(_titleCase(log.status), style: TextStyle(fontSize: 12, fontWeight: CareText.bold, color: kCareDark)),
                 ],
               ),
             ),

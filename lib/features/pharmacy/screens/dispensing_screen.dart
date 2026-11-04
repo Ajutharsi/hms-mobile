@@ -136,7 +136,7 @@ class _DispensingCard extends StatelessWidget {
                 const Spacer(),
                 Text('${dispensing.itemsCount} items', style: CareText.mutedXs),
                 const SizedBox(width: 10),
-                Text('₹${dispensing.totalAmount.toStringAsFixed(2)}', style: TextStyle(fontSize: 12.5, color: kCareDark, fontWeight: FontWeight.w700)),
+                Text('₹${dispensing.totalAmount.toStringAsFixed(2)}', style: TextStyle(fontSize: CareText.sm, color: kCareDark, fontWeight: CareText.bold)),
               ],
             ),
           ],
@@ -242,7 +242,7 @@ class _DispensingDetailView extends StatelessWidget {
             children: [
               const Text('Total', style: CareText.titleMd),
               const Spacer(),
-              Text('₹${d.totalAmount.toStringAsFixed(2)}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: kCareDark)),
+              Text('₹${d.totalAmount.toStringAsFixed(2)}', style: TextStyle(fontSize: 16, fontWeight: CareText.heavy, color: kCareDark)),
             ],
           ),
         ),

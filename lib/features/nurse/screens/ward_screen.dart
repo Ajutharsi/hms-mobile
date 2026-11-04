@@ -241,7 +241,7 @@ class _BedTile extends StatelessWidget {
             decoration: BoxDecoration(color: available ? kSuccessBg : kCareBg, borderRadius: BorderRadius.circular(8)),
             child: Text(
               available ? 'Available' : 'Occupied',
-              style: TextStyle(color: available ? kSuccessFg : kMuted, fontSize: 11, fontWeight: FontWeight.w700),
+              style: TextStyle(color: available ? kSuccessFg : kMuted, fontSize: 11, fontWeight: CareText.bold),
             ),
           ),
         ],
