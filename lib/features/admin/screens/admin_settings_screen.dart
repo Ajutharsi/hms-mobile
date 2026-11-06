@@ -40,39 +40,39 @@ class _SettingsView extends StatelessWidget {
   const _SettingsView();
 
   Future<void> _editHospital(BuildContext context, AdminSettingsViewModel viewModel, AdminSettings? s) async {
-    final values = await adminFormSheet(
+    final values = await careFormSheet(
       context,
       title: s == null ? 'Set up this hospital' : 'Hospital details',
       fields: [
-        AdminField('hospital_name', 'Hospital name', initial: s?.hospitalName, required: true, icon: Icons.local_hospital_outlined),
-        AdminField('address', 'Address', initial: s?.address, maxLines: 2, icon: Icons.place_outlined),
-        AdminField('city', 'City', initial: s?.city, icon: Icons.location_city_outlined),
-        AdminField('phone', 'Phone', initial: s?.phone, keyboard: TextInputType.phone, icon: Icons.phone_outlined),
-        AdminField('email', 'Email', initial: s?.email, keyboard: TextInputType.emailAddress, icon: Icons.mail_outline),
-        AdminField('website', 'Website', initial: s?.website, icon: Icons.language_outlined),
-        AdminField('low_stock_threshold', 'Low stock threshold', initial: '${s?.lowStockThreshold ?? 10}',
+        CareFormField('hospital_name', 'Hospital name', initial: s?.hospitalName, required: true, icon: Icons.local_hospital_outlined),
+        CareFormField('address', 'Address', initial: s?.address, maxLines: 2, icon: Icons.place_outlined),
+        CareFormField('city', 'City', initial: s?.city, icon: Icons.location_city_outlined),
+        CareFormField('phone', 'Phone', initial: s?.phone, keyboard: TextInputType.phone, icon: Icons.phone_outlined),
+        CareFormField('email', 'Email', initial: s?.email, keyboard: TextInputType.emailAddress, icon: Icons.mail_outline),
+        CareFormField('website', 'Website', initial: s?.website, icon: Icons.language_outlined),
+        CareFormField('low_stock_threshold', 'Low stock threshold', initial: '${s?.lowStockThreshold ?? 10}',
             keyboard: TextInputType.number, icon: Icons.warning_amber_outlined),
-        AdminField('near_expiry_days', 'Near expiry (days)', initial: '${s?.nearExpiryDays ?? 30}',
+        CareFormField('near_expiry_days', 'Near expiry (days)', initial: '${s?.nearExpiryDays ?? 30}',
             keyboard: TextInputType.number, icon: Icons.event_busy_outlined),
-        AdminField('round_alert_hours', 'Round alert (hours)', initial: '${s?.roundAlertHours ?? 4}',
+        CareFormField('round_alert_hours', 'Round alert (hours)', initial: '${s?.roundAlertHours ?? 4}',
             keyboard: TextInputType.number, icon: Icons.alarm_outlined),
       ],
     );
     if (values == null || !context.mounted) return;
 
     final error = await viewModel.mutate((api, token) => api.updateSettings(token, values));
-    if (context.mounted) adminSnack(context, error ?? 'Settings saved.', isError: error != null);
+    if (context.mounted) careSnack(context, error ?? 'Settings saved.', isError: error != null);
   }
 
   Future<void> _editDepartment(BuildContext context, AdminSettingsViewModel viewModel, [AdminDepartment? d]) async {
-    final values = await adminFormSheet(
+    final values = await careFormSheet(
       context,
       title: d == null ? 'Add department' : 'Edit ${d.name}',
       fields: [
-        AdminField('name', 'Name', initial: d?.name, required: true, icon: Icons.apartment_outlined),
-        AdminField('code', 'Code', initial: d?.code, icon: Icons.tag_outlined),
-        AdminField('description', 'Description', initial: d?.description, maxLines: 2, icon: Icons.notes_outlined),
-        AdminField('status', 'Status', initial: d?.status ?? 'active', options: const ['active', 'inactive'], icon: Icons.toggle_on_outlined),
+        CareFormField('name', 'Name', initial: d?.name, required: true, icon: Icons.apartment_outlined),
+        CareFormField('code', 'Code', initial: d?.code, icon: Icons.tag_outlined),
+        CareFormField('description', 'Description', initial: d?.description, maxLines: 2, icon: Icons.notes_outlined),
+        CareFormField('status', 'Status', initial: d?.status ?? 'active', options: const ['active', 'inactive'], icon: Icons.toggle_on_outlined),
       ],
     );
     if (values == null || !context.mounted) return;
@@ -80,17 +80,17 @@ class _SettingsView extends StatelessWidget {
     final error = await viewModel.mutate((api, token) =>
         d == null ? api.departmentStore(token, values) : api.departmentUpdate(token, d.id, values));
     if (context.mounted) {
-      adminSnack(context, error ?? (d == null ? 'Department added.' : 'Department updated.'), isError: error != null);
+      careSnack(context, error ?? (d == null ? 'Department added.' : 'Department updated.'), isError: error != null);
     }
   }
 
   Future<void> _deleteDepartment(BuildContext context, AdminSettingsViewModel viewModel, AdminDepartment d) async {
-    final yes = await adminConfirm(context,
+    final yes = await careConfirm(context,
         title: 'Remove ${d.name}?', message: 'Doctors assigned to it keep the name on their record.');
     if (!yes || !context.mounted) return;
 
     final error = await viewModel.mutate((api, token) => api.departmentDestroy(token, d.id));
-    if (context.mounted) adminSnack(context, error ?? 'Department removed.', isError: error != null);
+    if (context.mounted) careSnack(context, error ?? 'Department removed.', isError: error != null);
   }
 
   @override

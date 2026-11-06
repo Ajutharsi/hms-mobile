@@ -39,21 +39,21 @@ class _InventoryView extends StatelessWidget {
   const _InventoryView();
 
   Future<void> _addOrEdit(BuildContext context, AdminInventoryViewModel viewModel, [AdminInventoryItem? item]) async {
-    final values = await adminFormSheet(
+    final values = await careFormSheet(
       context,
       title: item == null ? 'Add item' : 'Edit ${item.itemName}',
       fields: [
-        AdminField('item_name', 'Item name', initial: item?.itemName, required: true, icon: Icons.inventory_2_outlined),
-        AdminField('category', 'Category', initial: item?.category, required: true, icon: Icons.category_outlined),
-        AdminField('unit', 'Unit', initial: item?.unit ?? 'piece', required: true, icon: Icons.straighten_outlined),
-        AdminField('unit_price', 'Unit price', initial: item?.unitPrice.toStringAsFixed(2),
+        CareFormField('item_name', 'Item name', initial: item?.itemName, required: true, icon: Icons.inventory_2_outlined),
+        CareFormField('category', 'Category', initial: item?.category, required: true, icon: Icons.category_outlined),
+        CareFormField('unit', 'Unit', initial: item?.unit ?? 'piece', required: true, icon: Icons.straighten_outlined),
+        CareFormField('unit_price', 'Unit price', initial: item?.unitPrice.toStringAsFixed(2),
             required: true, keyboard: TextInputType.number, icon: Icons.payments_outlined),
-        AdminField('current_stock', 'Current stock', initial: '${item?.currentStock ?? 0}',
+        CareFormField('current_stock', 'Current stock', initial: '${item?.currentStock ?? 0}',
             keyboard: TextInputType.number, icon: Icons.numbers_outlined),
-        AdminField('min_stock_level', 'Reorder level', initial: '${item?.minStockLevel ?? 0}',
+        CareFormField('min_stock_level', 'Reorder level', initial: '${item?.minStockLevel ?? 0}',
             keyboard: TextInputType.number, icon: Icons.warning_amber_outlined),
-        AdminField('supplier', 'Supplier', initial: item?.supplier, icon: Icons.local_shipping_outlined),
-        AdminField('location', 'Location', initial: item?.location, icon: Icons.place_outlined),
+        CareFormField('supplier', 'Supplier', initial: item?.supplier, icon: Icons.local_shipping_outlined),
+        CareFormField('location', 'Location', initial: item?.location, icon: Icons.place_outlined),
       ],
     );
     if (values == null || !context.mounted) return;
@@ -61,17 +61,17 @@ class _InventoryView extends StatelessWidget {
     final error = await viewModel.mutate((api, token) =>
         item == null ? api.inventoryStore(token, values) : api.inventoryUpdate(token, item.id, values));
     if (context.mounted) {
-      adminSnack(context, error ?? (item == null ? 'Item added.' : 'Item updated.'), isError: error != null);
+      careSnack(context, error ?? (item == null ? 'Item added.' : 'Item updated.'), isError: error != null);
     }
   }
 
   Future<void> _delete(BuildContext context, AdminInventoryViewModel viewModel, AdminInventoryItem item) async {
-    final yes = await adminConfirm(context,
+    final yes = await careConfirm(context,
         title: 'Remove ${item.itemName}?', message: 'Purchase orders that reference it keep their lines.');
     if (!yes || !context.mounted) return;
 
     final error = await viewModel.mutate((api, token) => api.inventoryDestroy(token, item.id));
-    if (context.mounted) adminSnack(context, error ?? 'Item removed.', isError: error != null);
+    if (context.mounted) careSnack(context, error ?? 'Item removed.', isError: error != null);
   }
 
   @override

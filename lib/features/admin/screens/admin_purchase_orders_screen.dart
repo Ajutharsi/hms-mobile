@@ -41,7 +41,7 @@ class _PurchaseOrdersView extends StatelessWidget {
   const _PurchaseOrdersView();
 
   Future<void> _receive(BuildContext context, AdminPurchaseOrdersViewModel viewModel, AdminPurchaseOrder po) async {
-    final yes = await adminConfirm(
+    final yes = await careConfirm(
       context,
       title: 'Mark ${po.poNo ?? 'this order'} received?',
       message: 'Stock goes up by the quantity on each of its ${po.itemCount} line'
@@ -51,16 +51,16 @@ class _PurchaseOrdersView extends StatelessWidget {
     if (!yes || !context.mounted) return;
 
     final error = await viewModel.mutate((api, token) => api.purchaseOrderReceive(token, po.id));
-    if (context.mounted) adminSnack(context, error ?? 'Received — stock updated.', isError: error != null);
+    if (context.mounted) careSnack(context, error ?? 'Received — stock updated.', isError: error != null);
   }
 
   Future<void> _delete(BuildContext context, AdminPurchaseOrdersViewModel viewModel, AdminPurchaseOrder po) async {
-    final yes = await adminConfirm(context,
+    final yes = await careConfirm(context,
         title: 'Delete ${po.poNo ?? 'this order'}?', message: 'Its lines go with it. Stock is not affected.');
     if (!yes || !context.mounted) return;
 
     final error = await viewModel.mutate((api, token) => api.purchaseOrderDestroy(token, po.id));
-    if (context.mounted) adminSnack(context, error ?? 'Purchase order deleted.', isError: error != null);
+    if (context.mounted) careSnack(context, error ?? 'Purchase order deleted.', isError: error != null);
   }
 
   @override

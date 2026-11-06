@@ -42,17 +42,17 @@ class _UsersView extends StatelessWidget {
 
   Future<void> _addOrEdit(BuildContext context, AdminUsersViewModel viewModel, List<String> roles, [AdminUser? user]) async {
     final creating = user == null;
-    final values = await adminFormSheet(
+    final values = await careFormSheet(
       context,
       title: creating ? 'Add user' : 'Edit ${user.name}',
       fields: [
-        AdminField('name', 'Full name', initial: user?.name, required: true, icon: Icons.person_outline),
-        AdminField('email', 'Email', initial: user?.email, required: true,
+        CareFormField('name', 'Full name', initial: user?.name, required: true, icon: Icons.person_outline),
+        CareFormField('email', 'Email', initial: user?.email, required: true,
             keyboard: TextInputType.emailAddress, icon: Icons.mail_outline),
-        AdminField('phone', 'Phone', initial: user?.phone, keyboard: TextInputType.phone, icon: Icons.phone_outlined),
-        AdminField('role', 'Role', initial: user?.role, required: true, options: roles, icon: Icons.badge_outlined),
+        CareFormField('phone', 'Phone', initial: user?.phone, keyboard: TextInputType.phone, icon: Icons.phone_outlined),
+        CareFormField('role', 'Role', initial: user?.role, required: true, options: roles, icon: Icons.badge_outlined),
         if (creating)
-          const AdminField('password', 'Password', required: true, icon: Icons.lock_outline),
+          const CareFormField('password', 'Password', required: true, icon: Icons.lock_outline),
       ],
     );
     if (values == null || !context.mounted) return;
@@ -62,31 +62,31 @@ class _UsersView extends StatelessWidget {
     final error = await viewModel.mutate((api, token) =>
         creating ? api.userStore(token, values) : api.userUpdate(token, user.id, values));
     if (context.mounted) {
-      adminSnack(context, error ?? (creating ? 'User created.' : 'User updated.'), isError: error != null);
+      careSnack(context, error ?? (creating ? 'User created.' : 'User updated.'), isError: error != null);
     }
   }
 
   Future<void> _resetPassword(BuildContext context, AdminUsersViewModel viewModel, AdminUser user) async {
-    final values = await adminFormSheet(
+    final values = await careFormSheet(
       context,
       title: 'New password for ${user.name}',
       submitLabel: 'Reset password',
-      fields: const [AdminField('password', 'New password', required: true, icon: Icons.lock_reset_outlined)],
+      fields: const [CareFormField('password', 'New password', required: true, icon: Icons.lock_reset_outlined)],
     );
     if (values == null || !context.mounted) return;
 
     final error = await viewModel.mutate((api, token) => api.userResetPassword(token, user.id, values['password'] as String));
-    if (context.mounted) adminSnack(context, error ?? 'Password reset.', isError: error != null);
+    if (context.mounted) careSnack(context, error ?? 'Password reset.', isError: error != null);
   }
 
   Future<void> _delete(BuildContext context, AdminUsersViewModel viewModel, AdminUser user) async {
-    final yes = await adminConfirm(context,
+    final yes = await careConfirm(context,
         title: 'Delete ${user.name}?',
         message: 'They will not be able to sign in again. Records they created stay as they are.');
     if (!yes || !context.mounted) return;
 
     final error = await viewModel.mutate((api, token) => api.userDestroy(token, user.id));
-    if (context.mounted) adminSnack(context, error ?? 'User deleted.', isError: error != null);
+    if (context.mounted) careSnack(context, error ?? 'User deleted.', isError: error != null);
   }
 
   @override

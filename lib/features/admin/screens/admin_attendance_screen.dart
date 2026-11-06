@@ -55,21 +55,21 @@ class _AttendanceView extends StatelessWidget {
   }
 
   Future<void> _edit(BuildContext context, AdminAttendanceViewModel viewModel, AdminAttendanceRow row) async {
-    final values = await adminFormSheet(
+    final values = await careFormSheet(
       context,
       title: row.userName ?? 'Attendance',
       fields: [
-        AdminField('status', 'Status', initial: row.status, required: true, options: _statuses, icon: Icons.how_to_reg_outlined),
-        AdminField('shift', 'Shift', initial: row.shift, icon: Icons.schedule_outlined),
-        AdminField('check_in', 'Check in (HH:MM)', initial: row.checkIn, icon: Icons.login_outlined),
-        AdminField('check_out', 'Check out (HH:MM)', initial: row.checkOut, icon: Icons.logout_outlined),
-        AdminField('notes', 'Notes', initial: row.notes, maxLines: 2, icon: Icons.notes_outlined),
+        CareFormField('status', 'Status', initial: row.status, required: true, options: _statuses, icon: Icons.how_to_reg_outlined),
+        CareFormField('shift', 'Shift', initial: row.shift, icon: Icons.schedule_outlined),
+        CareFormField('check_in', 'Check in (HH:MM)', initial: row.checkIn, icon: Icons.login_outlined),
+        CareFormField('check_out', 'Check out (HH:MM)', initial: row.checkOut, icon: Icons.logout_outlined),
+        CareFormField('notes', 'Notes', initial: row.notes, maxLines: 2, icon: Icons.notes_outlined),
       ],
     );
     if (values == null || !context.mounted) return;
 
     final error = await viewModel.mutate((api, token) => api.attendanceUpdate(token, row.id, values));
-    if (context.mounted) adminSnack(context, error ?? 'Attendance updated.', isError: error != null);
+    if (context.mounted) careSnack(context, error ?? 'Attendance updated.', isError: error != null);
   }
 
   (Color, Color) _tone(String? status) => switch (status) {

@@ -39,24 +39,24 @@ class AdminDoctorsScreen extends StatelessWidget {
 class _DoctorsView extends StatelessWidget {
   const _DoctorsView();
 
-  List<AdminField> _fields([AdminDoctor? doctor]) => [
-        AdminField('name', 'Full name', initial: doctor?.name, required: true, icon: Icons.person_outline),
-        AdminField('email', 'Email', initial: doctor?.email, required: true,
+  List<CareFormField> _fields([AdminDoctor? doctor]) => [
+        CareFormField('name', 'Full name', initial: doctor?.name, required: true, icon: Icons.person_outline),
+        CareFormField('email', 'Email', initial: doctor?.email, required: true,
             keyboard: TextInputType.emailAddress, icon: Icons.mail_outline),
-        AdminField('phone', 'Phone', initial: doctor?.phone, keyboard: TextInputType.phone, icon: Icons.phone_outlined),
-        AdminField('specialization', 'Specialization', initial: doctor?.specialization, required: true,
+        CareFormField('phone', 'Phone', initial: doctor?.phone, keyboard: TextInputType.phone, icon: Icons.phone_outlined),
+        CareFormField('specialization', 'Specialization', initial: doctor?.specialization, required: true,
             icon: Icons.medical_services_outlined),
-        AdminField('department', 'Department', initial: doctor?.department, icon: Icons.apartment_outlined),
-        const AdminField('qualification', 'Qualification', initial: null, icon: Icons.school_outlined),
-        AdminField('consultation_fee', 'Consultation fee',
+        CareFormField('department', 'Department', initial: doctor?.department, icon: Icons.apartment_outlined),
+        const CareFormField('qualification', 'Qualification', initial: null, icon: Icons.school_outlined),
+        CareFormField('consultation_fee', 'Consultation fee',
             initial: doctor?.consultationFee.toStringAsFixed(0), keyboard: TextInputType.number,
             icon: Icons.payments_outlined),
-        AdminField('status', 'Status', initial: doctor?.status ?? 'active', options: const ['active', 'inactive'],
+        CareFormField('status', 'Status', initial: doctor?.status ?? 'active', options: const ['active', 'inactive'],
             icon: Icons.toggle_on_outlined),
       ];
 
   Future<void> _addOrEdit(BuildContext context, AdminDoctorsViewModel viewModel, [AdminDoctor? doctor]) async {
-    final values = await adminFormSheet(context,
+    final values = await careFormSheet(context,
         title: doctor == null ? 'Add doctor' : 'Edit doctor', fields: _fields(doctor));
     if (values == null || !context.mounted) return;
 
@@ -64,18 +64,18 @@ class _DoctorsView extends StatelessWidget {
         ? api.doctorStore(token, values)
         : api.doctorUpdate(token, doctor.id, values));
     if (context.mounted) {
-      adminSnack(context, error ?? (doctor == null ? 'Doctor added.' : 'Doctor updated.'), isError: error != null);
+      careSnack(context, error ?? (doctor == null ? 'Doctor added.' : 'Doctor updated.'), isError: error != null);
     }
   }
 
   Future<void> _delete(BuildContext context, AdminDoctorsViewModel viewModel, AdminDoctor doctor) async {
-    final yes = await adminConfirm(context,
+    final yes = await careConfirm(context,
         title: 'Remove ${doctor.name}?',
         message: 'Their appointments and consultations stay on record. This only removes them from the register.');
     if (!yes || !context.mounted) return;
 
     final error = await viewModel.mutate((api, token) => api.doctorDestroy(token, doctor.id));
-    if (context.mounted) adminSnack(context, error ?? 'Doctor removed.', isError: error != null);
+    if (context.mounted) careSnack(context, error ?? 'Doctor removed.', isError: error != null);
   }
 
   @override

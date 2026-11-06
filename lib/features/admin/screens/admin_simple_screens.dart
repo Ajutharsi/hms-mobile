@@ -246,16 +246,16 @@ class _TemplatesView extends StatelessWidget {
   const _TemplatesView();
 
   Future<void> _addOrEdit(BuildContext context, AdminTemplatesViewModel viewModel, [AdminTemplate? template]) async {
-    final values = await adminFormSheet(
+    final values = await careFormSheet(
       context,
       title: template == null ? 'Add template' : 'Edit ${template.name}',
       fields: [
-        AdminField('name', 'Internal name', initial: template?.name, required: true, icon: Icons.label_outline),
-        AdminField('title', 'Title', initial: template?.title, required: true, icon: Icons.title_rounded),
-        AdminField('sms_template', 'SMS text', initial: template?.sms, maxLines: 3, icon: Icons.sms_outlined),
-        AdminField('whatsapp_template', 'WhatsApp text', initial: template?.whatsapp, maxLines: 3, icon: Icons.chat_outlined),
-        AdminField('email_template', 'Email body', initial: template?.email, maxLines: 5, icon: Icons.mail_outline),
-        AdminField('is_active', 'Status',
+        CareFormField('name', 'Internal name', initial: template?.name, required: true, icon: Icons.label_outline),
+        CareFormField('title', 'Title', initial: template?.title, required: true, icon: Icons.title_rounded),
+        CareFormField('sms_template', 'SMS text', initial: template?.sms, maxLines: 3, icon: Icons.sms_outlined),
+        CareFormField('whatsapp_template', 'WhatsApp text', initial: template?.whatsapp, maxLines: 3, icon: Icons.chat_outlined),
+        CareFormField('email_template', 'Email body', initial: template?.email, maxLines: 5, icon: Icons.mail_outline),
+        CareFormField('is_active', 'Status',
             initial: (template?.isActive ?? true) ? 'Active' : 'Paused',
             options: const ['Active', 'Paused'],
             icon: Icons.toggle_on_outlined),
@@ -269,7 +269,7 @@ class _TemplatesView extends StatelessWidget {
     final error = await viewModel.mutate((api, token) =>
         template == null ? api.templateStore(token, values) : api.templateUpdate(token, template.id, values));
     if (context.mounted) {
-      adminSnack(context, error ?? (template == null ? 'Template added.' : 'Template updated.'), isError: error != null);
+      careSnack(context, error ?? (template == null ? 'Template added.' : 'Template updated.'), isError: error != null);
     }
   }
 
@@ -346,15 +346,15 @@ class _ServicesView extends StatelessWidget {
   const _ServicesView();
 
   Future<void> _addOrEdit(BuildContext context, AdminServicesViewModel viewModel, [AdminService? service]) async {
-    final values = await adminFormSheet(
+    final values = await careFormSheet(
       context,
       title: service == null ? 'Add service' : 'Edit ${service.serviceName}',
       fields: [
-        AdminField('service_name', 'Service name', initial: service?.serviceName, required: true, icon: Icons.local_offer_outlined),
-        AdminField('category', 'Category', initial: service?.category, required: true, icon: Icons.category_outlined),
-        AdminField('price', 'Price', initial: service?.price.toStringAsFixed(2), required: true,
+        CareFormField('service_name', 'Service name', initial: service?.serviceName, required: true, icon: Icons.local_offer_outlined),
+        CareFormField('category', 'Category', initial: service?.category, required: true, icon: Icons.category_outlined),
+        CareFormField('price', 'Price', initial: service?.price.toStringAsFixed(2), required: true,
             keyboard: TextInputType.number, icon: Icons.payments_outlined),
-        AdminField('description', 'Description', initial: service?.description, maxLines: 3, icon: Icons.notes_outlined),
+        CareFormField('description', 'Description', initial: service?.description, maxLines: 3, icon: Icons.notes_outlined),
       ],
     );
     if (values == null || !context.mounted) return;
@@ -362,18 +362,18 @@ class _ServicesView extends StatelessWidget {
     final error = await viewModel.mutate((api, token) =>
         service == null ? api.serviceStore(token, values) : api.serviceUpdate(token, service.id, values));
     if (context.mounted) {
-      adminSnack(context, error ?? (service == null ? 'Service added.' : 'Service updated.'), isError: error != null);
+      careSnack(context, error ?? (service == null ? 'Service added.' : 'Service updated.'), isError: error != null);
     }
   }
 
   Future<void> _delete(BuildContext context, AdminServicesViewModel viewModel, AdminService service) async {
-    final yes = await adminConfirm(context,
+    final yes = await careConfirm(context,
         title: 'Remove ${service.serviceName}?',
         message: 'Invoices already raised with it keep their line and their price.');
     if (!yes || !context.mounted) return;
 
     final error = await viewModel.mutate((api, token) => api.serviceDestroy(token, service.id));
-    if (context.mounted) adminSnack(context, error ?? 'Service removed.', isError: error != null);
+    if (context.mounted) careSnack(context, error ?? 'Service removed.', isError: error != null);
   }
 
   @override

@@ -42,27 +42,27 @@ class _LeavesView extends StatelessWidget {
   const _LeavesView();
 
   Future<void> _approve(BuildContext context, AdminLeavesViewModel viewModel, AdminLeave leave) async {
-    final yes = await adminConfirm(context,
+    final yes = await careConfirm(context,
         title: 'Approve ${leave.days} day${leave.days == 1 ? '' : 's'}?',
         message: '${leave.userName ?? 'This person'} is away ${leave.fromDate} to ${leave.toDate}.',
         confirmLabel: 'Approve');
     if (!yes || !context.mounted) return;
 
     final error = await viewModel.mutate((api, token) => api.leaveApprove(token, leave.id));
-    if (context.mounted) adminSnack(context, error ?? 'Leave approved.', isError: error != null);
+    if (context.mounted) careSnack(context, error ?? 'Leave approved.', isError: error != null);
   }
 
   Future<void> _reject(BuildContext context, AdminLeavesViewModel viewModel, AdminLeave leave) async {
-    final values = await adminFormSheet(
+    final values = await careFormSheet(
       context,
       title: 'Reject this request',
       submitLabel: 'Reject',
-      fields: const [AdminField('remarks', 'Reason', required: true, maxLines: 3, icon: Icons.notes_outlined)],
+      fields: const [CareFormField('remarks', 'Reason', required: true, maxLines: 3, icon: Icons.notes_outlined)],
     );
     if (values == null || !context.mounted) return;
 
     final error = await viewModel.mutate((api, token) => api.leaveReject(token, leave.id, values['remarks'] as String));
-    if (context.mounted) adminSnack(context, error ?? 'Leave rejected.', isError: error != null);
+    if (context.mounted) careSnack(context, error ?? 'Leave rejected.', isError: error != null);
   }
 
   (Color, Color) _tone(String? status) => switch (status) {

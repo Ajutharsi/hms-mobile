@@ -5,6 +5,7 @@ import 'package:hms_mobile/core/services/auth_storage.dart';
 import 'package:hms_mobile/core/services/nurse_api_service.dart';
 import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
+import 'package:hms_mobile/features/emr/screens/patient_emr_screen.dart';
 import 'package:hms_mobile/features/nurse/models/nurse_patient.dart';
 import 'package:hms_mobile/core/theme/care_radius.dart';
 
@@ -95,7 +96,17 @@ class _NursePatientDetailScreenState extends State<NursePatientDetailScreen> {
             ],
           ),
         ),
-        const SizedBox(height: 24),
+        const SizedBox(height: 20),
+        // Allergies before anything is given, which is the nurse's first
+        // question at the bedside.
+        CarePrimaryButton(
+          label: 'Medical record',
+          icon: Icons.folder_shared_outlined,
+          onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+            builder: (_) => PatientEmrScreen(patientId: p.id, patientName: p.name),
+          )),
+        ),
+        const SizedBox(height: 20),
         if (p.admission != null) ...[
           _SectionCard(title: 'Admission', children: [
             _InfoRow(label: 'Admission No.', value: p.admission!.admissionNo),

@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
+import 'package:hms_mobile/features/emr/screens/patient_emr_screen.dart';
 import 'package:hms_mobile/features/doctor/screens/doctor_consultation_detail_screen.dart';
 import 'package:hms_mobile/features/doctor/screens/doctor_appointment_detail_screen.dart';
 import 'package:hms_mobile/features/doctor/viewmodels/doctor_view_models.dart';
@@ -91,6 +92,16 @@ class _PatientDetailView extends StatelessWidget {
               ),
             ],
           ),
+        ),
+        const SizedBox(height: 14),
+        // Allergies and the problem list live only here -- worth a
+        // button of its own rather than another section further down.
+        CarePrimaryButton(
+          label: 'Medical record',
+          icon: Icons.folder_shared_outlined,
+          onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+            builder: (_) => PatientEmrScreen(patientId: patient.id, patientName: patient.name),
+          )),
         ),
         if (vitals != null && !vitals.isEmpty) ...[
           const SizedBox(height: 18),
