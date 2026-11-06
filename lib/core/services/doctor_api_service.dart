@@ -141,6 +141,17 @@ class DoctorApiService {
     return (json['patients'] as List).map((p) => DoctorPatient.fromJson(p as Map<String, dynamic>)).toList();
   }
 
+  /// Every prescription this doctor has written, newest first. The
+  /// endpoint existed from the start; nothing in the app called it.
+  Future<List<DoctorPrescriptionSummary>> prescriptions(String token, {int? patientId}) async {
+    final json = await _get(token, '/doctor/prescriptions', {
+      if (patientId != null) 'patient_id': '$patientId',
+    });
+    return (json['prescriptions'] as List? ?? [])
+        .map((p) => DoctorPrescriptionSummary.fromJson(p as Map<String, dynamic>))
+        .toList();
+  }
+
   Future<DoctorPatientDetail> patientDetail(String token, int id) async {
     return DoctorPatientDetail.fromJson(await _get(token, '/doctor/patients/$id'));
   }

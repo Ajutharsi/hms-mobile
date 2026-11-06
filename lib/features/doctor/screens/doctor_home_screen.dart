@@ -11,6 +11,7 @@ import 'package:hms_mobile/features/doctor/screens/doctor_appointment_detail_scr
 import 'package:hms_mobile/features/doctor/screens/doctor_appointments_screen.dart';
 import 'package:hms_mobile/features/doctor/screens/doctor_patient_detail_screen.dart';
 import 'package:hms_mobile/features/doctor/screens/doctor_patients_screen.dart';
+import 'package:hms_mobile/features/doctor/screens/doctor_prescriptions_screen.dart';
 import 'package:hms_mobile/features/doctor/screens/doctor_profile_screen.dart';
 import 'package:hms_mobile/features/doctor/viewmodels/doctor_view_models.dart';
 import 'package:hms_mobile/features/lab/screens/lab_orders_screen.dart';
@@ -51,7 +52,7 @@ class DoctorHomeScreen extends StatelessWidget {
 /// already here, built for the nurse, the lab or the front desk — the
 /// doctor simply had no way in.
 enum DoctorSection {
-  appointments, todayAppointments, patients,
+  appointments, todayAppointments, patients, prescriptions,
   referrals, consent, opdQueue, er, admissions,
   emar, vitals, nursingNotes, ot, icu, bloodBank,
   labTests, labOrders, radiology,
@@ -62,6 +63,7 @@ Widget _screenFor(DoctorSection section) => switch (section) {
       DoctorSection.appointments => const DoctorAppointmentsScreen(),
       DoctorSection.todayAppointments => const DoctorAppointmentsScreen(initialFilter: 'today'),
       DoctorSection.patients => const DoctorPatientsScreen(),
+      DoctorSection.prescriptions => const DoctorPrescriptionsScreen(),
       DoctorSection.referrals => const ReferralsScreen(),
       DoctorSection.consent => const ConsentFormsScreen(),
       DoctorSection.opdQueue => const OpdQueueScreen(),
@@ -210,6 +212,7 @@ class _DoctorDrawer extends StatelessWidget {
                   tile(Icons.today_rounded, "Today's Visits", DoctorSection.todayAppointments),
                   tile(Icons.calendar_month_rounded, 'All Appointments', DoctorSection.appointments),
                   tile(Icons.people_rounded, 'Patients', DoctorSection.patients),
+                  tile(Icons.medication_rounded, 'Prescriptions', DoctorSection.prescriptions),
                   tile(Icons.compare_arrows_rounded, 'Referrals', DoctorSection.referrals),
                   tile(Icons.assignment_rounded, 'Consent Forms', DoctorSection.consent),
                   tile(Icons.confirmation_number_rounded, 'OPD Queue', DoctorSection.opdQueue),

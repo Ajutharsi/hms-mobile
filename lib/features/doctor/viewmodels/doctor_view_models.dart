@@ -340,6 +340,46 @@ class PrescriptionFormViewModel extends ChangeNotifier {
   }
 }
 
+class DoctorConsultationDetailViewModel extends _DoctorViewModel {
+  final int consultationId;
+
+  DoctorConsultationDetailViewModel({required this.consultationId, super.api, super.authStorage}) {
+    load();
+  }
+
+  DoctorConsultation? consultation;
+
+  Future<void> load() => guarded(() async {
+        consultation = await api.consultation(await token(), consultationId);
+      });
+}
+
+class DoctorPrescriptionsViewModel extends _DoctorViewModel {
+  final int? patientId;
+
+  DoctorPrescriptionsViewModel({this.patientId, super.api, super.authStorage}) {
+    load();
+  }
+
+  List<DoctorPrescriptionSummary> all = [];
+  String query = '';
+
+  /// Filtered on-device: the endpoint returns the latest 100, so another
+  /// round trip per keystroke would buy nothing.
+  List<DoctorPrescriptionSummary> get prescriptions =>
+      all.where((p) => p.matches(query)).toList();
+
+  Future<void> load() => guarded(() async {
+        all = await api.prescriptions(await token(), patientId: patientId);
+      });
+
+  void search(String value) {
+    if (query == value) return;
+    query = value;
+    notifyListeners();
+  }
+}
+
 class DoctorPatientsViewModel extends _DoctorViewModel {
   DoctorPatientsViewModel({super.api, super.authStorage}) {
     load();

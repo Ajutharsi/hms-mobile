@@ -201,6 +201,50 @@ class DoctorPrescription {
       );
 }
 
+/// A row of `GET /doctor/prescriptions` — the same prescription a
+/// consultation carries, plus the patient and date the list needs to
+/// stand on its own.
+class DoctorPrescriptionSummary {
+  final int id;
+  final String prescriptionNo;
+  final String? date;
+  final String? patientName;
+  final String? status;
+  final String? notes;
+  final List<PrescribedMedicine> items;
+
+  const DoctorPrescriptionSummary({
+    required this.id,
+    required this.prescriptionNo,
+    this.date,
+    this.patientName,
+    this.status,
+    this.notes,
+    required this.items,
+  });
+
+  factory DoctorPrescriptionSummary.fromJson(Map<String, dynamic> json) => DoctorPrescriptionSummary(
+        id: json['id'] as int? ?? 0,
+        prescriptionNo: json['prescription_no']?.toString() ?? '',
+        date: json['date']?.toString(),
+        patientName: json['patient_name']?.toString(),
+        status: json['status']?.toString(),
+        notes: json['notes']?.toString(),
+        items: (json['items'] as List? ?? [])
+            .map((i) => PrescribedMedicine.fromJson(i as Map<String, dynamic>))
+            .toList(),
+      );
+
+  /// What the search box matches on.
+  bool matches(String query) {
+    final q = query.trim().toLowerCase();
+    if (q.isEmpty) return true;
+    return prescriptionNo.toLowerCase().contains(q) ||
+        (patientName ?? '').toLowerCase().contains(q) ||
+        items.any((i) => i.medicineName.toLowerCase().contains(q));
+  }
+}
+
 class DoctorConsultation {
   final int id;
   final int? appointmentId;

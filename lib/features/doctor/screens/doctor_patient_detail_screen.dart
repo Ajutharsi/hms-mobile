@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
+import 'package:hms_mobile/features/doctor/screens/doctor_consultation_detail_screen.dart';
 import 'package:hms_mobile/features/doctor/screens/doctor_appointment_detail_screen.dart';
 import 'package:hms_mobile/features/doctor/viewmodels/doctor_view_models.dart';
 
@@ -132,24 +133,33 @@ class _PatientDetailView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 for (final consultation in detail.consultations) ...[
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(consultation.chiefComplaint ?? 'Consultation',
-                                style: CareText.titleMd),
-                          ),
-                          if ((consultation.date ?? '').isNotEmpty)
-                            CareChip(label: consultation.date!, bg: kCarePinkBg, fg: kCarePinkFg),
+                  // Opens the full record -- plan, notes and the
+                  // prescription written that day, none of which fit here.
+                  InkWell(
+                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) => DoctorConsultationDetailScreen(consultationId: consultation.id),
+                    )),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(consultation.chiefComplaint ?? 'Consultation',
+                                  style: CareText.titleMd),
+                            ),
+                            if ((consultation.date ?? '').isNotEmpty)
+                              CareChip(label: consultation.date!, bg: kCarePinkBg, fg: kCarePinkFg),
+                            const SizedBox(width: 6),
+                            const Icon(Icons.chevron_right_rounded, color: kCareHint),
+                          ],
+                        ),
+                        if ((consultation.diagnosis ?? '').isNotEmpty) ...[
+                          const SizedBox(height: 3),
+                          Text(consultation.diagnosis!, style: CareText.mutedSm),
                         ],
-                      ),
-                      if ((consultation.diagnosis ?? '').isNotEmpty) ...[
-                        const SizedBox(height: 3),
-                        Text(consultation.diagnosis!, style: CareText.mutedSm),
                       ],
-                    ],
+                    ),
                   ),
                   if (consultation != detail.consultations.last)
                     Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Divider(height: 1, color: kCareBorder)),

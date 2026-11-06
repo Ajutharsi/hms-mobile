@@ -116,7 +116,7 @@ class _DetailView extends StatelessWidget {
           const SizedBox(height: 18),
           const CareSectionTitle(title: 'Latest vitals'),
           const SizedBox(height: 10),
-          _VitalsCard(vitals: detail.latestVitals!),
+          DoctorVitalsCard(vitals: detail.latestVitals!),
         ],
         const SizedBox(height: 18),
         CareSectionTitle(title: consultation == null ? 'Consultation' : 'Consultation notes'),
@@ -160,16 +160,16 @@ class _DetailView extends StatelessWidget {
             ),
           )
         else
-          _ConsultationCard(consultation: consultation, onChanged: viewModel.load),
+          DoctorConsultationCard(consultation: consultation, onChanged: viewModel.load),
         const SizedBox(height: 24),
       ],
     );
   }
 }
 
-class _VitalsCard extends StatelessWidget {
+class DoctorVitalsCard extends StatelessWidget {
   final VitalsSnapshot vitals;
-  const _VitalsCard({required this.vitals});
+  const DoctorVitalsCard({super.key, required this.vitals});
 
   @override
   Widget build(BuildContext context) {
@@ -211,11 +211,11 @@ class _VitalsCard extends StatelessWidget {
   }
 }
 
-class _ConsultationCard extends StatelessWidget {
+class DoctorConsultationCard extends StatelessWidget {
   final DoctorConsultation consultation;
   final VoidCallback onChanged;
 
-  const _ConsultationCard({required this.consultation, required this.onChanged});
+  const DoctorConsultationCard({super.key, required this.consultation, required this.onChanged});
 
   @override
   Widget build(BuildContext context) {
@@ -257,7 +257,7 @@ class _ConsultationCard extends StatelessWidget {
                 ),
               row('Treatment plan', consultation.treatmentPlan),
               row('Notes', consultation.notes),
-              if (!consultation.vitals.isEmpty) _VitalsCard(vitals: consultation.vitals),
+              if (!consultation.vitals.isEmpty) DoctorVitalsCard(vitals: consultation.vitals),
             ],
           ),
         ),
