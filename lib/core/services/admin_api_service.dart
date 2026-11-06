@@ -227,6 +227,21 @@ class AdminApiService {
       _put(token, '/admin/leaves/$id/reject', {'remarks': remarks});
   Future<void> leaveDestroy(String token, int id) => _delete(token, '/admin/leaves/$id');
 
+  // ------------------------------------------------------------ suppliers
+
+  Future<({Map<String, int> stats, List<AdminSupplier> suppliers})> suppliers(String token) async {
+    final json = await _get(token, '/admin/suppliers');
+    return (
+      stats: ((json['stats'] as Map?) ?? const {}).map((k, v) => MapEntry('$k', asIntOr(v))),
+      suppliers: _rows(json, 'suppliers').map(AdminSupplier.fromJson).toList(),
+    );
+  }
+
+  Future<void> supplierStore(String token, Map<String, dynamic> body) => _post(token, '/admin/suppliers', body);
+  Future<void> supplierUpdate(String token, int id, Map<String, dynamic> body) =>
+      _put(token, '/admin/suppliers/$id', body);
+  Future<void> supplierDestroy(String token, int id) => _delete(token, '/admin/suppliers/$id');
+
   // --------------------------------------------------------- wards & beds
 
   Future<({Map<String, int> stats, List<AdminWard> wards})> wards(String token) async {

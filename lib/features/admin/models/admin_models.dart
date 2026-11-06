@@ -737,3 +737,57 @@ class AdminWardDetail {
             .toList(),
       );
 }
+
+// ------------------------------------------------------------ suppliers
+
+/// A vendor the hospital buys from, with what has been ordered from it.
+class AdminSupplier {
+  final int id;
+  final String name;
+  final String? contactPerson;
+  final String? phone;
+  final String? email;
+  final String? address;
+  final String? gstNo;
+  final String? paymentTerms;
+  final String status;
+  final String? notes;
+  final int orders;
+  final double spend;
+
+  const AdminSupplier({
+    required this.id,
+    required this.name,
+    this.contactPerson,
+    this.phone,
+    this.email,
+    this.address,
+    this.gstNo,
+    this.paymentTerms,
+    required this.status,
+    this.notes,
+    required this.orders,
+    required this.spend,
+  });
+
+  factory AdminSupplier.fromJson(Map<String, dynamic> j) => AdminSupplier(
+        id: asIntOr(j['id']),
+        name: j['name']?.toString() ?? '-',
+        contactPerson: j['contact_person']?.toString(),
+        phone: j['phone']?.toString(),
+        email: j['email']?.toString(),
+        address: j['address']?.toString(),
+        gstNo: j['gst_no']?.toString(),
+        paymentTerms: j['payment_terms']?.toString(),
+        status: j['status']?.toString() ?? 'active',
+        notes: j['notes']?.toString(),
+        orders: asIntOr(j['orders']),
+        spend: asDoubleOr(j['spend']),
+      );
+
+  /// Who to ring, as one line.
+  String get contact => [
+        if ((contactPerson ?? '').isNotEmpty) contactPerson!,
+        if ((phone ?? '').isNotEmpty) phone!,
+      ].join(' - ');
+}

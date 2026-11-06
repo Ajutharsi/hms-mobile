@@ -163,6 +163,30 @@ class LabApiService {
     return json['id'] as int;
   }
 
+  // Sample collection
+
+  Future<({int waiting, int collectedToday, List<LabSample> orders})> samples(
+    String token, {
+    String state = 'pending',
+  }) async {
+    final json = await _get(token, '/lab/samples', {'state': state});
+    final stats = (json['stats'] as Map?) ?? const {};
+    return (
+      waiting: (stats['waiting'] as int?) ?? 0,
+      collectedToday: (stats['collected_today'] as int?) ?? 0,
+      orders: ((json['orders'] as List?) ?? const [])
+          .map((o) => LabSample.fromJson((o as Map).cast<String, dynamic>()))
+          .toList(),
+    );
+  }
+
+  Future<void> collectSample(String token, int orderId, Map<String, dynamic> body) async {
+    await _post(token, '/lab/orders/$orderId/collect-sample', body);
+  }
+
+  Future<Map<String, dynamic>> sampleByBarcode(String token, String barcode) =>
+      _get(token, '/lab/samples/barcode', {'barcode': barcode});
+
   Future<LabOrderDetail> labOrderDetail(String token, int id) async {
     final json = await _get(token, '/lab/orders/$id');
     return LabOrderDetail.fromJson(json);

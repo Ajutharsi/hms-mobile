@@ -5,6 +5,7 @@ import 'package:hms_mobile/core/services/auth_storage.dart';
 import 'package:hms_mobile/core/services/nurse_api_service.dart';
 import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
+import 'package:hms_mobile/features/nurse/screens/assessments_screen.dart';
 import 'package:hms_mobile/features/emr/screens/patient_emr_screen.dart';
 import 'package:hms_mobile/features/nurse/models/nurse_patient.dart';
 import 'package:hms_mobile/core/theme/care_radius.dart';
@@ -104,6 +105,15 @@ class _NursePatientDetailScreenState extends State<NursePatientDetailScreen> {
           icon: Icons.folder_shared_outlined,
           onPressed: () => Navigator.of(context).push(MaterialPageRoute(
             builder: (_) => PatientEmrScreen(patientId: p.id, patientName: p.name),
+          )),
+        ),
+        const SizedBox(height: 12),
+        CareOptionTile(
+          icon: Icons.assignment_rounded,
+          title: 'Assessments',
+          subtitle: 'Fall risk, pain, pressure sore, early warning',
+          onTap: () => Navigator.of(context).push(MaterialPageRoute(
+            builder: (_) => AssessmentsScreen(patientId: p.id, patientName: p.name),
           )),
         ),
         const SizedBox(height: 20),

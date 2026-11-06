@@ -5,6 +5,8 @@ import 'package:hms_mobile/core/models/app_user.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
+import 'package:hms_mobile/features/discharge/screens/discharge_summaries_screen.dart';
+import 'package:hms_mobile/features/nurse/screens/assessments_screen.dart';
 import 'package:hms_mobile/features/me/screens/inbox_screen.dart';
 import 'package:hms_mobile/features/me/screens/my_work_screen.dart';
 import 'package:hms_mobile/features/me/screens/search_screen.dart';
@@ -305,6 +307,8 @@ class _NurseDrawer extends StatelessWidget {
                   _DrawerItem(icon: Icons.medication_rounded, label: 'eMAR', target: _Target.emar),
                   _DrawerItem(icon: Icons.favorite_rounded, label: 'Vitals', target: _Target.vitals),
                   _DrawerItem(icon: Icons.description_rounded, label: 'Nursing Notes', target: _Target.notes),
+                  _DrawerItem(icon: Icons.assignment_rounded, label: 'Assessments', target: _Target.assessments),
+                  _DrawerItem(icon: Icons.assignment_turned_in_rounded, label: 'Discharge Summaries', target: _Target.discharge),
                   _DrawerItem(icon: Icons.swap_horiz_rounded, label: 'Shift Handover', target: _Target.handover),
                   _DrawerItem(icon: Icons.medical_services_rounded, label: 'Operation Theatre', target: _Target.ot),
                   _DrawerItem(icon: Icons.monitor_heart_rounded, label: 'ICU Charting', target: _Target.icu),
@@ -344,7 +348,7 @@ class _NurseDrawer extends StatelessWidget {
 
 enum _Target {
   patients, consent, er, ward, admissions, emar, vitals, notes, handover,
-  ot, icu, bloodBank, food, fluid, staffRounds, myRounds, profile, settings, inbox, myWork, search,
+  ot, icu, bloodBank, food, fluid, staffRounds, myRounds, profile, settings, inbox, myWork, search, assessments, discharge,
 }
 
 Widget _screenFor(_Target target) => switch (target) {
@@ -364,6 +368,8 @@ Widget _screenFor(_Target target) => switch (target) {
       _Target.fluid => const FluidIntakeScreen(),
       _Target.staffRounds => const StaffRoundsScreen(),
       _Target.myRounds => const MyRoundsScreen(),
+      _Target.discharge => const DischargeSummariesScreen(),
+      _Target.assessments => const AssessmentsScreen(),
       _Target.inbox => const InboxScreen(),
       _Target.myWork => const MyWorkScreen(),
       _Target.search => const GlobalSearchScreen(),

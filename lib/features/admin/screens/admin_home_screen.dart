@@ -16,6 +16,7 @@ import 'package:hms_mobile/features/admin/screens/admin_purchase_orders_screen.d
 import 'package:hms_mobile/features/admin/screens/admin_reports_screen.dart';
 import 'package:hms_mobile/features/admin/screens/admin_settings_screen.dart';
 import 'package:hms_mobile/features/admin/screens/admin_simple_screens.dart';
+import 'package:hms_mobile/features/admin/screens/admin_suppliers_screen.dart';
 import 'package:hms_mobile/features/admin/screens/admin_users_screen.dart';
 import 'package:hms_mobile/features/admin/screens/admin_wards_screen.dart';
 import 'package:hms_mobile/features/auth/screens/login_screen.dart';
@@ -89,7 +90,7 @@ enum AdminSection {
   reports, doctorsAdmin, users, staffAdmin,
   inventory, purchaseOrders, services,
   attendance, leaves, notifications, notificationTemplates, activityLog, settings,
-  wardAdmin, inbox, myWork, search,
+  wardAdmin, inbox, myWork, search, suppliers,
   profile, appSettings,
 }
 
@@ -128,6 +129,7 @@ Widget _screenFor(AdminSection section) => switch (section) {
       AdminSection.staffAdmin => const AdminStaffScreen(),
       AdminSection.inventory => const AdminInventoryScreen(),
       AdminSection.purchaseOrders => const AdminPurchaseOrdersScreen(),
+      AdminSection.suppliers => const AdminSuppliersScreen(),
       AdminSection.services => const AdminServicesScreen(),
       AdminSection.attendance => const AdminAttendanceScreen(),
       AdminSection.leaves => const AdminLeavesScreen(),
@@ -439,6 +441,7 @@ class _AdminDrawer extends StatelessWidget {
                 _DrawerGroup(label: 'STORES', items: [
                   _DrawerItem(icon: Icons.inventory_2_rounded, label: 'Inventory', target: AdminSection.inventory),
                   _DrawerItem(icon: Icons.local_shipping_rounded, label: 'Purchase Orders', target: AdminSection.purchaseOrders),
+                  _DrawerItem(icon: Icons.store_rounded, label: 'Suppliers', target: AdminSection.suppliers),
                 ]),
                 _DrawerGroup(label: 'HR', items: [
                   _DrawerItem(icon: Icons.how_to_reg_rounded, label: 'Attendance', target: AdminSection.attendance),

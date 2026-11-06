@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:hms_mobile/core/models/app_user.dart';
 import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
+import 'package:hms_mobile/features/lab/screens/lab_samples_screen.dart';
 import 'package:hms_mobile/features/me/screens/inbox_screen.dart';
 import 'package:hms_mobile/features/me/screens/my_work_screen.dart';
 import 'package:hms_mobile/features/me/screens/search_screen.dart';
@@ -31,11 +32,12 @@ class LabHomeScreen extends StatelessWidget {
   }
 }
 
-enum _Target { orders, tests, profile, settings, inbox, myWork, search }
+enum _Target { orders, tests, profile, settings, inbox, myWork, search, samples }
 
 Widget _screenFor(_Target target) => switch (target) {
       _Target.orders => const LabOrdersScreen(),
       _Target.tests => const LabTestsScreen(),
+      _Target.samples => const LabSamplesScreen(),
       _Target.inbox => const InboxScreen(),
       _Target.myWork => const MyWorkScreen(),
       _Target.search => const GlobalSearchScreen(),
@@ -154,6 +156,7 @@ class _LabDrawer extends StatelessWidget {
                 ]),
                 _DrawerGroup(label: 'LABORATORY', items: [
                   _DrawerItem(icon: Icons.assignment_rounded, label: 'Lab Orders', target: _Target.orders),
+                  _DrawerItem(icon: Icons.science_rounded, label: 'Sample Collection', target: _Target.samples),
                   _DrawerItem(icon: Icons.biotech_rounded, label: 'Lab Tests', target: _Target.tests),
                 ]),
                 _DrawerGroup(label: 'ACCOUNT', items: [

@@ -138,3 +138,52 @@ class LabPatient {
         phone: json['phone']?.toString(),
       );
 }
+
+/// A lab order seen from the phlebotomy bench: has the tube been drawn,
+/// and what is on its label.
+class LabSample {
+  final int id;
+  final String orderNo;
+  final String? patientName;
+  final String? patientMrn;
+  final String? orderDate;
+  final int testsCount;
+  final String status;
+  final String? barcode;
+  final String? sampleType;
+  final String? collectedAt;
+  final String? collectedBy;
+  final String? notes;
+
+  const LabSample({
+    required this.id,
+    required this.orderNo,
+    this.patientName,
+    this.patientMrn,
+    this.orderDate,
+    required this.testsCount,
+    required this.status,
+    this.barcode,
+    this.sampleType,
+    this.collectedAt,
+    this.collectedBy,
+    this.notes,
+  });
+
+  factory LabSample.fromJson(Map<String, dynamic> j) => LabSample(
+        id: j['id'] as int? ?? 0,
+        orderNo: j['order_no']?.toString() ?? '',
+        patientName: j['patient_name']?.toString(),
+        patientMrn: j['patient_mrn']?.toString(),
+        orderDate: j['order_date']?.toString(),
+        testsCount: j['tests_count'] as int? ?? 0,
+        status: j['status']?.toString() ?? 'pending',
+        barcode: j['sample_barcode']?.toString(),
+        sampleType: j['sample_type']?.toString(),
+        collectedAt: j['sample_collected_at']?.toString(),
+        collectedBy: j['sample_collected_by']?.toString(),
+        notes: j['sample_notes']?.toString(),
+      );
+
+  bool get isCollected => (collectedAt ?? '').isNotEmpty;
+}
