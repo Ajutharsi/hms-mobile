@@ -5,6 +5,7 @@ import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/receptionist/models/reception_appointment.dart';
+import 'package:hms_mobile/features/doctor/screens/doctor_appointment_detail_screen.dart';
 import 'package:hms_mobile/features/receptionist/screens/appointment_form_screen.dart';
 import 'package:hms_mobile/features/receptionist/viewmodels/reception_appointments_view_model.dart';
 import 'package:hms_mobile/core/theme/care_radius.dart';
@@ -12,20 +13,29 @@ import 'package:hms_mobile/core/theme/care_radius.dart';
 const _kStatusFilters = [null, 'scheduled', 'completed', 'cancelled', 'no_show'];
 
 class ReceptionAppointmentsScreen extends StatelessWidget {
-  const ReceptionAppointmentsScreen({super.key});
+  /// Whether tapping an appointment can also open its clinical record.
+  ///
+  /// The web lets an administrator write a consultation against any
+  /// appointment, on the doctor's behalf; the front desk may not, and the
+  /// API refuses them. So the admin shell passes true and nobody else
+  /// does — rather than showing the front desk a button that 403s.
+  final bool canOpenConsultation;
+
+  const ReceptionAppointmentsScreen({super.key, this.canOpenConsultation = false});
 
   @override
   Widget build(BuildContext context) {
     watchCarePalette(context);
     return ChangeNotifierProvider(
       create: (_) => ReceptionAppointmentsViewModel(),
-      child: const _ReceptionAppointmentsView(),
+      child: _ReceptionAppointmentsView(canOpenConsultation: canOpenConsultation),
     );
   }
 }
 
 class _ReceptionAppointmentsView extends StatelessWidget {
-  const _ReceptionAppointmentsView();
+  final bool canOpenConsultation;
+  const _ReceptionAppointmentsView({required this.canOpenConsultation});
 
   Future<void> _book(BuildContext context, ReceptionAppointmentsViewModel viewModel) async {
     final booked = await Navigator.of(context).push<bool>(MaterialPageRoute(builder: (_) => const AppointmentFormScreen()));
@@ -35,6 +45,53 @@ class _ReceptionAppointmentsView extends StatelessWidget {
   Future<void> _edit(BuildContext context, ReceptionAppointmentsViewModel viewModel, ReceptionAppointment appt) async {
     final saved = await Navigator.of(context).push<bool>(MaterialPageRoute(builder: (_) => AppointmentFormScreen(existing: appt)));
     if (saved == true) viewModel.load();
+  }
+
+  /// The consultation and prescription for this appointment. Reusing the
+  /// doctor's own screen: it takes nothing but an id, and the record it
+  /// writes is filed against the appointment's doctor either way.
+  Future<void> _openConsultation(BuildContext context, ReceptionAppointmentsViewModel viewModel, ReceptionAppointment appt) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => DoctorAppointmentDetailScreen(appointmentId: appt.id)),
+    );
+    if (context.mounted) viewModel.load();
+  }
+
+  /// Which of the two to open. With one choice, go straight there.
+  Future<void> _tap(BuildContext context, ReceptionAppointmentsViewModel viewModel, ReceptionAppointment appt) async {
+    if (!canOpenConsultation) return _edit(context, viewModel, appt);
+
+    final choice = await showModalBottomSheet<String>(
+      context: context,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(CareRadius.sheet)),
+      ),
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(height: 10),
+            ListTile(
+              leading: const CareIconBox(icon: Icons.edit_calendar_outlined, size: 38, filled: false),
+              title: const Text('Edit the booking', style: CareText.titleMd),
+              subtitle: const Text('Doctor, date and time', style: CareText.mutedSm),
+              onTap: () => Navigator.of(context).pop('edit'),
+            ),
+            ListTile(
+              leading: const CareIconBox(icon: Icons.medical_information_outlined, size: 38, filled: false),
+              title: const Text('Clinical record', style: CareText.titleMd),
+              subtitle: const Text('Consultation and prescription', style: CareText.mutedSm),
+              onTap: () => Navigator.of(context).pop('consultation'),
+            ),
+            const SizedBox(height: 8),
+          ],
+        ),
+      ),
+    );
+    if (!context.mounted || choice == null) return;
+    if (choice == 'edit') return _edit(context, viewModel, appt);
+    return _openConsultation(context, viewModel, appt);
   }
 
   @override
@@ -95,7 +152,7 @@ class _ReceptionAppointmentsView extends StatelessWidget {
       separatorBuilder: (_, __) => const SizedBox(height: 10),
       itemBuilder: (context, index) {
         final appt = viewModel.appointments[index];
-        return _AppointmentCard(appointment: appt, onTap: () => _edit(context, viewModel, appt));
+        return _AppointmentCard(appointment: appt, onTap: () => _tap(context, viewModel, appt));
       },
     );
   }

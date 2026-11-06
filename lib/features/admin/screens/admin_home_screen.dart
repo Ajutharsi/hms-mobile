@@ -90,7 +90,7 @@ enum AdminSection {
 
 Widget _screenFor(AdminSection section) => switch (section) {
       AdminSection.patients => const ReceptionPatientsScreen(),
-      AdminSection.appointments => const ReceptionAppointmentsScreen(),
+      AdminSection.appointments => const ReceptionAppointmentsScreen(canOpenConsultation: true),
       AdminSection.referrals => const ReferralsScreen(),
       AdminSection.consent => const ConsentFormsScreen(),
       AdminSection.opdQueue => const OpdQueueScreen(),
