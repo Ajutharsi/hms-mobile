@@ -38,7 +38,7 @@ class _PharmacyProfileView extends StatelessWidget {
 
   Widget _buildBody(BuildContext context, PharmacyProfileViewModel viewModel) {
     if (viewModel.isLoading && viewModel.profile == null) {
-      return Center(child: CircularProgressIndicator(color: kCare));
+      return const CareStateView.loading();
     }
 
     if (viewModel.loadError != null && viewModel.profile == null) {

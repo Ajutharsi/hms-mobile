@@ -51,7 +51,7 @@ class _LabOrderDetailView extends StatelessWidget {
 
   Widget _buildBody(BuildContext context, LabOrderDetailViewModel viewModel) {
     if (viewModel.isLoading && viewModel.order == null) {
-      return Center(child: CircularProgressIndicator(color: kCare));
+      return const CareStateView.loading();
     }
     if (viewModel.loadError != null && viewModel.order == null) {
       return ListView(padding: const EdgeInsets.all(24), children: [

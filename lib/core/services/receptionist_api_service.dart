@@ -311,8 +311,11 @@ class ReceptionistApiService {
 
   // Profile
 
-  Future<ReceptionProfile> profile(String token) async {
-    final json = await _get(token, '/receptionist/profile');
+  /// [prefix] is the role whose profile is being read. Every role
+  /// serves the same shape at /{role}/profile, so one screen covers
+  /// them all rather than one per role.
+  Future<ReceptionProfile> profile(String token, {String prefix = '/receptionist'}) async {
+    final json = await _get(token, '$prefix/profile');
     return ReceptionProfile.fromJson(json);
   }
 
@@ -326,8 +329,9 @@ class ReceptionistApiService {
     String? passwordConfirmation,
     Uint8List? photoBytes,
     String? photoFilename,
+    String prefix = '/receptionist',
   }) async {
-    final request = http.MultipartRequest('POST', Uri.parse('$baseUrl/receptionist/profile'))
+    final request = http.MultipartRequest('POST', Uri.parse('$baseUrl$prefix/profile'))
       ..headers['Accept'] = 'application/json'
       ..headers['Authorization'] = 'Bearer $token'
       ..fields['name'] = name

@@ -97,7 +97,7 @@ class _DispensingCreateViewState extends State<_DispensingCreateView> {
       backgroundColor: kCareBg,
       appBar: carePageAppBar(context, 'New Dispensing'),
       body: viewModel.isLoadingDrugs
-          ? Center(child: CircularProgressIndicator(color: kCare))
+          ? const CareStateView.loading()
           : ListView(
               padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
               children: [

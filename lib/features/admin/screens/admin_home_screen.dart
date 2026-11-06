@@ -146,7 +146,9 @@ Widget _screenFor(AdminSection section) => switch (section) {
       AdminSection.inbox => const InboxScreen(),
       AdminSection.myWork => const MyWorkScreen(),
       AdminSection.search => const GlobalSearchScreen(),
-      AdminSection.profile => const ReceptionProfileScreen(),
+      // Administrators have their own profile endpoint; the screen
+      // is the same one every other role uses.
+      AdminSection.profile => const ReceptionProfileScreen(endpointPrefix: '/admin'),
       AdminSection.appSettings => const AppSettingsScreen(),
     };
 

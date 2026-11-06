@@ -9,13 +9,17 @@ import 'package:hms_mobile/features/receptionist/viewmodels/reception_profile_vi
 import 'package:hms_mobile/core/theme/care_radius.dart';
 
 class ReceptionProfileScreen extends StatelessWidget {
-  const ReceptionProfileScreen({super.key});
+  /// Which role's profile endpoint to use. Every role serves the same
+  /// shape at /{role}/profile, so this one screen covers all of them.
+  final String endpointPrefix;
+
+  const ReceptionProfileScreen({super.key, this.endpointPrefix = '/receptionist'});
 
   @override
   Widget build(BuildContext context) {
     watchCarePalette(context);
     return ChangeNotifierProvider(
-      create: (_) => ReceptionProfileViewModel(),
+      create: (_) => ReceptionProfileViewModel(endpointPrefix: endpointPrefix),
       child: const _ReceptionProfileView(),
     );
   }

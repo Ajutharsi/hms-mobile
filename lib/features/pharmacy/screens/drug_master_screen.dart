@@ -121,23 +121,17 @@ class _DrugMasterViewState extends State<_DrugMasterView> {
 
   Widget _buildBody(BuildContext context, DrugMasterViewModel viewModel) {
     if (viewModel.isLoading && viewModel.drugs.isEmpty) {
-      return Center(child: CircularProgressIndicator(color: kCare));
+      return const CareStateView.loading();
     }
     if (viewModel.loadError != null && viewModel.drugs.isEmpty) {
-      return ListView(padding: const EdgeInsets.all(24), children: [
-        const SizedBox(height: 80),
-        const Icon(Icons.wifi_off_rounded, color: kMuted, size: 40),
-        const SizedBox(height: 12),
-        Text(viewModel.loadError!, textAlign: TextAlign.center, style: CareText.muted),
-      ]);
+      return CareStateView.error(viewModel.loadError!);
     }
     if (viewModel.drugs.isEmpty) {
-      return ListView(padding: const EdgeInsets.all(24), children: const [
-        SizedBox(height: 80),
-        Icon(Icons.medication_outlined, color: kMuted, size: 40),
-        SizedBox(height: 12),
-        Text('No drugs in the catalog yet', textAlign: TextAlign.center, style: CareText.muted),
-      ]);
+      return const CareStateView(
+        icon: Icons.medication_outlined,
+        title: 'No drugs yet',
+        message: 'Add the medicines this pharmacy stocks.',
+      );
     }
 
     return ListView.separated(

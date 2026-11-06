@@ -12,8 +12,16 @@ class ReceptionProfileViewModel extends ChangeNotifier {
   final ReceptionistApiService _api;
   final AuthStorage _authStorage;
 
-  ReceptionProfileViewModel({ReceptionistApiService? api, AuthStorage? authStorage})
-      : _api = api ?? ReceptionistApiService(),
+  /// Which role's profile endpoint to talk to. Administrators have
+  /// their own; everyone else falls back to the front desk's, which is
+  /// where this screen started.
+  final String endpointPrefix;
+
+  ReceptionProfileViewModel({
+    ReceptionistApiService? api,
+    AuthStorage? authStorage,
+    this.endpointPrefix = '/receptionist',
+  })  : _api = api ?? ReceptionistApiService(),
         _authStorage = authStorage ?? AuthStorage() {
     load();
   }
@@ -43,7 +51,7 @@ class ReceptionProfileViewModel extends ChangeNotifier {
 
     try {
       final token = await _authStorage.readToken();
-      profile = await guardNetworkErrors(() => _api.profile(token!));
+      profile = await guardNetworkErrors(() => _api.profile(token!, prefix: endpointPrefix));
       nameController.text = profile!.name;
       emailController.text = profile!.email;
       phoneController.text = profile!.phone ?? '';
@@ -110,6 +118,7 @@ class ReceptionProfileViewModel extends ChangeNotifier {
             passwordConfirmation: confirmPasswordController.text,
             photoBytes: pendingPhotoBytes,
             photoFilename: _pendingPhotoName,
+            prefix: endpointPrefix,
           ));
       pendingPhotoBytes = null;
       _pendingPhotoName = null;

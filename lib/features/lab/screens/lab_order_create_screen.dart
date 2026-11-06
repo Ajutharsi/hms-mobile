@@ -58,7 +58,7 @@ class _LabOrderCreateViewState extends State<_LabOrderCreateView> {
       backgroundColor: kCareBg,
       appBar: carePageAppBar(context, 'New Lab Order'),
       body: viewModel.isLoadingMeta
-          ? Center(child: CircularProgressIndicator(color: kCare))
+          ? const CareStateView.loading()
           : ListView(
               padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
               children: [
