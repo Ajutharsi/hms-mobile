@@ -5,6 +5,7 @@ import 'package:hms_mobile/core/models/app_user.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
+import 'package:hms_mobile/features/rounds/screens/ward_rounds_screen.dart';
 import 'package:hms_mobile/features/discharge/screens/discharge_summaries_screen.dart';
 import 'package:hms_mobile/features/me/screens/inbox_screen.dart';
 import 'package:hms_mobile/features/me/screens/my_work_screen.dart';
@@ -61,7 +62,7 @@ enum DoctorSection {
   referrals, consent, opdQueue, er, admissions,
   emar, vitals, nursingNotes, ot, icu, bloodBank,
   labTests, labOrders, radiology,
-  profile, settings, inbox, myWork, search, schedule, discharge,
+  profile, settings, inbox, myWork, search, schedule, discharge, rounds,
 }
 
 Widget _screenFor(DoctorSection section) => switch (section) {
@@ -84,6 +85,7 @@ Widget _screenFor(DoctorSection section) => switch (section) {
       DoctorSection.labOrders => const LabOrdersScreen(),
       DoctorSection.radiology => const RadiologyScreen(),
       DoctorSection.schedule => const DoctorScheduleScreen(),
+      DoctorSection.rounds => const WardRoundsScreen(),
       DoctorSection.discharge => const DischargeSummariesScreen(),
       DoctorSection.inbox => const InboxScreen(),
       DoctorSection.myWork => const MyWorkScreen(),
@@ -230,6 +232,7 @@ class _DoctorDrawer extends StatelessWidget {
                 ]),
                 group('WARD', [
                   tile(Icons.bed_rounded, 'Admissions', DoctorSection.admissions),
+                  tile(Icons.route_rounded, 'Ward Round', DoctorSection.rounds),
                   tile(Icons.assignment_turned_in_rounded, 'Discharge Summaries', DoctorSection.discharge),
                   tile(Icons.medication_rounded, 'eMAR', DoctorSection.emar),
                   tile(Icons.favorite_rounded, 'Vitals', DoctorSection.vitals),

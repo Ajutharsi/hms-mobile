@@ -11,6 +11,7 @@ import 'package:hms_mobile/features/auth/models/auth_result.dart';
 import 'package:hms_mobile/features/patient/models/doctor.dart';
 import 'package:hms_mobile/features/patient/models/invoice.dart';
 import 'package:hms_mobile/features/patient/models/lab_order.dart';
+import 'package:hms_mobile/features/patient/models/health_record.dart';
 import 'package:hms_mobile/features/patient/models/patient_profile.dart';
 import 'package:hms_mobile/features/patient/models/prescription.dart';
 import 'package:hms_mobile/features/patient/models/time_slot.dart';
@@ -283,6 +284,16 @@ class ApiService {
       body: jsonEncode({'appointment_date': date, 'appointment_time': time}),
     );
     _decode(response);
+  }
+
+  /// The clinical side of the patient's record, which the app could
+  /// not show before: consultations, stays, allergies and vitals.
+  Future<HealthRecord> getHealthRecords(String token) async {
+    final response = await _client.get(
+      Uri.parse('$baseUrl/patient/health-records'),
+      headers: _headers(token: token),
+    );
+    return HealthRecord.fromJson(_decode(response));
   }
 
   Future<PatientProfile> getProfile(String token) async {

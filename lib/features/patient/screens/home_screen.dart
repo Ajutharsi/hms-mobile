@@ -11,6 +11,7 @@ import 'package:hms_mobile/features/patient/models/appointment.dart';
 import 'package:hms_mobile/features/patient/models/time_slot.dart';
 import 'package:hms_mobile/features/patient/screens/book_appointment_screen.dart';
 import 'package:hms_mobile/features/patient/screens/dashboard_screen.dart';
+import 'package:hms_mobile/features/patient/screens/health_records_screen.dart';
 import 'package:hms_mobile/features/patient/screens/invoices_screen.dart';
 import 'package:hms_mobile/features/patient/screens/lab_results_screen.dart';
 import 'package:hms_mobile/features/patient/screens/prescriptions_screen.dart';
@@ -228,6 +229,14 @@ class _PatientDrawer extends StatelessWidget {
                 _DrawerTile(icon: Icons.medication_rounded, label: 'My Prescriptions', onTap: () => go(PatientSection.prescriptions)),
                 _DrawerTile(icon: Icons.biotech_rounded, label: 'My Lab Results', onTap: () => go(PatientSection.lab)),
                 _DrawerTile(icon: Icons.receipt_long_rounded, label: 'My Bills', onTap: () => go(PatientSection.bills)),
+                _DrawerTile(
+                  icon: Icons.folder_shared_rounded,
+                  label: 'My Health Records',
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    Navigator.of(context).push(MaterialPageRoute(builder: (_) => const HealthRecordsScreen()));
+                  },
+                ),
                 _DrawerTile(
                   icon: Icons.notifications_rounded,
                   label: 'Notifications',
