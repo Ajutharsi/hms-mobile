@@ -219,6 +219,103 @@ class _NotificationsView extends StatelessWidget {
   }
 }
 
+// ----------------------------------------------- notification templates
+
+class AdminTemplatesViewModel extends AdminSectionViewModel<List<AdminTemplate>> {
+  @override
+  Future<List<AdminTemplate>> fetch(String token) => api.templates(token);
+}
+
+/// The message bodies the hospital sends from -- the web's
+/// Notification Templates page.
+///
+/// Templates were the one half of notifications the app could not reach:
+/// the log of what went out was already here, but nothing could read or
+/// change the wording behind it.
+class AdminNotificationTemplatesScreen extends StatelessWidget {
+  const AdminNotificationTemplatesScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) => ChangeNotifierProvider(
+        create: (_) => AdminTemplatesViewModel(),
+        child: const CareTheme(child: _TemplatesView()),
+      );
+}
+
+class _TemplatesView extends StatelessWidget {
+  const _TemplatesView();
+
+  Future<void> _addOrEdit(BuildContext context, AdminTemplatesViewModel viewModel, [AdminTemplate? template]) async {
+    final values = await adminFormSheet(
+      context,
+      title: template == null ? 'Add template' : 'Edit ${template.name}',
+      fields: [
+        AdminField('name', 'Internal name', initial: template?.name, required: true, icon: Icons.label_outline),
+        AdminField('title', 'Title', initial: template?.title, required: true, icon: Icons.title_rounded),
+        AdminField('sms_template', 'SMS text', initial: template?.sms, maxLines: 3, icon: Icons.sms_outlined),
+        AdminField('whatsapp_template', 'WhatsApp text', initial: template?.whatsapp, maxLines: 3, icon: Icons.chat_outlined),
+        AdminField('email_template', 'Email body', initial: template?.email, maxLines: 5, icon: Icons.mail_outline),
+        AdminField('is_active', 'Status',
+            initial: (template?.isActive ?? true) ? 'Active' : 'Paused',
+            options: const ['Active', 'Paused'],
+            icon: Icons.toggle_on_outlined),
+      ],
+    );
+    if (values == null || !context.mounted) return;
+
+    // The sheet hands back the label; the API wants the flag.
+    values['is_active'] = values['is_active'] == 'Paused' ? '0' : '1';
+
+    final error = await viewModel.mutate((api, token) =>
+        template == null ? api.templateStore(token, values) : api.templateUpdate(token, template.id, values));
+    if (context.mounted) {
+      adminSnack(context, error ?? (template == null ? 'Template added.' : 'Template updated.'), isError: error != null);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    watchCarePalette(context);
+    final viewModel = context.watch<AdminTemplatesViewModel>();
+    final templates = viewModel.data ?? const <AdminTemplate>[];
+
+    return AdminSectionScaffold(
+      title: 'Notification Templates',
+      isLoading: viewModel.isLoading,
+      error: viewModel.loadError,
+      itemCount: templates.length,
+      onRefresh: viewModel.load,
+      emptyIcon: Icons.mark_email_unread_outlined,
+      emptyTitle: 'No templates yet',
+      emptyMessage: 'Add one and the hospital can send it as SMS, WhatsApp or email.',
+      createLabel: 'Add template',
+      onCreate: () => _addOrEdit(context, viewModel),
+      itemBuilder: (context, i) {
+        final template = templates[i];
+        // Which channels this template can actually go out on.
+        final channels = [
+          if ((template.sms ?? '').isNotEmpty) 'SMS',
+          if ((template.whatsapp ?? '').isNotEmpty) 'WhatsApp',
+          if ((template.email ?? '').isNotEmpty) 'Email',
+        ];
+
+        return AdminCard(
+          title: template.title?.isNotEmpty == true ? template.title! : template.name,
+          subtitle: template.name,
+          detail: channels.isEmpty ? 'No channel filled in yet' : channels.join(' · '),
+          badge: template.isActive ? 'active' : 'paused',
+          badgeColor: template.isActive ? kSuccessFg : kMuted,
+          badgeBg: template.isActive ? kSuccessBg : kCareNeutralBg,
+          onTap: () => _addOrEdit(context, viewModel, template),
+          actions: [
+            (label: 'Edit', icon: Icons.edit_outlined, onTap: () => _addOrEdit(context, viewModel, template), destructive: false),
+          ],
+        );
+      },
+    );
+  }
+}
+
 // ------------------------------------------------------------ services
 
 typedef ServicesPayload = ({List<AdminService> services, List<String> categories});

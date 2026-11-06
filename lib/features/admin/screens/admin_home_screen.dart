@@ -84,7 +84,7 @@ enum AdminSection {
   // Admin-only: these have no clinical owner, so they run on api/admin.
   reports, doctorsAdmin, users, staffAdmin,
   inventory, purchaseOrders, services,
-  attendance, leaves, notifications, activityLog, settings,
+  attendance, leaves, notifications, notificationTemplates, activityLog, settings,
   profile, appearance,
 }
 
@@ -126,6 +126,7 @@ Widget _screenFor(AdminSection section) => switch (section) {
       AdminSection.attendance => const AdminAttendanceScreen(),
       AdminSection.leaves => const AdminLeavesScreen(),
       AdminSection.notifications => const AdminNotificationsScreen(),
+      AdminSection.notificationTemplates => const AdminNotificationTemplatesScreen(),
       AdminSection.activityLog => const AdminActivityLogScreen(),
       AdminSection.settings => const AdminSettingsScreen(),
       AdminSection.profile => const ReceptionProfileScreen(),
@@ -437,6 +438,7 @@ class _AdminDrawer extends StatelessWidget {
                   _DrawerItem(icon: Icons.tune_rounded, label: 'Settings', target: AdminSection.settings),
                   _DrawerItem(icon: Icons.history_rounded, label: 'Activity Log', target: AdminSection.activityLog),
                   _DrawerItem(icon: Icons.notifications_rounded, label: 'Notifications', target: AdminSection.notifications),
+                  _DrawerItem(icon: Icons.mark_email_read_rounded, label: 'Notification Templates', target: AdminSection.notificationTemplates),
                 ]),
                 _DrawerGroup(label: 'ACCOUNT', items: [
                   _DrawerItem(icon: Icons.person_rounded, label: 'My Profile', target: AdminSection.profile),
