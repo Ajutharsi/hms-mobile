@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Android 8 and later draw the launcher icon in two layers and crop them
+  to whatever shape the launcher uses: circle, squircle, teardrop. The
+  mark sits on its own layer, inset far enough that a circular crop
+  cannot clip it. The flat ic_launcher.png stays for older versions.
+-->
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <background android:drawable="@color/ic_launcher_background" />
+    <foreground android:drawable="@mipmap/ic_launcher_foreground" />
+    <monochrome android:drawable="@mipmap/ic_launcher_foreground" />
+</adaptive-icon>
