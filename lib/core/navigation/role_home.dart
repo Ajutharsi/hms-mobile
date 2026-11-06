@@ -10,18 +10,41 @@ import 'package:hms_mobile/features/admin/screens/admin_home_screen.dart';
 import 'package:hms_mobile/features/receptionist/screens/receptionist_home_screen.dart';
 import 'package:hms_mobile/features/staff/screens/staff_home_screen.dart';
 import 'package:hms_mobile/core/theme/care_text.dart';
+import 'package:hms_mobile/features/auth/screens/force_password_change_screen.dart';
 
 /// Routes a freshly-logged-in (or restored-session) user to the right
 /// role's home shell. Every role the web defines now has one. A role that
 /// somehow reaches here without a shell -- a new one added on the web, say
 /// -- gets a plain "not available yet" screen rather than a crash or a
 /// silent wrong-role UI.
-class RoleHome extends StatelessWidget {
+class RoleHome extends StatefulWidget {
   final AppUser user;
   const RoleHome({super.key, required this.user});
 
   @override
+  State<RoleHome> createState() => _RoleHomeState();
+}
+
+class _RoleHomeState extends State<RoleHome> {
+  /// Set once the password has actually been changed, so the shell is
+  /// shown without having to re-fetch `/me` (which the server was
+  /// refusing a moment ago anyway).
+  bool _passwordChanged = false;
+
+  @override
   Widget build(BuildContext context) {
+    final user = widget.user;
+
+    // The hospital can force a password change; until it is done the API
+    // answers 403 on everything except this one endpoint, so showing a
+    // role shell here would be a screen of failures with no way out.
+    if (user.mustChangePassword && !_passwordChanged) {
+      return ForcePasswordChangeScreen(
+        user: user,
+        onChanged: () => setState(() => _passwordChanged = true),
+      );
+    }
+
     // Checked before the clinical roles: an administrator may also hold
     // one of them, and the admin shell is the superset.
     if (user.roles.contains('admin') || user.roles.contains('super_admin')) {
