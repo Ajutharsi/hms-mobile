@@ -638,3 +638,102 @@ class AdminDepartment {
         status: j['status']?.toString(),
       );
 }
+
+// --------------------------------------------------------- wards & beds
+
+/// A row of `GET /admin/wards`. The bed counts come from the bed rows
+/// themselves, not the ward's stored counters, which had drifted.
+class AdminWard {
+  final int id;
+  final String wardNo;
+  final String name;
+  final String type;
+  final String? floor;
+  final String? building;
+  final int totalBeds;
+  final int occupiedBeds;
+  final int availableBeds;
+  final double chargePerDay;
+  final String status;
+  final String? description;
+
+  const AdminWard({
+    required this.id,
+    required this.wardNo,
+    required this.name,
+    required this.type,
+    this.floor,
+    this.building,
+    required this.totalBeds,
+    required this.occupiedBeds,
+    required this.availableBeds,
+    required this.chargePerDay,
+    required this.status,
+    this.description,
+  });
+
+  factory AdminWard.fromJson(Map<String, dynamic> j) => AdminWard(
+        id: asIntOr(j['id']),
+        wardNo: j['ward_no']?.toString() ?? '',
+        name: j['name']?.toString() ?? '—',
+        type: j['type']?.toString() ?? 'general',
+        floor: j['floor']?.toString(),
+        building: j['building']?.toString(),
+        totalBeds: asIntOr(j['total_beds']),
+        occupiedBeds: asIntOr(j['occupied_beds']),
+        availableBeds: asIntOr(j['available_beds']),
+        chargePerDay: asDoubleOr(j['charge_per_day']),
+        status: j['status']?.toString() ?? 'active',
+        description: j['description']?.toString(),
+      );
+
+  /// Reads as "general · 2nd floor".
+  String get where => [
+        type.replaceAll('_', ' '),
+        if ((floor ?? '').isNotEmpty) 'floor ${floor!}',
+        if ((building ?? '').isNotEmpty) building!,
+      ].join(' · ');
+}
+
+class AdminBed {
+  final int id;
+  final String bedNo;
+  final String type;
+  final String status;
+  final String? notes;
+  final String? patientName;
+
+  const AdminBed({
+    required this.id,
+    required this.bedNo,
+    required this.type,
+    required this.status,
+    this.notes,
+    this.patientName,
+  });
+
+  factory AdminBed.fromJson(Map<String, dynamic> j) => AdminBed(
+        id: asIntOr(j['id']),
+        bedNo: j['bed_no']?.toString() ?? '',
+        type: j['type']?.toString() ?? 'standard',
+        status: j['status']?.toString() ?? 'available',
+        notes: j['notes']?.toString(),
+        patientName: j['patient_name']?.toString(),
+      );
+
+  bool get isOccupied => status == 'occupied';
+}
+
+class AdminWardDetail {
+  final AdminWard ward;
+  final List<AdminBed> beds;
+
+  const AdminWardDetail({required this.ward, required this.beds});
+
+  factory AdminWardDetail.fromJson(Map<String, dynamic> j) => AdminWardDetail(
+        ward: AdminWard.fromJson(j['ward'] as Map<String, dynamic>? ?? const {}),
+        beds: ((j['beds'] as List?) ?? const [])
+            .map((b) => AdminBed.fromJson((b as Map).cast<String, dynamic>()))
+            .toList(),
+      );
+}

@@ -14,6 +14,7 @@ import 'package:hms_mobile/features/admin/screens/admin_reports_screen.dart';
 import 'package:hms_mobile/features/admin/screens/admin_settings_screen.dart';
 import 'package:hms_mobile/features/admin/screens/admin_simple_screens.dart';
 import 'package:hms_mobile/features/admin/screens/admin_users_screen.dart';
+import 'package:hms_mobile/features/admin/screens/admin_wards_screen.dart';
 import 'package:hms_mobile/features/auth/screens/login_screen.dart';
 import 'package:hms_mobile/features/lab/screens/lab_orders_screen.dart';
 import 'package:hms_mobile/features/lab/screens/lab_tests_screen.dart';
@@ -85,6 +86,7 @@ enum AdminSection {
   reports, doctorsAdmin, users, staffAdmin,
   inventory, purchaseOrders, services,
   attendance, leaves, notifications, notificationTemplates, activityLog, settings,
+  wardAdmin,
   profile, appSettings,
 }
 
@@ -96,6 +98,7 @@ Widget _screenFor(AdminSection section) => switch (section) {
       AdminSection.opdQueue => const OpdQueueScreen(),
       AdminSection.er => const ErScreen(),
       AdminSection.ward => const WardScreen(),
+      AdminSection.wardAdmin => const AdminWardsScreen(),
       AdminSection.admissions => const AdmissionsScreen(),
       AdminSection.emar => const EmarScreen(),
       AdminSection.vitals => const VitalsScreen(),
@@ -390,6 +393,7 @@ class _AdminDrawer extends StatelessWidget {
                 ]),
                 _DrawerGroup(label: 'WARD', items: [
                   _DrawerItem(icon: Icons.holiday_village_rounded, label: 'Ward', target: AdminSection.ward),
+                  _DrawerItem(icon: Icons.bed_rounded, label: 'Wards & Beds', target: AdminSection.wardAdmin),
                   _DrawerItem(icon: Icons.bed_rounded, label: 'Admissions', target: AdminSection.admissions),
                   _DrawerItem(icon: Icons.medication_rounded, label: 'eMAR', target: AdminSection.emar),
                   _DrawerItem(icon: Icons.favorite_rounded, label: 'Vitals', target: AdminSection.vitals),

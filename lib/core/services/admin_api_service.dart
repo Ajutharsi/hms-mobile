@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import 'package:hms_mobile/core/services/api_service.dart' show ApiException, ApiService, sessionExpired;
+import 'package:hms_mobile/core/models/json_value.dart';
 import 'package:hms_mobile/features/admin/models/admin_models.dart';
 
 /// JSON client for the administrator's endpoints — mirrors
@@ -225,6 +226,28 @@ class AdminApiService {
   Future<void> leaveReject(String token, int id, String remarks) =>
       _put(token, '/admin/leaves/$id/reject', {'remarks': remarks});
   Future<void> leaveDestroy(String token, int id) => _delete(token, '/admin/leaves/$id');
+
+  // --------------------------------------------------------- wards & beds
+
+  Future<({Map<String, int> stats, List<AdminWard> wards})> wards(String token) async {
+    final json = await _get(token, '/admin/wards');
+    return (
+      stats: ((json['stats'] as Map?) ?? const {}).map((k, v) => MapEntry('$k', asIntOr(v))),
+      wards: _rows(json, 'wards').map(AdminWard.fromJson).toList(),
+    );
+  }
+
+  Future<AdminWardDetail> ward(String token, int id) async =>
+      AdminWardDetail.fromJson(await _get(token, '/admin/wards/$id'));
+
+  Future<void> wardStore(String token, Map<String, dynamic> body) => _post(token, '/admin/wards', body);
+  Future<void> wardUpdate(String token, int id, Map<String, dynamic> body) => _put(token, '/admin/wards/$id', body);
+  Future<void> wardDestroy(String token, int id) => _delete(token, '/admin/wards/$id');
+
+  Future<void> bedStore(String token, int wardId, Map<String, dynamic> body) =>
+      _post(token, '/admin/wards/$wardId/beds', body);
+  Future<void> bedUpdate(String token, int id, Map<String, dynamic> body) => _put(token, '/admin/beds/$id', body);
+  Future<void> bedDestroy(String token, int id) => _delete(token, '/admin/beds/$id');
 
   // ------------------------------------------------------- notifications
 
