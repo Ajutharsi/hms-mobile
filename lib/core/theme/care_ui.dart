@@ -366,6 +366,109 @@ class CareIconBox extends StatelessWidget {
   }
 }
 
+/// One row in a role's navigation drawer.
+///
+/// Every role used to hand-roll this as a bare [ListTile], which gave the
+/// menu no sense of touch: no pressed state, no idea which section you are
+/// on, just the stock grey splash. Here the row answers the finger -- the
+/// icon box fills, the row tints, an accent bar slides in on the left and
+/// the chevron nudges -- and [selected] keeps that look for the section
+/// actually open.
+class CareDrawerTile extends StatefulWidget {
+  final IconData icon;
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  const CareDrawerTile({
+    super.key,
+    required this.icon,
+    required this.label,
+    required this.onTap,
+    this.selected = false,
+  });
+
+  @override
+  State<CareDrawerTile> createState() => _CareDrawerTileState();
+}
+
+class _CareDrawerTileState extends State<CareDrawerTile> {
+  static const _motion = Duration(milliseconds: 160);
+  bool _pressed = false;
+
+  @override
+  Widget build(BuildContext context) {
+    watchCarePalette(context);
+    final active = widget.selected || _pressed;
+
+    return Semantics(
+      selected: widget.selected,
+      button: true,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(CareRadius.field),
+            splashColor: kCare.withValues(alpha: 0.10),
+            highlightColor: Colors.transparent,
+            onHighlightChanged: (down) => setState(() => _pressed = down),
+            onTap: widget.onTap,
+            child: AnimatedContainer(
+              duration: _motion,
+              curve: Curves.easeOut,
+              padding: const EdgeInsets.fromLTRB(6, 7, 10, 7),
+              decoration: BoxDecoration(
+                color: active ? kCareSoft : Colors.transparent,
+                borderRadius: BorderRadius.circular(CareRadius.field),
+              ),
+              child: Row(
+                children: [
+                  // The accent bar grows out of the left edge rather than
+                  // appearing, so a quick tap still reads as movement.
+                  AnimatedContainer(
+                    duration: _motion,
+                    curve: Curves.easeOut,
+                    width: active ? 3 : 0,
+                    height: 22,
+                    margin: EdgeInsets.only(right: active ? 7 : 10),
+                    decoration: BoxDecoration(
+                      color: kCare,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                  CareIconBox(icon: widget.icon, size: 34, filled: active),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: AnimatedDefaultTextStyle(
+                      duration: _motion,
+                      style: CareText.titleMdMedium.copyWith(
+                        color: active ? kCareDark : null,
+                        fontWeight: widget.selected ? FontWeight.w700 : null,
+                      ),
+                      child: Text(widget.label, maxLines: 1, overflow: TextOverflow.ellipsis),
+                    ),
+                  ),
+                  AnimatedSlide(
+                    duration: _motion,
+                    curve: Curves.easeOut,
+                    offset: active ? const Offset(0.18, 0) : Offset.zero,
+                    child: Icon(
+                      Icons.chevron_right_rounded,
+                      size: 18,
+                      color: active ? kCare : kCareHintQuiet,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class CareOptionTile extends StatelessWidget {
   final IconData icon;
   final String title;

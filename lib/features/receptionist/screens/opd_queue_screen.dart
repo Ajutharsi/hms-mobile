@@ -170,14 +170,21 @@ class _StatTile extends StatelessWidget {
   Widget build(BuildContext context) {
     watchCarePalette(context);
     return Container(
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(CareRadius.control)),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(value, style: CareText.statValue(color)),
-          Text(label, textAlign: TextAlign.center, style: TextStyle(fontSize: CareText.xxs, color: color, fontWeight: CareText.medium)),
-        ],
+      // Four to a row at a fixed aspect ratio leaves the tile about 53px
+      // tall. At a larger system font scale the number and its label need
+      // more than that, and the tile overflowed; scale down rather than
+      // clip the count.
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(value, style: CareText.statValue(color)),
+            Text(label, textAlign: TextAlign.center, style: TextStyle(fontSize: CareText.xxs, color: color, fontWeight: CareText.medium)),
+          ],
+        ),
       ),
     );
   }

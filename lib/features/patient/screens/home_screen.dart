@@ -121,6 +121,7 @@ class _HomeShellState extends State<_HomeShell> {
       backgroundColor: kCareBg,
       drawer: _PatientDrawer(
         user: homeViewModel.user,
+        current: _tabs[_tabIndex],
         photoUrl: context.watch<ProfileViewModel>().profile?.profilePhotoUrl,
         isLoggingOut: homeViewModel.isLoggingOut,
         onOpen: _open,
@@ -166,12 +167,17 @@ class _PatientDrawer extends StatelessWidget {
   final void Function(PatientSection) onOpen;
   final VoidCallback onLogout;
 
+  /// The tab the shell is showing, so the matching row reads as the one
+  /// you are on. The rows that push a route of their own are never it.
+  final PatientSection current;
+
   const _PatientDrawer({
     required this.user,
     required this.photoUrl,
     required this.isLoggingOut,
     required this.onOpen,
     required this.onLogout,
+    required this.current,
   });
 
   @override
@@ -223,11 +229,11 @@ class _PatientDrawer extends StatelessWidget {
             child: ListView(
               padding: const EdgeInsets.fromLTRB(12, 14, 12, 12),
               children: [
-                _DrawerTile(icon: Icons.home_rounded, label: 'Home', onTap: () => go(PatientSection.home)),
-                _DrawerTile(icon: Icons.calendar_month_rounded, label: 'My Appointments', onTap: () => go(PatientSection.appointments)),
+                _DrawerTile(icon: Icons.home_rounded, label: 'Home', selected: current == PatientSection.home, onTap: () => go(PatientSection.home)),
+                _DrawerTile(icon: Icons.calendar_month_rounded, label: 'My Appointments', selected: current == PatientSection.appointments, onTap: () => go(PatientSection.appointments)),
                 _DrawerTile(icon: Icons.event_available_rounded, label: 'Book Appointment', onTap: () => go(PatientSection.book)),
                 _DrawerTile(icon: Icons.medication_rounded, label: 'My Prescriptions', onTap: () => go(PatientSection.prescriptions)),
-                _DrawerTile(icon: Icons.biotech_rounded, label: 'My Lab Results', onTap: () => go(PatientSection.lab)),
+                _DrawerTile(icon: Icons.biotech_rounded, label: 'My Lab Results', selected: current == PatientSection.lab, onTap: () => go(PatientSection.lab)),
                 _DrawerTile(icon: Icons.receipt_long_rounded, label: 'My Bills', onTap: () => go(PatientSection.bills)),
                 _DrawerTile(
                   icon: Icons.folder_shared_rounded,
@@ -245,7 +251,7 @@ class _PatientDrawer extends StatelessWidget {
                     Navigator.of(context).push(MaterialPageRoute(builder: (_) => const InboxScreen()));
                   },
                 ),
-                _DrawerTile(icon: Icons.person_rounded, label: 'My Profile', onTap: () => go(PatientSection.profile)),
+                _DrawerTile(icon: Icons.person_rounded, label: 'My Profile', selected: current == PatientSection.profile, onTap: () => go(PatientSection.profile)),
                 _DrawerTile(
                   icon: Icons.settings_rounded,
                   label: 'Settings',
@@ -278,20 +284,13 @@ class _PatientDrawer extends StatelessWidget {
 class _DrawerTile extends StatelessWidget {
   final IconData icon;
   final String label;
+  final bool selected;
   final VoidCallback onTap;
-  const _DrawerTile({required this.icon, required this.label, required this.onTap});
+  const _DrawerTile({required this.icon, required this.label, required this.onTap, this.selected = false});
 
   @override
-  Widget build(BuildContext context) {
-    watchCarePalette(context);
-    return ListTile(
-      onTap: onTap,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CareRadius.field)),
-      leading: CareIconBox(icon: icon, size: 36, filled: false),
-      title: Text(label, style: const TextStyle(fontSize: CareText.lg, color: kInk, fontWeight: CareText.medium)),
-      trailing: const Icon(Icons.chevron_right_rounded, color: kCareChevron),
-    );
-  }
+  Widget build(BuildContext context) =>
+      CareDrawerTile(icon: icon, label: label, selected: selected, onTap: onTap);
 }
 
 class _AppointmentsTab extends StatefulWidget {

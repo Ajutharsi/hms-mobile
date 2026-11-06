@@ -406,14 +406,16 @@ class _DrawerItem extends StatelessWidget {
   final _Target? target;
   const _DrawerItem({required this.icon, required this.label, this.target});
 
+  /// The drawer only ever opens from the role's home, so the entry with
+  /// no target -- "Dashboard" -- is the section you are actually on.
+
   @override
   Widget build(BuildContext context) {
     watchCarePalette(context);
-    return ListTile(
-      dense: true,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CareRadius.field)),
-      leading: CareIconBox(icon: icon, size: 34, filled: false),
-      title: Text(label, style: CareText.titleMdMedium),
+    return CareDrawerTile(
+      icon: icon,
+      label: label,
+      selected: target == null,
       onTap: () {
         Navigator.of(context).pop();
         if (target != null) _open(context, target!);

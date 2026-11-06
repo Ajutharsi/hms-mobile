@@ -182,6 +182,34 @@ class _AdminShell extends StatelessWidget {
         onRefresh: viewModel.load,
         child: _AdminBody(viewModel: viewModel),
       ),
+      // Every other role's shell carries this bar; the admin's was left
+      // off because its drawer is so much longer, which just made the one
+      // role with the most to reach the only one you had to open a drawer
+      // to reach anything. The four destinations are the ones an admin
+      // opens all day; the centre button is still the full menu.
+      bottomNavigationBar: Builder(
+        builder: (context) => CareBottomNav(
+          selectedIndex: 0,
+          centerIcon: Icons.grid_view_rounded,
+          onCenterTap: () => Scaffold.of(context).openDrawer(),
+          onSelected: (i) {
+            switch (i) {
+              case 1:
+                _open(context, AdminSection.patients);
+              case 2:
+                _open(context, AdminSection.appointments);
+              case 3:
+                _open(context, AdminSection.profile);
+            }
+          },
+          items: const [
+            CareNavItem(icon: Icons.home_outlined, activeIcon: Icons.home_rounded, label: 'Home'),
+            CareNavItem(icon: Icons.people_outline, activeIcon: Icons.people_rounded, label: 'Patients'),
+            CareNavItem(icon: Icons.calendar_month_outlined, activeIcon: Icons.calendar_month_rounded, label: 'Visits'),
+            CareNavItem(icon: Icons.person_outline_rounded, activeIcon: Icons.person_rounded, label: 'Profile'),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -514,14 +542,16 @@ class _DrawerItem extends StatelessWidget {
   final AdminSection? target;
   const _DrawerItem({required this.icon, required this.label, this.target});
 
+  /// The drawer only ever opens from the admin home, so the entry with no
+  /// target -- "Dashboard" -- is the section you are actually on.
+
   @override
   Widget build(BuildContext context) {
     watchCarePalette(context);
-    return ListTile(
-      dense: true,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CareRadius.field)),
-      leading: CareIconBox(icon: icon, size: 34, filled: false),
-      title: Text(label, style: CareText.titleMdMedium),
+    return CareDrawerTile(
+      icon: icon,
+      label: label,
+      selected: target == null,
       onTap: () {
         Navigator.of(context).pop();
         if (target != null) _open(context, target!);

@@ -119,11 +119,12 @@ class _StaffDrawer extends StatelessWidget {
     watchCarePalette(context);
     final topInset = MediaQuery.of(context).padding.top;
 
-    Widget tile(IconData icon, String label, _Target? target) => ListTile(
-          dense: true,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CareRadius.field)),
-          leading: CareIconBox(icon: icon, size: 34, filled: false),
-          title: Text(label, style: CareText.titleMdMedium),
+    Widget tile(IconData icon, String label, _Target? target) => CareDrawerTile(
+          icon: icon,
+          label: label,
+          // The drawer opens only from the staff home, so the row with no
+          // target -- "Dashboard" -- is where you already are.
+          selected: target == null,
           onTap: () {
             Navigator.of(context).pop();
             if (target != null) _open(context, target);
