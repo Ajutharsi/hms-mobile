@@ -4,6 +4,9 @@ import 'package:provider/provider.dart';
 import 'package:hms_mobile/core/models/app_user.dart';
 import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
+import 'package:hms_mobile/features/me/screens/inbox_screen.dart';
+import 'package:hms_mobile/features/me/screens/my_work_screen.dart';
+import 'package:hms_mobile/features/me/screens/search_screen.dart';
 import 'package:hms_mobile/features/auth/screens/login_screen.dart';
 import 'package:hms_mobile/features/pharmacy/models/pharmacy_dashboard_stats.dart';
 import 'package:hms_mobile/features/pharmacy/screens/dispensing_create_screen.dart';
@@ -29,11 +32,14 @@ class PharmacistHomeScreen extends StatelessWidget {
   }
 }
 
-enum _Target { dispensing, drugs, profile, settings }
+enum _Target { dispensing, drugs, profile, settings, inbox, myWork, search }
 
 Widget _screenFor(_Target target) => switch (target) {
       _Target.dispensing => const DispensingScreen(),
       _Target.drugs => const DrugMasterScreen(),
+      _Target.inbox => const InboxScreen(),
+      _Target.myWork => const MyWorkScreen(),
+      _Target.search => const GlobalSearchScreen(),
       _Target.profile => const PharmacyProfileScreen(),
       _Target.settings => const AppSettingsScreen(),
     };
@@ -152,6 +158,9 @@ class _PharmacyDrawer extends StatelessWidget {
                   _DrawerItem(icon: Icons.medication_rounded, label: 'Drug Master', target: _Target.drugs),
                 ]),
                 _DrawerGroup(label: 'ACCOUNT', items: [
+                  _DrawerItem(icon: Icons.search_rounded, label: 'Search', target: _Target.search),
+                  _DrawerItem(icon: Icons.notifications_rounded, label: 'Notifications', target: _Target.inbox),
+                  _DrawerItem(icon: Icons.fact_check_rounded, label: 'My Attendance & Leave', target: _Target.myWork),
                   _DrawerItem(icon: Icons.person_rounded, label: 'My Profile', target: _Target.profile),
                   _DrawerItem(icon: Icons.settings_rounded, label: 'Settings', target: _Target.settings),
                 ]),

@@ -5,8 +5,10 @@ import 'package:hms_mobile/core/models/app_user.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
+import 'package:hms_mobile/features/me/screens/inbox_screen.dart';
 import 'package:hms_mobile/features/auth/screens/login_screen.dart';
 import 'package:hms_mobile/features/patient/models/appointment.dart';
+import 'package:hms_mobile/features/patient/models/time_slot.dart';
 import 'package:hms_mobile/features/patient/screens/book_appointment_screen.dart';
 import 'package:hms_mobile/features/patient/screens/dashboard_screen.dart';
 import 'package:hms_mobile/features/patient/screens/invoices_screen.dart';
@@ -226,6 +228,14 @@ class _PatientDrawer extends StatelessWidget {
                 _DrawerTile(icon: Icons.medication_rounded, label: 'My Prescriptions', onTap: () => go(PatientSection.prescriptions)),
                 _DrawerTile(icon: Icons.biotech_rounded, label: 'My Lab Results', onTap: () => go(PatientSection.lab)),
                 _DrawerTile(icon: Icons.receipt_long_rounded, label: 'My Bills', onTap: () => go(PatientSection.bills)),
+                _DrawerTile(
+                  icon: Icons.notifications_rounded,
+                  label: 'Notifications',
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    Navigator.of(context).push(MaterialPageRoute(builder: (_) => const InboxScreen()));
+                  },
+                ),
                 _DrawerTile(icon: Icons.person_rounded, label: 'My Profile', onTap: () => go(PatientSection.profile)),
                 _DrawerTile(
                   icon: Icons.settings_rounded,
@@ -313,6 +323,51 @@ class _AppointmentsTabState extends State<_AppointmentsTab> {
     );
   }
 
+  /// Moving a booking: pick a day, then one of that doctor's free slots.
+  ///
+  /// Cancelling and booking again would lose the queue token and leave
+  /// two rows in the patient's history for one visit.
+  Future<void> _reschedule(HomeViewModel viewModel, Appointment appointment) async {
+    final doctorId = appointment.doctorId;
+    if (doctorId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('This booking has no doctor on it, so it cannot be moved.')),
+      );
+      return;
+    }
+
+    final day = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now().add(const Duration(days: 1)),
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(const Duration(days: 90)),
+      helpText: 'Move to which day?',
+    );
+    if (day == null || !mounted) return;
+
+    final date = '${day.year}-${day.month.toString().padLeft(2, '0')}-${day.day.toString().padLeft(2, '0')}';
+
+    final time = await showModalBottomSheet<String>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => _SlotSheet(
+        date: date,
+        load: () => viewModel.slotsFor(doctorId: doctorId, date: date),
+      ),
+    );
+    if (time == null || !mounted) return;
+
+    final error = await viewModel.rescheduleAppointment(appointment.id, date: date, time: time);
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: error == null ? kCareDark : null,
+        content: Text(error ?? 'Moved to $date at $time.'),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     watchCarePalette(context);
@@ -370,6 +425,7 @@ class _AppointmentsTabState extends State<_AppointmentsTab> {
         return AppointmentCard(
           appointment: appointment,
           onCancel: appointment.isScheduled ? () => _confirmCancel(viewModel, appointment) : null,
+          onReschedule: appointment.isScheduled ? () => _reschedule(viewModel, appointment) : null,
         );
       },
     );
@@ -408,8 +464,9 @@ class _SegmentButton extends StatelessWidget {
 class AppointmentCard extends StatelessWidget {
   final Appointment appointment;
   final VoidCallback? onCancel;
+  final VoidCallback? onReschedule;
 
-  const AppointmentCard({super.key, required this.appointment, this.onCancel});
+  const AppointmentCard({super.key, required this.appointment, this.onCancel, this.onReschedule});
 
   @override
   Widget build(BuildContext context) {
@@ -450,23 +507,140 @@ class AppointmentCard extends StatelessWidget {
                 CareChip(label: 'Token #${appointment.tokenNumber}', bg: kInfoBg, fg: kInfoFg, icon: Icons.confirmation_number_outlined),
             ],
           ),
-          if (onCancel != null) ...[
+          if (onCancel != null || onReschedule != null) ...[
             const SizedBox(height: 12),
-            SizedBox(
-              width: double.infinity,
-              height: 40,
-              child: OutlinedButton(
-                onPressed: onCancel,
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: kCarePinkFg,
-                  side: BorderSide(color: kCarePinkBg, width: 1.4),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CareRadius.control)),
-                ),
-                child: const Text('Cancel appointment', style: TextStyle(fontSize: CareText.sm, fontWeight: CareText.bold)),
-              ),
+            Row(
+              children: [
+                if (onReschedule != null)
+                  Expanded(
+                    child: SizedBox(
+                      height: 40,
+                      child: OutlinedButton(
+                        onPressed: onReschedule,
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: kCareDark,
+                          side: BorderSide(color: kCareSoft, width: 1.4),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CareRadius.control)),
+                        ),
+                        child: const Text('Move', style: TextStyle(fontSize: CareText.sm, fontWeight: CareText.bold)),
+                      ),
+                    ),
+                  ),
+                if (onReschedule != null && onCancel != null) const SizedBox(width: 10),
+                if (onCancel != null)
+                  Expanded(
+                    child: SizedBox(
+                      height: 40,
+                      child: OutlinedButton(
+                        onPressed: onCancel,
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: kCarePinkFg,
+                          side: BorderSide(color: kCarePinkBg, width: 1.4),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CareRadius.control)),
+                        ),
+                        child: const Text('Cancel', style: TextStyle(fontSize: CareText.sm, fontWeight: CareText.bold)),
+                      ),
+                    ),
+                  ),
+              ],
             ),
           ],
         ],
+      ),
+    );
+  }
+}
+
+/// The free slots for one day, as a sheet over the appointments list.
+///
+/// Greyed-out slots are shown rather than hidden: seeing that 10:00 is
+/// taken and 10:30 is free is the whole point of picking a time.
+class _SlotSheet extends StatefulWidget {
+  final String date;
+  final Future<List<TimeSlot>> Function() load;
+
+  const _SlotSheet({required this.date, required this.load});
+
+  @override
+  State<_SlotSheet> createState() => _SlotSheetState();
+}
+
+class _SlotSheetState extends State<_SlotSheet> {
+  late Future<List<TimeSlot>> _slots;
+
+  @override
+  void initState() {
+    super.initState();
+    _slots = widget.load();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    watchCarePalette(context);
+
+    return Container(
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(CareRadius.sheet)),
+      ),
+      padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+      child: SafeArea(
+        top: false,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Container(
+                width: 44,
+                height: 4,
+                decoration: BoxDecoration(color: kCareBorder, borderRadius: BorderRadius.circular(CareRadius.pill)),
+              ),
+            ),
+            const SizedBox(height: 16),
+            const Text('Pick a time', style: CareText.titleXl),
+            Text(widget.date, style: CareText.mutedSm),
+            const SizedBox(height: 16),
+            FutureBuilder<List<TimeSlot>>(
+              future: _slots,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState != ConnectionState.done) {
+                  return const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 28),
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+                }
+                if (snapshot.hasError) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    child: Text('${snapshot.error}', style: CareText.danger),
+                  );
+                }
+
+                final slots = snapshot.data ?? const <TimeSlot>[];
+                if (slots.isEmpty) {
+                  return const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 20),
+                    child: Text('That doctor has no clinic on this day.', style: CareText.bodyMdMuted),
+                  );
+                }
+
+                return Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    for (final slot in slots)
+                      CareChoicePill(
+                        label: slot.time,
+                        selected: false,
+                        onTap: slot.available ? () => Navigator.of(context).pop(slot.time) : null,
+                      ),
+                  ],
+                );
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

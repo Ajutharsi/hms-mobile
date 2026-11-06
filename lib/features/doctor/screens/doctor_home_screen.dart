@@ -5,6 +5,10 @@ import 'package:hms_mobile/core/models/app_user.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
+import 'package:hms_mobile/features/me/screens/inbox_screen.dart';
+import 'package:hms_mobile/features/me/screens/my_work_screen.dart';
+import 'package:hms_mobile/features/me/screens/search_screen.dart';
+import 'package:hms_mobile/features/doctor/screens/doctor_schedule_screen.dart';
 import 'package:hms_mobile/features/auth/screens/login_screen.dart';
 import 'package:hms_mobile/features/doctor/models/doctor_models.dart';
 import 'package:hms_mobile/features/doctor/screens/doctor_appointment_detail_screen.dart';
@@ -56,7 +60,7 @@ enum DoctorSection {
   referrals, consent, opdQueue, er, admissions,
   emar, vitals, nursingNotes, ot, icu, bloodBank,
   labTests, labOrders, radiology,
-  profile, settings,
+  profile, settings, inbox, myWork, search, schedule,
 }
 
 Widget _screenFor(DoctorSection section) => switch (section) {
@@ -78,6 +82,10 @@ Widget _screenFor(DoctorSection section) => switch (section) {
       DoctorSection.labTests => const LabTestsScreen(),
       DoctorSection.labOrders => const LabOrdersScreen(),
       DoctorSection.radiology => const RadiologyScreen(),
+      DoctorSection.schedule => const DoctorScheduleScreen(),
+      DoctorSection.inbox => const InboxScreen(),
+      DoctorSection.myWork => const MyWorkScreen(),
+      DoctorSection.search => const GlobalSearchScreen(),
       DoctorSection.profile => const DoctorProfileScreen(),
       DoctorSection.settings => const AppSettingsScreen(),
     };
@@ -233,6 +241,10 @@ class _DoctorDrawer extends StatelessWidget {
                   tile(Icons.camera_rounded, 'Radiology', DoctorSection.radiology),
                 ]),
                 group('ACCOUNT', [
+                  tile(Icons.event_note_rounded, 'My Schedule', DoctorSection.schedule),
+                  tile(Icons.search_rounded, 'Search', DoctorSection.search),
+                  tile(Icons.notifications_rounded, 'Notifications', DoctorSection.inbox),
+                  tile(Icons.fact_check_rounded, 'My Attendance & Leave', DoctorSection.myWork),
                   tile(Icons.person_rounded, 'My Profile', DoctorSection.profile),
                   tile(Icons.settings_rounded, 'Settings', DoctorSection.settings),
                 ]),

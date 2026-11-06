@@ -5,6 +5,9 @@ import 'package:hms_mobile/core/models/app_user.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
+import 'package:hms_mobile/features/me/screens/inbox_screen.dart';
+import 'package:hms_mobile/features/me/screens/my_work_screen.dart';
+import 'package:hms_mobile/features/me/screens/search_screen.dart';
 import 'package:hms_mobile/features/auth/screens/login_screen.dart';
 import 'package:hms_mobile/features/nurse/screens/fluid_intake_screen.dart';
 import 'package:hms_mobile/features/nurse/screens/food_intake_screen.dart';
@@ -32,13 +35,16 @@ class StaffHomeScreen extends StatelessWidget {
   }
 }
 
-enum _Target { patients, food, fluid, rounds, profile, settings }
+enum _Target { patients, food, fluid, rounds, profile, settings, inbox, myWork, search }
 
 Widget _screenFor(_Target target) => switch (target) {
       _Target.patients => const PatientsScreen(),
       _Target.food => const FoodIntakeScreen(),
       _Target.fluid => const FluidIntakeScreen(),
       _Target.rounds => const MyRoundsScreen(),
+      _Target.inbox => const InboxScreen(),
+      _Target.myWork => const MyWorkScreen(),
+      _Target.search => const GlobalSearchScreen(),
       _Target.profile => const NurseProfileScreen(),
       _Target.settings => const AppSettingsScreen(),
     };
@@ -172,6 +178,9 @@ class _StaffDrawer extends StatelessWidget {
                   tile(Icons.water_drop_rounded, 'Fluid Intake', _Target.fluid),
                 ]),
                 group('ACCOUNT', [
+                  tile(Icons.search_rounded, 'Search', _Target.search),
+                  tile(Icons.notifications_rounded, 'Notifications', _Target.inbox),
+                  tile(Icons.fact_check_rounded, 'My Attendance & Leave', _Target.myWork),
                   tile(Icons.person_rounded, 'My Profile', _Target.profile),
                   tile(Icons.settings_rounded, 'Settings', _Target.settings),
                 ]),

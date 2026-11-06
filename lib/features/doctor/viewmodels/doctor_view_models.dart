@@ -420,6 +420,32 @@ class DoctorPatientDetailViewModel extends _DoctorViewModel {
       });
 }
 
+class DoctorScheduleViewModel extends _DoctorViewModel {
+  DoctorScheduleViewModel({super.api, super.authStorage}) {
+    load();
+  }
+
+  List<DoctorScheduleEntry> entries = [];
+  int days = 0;
+
+  Future<void> load() => guarded(() async {
+        final result = await api.schedule(await token());
+        entries = result.entries;
+        days = result.days;
+      });
+
+  /// Null on success, else the message to show.
+  Future<String?> mutate(Future<void> Function(DoctorApiService api, String token) action) async {
+    try {
+      await guardNetworkErrors(() async => action(api, await token()));
+      await load();
+      return null;
+    } on ApiException catch (e) {
+      return e.message;
+    }
+  }
+}
+
 class DoctorProfileViewModel extends _DoctorViewModel {
   DoctorProfileViewModel({super.api, super.authStorage}) {
     load();

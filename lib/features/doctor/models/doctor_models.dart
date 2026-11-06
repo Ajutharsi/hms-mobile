@@ -290,6 +290,56 @@ class DoctorConsultation {
 }
 
 /// A row from the consultation form's diagnosis-code lookup.
+/// One session of the doctor's own clinic week. These rows are what the
+/// patient app's slot picker is built from.
+class DoctorScheduleEntry {
+  final int id;
+  final String day;
+  final String startTime;
+  final String endTime;
+  final int slotDuration;
+  final bool isAvailable;
+
+  const DoctorScheduleEntry({
+    required this.id,
+    required this.day,
+    required this.startTime,
+    required this.endTime,
+    required this.slotDuration,
+    required this.isAvailable,
+  });
+
+  factory DoctorScheduleEntry.fromJson(Map<String, dynamic> json) => DoctorScheduleEntry(
+        id: json['id'] as int? ?? 0,
+        day: json['day']?.toString() ?? '',
+        startTime: json['start_time']?.toString() ?? '',
+        endTime: json['end_time']?.toString() ?? '',
+        slotDuration: json['slot_duration'] as int? ?? 30,
+        isAvailable: json['is_available'] != false,
+      );
+
+  String get dayLabel => day.isEmpty ? day : day[0].toUpperCase() + day.substring(1);
+
+  String get hours => '$startTime - $endTime';
+
+  /// How many bookable slots the session holds.
+  int get slots {
+    final start = _minutes(startTime);
+    final end = _minutes(endTime);
+    if (start == null || end == null || slotDuration <= 0 || end <= start) return 0;
+    return (end - start) ~/ slotDuration;
+  }
+
+  static int? _minutes(String time) {
+    final parts = time.split(':');
+    if (parts.length < 2) return null;
+    final h = int.tryParse(parts[0]);
+    final m = int.tryParse(parts[1]);
+    if (h == null || m == null) return null;
+    return h * 60 + m;
+  }
+}
+
 class Icd10Suggestion {
   final String code;
   final String description;

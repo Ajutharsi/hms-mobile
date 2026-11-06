@@ -161,6 +161,37 @@ class DoctorApiService {
     return (json['codes'] as List).map((c) => Icd10Suggestion.fromJson(c as Map<String, dynamic>)).toList();
   }
 
+  // ------------------------------------------------------- my schedule
+
+  Future<({int days, int sessions, List<DoctorScheduleEntry> entries})> schedule(String token) async {
+    final json = await _get(token, '/doctor/schedule');
+    final summary = (json['summary'] as Map?) ?? const {};
+    return (
+      days: (summary['days'] as int?) ?? 0,
+      sessions: (summary['sessions'] as int?) ?? 0,
+      entries: (json['schedule'] as List? ?? [])
+          .map((e) => DoctorScheduleEntry.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+  }
+
+  Future<void> scheduleStore(String token, Map<String, dynamic> body) async {
+    await _post(token, '/doctor/schedule', body);
+  }
+
+  Future<void> scheduleUpdate(String token, int id, Map<String, dynamic> body) async {
+    final response = await _client.put(
+      Uri.parse('$baseUrl/doctor/schedule/$id'),
+      headers: _headers(token),
+      body: jsonEncode(body),
+    );
+    _decode(response);
+  }
+
+  Future<void> scheduleDestroy(String token, int id) async {
+    _decode(await _client.delete(Uri.parse('$baseUrl/doctor/schedule/$id'), headers: _headers(token)));
+  }
+
   Future<DoctorProfile> profile(String token) async {
     return DoctorProfile.fromJson(await _get(token, '/doctor/profile'));
   }

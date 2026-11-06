@@ -5,6 +5,9 @@ import 'package:hms_mobile/core/models/app_user.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
+import 'package:hms_mobile/features/me/screens/inbox_screen.dart';
+import 'package:hms_mobile/features/me/screens/my_work_screen.dart';
+import 'package:hms_mobile/features/me/screens/search_screen.dart';
 import 'package:hms_mobile/features/auth/screens/login_screen.dart';
 import 'package:hms_mobile/features/nurse/models/dashboard_stats.dart';
 import 'package:hms_mobile/features/nurse/screens/admissions_screen.dart';
@@ -312,6 +315,9 @@ class _NurseDrawer extends StatelessWidget {
                   _DrawerItem(icon: Icons.opacity_rounded, label: 'Fluid Intake', target: _Target.fluid),
                   _DrawerItem(icon: Icons.groups_rounded, label: 'Staff Rounds', target: _Target.staffRounds),
                   _DrawerItem(icon: Icons.schedule_rounded, label: 'My Rounds', target: _Target.myRounds),
+                  _DrawerItem(icon: Icons.search_rounded, label: 'Search', target: _Target.search),
+                  _DrawerItem(icon: Icons.notifications_rounded, label: 'Notifications', target: _Target.inbox),
+                  _DrawerItem(icon: Icons.fact_check_rounded, label: 'My Attendance & Leave', target: _Target.myWork),
                   _DrawerItem(icon: Icons.person_rounded, label: 'My Profile', target: _Target.profile),
                   _DrawerItem(icon: Icons.settings_rounded, label: 'Settings', target: _Target.settings),
                 ]),
@@ -338,7 +344,7 @@ class _NurseDrawer extends StatelessWidget {
 
 enum _Target {
   patients, consent, er, ward, admissions, emar, vitals, notes, handover,
-  ot, icu, bloodBank, food, fluid, staffRounds, myRounds, profile, settings,
+  ot, icu, bloodBank, food, fluid, staffRounds, myRounds, profile, settings, inbox, myWork, search,
 }
 
 Widget _screenFor(_Target target) => switch (target) {
@@ -358,6 +364,9 @@ Widget _screenFor(_Target target) => switch (target) {
       _Target.fluid => const FluidIntakeScreen(),
       _Target.staffRounds => const StaffRoundsScreen(),
       _Target.myRounds => const MyRoundsScreen(),
+      _Target.inbox => const InboxScreen(),
+      _Target.myWork => const MyWorkScreen(),
+      _Target.search => const GlobalSearchScreen(),
       _Target.profile => const NurseProfileScreen(),
       _Target.settings => const AppSettingsScreen(),
     };

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hms_mobile/core/models/app_user.dart';
 import 'package:hms_mobile/features/patient/models/appointment.dart';
 import 'package:hms_mobile/core/services/api_service.dart';
+import 'package:hms_mobile/features/patient/models/time_slot.dart';
 import 'package:hms_mobile/core/services/auth_storage.dart';
 
 class HomeViewModel extends ChangeNotifier {
@@ -47,6 +48,24 @@ class HomeViewModel extends ChangeNotifier {
     } on ApiException catch (e) {
       return e.message;
     }
+  }
+
+  /// Returns an error message on failure, or null on success.
+  Future<String?> rescheduleAppointment(int id, {required String date, required String time}) async {
+    try {
+      final token = await _authStorage.readToken();
+      await guardNetworkErrors(() => _api.rescheduleAppointment(token!, id, date: date, time: time));
+      await loadAppointments();
+      return null;
+    } on ApiException catch (e) {
+      return e.message;
+    }
+  }
+
+  /// The doctor's free slots for a day, used by the move sheet.
+  Future<List<TimeSlot>> slotsFor({required int doctorId, required String date}) async {
+    final token = await _authStorage.readToken();
+    return guardNetworkErrors(() => _api.getSlots(token!, doctorId: doctorId, date: date));
   }
 
   Future<void> logout() async {

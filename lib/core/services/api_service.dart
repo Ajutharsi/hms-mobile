@@ -269,6 +269,22 @@ class ApiService {
     _decode(response);
   }
 
+  /// Move a booking instead of cancelling and booking again, which
+  /// loses the queue token and leaves two rows in the history.
+  Future<void> rescheduleAppointment(
+    String token,
+    int appointmentId, {
+    required String date,
+    required String time,
+  }) async {
+    final response = await _client.put(
+      Uri.parse('$baseUrl/patient/appointments/$appointmentId/reschedule'),
+      headers: _headers(token: token),
+      body: jsonEncode({'appointment_date': date, 'appointment_time': time}),
+    );
+    _decode(response);
+  }
+
   Future<PatientProfile> getProfile(String token) async {
     final response = await _client.get(
       Uri.parse('$baseUrl/patient/profile'),

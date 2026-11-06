@@ -5,6 +5,9 @@ import 'package:hms_mobile/core/models/app_user.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
+import 'package:hms_mobile/features/me/screens/inbox_screen.dart';
+import 'package:hms_mobile/features/me/screens/my_work_screen.dart';
+import 'package:hms_mobile/features/me/screens/search_screen.dart';
 import 'package:hms_mobile/features/auth/screens/login_screen.dart';
 import 'package:hms_mobile/features/lab/screens/lab_orders_screen.dart';
 import 'package:hms_mobile/features/lab/screens/lab_tests_screen.dart';
@@ -51,7 +54,7 @@ class ReceptionistHomeScreen extends StatelessWidget {
 enum _Target {
   patients, appointments, referrals, consent, opdQueue, er, ward, admissions,
   dispensing, labTests, labOrders, radiology, invoices, insurance, deposits,
-  schemeBilling, profile, settings,
+  schemeBilling, profile, settings, inbox, myWork, search,
 }
 
 Widget _screenFor(_Target target) => switch (target) {
@@ -71,6 +74,9 @@ Widget _screenFor(_Target target) => switch (target) {
       _Target.insurance => const InsuranceClaimsScreen(),
       _Target.deposits => const IpdDepositsScreen(),
       _Target.schemeBilling => const SchemeBillingScreen(),
+      _Target.inbox => const InboxScreen(),
+      _Target.myWork => const MyWorkScreen(),
+      _Target.search => const GlobalSearchScreen(),
       _Target.profile => const ReceptionProfileScreen(),
       _Target.settings => const AppSettingsScreen(),
     };
@@ -346,6 +352,9 @@ class _ReceptionistDrawer extends StatelessWidget {
                   _DrawerItem(icon: Icons.request_quote_rounded, label: 'Scheme Billing', target: _Target.schemeBilling),
                 ]),
                 _DrawerGroup(label: 'ACCOUNT', items: [
+                  _DrawerItem(icon: Icons.search_rounded, label: 'Search', target: _Target.search),
+                  _DrawerItem(icon: Icons.notifications_rounded, label: 'Notifications', target: _Target.inbox),
+                  _DrawerItem(icon: Icons.fact_check_rounded, label: 'My Attendance & Leave', target: _Target.myWork),
                   _DrawerItem(icon: Icons.person_rounded, label: 'My Profile', target: _Target.profile),
                   _DrawerItem(icon: Icons.settings_rounded, label: 'Settings', target: _Target.settings),
                 ]),

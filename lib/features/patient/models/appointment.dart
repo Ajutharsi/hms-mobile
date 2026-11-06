@@ -1,6 +1,7 @@
 class Appointment {
   final int id;
   final String appointmentId;
+  final int? doctorId;
   final String? doctorName;
   final String? doctorSpecialization;
   final String date;
@@ -13,6 +14,7 @@ class Appointment {
   const Appointment({
     required this.id,
     required this.appointmentId,
+    this.doctorId,
     this.doctorName,
     this.doctorSpecialization,
     required this.date,
@@ -26,6 +28,7 @@ class Appointment {
   factory Appointment.fromJson(Map<String, dynamic> json) => Appointment(
         id: json['id'] as int,
         appointmentId: json['appointment_id']?.toString() ?? '',
+        doctorId: json['doctor_id'] as int?,
         doctorName: json['doctor_name']?.toString(),
         doctorSpecialization: json['doctor_specialization']?.toString(),
         date: json['date']?.toString() ?? '',

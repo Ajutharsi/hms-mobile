@@ -5,6 +5,9 @@ import 'package:hms_mobile/core/models/app_user.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
+import 'package:hms_mobile/features/me/screens/inbox_screen.dart';
+import 'package:hms_mobile/features/me/screens/my_work_screen.dart';
+import 'package:hms_mobile/features/me/screens/search_screen.dart';
 import 'package:hms_mobile/features/admin/screens/admin_attendance_screen.dart';
 import 'package:hms_mobile/features/admin/screens/admin_doctors_screen.dart';
 import 'package:hms_mobile/features/admin/screens/admin_inventory_screen.dart';
@@ -86,7 +89,7 @@ enum AdminSection {
   reports, doctorsAdmin, users, staffAdmin,
   inventory, purchaseOrders, services,
   attendance, leaves, notifications, notificationTemplates, activityLog, settings,
-  wardAdmin,
+  wardAdmin, inbox, myWork, search,
   profile, appSettings,
 }
 
@@ -132,6 +135,9 @@ Widget _screenFor(AdminSection section) => switch (section) {
       AdminSection.notificationTemplates => const AdminNotificationTemplatesScreen(),
       AdminSection.activityLog => const AdminActivityLogScreen(),
       AdminSection.settings => const AdminSettingsScreen(),
+      AdminSection.inbox => const InboxScreen(),
+      AdminSection.myWork => const MyWorkScreen(),
+      AdminSection.search => const GlobalSearchScreen(),
       AdminSection.profile => const ReceptionProfileScreen(),
       AdminSection.appSettings => const AppSettingsScreen(),
     };
@@ -445,6 +451,9 @@ class _AdminDrawer extends StatelessWidget {
                   _DrawerItem(icon: Icons.mark_email_read_rounded, label: 'Notification Templates', target: AdminSection.notificationTemplates),
                 ]),
                 _DrawerGroup(label: 'ACCOUNT', items: [
+                  _DrawerItem(icon: Icons.search_rounded, label: 'Search', target: AdminSection.search),
+                  _DrawerItem(icon: Icons.inbox_rounded, label: 'My Notifications', target: AdminSection.inbox),
+                  _DrawerItem(icon: Icons.fact_check_rounded, label: 'My Attendance & Leave', target: AdminSection.myWork),
                   _DrawerItem(icon: Icons.person_rounded, label: 'My Profile', target: AdminSection.profile),
                   _DrawerItem(icon: Icons.settings_rounded, label: 'App Settings', target: AdminSection.appSettings),
                 ]),
