@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:http/http.dart' as http;
 
 import 'package:hms_mobile/core/services/api_service.dart' show ApiException, ApiService, sessionExpired;
+import 'package:hms_mobile/features/pharmacy/models/counter_models.dart';
 import 'package:hms_mobile/features/pharmacy/models/dispensing.dart';
 import 'package:hms_mobile/features/pharmacy/models/drug.dart';
 import 'package:hms_mobile/features/pharmacy/models/pharmacy_dashboard_stats.dart';
@@ -99,6 +100,49 @@ class PharmacyApiService {
   Future<List<DrugStockEntry>> drugStockHistory(String token, int id) async {
     final json = await _get(token, '/pharmacy/drugs/$id/stock-history');
     return (json['history'] as List).map((h) => DrugStockEntry.fromJson(h as Map<String, dynamic>)).toList();
+  }
+
+  // Counter: walk-in sales and returns
+
+  Future<CounterDay> counterDay(String token, {String? type}) async {
+    final json = await _get(token, '/pharmacy/counter', {if (type != null) 'type': type});
+    return CounterDay.fromJson(json);
+  }
+
+  /// Returns the server's sentence, which carries the sale number.
+  Future<String> counterSell(
+    String token, {
+    required int patientId,
+    required List<Map<String, dynamic>> items,
+    String? notes,
+  }) async {
+    final json = await _post(token, '/pharmacy/counter/sell', {
+      'patient_id': patientId,
+      'items': items,
+      if ((notes ?? '').isNotEmpty) 'notes': notes,
+    });
+    return json['message']?.toString() ?? 'Sale recorded.';
+  }
+
+  Future<List<CounterEntry>> returnable(String token, {int? patientId}) async {
+    final json = await _get(token, '/pharmacy/counter/returnable',
+        {if (patientId != null) 'patient_id': '$patientId'});
+    return ((json['dispensings'] as List?) ?? const [])
+        .map((d) => CounterEntry.fromJson((d as Map).cast<String, dynamic>()))
+        .toList();
+  }
+
+  Future<String> counterReturn(
+    String token,
+    int dispensingId, {
+    required List<Map<String, dynamic>> items,
+    String? reason,
+  }) async {
+    final json = await _post(token, '/pharmacy/counter/$dispensingId/return', {
+      'items': items,
+      if ((reason ?? '').isNotEmpty) 'reason': reason,
+    });
+    return json['message']?.toString() ?? 'Return recorded.';
   }
 
   // Dispensing

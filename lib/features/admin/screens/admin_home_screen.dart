@@ -16,6 +16,9 @@ import 'package:hms_mobile/features/admin/screens/admin_purchase_orders_screen.d
 import 'package:hms_mobile/features/admin/screens/admin_reports_screen.dart';
 import 'package:hms_mobile/features/admin/screens/admin_settings_screen.dart';
 import 'package:hms_mobile/features/admin/screens/admin_simple_screens.dart';
+import 'package:hms_mobile/features/admin/screens/admin_accounts_screen.dart';
+import 'package:hms_mobile/features/admin/screens/admin_payroll_screen.dart';
+import 'package:hms_mobile/features/admin/screens/admin_roster_screen.dart';
 import 'package:hms_mobile/features/admin/screens/admin_suppliers_screen.dart';
 import 'package:hms_mobile/features/admin/screens/admin_users_screen.dart';
 import 'package:hms_mobile/features/admin/screens/admin_wards_screen.dart';
@@ -90,7 +93,7 @@ enum AdminSection {
   reports, doctorsAdmin, users, staffAdmin,
   inventory, purchaseOrders, services,
   attendance, leaves, notifications, notificationTemplates, activityLog, settings,
-  wardAdmin, inbox, myWork, search, suppliers,
+  wardAdmin, inbox, myWork, search, suppliers, roster, payroll, accounts,
   profile, appSettings,
 }
 
@@ -130,6 +133,9 @@ Widget _screenFor(AdminSection section) => switch (section) {
       AdminSection.inventory => const AdminInventoryScreen(),
       AdminSection.purchaseOrders => const AdminPurchaseOrdersScreen(),
       AdminSection.suppliers => const AdminSuppliersScreen(),
+      AdminSection.roster => const AdminRosterScreen(),
+      AdminSection.payroll => const AdminPayrollScreen(),
+      AdminSection.accounts => const AdminAccountsScreen(),
       AdminSection.services => const AdminServicesScreen(),
       AdminSection.attendance => const AdminAttendanceScreen(),
       AdminSection.leaves => const AdminLeavesScreen(),
@@ -446,6 +452,9 @@ class _AdminDrawer extends StatelessWidget {
                 _DrawerGroup(label: 'HR', items: [
                   _DrawerItem(icon: Icons.how_to_reg_rounded, label: 'Attendance', target: AdminSection.attendance),
                   _DrawerItem(icon: Icons.event_available_rounded, label: 'Leave Requests', target: AdminSection.leaves),
+                  _DrawerItem(icon: Icons.event_note_rounded, label: 'Duty Roster', target: AdminSection.roster),
+                  _DrawerItem(icon: Icons.payments_rounded, label: 'Payroll', target: AdminSection.payroll),
+                  _DrawerItem(icon: Icons.account_balance_rounded, label: 'Accounts', target: AdminSection.accounts),
                 ]),
                 _DrawerGroup(label: 'SYSTEM', items: [
                   _DrawerItem(icon: Icons.tune_rounded, label: 'Settings', target: AdminSection.settings),

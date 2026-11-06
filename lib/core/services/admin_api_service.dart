@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:hms_mobile/core/services/api_service.dart' show ApiException, ApiService, sessionExpired;
 import 'package:hms_mobile/core/models/json_value.dart';
 import 'package:hms_mobile/features/admin/models/admin_models.dart';
+import 'package:hms_mobile/features/admin/models/ops_models.dart';
 
 /// JSON client for the administrator's endpoints — mirrors
 /// app/Http/Controllers/Api/AdminController.php and its three siblings.
@@ -226,6 +227,39 @@ class AdminApiService {
   Future<void> leaveReject(String token, int id, String remarks) =>
       _put(token, '/admin/leaves/$id/reject', {'remarks': remarks});
   Future<void> leaveDestroy(String token, int id) => _delete(token, '/admin/leaves/$id');
+
+  // ------------------------------------------ roster, payroll, books
+
+  Future<RosterWeek> rosterWeek(String token, {String? week}) async =>
+      RosterWeek.fromJson(await _get(token, '/admin/roster', {if (week != null) 'week': week}));
+
+  Future<void> rosterSet(String token, Map<String, dynamic> body) => _post(token, '/admin/roster', body);
+  Future<void> rosterClear(String token, int id) => _delete(token, '/admin/roster/$id');
+
+  Future<PayrollRun> payroll(String token, {String? period}) async =>
+      PayrollRun.fromJson(await _get(token, '/admin/payroll', {if (period != null) 'period': period}));
+
+  Future<void> payrollSave(String token, Map<String, dynamic> body) => _post(token, '/admin/payroll', body);
+  Future<void> payrollPay(String token, int id, Map<String, dynamic> body) =>
+      _put(token, '/admin/payroll/$id/pay', body);
+  Future<void> payrollDestroy(String token, int id) => _delete(token, '/admin/payroll/$id');
+
+  Future<ExpenseMonth> expenses(String token, {String? month}) async =>
+      ExpenseMonth.fromJson(await _get(token, '/admin/expenses', {if (month != null) 'month': month}));
+
+  Future<void> expenseStore(String token, Map<String, dynamic> body) => _post(token, '/admin/expenses', body);
+  Future<void> expenseDestroy(String token, int id) => _delete(token, '/admin/expenses/$id');
+
+  Future<DayEnd> dayEnd(String token, {String? date}) async =>
+      DayEnd.fromJson(await _get(token, '/admin/day-end', {if (date != null) 'date': date}));
+
+  Future<String> closeDay(String token, Map<String, dynamic> body) async {
+    final json = await _post(token, '/admin/day-end', body);
+    return json['message']?.toString() ?? 'Day closed.';
+  }
+
+  Future<List<DayClosing>> closings(String token) async =>
+      _rows(await _get(token, '/admin/closings'), 'closings').map(DayClosing.fromJson).toList();
 
   // ------------------------------------------------------------ suppliers
 

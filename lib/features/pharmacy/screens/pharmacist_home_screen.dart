@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:hms_mobile/core/models/app_user.dart';
 import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
+import 'package:hms_mobile/features/pharmacy/screens/pharmacy_counter_screen.dart';
 import 'package:hms_mobile/features/me/screens/inbox_screen.dart';
 import 'package:hms_mobile/features/me/screens/my_work_screen.dart';
 import 'package:hms_mobile/features/me/screens/search_screen.dart';
@@ -32,11 +33,12 @@ class PharmacistHomeScreen extends StatelessWidget {
   }
 }
 
-enum _Target { dispensing, drugs, profile, settings, inbox, myWork, search }
+enum _Target { dispensing, drugs, profile, settings, inbox, myWork, search, counter }
 
 Widget _screenFor(_Target target) => switch (target) {
       _Target.dispensing => const DispensingScreen(),
       _Target.drugs => const DrugMasterScreen(),
+      _Target.counter => const PharmacyCounterScreen(),
       _Target.inbox => const InboxScreen(),
       _Target.myWork => const MyWorkScreen(),
       _Target.search => const GlobalSearchScreen(),
@@ -155,6 +157,7 @@ class _PharmacyDrawer extends StatelessWidget {
                 ]),
                 _DrawerGroup(label: 'PHARMACY', items: [
                   _DrawerItem(icon: Icons.local_pharmacy_rounded, label: 'Dispensing', target: _Target.dispensing),
+                  _DrawerItem(icon: Icons.point_of_sale_rounded, label: 'Counter Sales', target: _Target.counter),
                   _DrawerItem(icon: Icons.medication_rounded, label: 'Drug Master', target: _Target.drugs),
                 ]),
                 _DrawerGroup(label: 'ACCOUNT', items: [
