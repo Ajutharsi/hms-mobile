@@ -25,7 +25,7 @@ import 'package:hms_mobile/features/receptionist/screens/reception_profile_scree
 import 'package:hms_mobile/features/receptionist/screens/referrals_screen.dart';
 import 'package:hms_mobile/features/receptionist/screens/scheme_billing_screen.dart';
 import 'package:hms_mobile/features/receptionist/viewmodels/reception_dashboard_view_model.dart';
-import 'package:hms_mobile/features/settings/screens/appearance_screen.dart';
+import 'package:hms_mobile/features/settings/screens/app_settings_screen.dart';
 import 'package:hms_mobile/core/theme/care_radius.dart';
 
 /// The receptionist role's home shell — the largest sidebar in this app.
@@ -51,7 +51,7 @@ class ReceptionistHomeScreen extends StatelessWidget {
 enum _Target {
   patients, appointments, referrals, consent, opdQueue, er, ward, admissions,
   dispensing, labTests, labOrders, radiology, invoices, insurance, deposits,
-  schemeBilling, profile, appearance,
+  schemeBilling, profile, settings,
 }
 
 Widget _screenFor(_Target target) => switch (target) {
@@ -72,7 +72,7 @@ Widget _screenFor(_Target target) => switch (target) {
       _Target.deposits => const IpdDepositsScreen(),
       _Target.schemeBilling => const SchemeBillingScreen(),
       _Target.profile => const ReceptionProfileScreen(),
-      _Target.appearance => const AppearanceScreen(),
+      _Target.settings => const AppSettingsScreen(),
     };
 
 void _open(BuildContext context, _Target target) {
@@ -347,7 +347,7 @@ class _ReceptionistDrawer extends StatelessWidget {
                 ]),
                 _DrawerGroup(label: 'ACCOUNT', items: [
                   _DrawerItem(icon: Icons.person_rounded, label: 'My Profile', target: _Target.profile),
-                  _DrawerItem(icon: Icons.palette_rounded, label: 'Appearance', target: _Target.appearance),
+                  _DrawerItem(icon: Icons.settings_rounded, label: 'Settings', target: _Target.settings),
                 ]),
               ],
             ),

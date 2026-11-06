@@ -28,7 +28,7 @@ import 'package:hms_mobile/features/nurse/screens/vitals_screen.dart';
 import 'package:hms_mobile/features/receptionist/screens/opd_queue_screen.dart';
 import 'package:hms_mobile/features/receptionist/screens/radiology_screen.dart';
 import 'package:hms_mobile/features/receptionist/screens/referrals_screen.dart';
-import 'package:hms_mobile/features/settings/screens/appearance_screen.dart';
+import 'package:hms_mobile/features/settings/screens/app_settings_screen.dart';
 import 'package:hms_mobile/core/theme/care_radius.dart';
 
 /// The doctor's home shell — today's clinic at the top, then shortcuts.
@@ -56,7 +56,7 @@ enum DoctorSection {
   referrals, consent, opdQueue, er, admissions,
   emar, vitals, nursingNotes, ot, icu, bloodBank,
   labTests, labOrders, radiology,
-  profile, appearance,
+  profile, settings,
 }
 
 Widget _screenFor(DoctorSection section) => switch (section) {
@@ -79,7 +79,7 @@ Widget _screenFor(DoctorSection section) => switch (section) {
       DoctorSection.labOrders => const LabOrdersScreen(),
       DoctorSection.radiology => const RadiologyScreen(),
       DoctorSection.profile => const DoctorProfileScreen(),
-      DoctorSection.appearance => const AppearanceScreen(),
+      DoctorSection.settings => const AppSettingsScreen(),
     };
 
 Future<void> openDoctorSection(BuildContext context, DoctorSection section) async {
@@ -234,7 +234,7 @@ class _DoctorDrawer extends StatelessWidget {
                 ]),
                 group('ACCOUNT', [
                   tile(Icons.person_rounded, 'My Profile', DoctorSection.profile),
-                  tile(Icons.palette_rounded, 'Appearance', DoctorSection.appearance),
+                  tile(Icons.settings_rounded, 'Settings', DoctorSection.settings),
                 ]),
               ],
             ),

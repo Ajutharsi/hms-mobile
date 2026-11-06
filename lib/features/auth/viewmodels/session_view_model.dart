@@ -4,7 +4,7 @@ import 'package:hms_mobile/core/models/app_user.dart';
 import 'package:hms_mobile/core/services/api_service.dart';
 import 'package:hms_mobile/core/services/auth_storage.dart';
 
-enum SessionStatus { checking, loggedIn, loggedOut }
+enum SessionStatus { checking, loggedIn, loggedOut, unreachable }
 
 /// Checks for a saved token on app launch and confirms it's still valid,
 /// so the app can skip straight to Home instead of asking to log in again
@@ -16,13 +16,21 @@ class SessionViewModel extends ChangeNotifier {
   SessionViewModel({ApiService? api, AuthStorage? authStorage})
       : _api = api ?? ApiService(),
         _authStorage = authStorage ?? AuthStorage() {
-    _checkSession();
+    checkSession();
   }
 
   SessionStatus status = SessionStatus.checking;
   AppUser? user;
 
-  Future<void> _checkSession() async {
+  /// Set when [status] is [SessionStatus.unreachable], so the startup
+  /// screen can say which kind of outage it is.
+  ApiException? failure;
+
+  Future<void> checkSession() async {
+    status = SessionStatus.checking;
+    failure = null;
+    notifyListeners();
+
     final token = await _authStorage.readToken();
 
     if (token == null) {
@@ -32,13 +40,24 @@ class SessionViewModel extends ChangeNotifier {
     }
 
     try {
-      user = await _api.me(token);
+      user = await guardNetworkErrors(() => _api.me(token));
       status = SessionStatus.loggedIn;
-    } catch (_) {
-      // Token missing/expired/server unreachable — fall back to login
-      // rather than getting stuck on the splash screen.
-      await _authStorage.clear();
-      status = SessionStatus.loggedOut;
+    } on ApiException catch (error) {
+      if (error.isUnauthenticated) {
+        // The token really is no good: forget it and ask for a password.
+        await _authStorage.clear();
+        status = SessionStatus.loggedOut;
+      } else {
+        // The phone is offline, or the server is down or erroring. The
+        // token is probably fine, so keep it -- signing somebody out
+        // because their train went into a tunnel loses their place for
+        // no reason.
+        failure = error;
+        status = SessionStatus.unreachable;
+      }
+    } catch (error) {
+      failure = ApiException('$error');
+      status = SessionStatus.unreachable;
     }
     notifyListeners();
   }

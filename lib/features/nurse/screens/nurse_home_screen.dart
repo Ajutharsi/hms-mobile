@@ -25,7 +25,7 @@ import 'package:hms_mobile/features/nurse/screens/staff_rounds_screen.dart';
 import 'package:hms_mobile/features/nurse/screens/vitals_screen.dart';
 import 'package:hms_mobile/features/nurse/screens/ward_screen.dart';
 import 'package:hms_mobile/features/nurse/viewmodels/nurse_dashboard_view_model.dart';
-import 'package:hms_mobile/features/settings/screens/appearance_screen.dart';
+import 'package:hms_mobile/features/settings/screens/app_settings_screen.dart';
 import 'package:hms_mobile/core/theme/care_radius.dart';
 
 /// The nurse's home shell — teal header + dashboard, with a drawer that
@@ -313,7 +313,7 @@ class _NurseDrawer extends StatelessWidget {
                   _DrawerItem(icon: Icons.groups_rounded, label: 'Staff Rounds', target: _Target.staffRounds),
                   _DrawerItem(icon: Icons.schedule_rounded, label: 'My Rounds', target: _Target.myRounds),
                   _DrawerItem(icon: Icons.person_rounded, label: 'My Profile', target: _Target.profile),
-                  _DrawerItem(icon: Icons.palette_rounded, label: 'Appearance', target: _Target.appearance),
+                  _DrawerItem(icon: Icons.settings_rounded, label: 'Settings', target: _Target.settings),
                 ]),
               ],
             ),
@@ -338,7 +338,7 @@ class _NurseDrawer extends StatelessWidget {
 
 enum _Target {
   patients, consent, er, ward, admissions, emar, vitals, notes, handover,
-  ot, icu, bloodBank, food, fluid, staffRounds, myRounds, profile, appearance,
+  ot, icu, bloodBank, food, fluid, staffRounds, myRounds, profile, settings,
 }
 
 Widget _screenFor(_Target target) => switch (target) {
@@ -359,7 +359,7 @@ Widget _screenFor(_Target target) => switch (target) {
       _Target.staffRounds => const StaffRoundsScreen(),
       _Target.myRounds => const MyRoundsScreen(),
       _Target.profile => const NurseProfileScreen(),
-      _Target.appearance => const AppearanceScreen(),
+      _Target.settings => const AppSettingsScreen(),
     };
 
 class _DrawerGroup extends StatelessWidget {

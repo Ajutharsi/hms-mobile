@@ -11,7 +11,7 @@ import 'package:hms_mobile/features/nurse/screens/food_intake_screen.dart';
 import 'package:hms_mobile/features/nurse/screens/my_rounds_screen.dart';
 import 'package:hms_mobile/features/nurse/screens/nurse_profile_screen.dart';
 import 'package:hms_mobile/features/nurse/screens/patients_screen.dart';
-import 'package:hms_mobile/features/settings/screens/appearance_screen.dart';
+import 'package:hms_mobile/features/settings/screens/app_settings_screen.dart';
 import 'package:hms_mobile/features/staff/models/staff_dashboard_stats.dart';
 import 'package:hms_mobile/features/staff/viewmodels/staff_dashboard_view_model.dart';
 import 'package:hms_mobile/core/theme/care_radius.dart';
@@ -32,7 +32,7 @@ class StaffHomeScreen extends StatelessWidget {
   }
 }
 
-enum _Target { patients, food, fluid, rounds, profile, appearance }
+enum _Target { patients, food, fluid, rounds, profile, settings }
 
 Widget _screenFor(_Target target) => switch (target) {
       _Target.patients => const PatientsScreen(),
@@ -40,7 +40,7 @@ Widget _screenFor(_Target target) => switch (target) {
       _Target.fluid => const FluidIntakeScreen(),
       _Target.rounds => const MyRoundsScreen(),
       _Target.profile => const NurseProfileScreen(),
-      _Target.appearance => const AppearanceScreen(),
+      _Target.settings => const AppSettingsScreen(),
     };
 
 void _open(BuildContext context, _Target target) {
@@ -173,7 +173,7 @@ class _StaffDrawer extends StatelessWidget {
                 ]),
                 group('ACCOUNT', [
                   tile(Icons.person_rounded, 'My Profile', _Target.profile),
-                  tile(Icons.palette_rounded, 'Appearance', _Target.appearance),
+                  tile(Icons.settings_rounded, 'Settings', _Target.settings),
                 ]),
               ],
             ),
@@ -231,7 +231,7 @@ class _DashboardBody extends StatelessWidget {
                     (Icons.water_drop_rounded, 'Fluid Intake', 'Log fluids', _Target.fluid),
                     (Icons.people_rounded, 'Patients', 'Search records', _Target.patients),
                     (Icons.person_rounded, 'My Profile', 'Account', _Target.profile),
-                    (Icons.palette_rounded, 'Appearance', 'Theme colour', _Target.appearance),
+                    (Icons.settings_rounded, 'Settings', 'Colour, help, about', _Target.settings),
                   ])
                     CareCard(
                       radius: 16,

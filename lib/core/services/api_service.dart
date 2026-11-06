@@ -24,7 +24,17 @@ class ApiException implements Exception {
   /// they expire after a week, any screen can meet it mid-session.
   final bool isUnauthenticated;
 
-  ApiException(this.message, {this.isUnauthenticated = false});
+  /// True when the request never reached the server: no connection, DNS
+  /// failure, timeout. Worth telling apart from a server that answered
+  /// with an error, because the two need different things from the
+  /// person reading the screen.
+  final bool isNetwork;
+
+  /// True when the server is deliberately down (503). The hospital put it
+  /// there; trying again in a second will not help.
+  final bool isMaintenance;
+
+  ApiException(this.message, {this.isUnauthenticated = false, this.isNetwork = false, this.isMaintenance = false});
 
   @override
   String toString() => message;
@@ -341,6 +351,13 @@ class ApiService {
       throw sessionExpired();
     }
 
+    if (response.statusCode == 503) {
+      throw ApiException(
+        body['message']?.toString() ?? 'The system is under maintenance.',
+        isMaintenance: true,
+      );
+    }
+
     throw ApiException(body['message']?.toString() ?? 'Something went wrong (${response.statusCode}).');
   }
 }
@@ -355,11 +372,11 @@ Future<T> guardNetworkErrors<T>(Future<T> Function() action) async {
   } on ApiException {
     rethrow;
   } on SocketException {
-    throw ApiException('Could not reach the server. Is the backend running and reachable?');
+    throw ApiException('Could not reach the server. Is the backend running and reachable?', isNetwork: true);
   } on http.ClientException {
-    throw ApiException('Could not reach the server. Is the backend running and reachable?');
+    throw ApiException('Could not reach the server. Is the backend running and reachable?', isNetwork: true);
   } on TimeoutException {
-    throw ApiException('The server took too long to respond. Please try again.');
+    throw ApiException('The server took too long to respond. Please try again.', isNetwork: true);
   } catch (error) {
     // Anything else is ours — a bad cast or a payload we didn't expect.
     // Saying "could not reach the server" for those sent us hunting the

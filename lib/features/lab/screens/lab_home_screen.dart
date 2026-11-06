@@ -10,7 +10,7 @@ import 'package:hms_mobile/features/lab/screens/lab_orders_screen.dart';
 import 'package:hms_mobile/features/lab/screens/lab_profile_screen.dart';
 import 'package:hms_mobile/features/lab/screens/lab_tests_screen.dart';
 import 'package:hms_mobile/features/lab/viewmodels/lab_dashboard_view_model.dart';
-import 'package:hms_mobile/features/settings/screens/appearance_screen.dart';
+import 'package:hms_mobile/features/settings/screens/app_settings_screen.dart';
 import 'package:hms_mobile/core/theme/care_radius.dart';
 
 /// The lab assistant's home shell — orders, the test catalogue and the
@@ -28,13 +28,13 @@ class LabHomeScreen extends StatelessWidget {
   }
 }
 
-enum _Target { orders, tests, profile, appearance }
+enum _Target { orders, tests, profile, settings }
 
 Widget _screenFor(_Target target) => switch (target) {
       _Target.orders => const LabOrdersScreen(),
       _Target.tests => const LabTestsScreen(),
       _Target.profile => const LabProfileScreen(),
-      _Target.appearance => const AppearanceScreen(),
+      _Target.settings => const AppSettingsScreen(),
     };
 
 void _open(BuildContext context, _Target target) {
@@ -152,7 +152,7 @@ class _LabDrawer extends StatelessWidget {
                 ]),
                 _DrawerGroup(label: 'ACCOUNT', items: [
                   _DrawerItem(icon: Icons.person_rounded, label: 'My Profile', target: _Target.profile),
-                  _DrawerItem(icon: Icons.palette_rounded, label: 'Appearance', target: _Target.appearance),
+                  _DrawerItem(icon: Icons.settings_rounded, label: 'Settings', target: _Target.settings),
                 ]),
               ],
             ),

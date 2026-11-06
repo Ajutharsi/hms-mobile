@@ -44,7 +44,7 @@ import 'package:hms_mobile/features/receptionist/screens/reception_profile_scree
 import 'package:hms_mobile/features/receptionist/screens/referrals_screen.dart';
 import 'package:hms_mobile/features/receptionist/screens/scheme_billing_screen.dart';
 import 'package:hms_mobile/features/receptionist/viewmodels/reception_dashboard_view_model.dart';
-import 'package:hms_mobile/features/settings/screens/appearance_screen.dart';
+import 'package:hms_mobile/features/settings/screens/app_settings_screen.dart';
 import 'package:hms_mobile/core/theme/care_radius.dart';
 
 /// The administrator's home.
@@ -85,7 +85,7 @@ enum AdminSection {
   reports, doctorsAdmin, users, staffAdmin,
   inventory, purchaseOrders, services,
   attendance, leaves, notifications, notificationTemplates, activityLog, settings,
-  profile, appearance,
+  profile, appSettings,
 }
 
 Widget _screenFor(AdminSection section) => switch (section) {
@@ -130,7 +130,7 @@ Widget _screenFor(AdminSection section) => switch (section) {
       AdminSection.activityLog => const AdminActivityLogScreen(),
       AdminSection.settings => const AdminSettingsScreen(),
       AdminSection.profile => const ReceptionProfileScreen(),
-      AdminSection.appearance => const AppearanceScreen(),
+      AdminSection.appSettings => const AppSettingsScreen(),
     };
 
 void _open(BuildContext context, AdminSection section) {
@@ -442,7 +442,7 @@ class _AdminDrawer extends StatelessWidget {
                 ]),
                 _DrawerGroup(label: 'ACCOUNT', items: [
                   _DrawerItem(icon: Icons.person_rounded, label: 'My Profile', target: AdminSection.profile),
-                  _DrawerItem(icon: Icons.palette_rounded, label: 'Appearance', target: AdminSection.appearance),
+                  _DrawerItem(icon: Icons.settings_rounded, label: 'App Settings', target: AdminSection.appSettings),
                 ]),
               ],
             ),

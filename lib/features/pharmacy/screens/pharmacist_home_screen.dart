@@ -11,7 +11,7 @@ import 'package:hms_mobile/features/pharmacy/screens/dispensing_screen.dart';
 import 'package:hms_mobile/features/pharmacy/screens/drug_master_screen.dart';
 import 'package:hms_mobile/features/pharmacy/screens/pharmacy_profile_screen.dart';
 import 'package:hms_mobile/features/pharmacy/viewmodels/pharmacy_dashboard_view_model.dart';
-import 'package:hms_mobile/features/settings/screens/appearance_screen.dart';
+import 'package:hms_mobile/features/settings/screens/app_settings_screen.dart';
 import 'package:hms_mobile/core/theme/care_radius.dart';
 
 /// The pharmacist's home shell — dispensing, the drug master and the
@@ -29,13 +29,13 @@ class PharmacistHomeScreen extends StatelessWidget {
   }
 }
 
-enum _Target { dispensing, drugs, profile, appearance }
+enum _Target { dispensing, drugs, profile, settings }
 
 Widget _screenFor(_Target target) => switch (target) {
       _Target.dispensing => const DispensingScreen(),
       _Target.drugs => const DrugMasterScreen(),
       _Target.profile => const PharmacyProfileScreen(),
-      _Target.appearance => const AppearanceScreen(),
+      _Target.settings => const AppSettingsScreen(),
     };
 
 void _open(BuildContext context, _Target target) {
@@ -153,7 +153,7 @@ class _PharmacyDrawer extends StatelessWidget {
                 ]),
                 _DrawerGroup(label: 'ACCOUNT', items: [
                   _DrawerItem(icon: Icons.person_rounded, label: 'My Profile', target: _Target.profile),
-                  _DrawerItem(icon: Icons.palette_rounded, label: 'Appearance', target: _Target.appearance),
+                  _DrawerItem(icon: Icons.settings_rounded, label: 'Settings', target: _Target.settings),
                 ]),
               ],
             ),

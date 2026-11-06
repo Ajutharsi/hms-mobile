@@ -18,7 +18,7 @@ import 'package:hms_mobile/features/patient/viewmodels/invoices_view_model.dart'
 import 'package:hms_mobile/features/patient/viewmodels/lab_results_view_model.dart';
 import 'package:hms_mobile/features/patient/viewmodels/prescriptions_view_model.dart';
 import 'package:hms_mobile/features/patient/viewmodels/profile_view_model.dart';
-import 'package:hms_mobile/features/settings/screens/appearance_screen.dart';
+import 'package:hms_mobile/features/settings/screens/app_settings_screen.dart';
 import 'package:hms_mobile/core/theme/care_radius.dart';
 
 /// The patient's home shell — bottom nav (Home / Appointments / Lab /
@@ -228,11 +228,11 @@ class _PatientDrawer extends StatelessWidget {
                 _DrawerTile(icon: Icons.receipt_long_rounded, label: 'My Bills', onTap: () => go(PatientSection.bills)),
                 _DrawerTile(icon: Icons.person_rounded, label: 'My Profile', onTap: () => go(PatientSection.profile)),
                 _DrawerTile(
-                  icon: Icons.palette_rounded,
-                  label: 'Appearance',
+                  icon: Icons.settings_rounded,
+                  label: 'Settings',
                   onTap: () {
                     Navigator.of(context).pop();
-                    Navigator.of(context).push(MaterialPageRoute(builder: (_) => const AppearanceScreen()));
+                    Navigator.of(context).push(MaterialPageRoute(builder: (_) => const AppSettingsScreen()));
                   },
                 ),
               ],
