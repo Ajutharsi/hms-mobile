@@ -1,0 +1,10 @@
+{
+  "recent_patients": [],
+  "stats": {
+    "completed_today": 0,
+    "lab_tests": 12,
+    "pending_orders": 123,
+    "total_orders": 505
+  },
+  "today_appointments": []
+}

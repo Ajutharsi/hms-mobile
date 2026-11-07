@@ -1,0 +1,10 @@
+{
+  "user": {
+    "department": null,
+    "email": "reception@hospital.com",
+    "id": 4,
+    "name": "Reception Staff",
+    "phone": null,
+    "profile_photo_url": null
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "doctor": {
+    "consultation_fee": "500.00",
+    "doctor_id": "DR-0101",
+    "id": 101,
+    "qualification": "MBBS",
+    "specialization": "General Medicine"
+  },
+  "user": {
+    "email": "doctor@hospital.com",
+    "id": 3,
+    "name": "Dr. Kumar",
+    "phone": null,
+    "profile_photo_url": "http://127.0.0.1:8000/storage/profile-photos/U6aiUXhzC145PBcojM42WVIaoviQWFQDV7RZNGfO.jpg"
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "recent_patients": [
+    {
+      "id": 1007,
+      "mrn": "HMS-2026-1007",
+      "name": "test",
+      "photo_url": "http://127.0.0.1:8000/images/defaults/patient.png",
+      "status": "active"
+    },
+    {
+      "id": 1006,
+      "mrn": "HMS-2026-1006",
+      "name": "API Test Patient",
+      "photo_url": "http://127.0.0.1:8000/images/defaults/patient.png",
+      "status": "active"
+    },
+    {
+      "id": 1005,
+      "mrn": "HMS-2026-1005",
+      "name": "SMOKE Test Patient 2",
+      "photo_url": "http://127.0.0.1:8000/images/defaults/patient.png",
+      "status": "active"
+    },
+    {
+      "id": 1004,
+      "mrn": "HMS-2026-1004",
+      "name": "SMOKE Cycle Patient",
+      "photo_url": "http://127.0.0.1:8000/images/defaults/patient.png",
+      "status": "active"
+    },
+    {
+      "id": 1003,
+      "mrn": "HMS-2026-1003",
+      "name": "SMOKE Test Patient 2",
+      "photo_url": "http://127.0.0.1:8000/images/defaults/patient.png",
+      "status": "active"
+    }
+  ],
+  "stats": {
+    "available_beds": 30,
+    "pending_invoices": 0,
+    "today_appointments": 0,
+    "total_patients": 1007
+  },
+  "today_appointments": []
+}

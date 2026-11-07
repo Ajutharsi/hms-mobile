@@ -1,0 +1,14 @@
+{
+  "email": "admin@hospital.com",
+  "hospital": {
+    "currency": "LKR",
+    "name": "Hospital Management System"
+  },
+  "id": 2,
+  "must_change_password": false,
+  "name": "Admin User",
+  "profile_photo_url": "http://127.0.0.1:8000/storage/profile-photos/vlInxXz2nfSJnDQjHS0l8ntwq5tIgAjbI3naO1BL.jpg",
+  "roles": [
+    "admin"
+  ]
+}

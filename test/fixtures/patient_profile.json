@@ -1,0 +1,15 @@
+{
+  "mrn": "HMS-2026-1006",
+  "stats": {
+    "lab_orders": 0,
+    "today_appointments": 0,
+    "total_appointments": 0
+  },
+  "user": {
+    "email": "api.test.patient@hms.test",
+    "id": 133,
+    "name": "API Test Patient",
+    "phone": null,
+    "profile_photo_url": null
+  }
+}

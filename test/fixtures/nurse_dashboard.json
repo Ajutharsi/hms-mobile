@@ -1,0 +1,51 @@
+{
+  "recent_patients": [
+    {
+      "id": 768,
+      "mrn": "HMS-2026-0768",
+      "name": "Nishtha Chhabra",
+      "photo_url": "http://127.0.0.1:8000/assets/patients/000768.jpg",
+      "status": "active"
+    },
+    {
+      "id": 771,
+      "mrn": "HMS-2026-0771",
+      "name": "Yadu Chandra Tailor",
+      "photo_url": "http://127.0.0.1:8000/assets/patients/000771.jpg",
+      "status": "active"
+    },
+    {
+      "id": 773,
+      "mrn": "HMS-2026-0773",
+      "name": "Akhila Mitesh Goyal",
+      "photo_url": "http://127.0.0.1:8000/assets/patients/000773.jpg",
+      "status": "active"
+    },
+    {
+      "id": 778,
+      "mrn": "HMS-2026-0778",
+      "name": "Charlie Ram Palla",
+      "photo_url": "http://127.0.0.1:8000/assets/patients/000778.jpg",
+      "status": "active"
+    },
+    {
+      "id": 779,
+      "mrn": "HMS-2026-0779",
+      "name": "Rachel Aniruddh Sandal",
+      "photo_url": "http://127.0.0.1:8000/assets/patients/000779.jpg",
+      "status": "active"
+    }
+  ],
+  "stats": {
+    "fluid_logs_today": 0,
+    "food_logs_today": 0,
+    "ip_patients": 250,
+    "needs_vitals_check": 250,
+    "nursing_notes_today": 0,
+    "overdue_rounds": 0,
+    "pending_handovers": 0,
+    "pending_medications": 0,
+    "todays_handovers": 0
+  },
+  "today_appointments": []
+}

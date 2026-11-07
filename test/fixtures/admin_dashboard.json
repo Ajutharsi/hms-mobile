@@ -1,0 +1,61 @@
+{
+  "appointments": {
+    "cancelled": 167,
+    "completed": 473,
+    "scheduled": 205,
+    "today": 0,
+    "total": 1013
+  },
+  "capacity": {
+    "available_beds": 30,
+    "doctors": 101,
+    "lab_orders": 505,
+    "low_stock_drugs": 0,
+    "near_expiry_drugs": 0,
+    "pending_lab_orders": 123
+  },
+  "monthly": [
+    {
+      "month": "Jun 2026",
+      "patients": 0,
+      "revenue": 0
+    },
+    {
+      "month": "Jul 2026",
+      "patients": 0,
+      "revenue": 0
+    },
+    {
+      "month": "Aug 2026",
+      "patients": 0,
+      "revenue": 0
+    },
+    {
+      "month": "Sep 2026",
+      "patients": 1005,
+      "revenue": 3127210
+    },
+    {
+      "month": "Oct 2026",
+      "patients": 0,
+      "revenue": 0
+    },
+    {
+      "month": "Nov 2026",
+      "patients": 2,
+      "revenue": 0
+    }
+  ],
+  "patients": {
+    "active": 513,
+    "ip": 503,
+    "op": 504,
+    "total": 1007
+  },
+  "revenue": {
+    "outstanding": 0,
+    "pending_bills": 0,
+    "today": 0,
+    "total": 3127210
+  }
+}
