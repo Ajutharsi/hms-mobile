@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-import 'package:hms_mobile/core/services/api_service.dart' show ApiException, ApiService, sessionExpired;
+import 'package:hms_mobile/core/services/api_service.dart' show ApiException, ApiService, sessionExpired, serverFailure;
 import 'package:hms_mobile/features/me/models/me_models.dart';
 
 /// Client for `api/me/*` — what the signed-in account can see about
@@ -38,7 +38,7 @@ class MeApiService {
           : (body?['message']?.toString() ?? 'Invalid request.'));
     }
     if (response.statusCode == 401) throw sessionExpired();
-    throw ApiException((body is Map ? body['message']?.toString() : null) ?? 'Something went wrong (${response.statusCode}).');
+    throw serverFailure(response.statusCode, body is Map ? body['message']?.toString() : null);
   }
 
   Future<Map<String, dynamic>> _get(String token, String path, [Map<String, String>? query]) async {

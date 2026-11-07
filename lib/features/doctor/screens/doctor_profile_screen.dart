@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_forms.dart';
 import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/doctor/viewmodels/doctor_view_models.dart';
@@ -64,7 +65,36 @@ class _ProfileView extends StatelessWidget {
               Center(
                 child: Column(
                   children: [
-                    CareAvatar(name: profile.name, imageUrl: profile.photoUrl, radius: 44),
+                    // Tapping the picture is how every other role changes
+                    // theirs; the doctor's was the one that could not.
+                    Stack(
+                      alignment: Alignment.bottomRight,
+                      children: [
+                        if (viewModel.pendingPhotoBytes != null)
+                          CircleAvatar(radius: 44, backgroundImage: MemoryImage(viewModel.pendingPhotoBytes!))
+                        else
+                          CareAvatar(name: profile.name, imageUrl: profile.photoUrl, radius: 44),
+                        Material(
+                          color: kCare,
+                          shape: const CircleBorder(),
+                          child: InkWell(
+                            customBorder: const CircleBorder(),
+                            onTap: () async {
+                    final source = await careImageSource(context);
+                    if (source != null) await viewModel.pickPhoto(source);
+                  },
+                            child: const Padding(
+                              padding: EdgeInsets.all(6),
+                              child: Icon(Icons.photo_camera_rounded, size: 16, color: Colors.white),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    if (viewModel.pendingPhotoBytes != null) ...[
+                      const SizedBox(height: 6),
+                      const Text('New picture — tap Save to upload', style: CareText.mutedXs),
+                    ],
                     const SizedBox(height: 12),
                     Text(profile.name, style: const TextStyle(fontSize: CareText.h3, fontWeight: CareText.heavy, color: kInk)),
                     const SizedBox(height: 2),

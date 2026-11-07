@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:hms_mobile/core/services/current_user.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_palette.dart';
 import 'package:hms_mobile/core/theme/care_text.dart';
@@ -405,12 +406,12 @@ class _CareDrawerTileState extends State<CareDrawerTile> {
       selected: widget.selected,
       button: true,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 3),
         child: Material(
           color: Colors.transparent,
           child: InkWell(
             borderRadius: BorderRadius.circular(CareRadius.field),
-            splashColor: kCare.withValues(alpha: 0.10),
+            splashColor: kCare.withValues(alpha: 0.05),
             highlightColor: Colors.transparent,
             onHighlightChanged: (down) => setState(() => _pressed = down),
             onTap: widget.onTap,
@@ -419,7 +420,15 @@ class _CareDrawerTileState extends State<CareDrawerTile> {
               curve: Curves.easeOut,
               padding: const EdgeInsets.fromLTRB(6, 7, 10, 7),
               decoration: BoxDecoration(
-                color: active ? kCareSoft : Colors.transparent,
+                // Every row is outlined, so the menu reads as a list of
+                // separate things rather than one long column of text.
+                // The fill and the border only warm up on touch -- enough
+                // to answer the finger, not enough to shout.
+                color: active ? kCare.withValues(alpha: 0.05) : Colors.transparent,
+                border: Border.all(
+                  color: active ? kCare.withValues(alpha: 0.40) : kCareBorder,
+                  width: 1,
+                ),
                 borderRadius: BorderRadius.circular(CareRadius.field),
               ),
               child: Row(
@@ -433,11 +442,14 @@ class _CareDrawerTileState extends State<CareDrawerTile> {
                     height: 22,
                     margin: EdgeInsets.only(right: active ? 7 : 10),
                     decoration: BoxDecoration(
+                      // A 3px bar: `pill` rounds it to its own width,
+                      // which is the only sane corner at that size and
+                      // keeps it on the scale.
                       color: kCare,
-                      borderRadius: BorderRadius.circular(2),
+                      borderRadius: BorderRadius.circular(CareRadius.pill),
                     ),
                   ),
-                  CareIconBox(icon: widget.icon, size: 34, filled: active),
+                  CareIconBox(icon: widget.icon, size: 34, filled: widget.selected),
                   const SizedBox(width: 14),
                   Expanded(
                     child: AnimatedDefaultTextStyle(
@@ -465,6 +477,37 @@ class _CareDrawerTileState extends State<CareDrawerTile> {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// The signed-in user's own avatar, wherever a shell shows it.
+///
+/// [CareAvatar] draws whatever URL it is handed, and the shells hand it
+/// the one captured at sign-in -- so a new picture did not appear in the
+/// header or the drawer until the next launch. This one follows
+/// [myPhotoUrl], which the profile screens update the moment the server
+/// accepts an upload, and falls back to the sign-in URL until then.
+class CareSelfAvatar extends StatelessWidget {
+  final String name;
+  final String? fallbackUrl;
+  final double radius;
+  final bool ring;
+
+  const CareSelfAvatar({
+    super.key,
+    required this.name,
+    this.fallbackUrl,
+    this.radius = 28,
+    this.ring = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<String?>(
+      valueListenable: myPhotoUrl,
+      builder: (context, url, _) =>
+          CareAvatar(name: name, imageUrl: url ?? fallbackUrl, radius: radius, ring: ring),
     );
   }
 }

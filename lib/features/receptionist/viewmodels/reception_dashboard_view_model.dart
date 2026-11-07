@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hms_mobile/core/models/app_user.dart';
 import 'package:hms_mobile/core/services/api_service.dart';
 import 'package:hms_mobile/core/services/auth_storage.dart';
-import 'package:hms_mobile/core/services/receptionist_api_service.dart';
+import 'package:hms_mobile/features/receptionist/services/receptionist_api_service.dart';
 import 'package:hms_mobile/features/receptionist/models/reception_dashboard_stats.dart';
 
 class ReceptionDashboardViewModel extends ChangeNotifier {

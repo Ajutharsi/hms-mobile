@@ -132,7 +132,7 @@ class _LabDrawer extends StatelessWidget {
             padding: EdgeInsets.fromLTRB(22, topInset + 24, 22, 22),
             child: Row(
               children: [
-                CareAvatar(name: user.name, imageUrl: user.profilePhotoUrl, radius: 28, ring: true),
+                CareSelfAvatar(name: user.name, fallbackUrl: user.profilePhotoUrl, radius: 28, ring: true),
                 const SizedBox(width: 14),
                 Expanded(
                   child: Column(
@@ -347,7 +347,7 @@ class _RoleHeader extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    CareAvatar(name: user.name, imageUrl: user.profilePhotoUrl, radius: 25, ring: true),
+                    CareSelfAvatar(name: user.name, fallbackUrl: user.profilePhotoUrl, radius: 25, ring: true),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Column(

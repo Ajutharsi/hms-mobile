@@ -378,15 +378,49 @@ class ApiService {
       throw sessionExpired();
     }
 
-    if (response.statusCode == 503) {
-      throw ApiException(
-        body['message']?.toString() ?? 'The system is under maintenance.',
-        isMaintenance: true,
-      );
-    }
-
-    throw ApiException(body['message']?.toString() ?? 'Something went wrong (${response.statusCode}).');
+    throw serverFailure(response.statusCode, body['message']?.toString());
   }
+}
+
+/// The message to show when the server answers with an error.
+///
+/// Laravel's own text is right for things the person did -- "This email
+/// is already registered" -- but not for the HTTP layer. A 404 reads
+/// "The route api/foo could not be found" and a 405 names the methods a
+/// route supports: that is a note to a developer, shown to a nurse. For
+/// those we say what it means for them instead, and keep the raw text
+/// out of the way.
+String serverErrorMessage(int status, String? serverMessage) {
+  switch (status) {
+    case 404:
+      return 'This feature is not available on the server yet. Please let your administrator know.';
+    case 405:
+      return "The server did not accept that request. The app may be out of date -- please update it.";
+    case 403:
+      return serverMessage ?? 'You do not have permission to do that.';
+    case 429:
+      return serverMessage ?? 'Too many attempts. Please wait a minute and try again.';
+    case 500:
+    case 502:
+    case 504:
+      return 'The server ran into a problem. Please try again in a moment.';
+    default:
+      return serverMessage ?? 'Something went wrong ($status).';
+  }
+}
+
+/// The exception to throw when the server answers with an error.
+///
+/// Carries the flags as well as the wording, because a screen reacts to
+/// maintenance differently from an ordinary failure -- and only the
+/// patient's client used to notice 503 at all, so a hospital in
+/// maintenance showed every other role a generic "something went wrong".
+ApiException serverFailure(int status, String? serverMessage) {
+  if (status == 503) {
+    return ApiException(serverMessage ?? 'The system is under maintenance.', isMaintenance: true);
+  }
+  if (status == 401) return sessionExpired();
+  return ApiException(serverErrorMessage(status, serverMessage));
 }
 
 /// Wraps a request's network-level failures (server unreachable, DNS

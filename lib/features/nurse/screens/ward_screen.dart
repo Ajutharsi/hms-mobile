@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:hms_mobile/core/services/hospital_settings.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
@@ -116,7 +117,7 @@ class _WardCard extends StatelessWidget {
                 const SizedBox(width: 6),
                 Text('$occupied / ${ward.totalBeds} beds occupied', style: CareText.mutedSm),
                 const Spacer(),
-                Text('₹${ward.chargePerDay.toStringAsFixed(0)}/day', style: CareText.mutedSmMedium),
+                Text('${money(ward.chargePerDay)}/day', style: CareText.mutedSmMedium),
               ],
             ),
           ],

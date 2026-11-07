@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_radius.dart';
@@ -12,6 +13,46 @@ import 'package:hms_mobile/core/theme/care_ui.dart';
 /// adding and editing a row. The clinical screens need exactly the same
 /// three things, and nothing in them was ever admin-specific, so they
 /// live with the rest of the design kit instead.
+/// Ask whether the picture should come from the camera or the gallery.
+///
+/// Every picker in the app went straight to the gallery, which is no use
+/// to someone holding the thing they need a photo of -- a patient at the
+/// desk, a wound, a prescription slip. Returns null if the sheet is
+/// dismissed, which callers treat as "changed my mind".
+///
+/// No CAMERA permission is declared on purpose: image_picker hands off
+/// to the system camera app, and declaring the permission would make
+/// Android demand one at runtime for no gain.
+Future<ImageSource?> careImageSource(BuildContext context) {
+  Widget option(IconData icon, String label, String hint, ImageSource source) => ListTile(
+        leading: CareIconBox(icon: icon, size: 42),
+        title: Text(label, style: CareText.titleMd),
+        subtitle: Text(hint, style: CareText.mutedXs),
+        onTap: () => Navigator.of(context).pop(source),
+      );
+
+  return showModalBottomSheet<ImageSource>(
+    context: context,
+    backgroundColor: Colors.white,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(CareRadius.sheet)),
+    ),
+    builder: (context) => SafeArea(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const SizedBox(height: 14),
+          const Text('Add a photo', style: CareText.titleH3),
+          const SizedBox(height: 10),
+          option(Icons.photo_camera_rounded, 'Take a photo', 'Use the camera', ImageSource.camera),
+          option(Icons.photo_library_rounded, 'Choose from gallery', 'Pick a saved picture', ImageSource.gallery),
+          const SizedBox(height: 10),
+        ],
+      ),
+    ),
+  );
+}
+
 /// One field in an [careFormSheet].
 class CareFormField {
   final String key;

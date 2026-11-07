@@ -200,7 +200,7 @@ class _PatientDrawer extends StatelessWidget {
             padding: EdgeInsets.fromLTRB(22, topInset + 24, 22, 22),
             child: Row(
               children: [
-                CareAvatar(name: user.name, imageUrl: photoUrl ?? user.profilePhotoUrl, radius: 30, ring: true),
+                CareSelfAvatar(name: user.name, fallbackUrl: photoUrl ?? user.profilePhotoUrl, radius: 30, ring: true),
                 const SizedBox(width: 14),
                 Expanded(
                   child: Column(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:hms_mobile/core/services/hospital_settings.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/admin/models/admin_models.dart';
@@ -124,7 +125,7 @@ class _DoctorsView extends StatelessWidget {
           detail: [
             if (doctor.doctorId != null) doctor.doctorId,
             if (doctor.email != null) doctor.email,
-            '₹${doctor.consultationFee.toStringAsFixed(0)}',
+            money(doctor.consultationFee),
           ].join(' · '),
           badge: inactive ? 'inactive' : 'active',
           badgeColor: inactive ? kMuted : kSuccessFg,

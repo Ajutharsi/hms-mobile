@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:hms_mobile/core/services/hospital_settings.dart';
 import 'package:hms_mobile/core/services/api_service.dart';
 import 'package:hms_mobile/core/services/auth_storage.dart';
-import 'package:hms_mobile/core/services/pharmacy_api_service.dart';
+import 'package:hms_mobile/features/pharmacy/services/pharmacy_api_service.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_forms.dart';
 import 'package:hms_mobile/core/theme/care_radius.dart';
@@ -214,7 +215,7 @@ class _CounterView extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text('Taken today', style: CareText.mutedXs),
-                          Text('₹${(day.stats['takings_today'] ?? 0).toStringAsFixed(0)}', style: CareText.titleXxl),
+                          Text(money((day.stats['takings_today'] ?? 0)), style: CareText.titleXxl),
                           Text('${day.stats['sales_today'] ?? 0} sales', style: CareText.mutedSm),
                         ],
                       ),
@@ -223,7 +224,7 @@ class _CounterView extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         const Text('Refunded', style: CareText.mutedXs),
-                        Text('₹${(day.stats['refunded_today'] ?? 0).toStringAsFixed(0)}', style: CareText.titleLg),
+                        Text(money((day.stats['refunded_today'] ?? 0)), style: CareText.titleLg),
                         Text('${day.stats['returns_today'] ?? 0} returns', style: CareText.mutedSm),
                       ],
                     ),
@@ -312,7 +313,7 @@ class _CounterView extends StatelessWidget {
                 ),
               ),
               Text(
-                '${entry.isReturn ? '−' : ''}₹${entry.totalAmount.toStringAsFixed(0)}',
+                '${entry.isReturn ? '−' : ''}${money(entry.totalAmount)}',
                 style: CareText.titleMd.copyWith(color: entry.isReturn ? kWarningFg : kInk),
               ),
             ],
@@ -469,7 +470,7 @@ class _BasketSheetState extends State<_BasketSheet> {
                               children: [
                                 Text(drug.drugName, style: CareText.titleMd),
                                 Text(
-                                  '₹${drug.unitPrice.toStringAsFixed(2)} · ${drug.currentStock} in stock',
+                                  '${money(drug.unitPrice, decimals: 2)} · ${drug.currentStock} in stock',
                                   style: short ? CareText.danger : CareText.mutedSm,
                                 ),
                               ],
@@ -494,7 +495,7 @@ class _BasketSheetState extends State<_BasketSheet> {
               ),
               const SizedBox(height: 8),
               CarePrimaryButton(
-                label: _total == 0 ? 'Add something' : 'Take ₹${_total.toStringAsFixed(2)}',
+                label: _total == 0 ? 'Add something' : 'Take ${money(_total, decimals: 2)}',
                 onPressed: _total == 0
                     ? null
                     : () => Navigator.of(context).pop([
@@ -542,7 +543,7 @@ class _PickDispensingSheet extends StatelessWidget {
                     onTap: () => Navigator.of(context).pop(entry),
                     title: Text(entry.patientName ?? 'Patient', style: CareText.titleMd),
                     subtitle: Text(
-                      '${entry.dispensingNo} · ${entry.date ?? ''} · ₹${entry.totalAmount.toStringAsFixed(0)}',
+                      '${entry.dispensingNo} · ${entry.date ?? ''} · ${money(entry.totalAmount)}',
                       style: CareText.mutedSm,
                     ),
                   );
@@ -602,7 +603,7 @@ class _ReturnSheetState extends State<_ReturnSheet> {
                         children: [
                           Text(item.medicineName, style: CareText.titleMd),
                           // The cap is what went out; more cannot come back.
-                          Text('${item.quantity} given · ₹${item.unitPrice.toStringAsFixed(2)} each',
+                          Text('${item.quantity} given · ${money(item.unitPrice, decimals: 2)} each',
                               style: CareText.mutedSm),
                         ],
                       ),
@@ -627,7 +628,7 @@ class _ReturnSheetState extends State<_ReturnSheet> {
               ),
             const SizedBox(height: 10),
             CarePrimaryButton(
-              label: _refund == 0 ? 'Nothing selected' : 'Refund ₹${_refund.toStringAsFixed(2)}',
+              label: _refund == 0 ? 'Nothing selected' : 'Refund ${money(_refund, decimals: 2)}',
               onPressed: _refund == 0
                   ? null
                   : () => Navigator.of(context).pop([

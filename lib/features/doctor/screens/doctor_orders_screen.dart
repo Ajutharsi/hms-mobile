@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:hms_mobile/core/services/hospital_settings.dart';
 import 'package:hms_mobile/core/services/api_service.dart';
 import 'package:hms_mobile/core/services/auth_storage.dart';
-import 'package:hms_mobile/core/services/doctor_order_api_service.dart';
+import 'package:hms_mobile/features/doctor/services/doctor_order_api_service.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_forms.dart';
 import 'package:hms_mobile/core/theme/care_radius.dart';
@@ -392,7 +393,7 @@ class _TestPickerSheetState extends State<_TestPickerSheet> {
                       onChanged: (v) => setState(() => v == true ? _picked.add(test.id) : _picked.remove(test.id)),
                       title: Text(test.name, style: CareText.titleMd),
                       subtitle: Text(
-                        [test.category, test.sampleType, '₹${test.price.toStringAsFixed(0)}']
+                        [test.category, test.sampleType, money(test.price)]
                             .where((s) => (s ?? '').isNotEmpty)
                             .join(' · '),
                         style: CareText.mutedSm,
@@ -405,7 +406,7 @@ class _TestPickerSheetState extends State<_TestPickerSheet> {
               CarePrimaryButton(
                 label: _picked.isEmpty
                     ? 'Pick at least one'
-                    : 'Order ${_picked.length} test${_picked.length == 1 ? '' : 's'} · ₹${total.toStringAsFixed(0)}',
+                    : 'Order ${_picked.length} test${_picked.length == 1 ? '' : 's'} · ${money(total)}',
                 onPressed: _picked.isEmpty ? null : () => Navigator.of(context).pop(_picked.toList()),
               ),
             ],

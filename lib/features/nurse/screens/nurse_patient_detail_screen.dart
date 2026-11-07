@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:hms_mobile/core/services/api_service.dart' show ApiException, guardNetworkErrors;
 import 'package:hms_mobile/core/services/auth_storage.dart';
-import 'package:hms_mobile/core/services/nurse_api_service.dart';
+import 'package:hms_mobile/features/nurse/services/nurse_api_service.dart';
 import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/nurse/screens/assessments_screen.dart';

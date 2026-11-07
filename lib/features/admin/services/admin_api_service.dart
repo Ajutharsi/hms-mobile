@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-import 'package:hms_mobile/core/services/api_service.dart' show ApiException, ApiService, sessionExpired;
+import 'package:hms_mobile/core/services/api_service.dart' show ApiException, ApiService, sessionExpired, serverFailure;
 import 'package:hms_mobile/core/models/json_value.dart';
 import 'package:hms_mobile/features/admin/models/admin_models.dart';
 import 'package:hms_mobile/features/admin/models/ops_models.dart';
@@ -46,7 +46,7 @@ class AdminApiService {
     if (response.statusCode == 403) {
       throw ApiException((body is Map ? body['message']?.toString() : null) ?? 'You are not allowed to do that.');
     }
-    throw ApiException((body is Map ? body['message']?.toString() : null) ?? 'Something went wrong (${response.statusCode}).');
+    throw serverFailure(response.statusCode, body is Map ? body['message']?.toString() : null);
   }
 
   Future<Map<String, dynamic>> _get(String token, String path, [Map<String, String>? query]) async {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:hms_mobile/core/services/hospital_settings.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
@@ -72,7 +73,7 @@ class _DispensingCreateViewState extends State<_DispensingCreateView> {
                           final d = remaining[index];
                           return ListTile(
                             title: Text(d.drugName),
-                            subtitle: Text('${d.category} · Stock: ${d.currentStock} · ₹${d.unitPrice.toStringAsFixed(2)}'),
+                            subtitle: Text('${d.category} · Stock: ${d.currentStock} · ${money(d.unitPrice, decimals: 2)}'),
                             onTap: () => Navigator.of(context).pop(d),
                           );
                         },
@@ -178,7 +179,7 @@ class _DispensingCreateViewState extends State<_DispensingCreateView> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(line.drug.drugName, style: const TextStyle(fontWeight: CareText.bold, fontSize: CareText.md, color: kInk)),
-                                Text('Available: ${line.drug.currentStock} · ₹${line.drug.unitPrice.toStringAsFixed(2)}', style: CareText.mutedXs),
+                                Text('Available: ${line.drug.currentStock} · ${money(line.drug.unitPrice, decimals: 2)}', style: CareText.mutedXs),
                               ],
                             ),
                           ),
@@ -205,7 +206,7 @@ class _DispensingCreateViewState extends State<_DispensingCreateView> {
                     children: [
                       const Text('Total', style: CareText.inkBold),
                       const Spacer(),
-                      Text('₹${total.toStringAsFixed(2)}', style: TextStyle(fontWeight: CareText.heavy, fontSize: CareText.xl, color: kCareDark)),
+                      Text(money(total, decimals: 2), style: TextStyle(fontWeight: CareText.heavy, fontSize: CareText.xl, color: kCareDark)),
                     ],
                   ),
                 ],

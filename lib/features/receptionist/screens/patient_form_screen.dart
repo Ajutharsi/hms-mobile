@@ -5,8 +5,9 @@ import 'package:image_picker/image_picker.dart';
 
 import 'package:hms_mobile/core/services/api_service.dart';
 import 'package:hms_mobile/core/services/auth_storage.dart';
-import 'package:hms_mobile/core/services/receptionist_api_service.dart';
+import 'package:hms_mobile/features/receptionist/services/receptionist_api_service.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_forms.dart';
 import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/receptionist/models/reception_patient.dart';
@@ -81,7 +82,18 @@ class _PatientFormScreenState extends State<PatientFormScreen> {
   }
 
   Future<void> _pickPhoto() async {
-    final picked = await ImagePicker().pickImage(source: ImageSource.gallery, imageQuality: 85);
+    final source = await careImageSource(context);
+    if (source == null || !mounted) return;
+
+    final picked = await ImagePicker().pickImage(
+      source: source,
+      // A phone camera shoots 3-8MB, which PHP refuses before
+      // Laravel ever sees it ('failed to upload'). Scaling here
+      // keeps a portrait around 300KB and costs nothing on screen.
+      maxWidth: 1024,
+      maxHeight: 1024,
+      imageQuality: 85,
+    );
     if (picked == null) return;
     _photoBytes = await picked.readAsBytes();
     _photoName = picked.name;

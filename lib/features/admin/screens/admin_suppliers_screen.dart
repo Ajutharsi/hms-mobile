@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:hms_mobile/core/services/hospital_settings.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/admin/models/admin_models.dart';
@@ -101,7 +102,7 @@ class _SuppliersView extends StatelessWidget {
           subtitle: supplier.contact.isEmpty ? supplier.email : supplier.contact,
           detail: supplier.orders == 0
               ? 'No orders yet'
-              : '${supplier.orders} order${supplier.orders == 1 ? '' : 's'} · ₹${supplier.spend.toStringAsFixed(0)}',
+              : '${supplier.orders} order${supplier.orders == 1 ? '' : 's'} · ${money(supplier.spend)}',
           badge: supplier.status,
           badgeColor: supplier.status == 'active' ? kSuccessFg : kMuted,
           badgeBg: supplier.status == 'active' ? kSuccessBg : kCareNeutralBg,

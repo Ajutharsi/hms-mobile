@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:hms_mobile/core/services/hospital_settings.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/admin/models/admin_models.dart';
@@ -103,7 +104,7 @@ class _InventoryView extends StatelessWidget {
               label: 'Low stock',
               color: (totals['low_stock'] ?? 0) > 0 ? kWarnText : null,
             ),
-            AdminStat(value: '₹${(totals['stock_value'] ?? 0).toStringAsFixed(0)}', label: 'Value'),
+            AdminStat(value: money((totals['stock_value'] ?? 0)), label: 'Value'),
           ]),
           AdminFilterChips(
             value: viewModel.lowStockOnly ? 'low' : '',
@@ -120,7 +121,7 @@ class _InventoryView extends StatelessWidget {
         return AdminCard(
           title: item.itemName,
           subtitle: [item.category, item.supplier].where((s) => s != null && s.isNotEmpty).join(' · '),
-          detail: '${item.currentStock} ${item.unit ?? ''} · reorder at ${item.minStockLevel} · ₹${item.unitPrice.toStringAsFixed(2)}',
+          detail: '${item.currentStock} ${item.unit ?? ''} · reorder at ${item.minStockLevel} · ${money(item.unitPrice, decimals: 2)}',
           badge: item.isLowStock ? 'low' : null,
           badgeColor: kWarnText,
           badgeBg: kWarnSurface,

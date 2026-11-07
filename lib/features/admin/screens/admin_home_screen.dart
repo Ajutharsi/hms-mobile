@@ -235,7 +235,7 @@ class _AdminBody extends StatelessWidget {
           padding: EdgeInsets.fromLTRB(20, topInset + 18, 20, 70),
           child: Row(
             children: [
-              CareAvatar(name: viewModel.user.name, imageUrl: viewModel.user.profilePhotoUrl, radius: 28, ring: true),
+              CareSelfAvatar(name: viewModel.user.name, fallbackUrl: viewModel.user.profilePhotoUrl, radius: 28, ring: true),
               const SizedBox(width: 14),
               Expanded(
                 child: Column(
@@ -307,7 +307,147 @@ class _AdminBody extends StatelessWidget {
             ),
           ),
         ),
+        // The dashboard endpoint hands back today's appointments and the
+        // recently seen patients along with the counts; the admin shell
+        // was dropping both on the floor and leaving the screen empty
+        // below the shortcuts. Same data, same endpoint, now shown.
+        Transform.translate(
+          offset: const Offset(0, -24),
+          child: Column(
+            children: [
+              if ((stats?.pendingInvoices ?? 0) > 0)
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
+                  child: _AttentionCard(
+                    count: stats!.pendingInvoices,
+                    onTap: () => _open(context, AdminSection.invoices),
+                  ),
+                ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: CareCard(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      CareSectionTitle(
+                        title: "Today's Appointments",
+                        actionLabel: 'View All',
+                        onAction: () => _open(context, AdminSection.appointments),
+                      ),
+                      const SizedBox(height: 12),
+                      if (viewModel.todayAppointments.isEmpty)
+                        const Text('No appointments today.', style: CareText.mutedSm)
+                      else
+                        for (final a in viewModel.todayAppointments) ...[
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(a.patientName ?? 'Patient', style: CareText.titleMd),
+                                    const SizedBox(height: 2),
+                                    Text('${a.doctorName ?? ''} · ${a.time}', style: CareText.mutedXs),
+                                  ],
+                                ),
+                              ),
+                              CareChip(label: a.type.toUpperCase(), bg: kCareSoft, fg: kCareDark),
+                            ],
+                          ),
+                          if (a != viewModel.todayAppointments.last)
+                            Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Divider(height: 1, color: kCareBorder)),
+                        ],
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: CareCard(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      CareSectionTitle(
+                        title: 'Recent Patients',
+                        actionLabel: 'View All',
+                        onAction: () => _open(context, AdminSection.patients),
+                      ),
+                      const SizedBox(height: 12),
+                      if (viewModel.recentPatients.isEmpty)
+                        const Text('No recent patients.', style: CareText.mutedSm)
+                      else
+                        for (final p in viewModel.recentPatients) ...[
+                          Row(
+                            children: [
+                              CareAvatar(name: p.name, imageUrl: p.photoUrl, radius: 18),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(p.name, style: CareText.titleMd),
+                                    Text(p.mrn, style: CareText.mutedXs),
+                                  ],
+                                ),
+                              ),
+                              CareChip(label: p.status, bg: kSuccessBg, fg: kSuccessFg),
+                            ],
+                          ),
+                          if (p != viewModel.recentPatients.last)
+                            Padding(padding: const EdgeInsets.symmetric(vertical: 10), child: Divider(height: 1, color: kCareBorder)),
+                        ],
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+            ],
+          ),
+        ),
       ],
+    );
+  }
+}
+
+/// The one count on the dashboard that is a job rather than a fact.
+class _AttentionCard extends StatelessWidget {
+  final int count;
+  final VoidCallback onTap;
+  const _AttentionCard({required this.count, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    watchCarePalette(context);
+    return InkWell(
+      borderRadius: BorderRadius.circular(CareRadius.card),
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: kWarningBg,
+          borderRadius: BorderRadius.circular(CareRadius.card),
+          border: Border.all(color: kWarningFg.withValues(alpha: 0.25)),
+        ),
+        child: Row(
+          children: [
+            const Icon(Icons.receipt_long_rounded, color: kWarningFg, size: 22),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('$count invoice${count == 1 ? '' : 's'} awaiting payment',
+                      style: CareText.titleMdMedium.copyWith(color: kWarningFg)),
+                  const SizedBox(height: 2),
+                  const Text('Tap to open billing', style: CareText.mutedXs),
+                ],
+              ),
+            ),
+            const Icon(Icons.chevron_right_rounded, color: kWarningFg, size: 20),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -405,7 +545,7 @@ class _AdminDrawer extends StatelessWidget {
             padding: EdgeInsets.fromLTRB(22, topInset + 24, 22, 22),
             child: Row(
               children: [
-                CareAvatar(name: user.name, imageUrl: user.profilePhotoUrl, radius: 28, ring: true),
+                CareSelfAvatar(name: user.name, fallbackUrl: user.profilePhotoUrl, radius: 28, ring: true),
                 const SizedBox(width: 14),
                 Expanded(
                   child: Column(

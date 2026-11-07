@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:hms_mobile/core/services/hospital_settings.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
@@ -85,7 +86,7 @@ class _SchemeBillingView extends StatelessWidget {
             children: [
               _StatTile(label: 'Total Claims', value: '${stats.total}', color: kCareDark, bg: kCareSoft),
               _StatTile(label: 'Pending', value: '${stats.pending}', color: kWarningFg, bg: kWarningBg),
-              _StatTile(label: 'Approved Amt', value: '₹${stats.approvedAmount.toStringAsFixed(0)}', color: kSuccessFg, bg: kSuccessBg),
+              _StatTile(label: 'Approved Amt', value: money(stats.approvedAmount), color: kSuccessFg, bg: kSuccessBg),
               _StatTile(label: 'Settled', value: '${stats.settled}', color: kInfoFg, bg: kInfoBg),
             ],
           ),
@@ -171,7 +172,7 @@ class _BillCard extends StatelessWidget {
                   child: Text(bill.scheme.toUpperCase(), style: const TextStyle(fontSize: CareText.xxs, fontWeight: CareText.bold, color: kInk)),
                 ),
                 const Spacer(),
-                Text('₹${bill.packageRate.toStringAsFixed(0)}', style: CareText.brandSmBold),
+                Text(money(bill.packageRate), style: CareText.brandSmBold),
               ],
             ),
           ],

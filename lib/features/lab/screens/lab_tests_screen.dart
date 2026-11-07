@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:hms_mobile/core/services/hospital_settings.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
@@ -149,7 +150,7 @@ class _TestCard extends StatelessWidget {
                 const SizedBox(height: 3),
                 Text('${test.category} · ${test.sampleType}', style: CareText.mutedXs),
                 const SizedBox(height: 4),
-                Text('₹${test.price.toStringAsFixed(0)}${test.unit != null ? ' · ${test.unit}' : ''}', style: TextStyle(fontSize: CareText.sm, color: kCareDark, fontWeight: CareText.medium)),
+                Text('${money(test.price)}${test.unit != null ? ' · ${test.unit}' : ''}', style: TextStyle(fontSize: CareText.sm, color: kCareDark, fontWeight: CareText.medium)),
               ],
             ),
           ),

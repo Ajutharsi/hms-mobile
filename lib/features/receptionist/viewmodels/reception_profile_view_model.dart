@@ -3,9 +3,10 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
+import 'package:hms_mobile/core/services/current_user.dart';
 import 'package:hms_mobile/core/services/api_service.dart';
 import 'package:hms_mobile/core/services/auth_storage.dart';
-import 'package:hms_mobile/core/services/receptionist_api_service.dart';
+import 'package:hms_mobile/features/receptionist/services/receptionist_api_service.dart';
 import 'package:hms_mobile/features/receptionist/models/reception_profile.dart';
 
 class ReceptionProfileViewModel extends ChangeNotifier {
@@ -58,13 +59,22 @@ class ReceptionProfileViewModel extends ChangeNotifier {
     } on ApiException catch (e) {
       loadError = e.message;
     } finally {
+      rememberMyPhoto(profile?.profilePhotoUrl);
       isLoading = false;
       notifyListeners();
     }
   }
 
-  Future<void> pickPhoto() async {
-    final picked = await ImagePicker().pickImage(source: ImageSource.gallery, imageQuality: 85);
+  Future<void> pickPhoto(ImageSource source) async {
+    final picked = await ImagePicker().pickImage(
+      source: source,
+      // A phone camera shoots 3-8MB, which PHP refuses before
+      // Laravel ever sees it ('failed to upload'). Scaling here
+      // keeps a portrait around 300KB and costs nothing on screen.
+      maxWidth: 1024,
+      maxHeight: 1024,
+      imageQuality: 85,
+    );
     if (picked == null) return;
 
     pendingPhotoBytes = await picked.readAsBytes();
@@ -131,6 +141,7 @@ class ReceptionProfileViewModel extends ChangeNotifier {
       errorMessage = e.message;
       return false;
     } finally {
+      rememberMyPhoto(profile?.profilePhotoUrl);
       isSaving = false;
       notifyListeners();
     }

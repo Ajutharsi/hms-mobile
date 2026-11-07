@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:hms_mobile/core/services/hospital_settings.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/admin/models/admin_models.dart';
@@ -408,7 +409,7 @@ class _ServicesView extends StatelessWidget {
           title: service.serviceName,
           subtitle: service.category,
           detail: service.description,
-          badge: '₹${service.price.toStringAsFixed(0)}',
+          badge: money(service.price),
           onTap: () => _addOrEdit(context, viewModel, service),
           actions: [
             (label: 'Edit', icon: Icons.edit_outlined, onTap: () => _addOrEdit(context, viewModel, service), destructive: false),

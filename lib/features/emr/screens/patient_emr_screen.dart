@@ -387,9 +387,20 @@ class _AttachmentsSection extends StatelessWidget {
     final viewModel = context.read<PatientEmrViewModel>();
 
     // Photos only from here: the server also takes PDFs and documents,
-    // but a phone's picker is the camera roll, and a ward photo of a
-    // wound or a paper report is what this is for.
-    final picked = await ImagePicker().pickImage(source: ImageSource.gallery, imageQuality: 85);
+    // but a photo of a wound or a paper report is what this is for --
+    // taken on the spot as often as picked from the roll.
+    final source = await careImageSource(context);
+    if (source == null || !context.mounted) return;
+
+    final picked = await ImagePicker().pickImage(
+      source: source,
+      // Larger than a profile picture: this may be a paper report
+      // that has to stay readable. Still well under the 2MB the
+      // server accepts.
+      maxWidth: 1600,
+      maxHeight: 1600,
+      imageQuality: 85,
+    );
     if (picked == null || !context.mounted) return;
 
     final bytes = await picked.readAsBytes();

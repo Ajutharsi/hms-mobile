@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-import 'package:hms_mobile/core/services/api_service.dart' show ApiException, ApiService, sessionExpired;
+import 'package:hms_mobile/core/services/api_service.dart' show ApiException, ApiService, sessionExpired, serverFailure;
 import 'package:hms_mobile/features/doctor/models/doctor_order_models.dart';
 
 /// Client for `api/doctor/orders/*` — the four things a doctor orders
@@ -37,7 +37,7 @@ class DoctorOrderApiService {
           : (body?['message']?.toString() ?? 'Invalid request.'));
     }
     if (response.statusCode == 401) throw sessionExpired();
-    throw ApiException((body is Map ? body['message']?.toString() : null) ?? 'Something went wrong (${response.statusCode}).');
+    throw serverFailure(response.statusCode, body is Map ? body['message']?.toString() : null);
   }
 
   Future<DoctorOrderBoard> board(String token, int patientId) async {

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:hms_mobile/core/services/api_service.dart';
 import 'package:hms_mobile/core/services/auth_storage.dart';
-import 'package:hms_mobile/core/services/nurse_api_service.dart';
+import 'package:hms_mobile/features/nurse/services/nurse_api_service.dart';
 import 'package:hms_mobile/features/nurse/models/nurse_patient.dart';
 import 'package:hms_mobile/features/nurse/models/ward.dart';
 import 'package:hms_mobile/features/patient/models/doctor.dart';

@@ -1,11 +1,14 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'package:hms_mobile/core/models/app_user.dart';
 import 'package:hms_mobile/core/services/api_service.dart';
 import 'package:hms_mobile/core/services/auth_storage.dart';
-import 'package:hms_mobile/core/services/doctor_api_service.dart';
+import 'package:hms_mobile/core/services/current_user.dart';
+import 'package:hms_mobile/features/doctor/services/doctor_api_service.dart';
 import 'package:hms_mobile/features/doctor/models/doctor_models.dart';
 
 /// Shared plumbing: token lookup and the load/error flags every doctor
@@ -464,8 +467,31 @@ class DoctorProfileViewModel extends _DoctorViewModel {
   String? errorMessage;
   String? successMessage;
 
+  /// Held until the next save, so picking a picture and changing a field
+  /// are one trip to the server rather than two.
+  Uint8List? pendingPhotoBytes;
+  String? _pendingPhotoName;
+
+  Future<void> pickPhoto(ImageSource source) async {
+    final picked = await ImagePicker().pickImage(
+      source: source,
+      // A phone camera shoots 3-8MB, which PHP refuses before
+      // Laravel ever sees it ('failed to upload'). Scaling here
+      // keeps a portrait around 300KB and costs nothing on screen.
+      maxWidth: 1024,
+      maxHeight: 1024,
+      imageQuality: 85,
+    );
+    if (picked == null) return;
+
+    pendingPhotoBytes = await picked.readAsBytes();
+    _pendingPhotoName = picked.name;
+    notifyListeners();
+  }
+
   Future<void> load() => guarded(() async {
         profile = await api.profile(await token());
+        rememberMyPhoto(profile!.photoUrl);
         nameController.text = profile!.name;
         emailController.text = profile!.email;
         phoneController.text = profile!.phone ?? '';
@@ -497,7 +523,12 @@ class DoctorProfileViewModel extends _DoctorViewModel {
             currentPassword: currentPasswordController.text,
             password: newPasswordController.text,
             passwordConfirmation: confirmPasswordController.text,
+            photoBytes: pendingPhotoBytes,
+            photoFilename: _pendingPhotoName,
           ));
+      pendingPhotoBytes = null;
+      _pendingPhotoName = null;
+      await load();
       successMessage = 'Profile updated successfully!';
       for (final c in [currentPasswordController, newPasswordController, confirmPasswordController]) {
         c.clear();

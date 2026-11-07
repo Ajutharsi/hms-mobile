@@ -42,7 +42,7 @@ void main() {
     });
 
     test('a validation error shows the field message, not a generic one', () async {
-      final body = '{"message":"Invalid.","errors":{"email":["This email is already registered."]}}';
+      const body = '{"message":"Invalid.","errors":{"email":["This email is already registered."]}}';
       final http = respondingWith(body, status: 422);
 
       await expectLater(

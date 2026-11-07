@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-import 'package:hms_mobile/core/services/api_service.dart' show ApiException, ApiService, sessionExpired;
+import 'package:hms_mobile/core/services/api_service.dart' show ApiException, ApiService, sessionExpired, serverFailure;
 import 'package:hms_mobile/features/nurse/models/nursing_assessment.dart';
 
 /// Client for `api/assessments/*` — the scored bedside assessments that
@@ -37,7 +37,7 @@ class AssessmentApiService {
           : (body?['message']?.toString() ?? 'Invalid request.'));
     }
     if (response.statusCode == 401) throw sessionExpired();
-    throw ApiException((body is Map ? body['message']?.toString() : null) ?? 'Something went wrong (${response.statusCode}).');
+    throw serverFailure(response.statusCode, body is Map ? body['message']?.toString() : null);
   }
 
   Future<({int total, int needsAttention, List<NursingAssessment> rows})> assessments(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:hms_mobile/core/services/hospital_settings.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/admin/models/admin_models.dart';
@@ -109,7 +110,7 @@ class _WardsView extends StatelessWidget {
         return AdminCard(
           title: ward.name,
           subtitle: '${ward.wardNo} · ${ward.where}',
-          detail: '${ward.availableBeds} free of ${ward.totalBeds} beds · ₹${ward.chargePerDay.toStringAsFixed(0)}/day',
+          detail: '${ward.availableBeds} free of ${ward.totalBeds} beds · ${money(ward.chargePerDay)}/day',
           badge: full ? 'full' : ward.status,
           badgeColor: full ? kDangerFg : (ward.status == 'active' ? kSuccessFg : kMuted),
           badgeBg: full ? kDangerBg : (ward.status == 'active' ? kSuccessBg : kCareNeutralBg),

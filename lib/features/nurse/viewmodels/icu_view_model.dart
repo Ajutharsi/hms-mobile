@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:hms_mobile/core/services/api_service.dart';
 import 'package:hms_mobile/core/services/auth_storage.dart';
-import 'package:hms_mobile/core/services/nurse_api_service.dart';
+import 'package:hms_mobile/features/nurse/services/nurse_api_service.dart';
 import 'package:hms_mobile/features/nurse/models/icu_chart.dart';
 
 class IcuViewModel extends ChangeNotifier {

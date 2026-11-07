@@ -1,8 +1,9 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
 
-import 'package:hms_mobile/core/services/api_service.dart' show ApiException, ApiService, sessionExpired;
+import 'package:hms_mobile/core/services/api_service.dart' show ApiException, ApiService, sessionExpired, serverFailure;
 import 'package:hms_mobile/features/doctor/models/doctor_models.dart';
 
 /// JSON client for the Flutter doctor app — mirrors
@@ -42,7 +43,7 @@ class DoctorApiService {
     if (response.statusCode == 403) {
       throw ApiException((body is Map ? body['message']?.toString() : null) ?? 'You are not allowed to do that.');
     }
-    throw ApiException((body is Map ? body['message']?.toString() : null) ?? 'Something went wrong (${response.statusCode}).');
+    throw serverFailure(response.statusCode, body is Map ? body['message']?.toString() : null);
   }
 
   Future<Map<String, dynamic>> _get(String token, String path, [Map<String, String>? query]) async {
@@ -204,7 +205,32 @@ class DoctorApiService {
     String? currentPassword,
     String? password,
     String? passwordConfirmation,
+    Uint8List? photoBytes,
+    String? photoFilename,
   }) async {
+    // A picture cannot go as JSON, so a save that carries one is sent as
+    // multipart -- the same shape every other role's profile uses.
+    if (photoBytes != null) {
+      final request = http.MultipartRequest('POST', Uri.parse('$baseUrl/doctor/profile'))
+        ..headers['Accept'] = 'application/json'
+        ..headers['Authorization'] = 'Bearer $token'
+        ..fields['name'] = name
+        ..fields['email'] = email;
+
+      if ((phone ?? '').isNotEmpty) request.fields['phone'] = phone!;
+      if ((password ?? '').isNotEmpty) {
+        request.fields['current_password'] = currentPassword ?? '';
+        request.fields['password'] = password!;
+        request.fields['password_confirmation'] = passwordConfirmation ?? '';
+      }
+      request.files.add(http.MultipartFile.fromBytes('profile_photo', photoBytes,
+          filename: photoFilename ?? 'profile_photo.jpg'));
+
+      final streamed = await _client.send(request);
+      _decode(await http.Response.fromStream(streamed));
+      return;
+    }
+
     await _post(token, '/doctor/profile', {
       'name': name,
       'email': email,

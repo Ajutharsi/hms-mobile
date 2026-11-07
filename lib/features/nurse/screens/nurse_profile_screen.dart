@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/theme/app_style.dart';
+import 'package:hms_mobile/core/theme/care_forms.dart';
 import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/nurse/models/nurse_profile.dart';
@@ -193,7 +194,10 @@ class _AvatarHeader extends StatelessWidget {
                 right: 0,
                 bottom: 0,
                 child: InkWell(
-                  onTap: viewModel.pickPhoto,
+                  onTap: () async {
+                    final source = await careImageSource(context);
+                    if (source != null) await viewModel.pickPhoto(source);
+                  },
                   borderRadius: BorderRadius.circular(CareRadius.panel),
                   child: Container(
                     padding: const EdgeInsets.all(6),

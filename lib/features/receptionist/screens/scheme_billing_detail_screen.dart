@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:hms_mobile/core/services/hospital_settings.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
@@ -127,10 +128,10 @@ class _DetailView extends StatelessWidget {
               _row('Beneficiary ID', bill.beneficiaryId ?? '—'),
               _row('Package code', bill.packageCode ?? '—'),
               _row('Package name', bill.packageName ?? '—'),
-              _row('Package rate', '₹${bill.packageRate.toStringAsFixed(2)}'),
-              _row('Actual bill', '₹${bill.actualBill.toStringAsFixed(2)}'),
-              if (bill.schemePayment != null) _row('Scheme payment', '₹${bill.schemePayment!.toStringAsFixed(2)}'),
-              if (bill.patientLiability != null) _row('Patient liability', '₹${bill.patientLiability!.toStringAsFixed(2)}'),
+              _row('Package rate', money(bill.packageRate, decimals: 2)),
+              _row('Actual bill', money(bill.actualBill, decimals: 2)),
+              if (bill.schemePayment != null) _row('Scheme payment', money(bill.schemePayment!, decimals: 2)),
+              if (bill.patientLiability != null) _row('Patient liability', money(bill.patientLiability!, decimals: 2)),
               _row('Submission date', bill.submissionDate ?? '—'),
               _row('Settlement date', bill.settlementDate ?? '—', showDivider: false),
             ],

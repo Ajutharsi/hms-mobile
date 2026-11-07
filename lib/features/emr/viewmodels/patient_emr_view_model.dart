@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:hms_mobile/core/services/api_service.dart';
 import 'package:hms_mobile/core/services/auth_storage.dart';
-import 'package:hms_mobile/core/services/emr_api_service.dart';
+import 'package:hms_mobile/features/emr/services/emr_api_service.dart';
 import 'package:hms_mobile/features/emr/models/emr_models.dart';
 
 /// Loads one patient's record and applies the small writes the screen

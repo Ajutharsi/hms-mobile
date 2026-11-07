@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:hms_mobile/core/services/hospital_settings.dart';
 import 'package:hms_mobile/core/services/api_service.dart';
 import 'package:hms_mobile/core/services/auth_storage.dart';
-import 'package:hms_mobile/core/services/receptionist_api_service.dart';
+import 'package:hms_mobile/features/receptionist/services/receptionist_api_service.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
@@ -168,7 +169,7 @@ class _ClaimCard extends StatelessWidget {
             Row(
               children: [
                 Expanded(child: Text(claim.insuranceCompany, style: CareText.titleSmMedium)),
-                Text('₹${claim.claimAmount.toStringAsFixed(0)}', style: CareText.brandSmBold),
+                Text(money(claim.claimAmount), style: CareText.brandSmBold),
               ],
             ),
           ],

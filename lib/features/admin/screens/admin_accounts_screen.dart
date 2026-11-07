@@ -3,7 +3,8 @@ import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/services/api_service.dart';
 import 'package:hms_mobile/core/services/auth_storage.dart';
-import 'package:hms_mobile/core/services/admin_api_service.dart';
+import 'package:hms_mobile/core/services/hospital_settings.dart';
+import 'package:hms_mobile/features/admin/services/admin_api_service.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_forms.dart';
 import 'package:hms_mobile/core/theme/care_radius.dart';
@@ -214,7 +215,7 @@ class _AccountsView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(month.month, style: CareText.mutedSm),
-                    Text('₹${(month.stats['total'] ?? 0).toStringAsFixed(0)}', style: CareText.display),
+                    Text(money((month.stats['total'] ?? 0)), style: CareText.display),
                     Text('${month.stats['count'] ?? 0} entries', style: CareText.mutedXs),
                   ],
                 ),
@@ -223,7 +224,7 @@ class _AccountsView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   const Text('of which cash', style: CareText.mutedXs),
-                  Text('₹${(month.stats['cash'] ?? 0).toStringAsFixed(0)}', style: CareText.titleLg),
+                  Text(money((month.stats['cash'] ?? 0)), style: CareText.titleLg),
                 ],
               ),
             ],
@@ -242,7 +243,7 @@ class _AccountsView extends StatelessWidget {
                     child: Row(
                       children: [
                         Expanded(child: Text(row.category, style: CareText.titleMd)),
-                        Text('₹${row.total.toStringAsFixed(0)}', style: CareText.titleMd),
+                        Text(money(row.total), style: CareText.titleMd),
                       ],
                     ),
                   ),
@@ -280,7 +281,7 @@ class _AccountsView extends StatelessWidget {
                         ],
                       ),
                     ),
-                    Text('₹${expense.amount.toStringAsFixed(0)}', style: CareText.titleMd),
+                    Text(money(expense.amount), style: CareText.titleMd),
                   ],
                 ),
               ),
@@ -339,13 +340,13 @@ class _AccountsView extends StatelessWidget {
                 Text(
                   day.closing!.isBalanced
                       ? 'Closed and balanced'
-                      : 'Closed ${day.closing!.varianceLabel} by ₹${day.closing!.variance.abs().toStringAsFixed(2)}',
+                      : 'Closed ${day.closing!.varianceLabel} by ${money(day.closing!.variance.abs(), decimals: 2)}',
                   style: CareText.titleMd,
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'Counted ₹${day.closing!.countedCash.toStringAsFixed(2)} against '
-                  '₹${day.closing!.expectedCash.toStringAsFixed(2)} expected',
+                  'Counted ${money(day.closing!.countedCash, decimals: 2)} against '
+                  '${money(day.closing!.expectedCash, decimals: 2)} expected',
                   style: CareText.mutedSm,
                 ),
                 if ((day.closing!.closedBy ?? '').isNotEmpty)
@@ -380,8 +381,8 @@ class _AccountsView extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(closing.date ?? '', style: CareText.titleMd),
-                              Text('₹${closing.collections.toStringAsFixed(0)} in · '
-                                  '₹${closing.expenses.toStringAsFixed(0)} out',
+                              Text('${money(closing.collections)} in · '
+                                  '${money(closing.expenses)} out',
                                   style: CareText.mutedSm),
                             ],
                           ),
@@ -389,7 +390,7 @@ class _AccountsView extends StatelessWidget {
                         CareChip(
                           label: closing.isBalanced
                               ? 'balanced'
-                              : '${closing.varianceLabel} ₹${closing.variance.abs().toStringAsFixed(0)}',
+                              : '${closing.varianceLabel} ${money(closing.variance.abs())}',
                           bg: closing.isBalanced ? kSuccessBg : kWarningBg,
                           fg: closing.isBalanced ? kSuccessFg : kWarningFg,
                         ),
@@ -421,7 +422,7 @@ class _Money extends StatelessWidget {
         children: [
           Expanded(child: Text(label, style: muted ? CareText.mutedXs : CareText.bodyMd)),
           Text(
-            '₹${value.toStringAsFixed(2)}',
+            money(value, decimals: 2),
             style: strong ? CareText.titleLg : (muted ? CareText.mutedSm : CareText.titleMd),
           ),
         ],

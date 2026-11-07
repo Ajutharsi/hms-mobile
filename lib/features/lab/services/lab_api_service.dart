@@ -3,7 +3,7 @@ import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
 
-import 'package:hms_mobile/core/services/api_service.dart' show ApiException, ApiService, sessionExpired;
+import 'package:hms_mobile/core/services/api_service.dart' show ApiException, ApiService, sessionExpired, serverFailure;
 import 'package:hms_mobile/features/lab/models/lab_dashboard_stats.dart';
 import 'package:hms_mobile/features/lab/models/lab_order.dart';
 import 'package:hms_mobile/features/lab/models/lab_profile.dart';
@@ -51,7 +51,7 @@ class LabApiService {
       throw ApiException((body is Map ? body['message']?.toString() : null) ?? 'You are not allowed to do that.');
     }
 
-    throw ApiException((body is Map ? body['message']?.toString() : null) ?? 'Something went wrong (${response.statusCode}).');
+    throw serverFailure(response.statusCode, body is Map ? body['message']?.toString() : null);
   }
 
   Future<Map<String, dynamic>> _get(String token, String path, [Map<String, String>? query]) async {

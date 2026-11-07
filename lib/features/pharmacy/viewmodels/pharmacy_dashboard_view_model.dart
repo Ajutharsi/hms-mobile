@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hms_mobile/core/models/app_user.dart';
 import 'package:hms_mobile/core/services/api_service.dart';
 import 'package:hms_mobile/core/services/auth_storage.dart';
-import 'package:hms_mobile/core/services/pharmacy_api_service.dart';
+import 'package:hms_mobile/features/pharmacy/services/pharmacy_api_service.dart';
 import 'package:hms_mobile/features/pharmacy/models/pharmacy_dashboard_stats.dart';
 
 class PharmacyDashboardViewModel extends ChangeNotifier {

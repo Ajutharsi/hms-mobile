@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:hms_mobile/core/services/hospital_settings.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
@@ -63,7 +64,7 @@ class AdminReportsScreen extends StatelessWidget {
 class _ReportsView extends StatelessWidget {
   const _ReportsView();
 
-  String _money(num? v) => '₹${(v ?? 0).toStringAsFixed(0)}';
+  String _money(num? v) => money((v ?? 0));
 
   List<AdminStat> _stats(ReportPayload data) => switch (data.kind) {
         AdminReportKind.patients => [
@@ -150,8 +151,8 @@ class _ReportsView extends StatelessWidget {
     return AdminCard(
       title: inv.patientName ?? inv.invoiceNo ?? 'Invoice',
       subtitle: [inv.invoiceNo, inv.invoiceDate].where((s) => s != null && s.isNotEmpty).join(' · '),
-      detail: 'Billed ₹${inv.total.toStringAsFixed(0)} · paid ₹${inv.paid.toStringAsFixed(0)}'
-          '${unpaid ? ' · due ₹${inv.balance.toStringAsFixed(0)}' : ''}',
+      detail: 'Billed ${money(inv.total)} · paid ${money(inv.paid)}'
+          '${unpaid ? ' · due ${money(inv.balance)}' : ''}',
       badge: inv.status,
       badgeColor: unpaid ? kWarnText : kSuccessFg,
       badgeBg: unpaid ? kWarnSurface : kSuccessBg,
@@ -163,7 +164,7 @@ class _ReportsView extends StatelessWidget {
     return AdminCard(
       title: d.drugName,
       subtitle: d.category,
-      detail: '${d.currentStock} in stock · reorder at ${d.minStockLevel} · ₹${d.unitPrice.toStringAsFixed(2)}'
+      detail: '${d.currentStock} in stock · reorder at ${d.minStockLevel} · ${money(d.unitPrice, decimals: 2)}'
           '${d.expiryDate != null ? ' · exp ${d.expiryDate}' : ''}',
       badge: low ? 'low' : null,
       badgeColor: kWarnText,

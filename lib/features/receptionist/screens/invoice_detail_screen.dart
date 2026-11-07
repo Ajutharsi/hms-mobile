@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:hms_mobile/core/services/hospital_settings.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
@@ -103,11 +104,11 @@ class _InvoiceDetailView extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(item.itemName, style: CareText.titleMd),
-                      Text('${item.quantity} × ₹${item.unitPrice.toStringAsFixed(2)}', style: CareText.mutedXs),
+                      Text('${item.quantity} × ${money(item.unitPrice, decimals: 2)}', style: CareText.mutedXs),
                     ],
                   ),
                 ),
-                Text('₹${item.total.toStringAsFixed(2)}', style: CareText.brandSmBold),
+                Text(money(item.total, decimals: 2), style: CareText.brandSmBold),
               ],
             ),
           ),
@@ -132,7 +133,7 @@ class _InvoiceDetailView extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Text('₹${p.amount.toStringAsFixed(2)}', style: const TextStyle(fontSize: CareText.sm, fontWeight: CareText.bold, color: kSuccessFg)),
+                  Text(money(p.amount, decimals: 2), style: const TextStyle(fontSize: CareText.sm, fontWeight: CareText.bold, color: kSuccessFg)),
                 ],
               ),
             ),
@@ -162,7 +163,7 @@ class _InvoiceDetailView extends StatelessWidget {
           Text(label, style: CareText.mutedSm),
           const Spacer(),
           Text(
-            '₹${amount.toStringAsFixed(2)}',
+            money(amount, decimals: 2),
             style: TextStyle(fontSize: bold ? CareText.lg : CareText.sm, fontWeight: bold ? CareText.heavy : CareText.medium, color: color ?? kInk),
           ),
         ],

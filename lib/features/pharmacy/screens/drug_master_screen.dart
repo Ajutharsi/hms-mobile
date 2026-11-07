@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:hms_mobile/core/services/hospital_settings.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
@@ -235,7 +236,7 @@ class _DrugCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 8),
-              Text('₹${drug.unitPrice.toStringAsFixed(2)}', style: TextStyle(fontSize: CareText.sm, color: kCareDark, fontWeight: CareText.medium)),
+              Text(money(drug.unitPrice, decimals: 2), style: TextStyle(fontSize: CareText.sm, color: kCareDark, fontWeight: CareText.medium)),
               const Spacer(),
               if ((drug.expiryDate ?? '').isNotEmpty)
                 Text('Exp: ${drug.expiryDate}', style: TextStyle(fontSize: CareText.xs, color: drug.isNearExpiry || drug.isExpired ? kDangerFg : kMuted)),

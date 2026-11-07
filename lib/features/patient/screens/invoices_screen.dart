@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:hms_mobile/core/services/hospital_settings.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
@@ -23,7 +24,7 @@ class InvoicesTabBody extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(CareRadius.panel)),
         title: const Text('Request billing help?'),
         content: Text(
-          'This sends invoice ${invoice.invoiceNo} to our billing team, who will contact you about the ₹${invoice.balance.toStringAsFixed(2)} balance. '
+          'This sends invoice ${invoice.invoiceNo} to our billing team, who will contact you about the ${money(invoice.balance, decimals: 2)} balance. '
           "This doesn't process a payment — there's no online payment option yet.",
         ),
         actions: [
@@ -116,7 +117,7 @@ class _BalanceSummary extends StatelessWidget {
                 const Text('Outstanding balance', style: CareText.onCareSoftSm),
                 const SizedBox(height: 4),
                 Text(
-                  '₹${outstanding.toStringAsFixed(2)}',
+                  money(outstanding, decimals: 2),
                   style: const TextStyle(color: Colors.white, fontSize: CareText.h1, fontWeight: CareText.heavy),
                 ),
                 const SizedBox(height: 4),
@@ -177,7 +178,7 @@ class _InvoiceCard extends StatelessWidget {
                 Text(invoice.date, style: CareText.mutedSm),
                 const Spacer(),
                 Text(
-                  invoice.hasBalance ? 'Due ₹${invoice.balance.toStringAsFixed(2)}' : 'Paid',
+                  invoice.hasBalance ? 'Due ${money(invoice.balance, decimals: 2)}' : 'Paid',
                   style: TextStyle(
                     fontSize: CareText.sm,
                     fontWeight: CareText.heavy,
@@ -203,7 +204,7 @@ class _InvoiceCard extends StatelessWidget {
                                 style: const TextStyle(fontSize: CareText.sm, color: kInk),
                               ),
                             ),
-                            Text('₹${item.total.toStringAsFixed(2)}', style: CareText.mutedSm),
+                            Text(money(item.total, decimals: 2), style: CareText.mutedSm),
                           ],
                         ),
                       )),
@@ -251,7 +252,7 @@ class _AmountRow extends StatelessWidget {
         children: [
           Text(label, style: TextStyle(fontSize: CareText.sm, color: emphasize ? kInk : kMuted, fontWeight: emphasize ? CareText.bold : CareText.regular)),
           Text(
-            '₹${value.toStringAsFixed(2)}',
+            money(value, decimals: 2),
             style: TextStyle(fontSize: emphasize ? CareText.md : CareText.sm, fontWeight: emphasize ? CareText.heavy : CareText.regular, color: emphasize ? kCareDark : kInk),
           ),
         ],

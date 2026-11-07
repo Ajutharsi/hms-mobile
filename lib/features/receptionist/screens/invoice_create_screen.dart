@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
+import 'package:hms_mobile/core/services/hospital_settings.dart';
 import 'package:hms_mobile/core/services/api_service.dart';
 import 'package:hms_mobile/core/services/auth_storage.dart';
-import 'package:hms_mobile/core/services/receptionist_api_service.dart';
+import 'package:hms_mobile/features/receptionist/services/receptionist_api_service.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
@@ -232,7 +233,7 @@ class _InvoiceCreateScreenState extends State<InvoiceCreateScreen> {
                 const SizedBox(height: 8),
                 Align(
                   alignment: Alignment.centerRight,
-                  child: Text('Subtotal: ₹${_subtotal.toStringAsFixed(2)}', style: TextStyle(fontSize: CareText.md, fontWeight: CareText.bold, color: kCareDark)),
+                  child: Text('Subtotal: ${money(_subtotal, decimals: 2)}', style: TextStyle(fontSize: CareText.md, fontWeight: CareText.bold, color: kCareDark)),
                 ),
                 const SizedBox(height: 20),
                 Row(
@@ -306,7 +307,7 @@ class _LineEditorState extends State<_LineEditor> {
                   decoration: const InputDecoration(labelText: 'Service (or manual below)', isDense: true),
                   items: [
                     const DropdownMenuItem(value: null, child: Text('Manual item', overflow: TextOverflow.ellipsis)),
-                    ...widget.services.map((s) => DropdownMenuItem(value: s, child: Text('${s.serviceName} (₹${s.price.toStringAsFixed(0)})', overflow: TextOverflow.ellipsis))),
+                    ...widget.services.map((s) => DropdownMenuItem(value: s, child: Text('${s.serviceName} (${money(s.price)})', overflow: TextOverflow.ellipsis))),
                   ],
                   onChanged: (v) => setState(() => widget.line.service = v),
                 ),
@@ -333,7 +334,7 @@ class _LineEditorState extends State<_LineEditor> {
             ],
           ),
           const SizedBox(height: 6),
-          Align(alignment: Alignment.centerRight, child: Text('₹${widget.line.total.toStringAsFixed(2)}', style: TextStyle(fontSize: CareText.sm, fontWeight: CareText.bold, color: kCareDark))),
+          Align(alignment: Alignment.centerRight, child: Text(money(widget.line.total, decimals: 2), style: TextStyle(fontSize: CareText.sm, fontWeight: CareText.bold, color: kCareDark))),
         ],
       ),
     );

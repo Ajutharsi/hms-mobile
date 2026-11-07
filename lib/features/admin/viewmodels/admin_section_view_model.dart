@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:hms_mobile/core/services/admin_api_service.dart';
+import 'package:hms_mobile/features/admin/services/admin_api_service.dart';
 import 'package:hms_mobile/core/services/api_service.dart';
 import 'package:hms_mobile/core/services/auth_storage.dart';
 

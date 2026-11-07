@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:hms_mobile/core/services/hospital_settings.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
@@ -141,7 +142,7 @@ class _PayrollView extends StatelessWidget {
               child: AdminStatRow(stats: [
                 AdminStat(value: '${run.stats['run'] ?? 0}', label: 'Lines run'),
                 AdminStat(value: '${run.stats['paid'] ?? 0}', label: 'Paid', color: kSuccessFg),
-                AdminStat(value: '₹${(run.stats['total_net'] ?? 0).toStringAsFixed(0)}', label: 'Net total'),
+                AdminStat(value: money((run.stats['total_net'] ?? 0)), label: 'Net total'),
               ]),
             ),
           Padding(
@@ -241,12 +242,12 @@ class _PayrollView extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        '₹${line.basic.toStringAsFixed(0)} + ₹${line.allowances.toStringAsFixed(0)} '
-                        '− ₹${line.deductions.toStringAsFixed(0)}',
+                        '${money(line.basic)} + ${money(line.allowances)} '
+                        '− ${money(line.deductions)}',
                         style: CareText.mutedSm,
                       ),
                     ),
-                    Text('₹${line.netPay.toStringAsFixed(0)}', style: CareText.titleLg),
+                    Text(money(line.netPay), style: CareText.titleLg),
                   ],
                 ),
                 if (!line.isPaid) ...[

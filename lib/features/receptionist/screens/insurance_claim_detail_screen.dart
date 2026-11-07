@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:hms_mobile/core/services/hospital_settings.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
@@ -127,9 +128,9 @@ class _DetailView extends StatelessWidget {
           ('Policy number', claim.policyNumber),
           ('Member ID', claim.memberId ?? '—'),
           ('Claim type', titleCase(claim.claimType)),
-          ('Claim amount', '₹${claim.claimAmount.toStringAsFixed(2)}'),
-          if (claim.approvedAmount != null) ('Approved amount', '₹${claim.approvedAmount!.toStringAsFixed(2)}'),
-          if (claim.patientLiability != null) ('Patient liability', '₹${claim.patientLiability!.toStringAsFixed(2)}'),
+          ('Claim amount', money(claim.claimAmount, decimals: 2)),
+          if (claim.approvedAmount != null) ('Approved amount', money(claim.approvedAmount!, decimals: 2)),
+          if (claim.patientLiability != null) ('Patient liability', money(claim.patientLiability!, decimals: 2)),
           ('Admission date', claim.admissionDate ?? '—'),
           ('Discharge date', claim.dischargeDate ?? '—'),
           ('ICD-10 code', claim.icd10Code ?? '—'),

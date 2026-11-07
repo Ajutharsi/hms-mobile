@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/services/api_service.dart';
 import 'package:hms_mobile/core/services/auth_storage.dart';
-import 'package:hms_mobile/core/services/discharge_api_service.dart';
+import 'package:hms_mobile/features/discharge/services/discharge_api_service.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_forms.dart';
 import 'package:hms_mobile/core/theme/care_radius.dart';

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:hms_mobile/core/services/hospital_settings.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
@@ -89,11 +90,11 @@ class _IpdDepositsView extends StatelessWidget {
         if (stats != null)
           Row(
             children: [
-              Expanded(child: _StatTile(label: 'Collected', value: '₹${stats.totalCollected.toStringAsFixed(0)}', color: kSuccessFg, bg: kSuccessBg)),
+              Expanded(child: _StatTile(label: 'Collected', value: money(stats.totalCollected), color: kSuccessFg, bg: kSuccessBg)),
               const SizedBox(width: 10),
-              Expanded(child: _StatTile(label: 'Refunded', value: '₹${stats.totalRefunded.toStringAsFixed(0)}', color: kWarningFg, bg: kWarningBg)),
+              Expanded(child: _StatTile(label: 'Refunded', value: money(stats.totalRefunded), color: kWarningFg, bg: kWarningBg)),
               const SizedBox(width: 10),
-              Expanded(child: _StatTile(label: 'Today', value: '₹${stats.todayCollection.toStringAsFixed(0)}', color: kCareDark, bg: kCareSoft)),
+              Expanded(child: _StatTile(label: 'Today', value: money(stats.todayCollection), color: kCareDark, bg: kCareSoft)),
             ],
           ),
         const SizedBox(height: 20),
@@ -164,11 +165,11 @@ class _DepositCard extends StatelessWidget {
           const SizedBox(height: 8),
           Row(
             children: [
-              Text('${isAdvance ? '+' : '-'}₹${deposit.amount.toStringAsFixed(2)}', style: TextStyle(fontSize: CareText.lg, fontWeight: CareText.heavy, color: amountColor)),
+              Text('${isAdvance ? '+' : '-'}${money(deposit.amount, decimals: 2)}', style: TextStyle(fontSize: CareText.lg, fontWeight: CareText.heavy, color: amountColor)),
               const SizedBox(width: 10),
               Text(_titleCase(deposit.paymentMethod), style: CareText.mutedXs),
               const Spacer(),
-              Text('Balance: ₹${deposit.balance.toStringAsFixed(0)}', style: CareText.mutedXsMedium),
+              Text('Balance: ${money(deposit.balance)}', style: CareText.mutedXsMedium),
             ],
           ),
           if (onRefund != null) ...[
@@ -292,7 +293,7 @@ class _RefundDialogState extends State<_RefundDialog> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('Available balance: ₹${widget.deposit.balance.toStringAsFixed(2)}', style: CareText.mutedSm),
+            Text('Available balance: ${money(widget.deposit.balance, decimals: 2)}', style: CareText.mutedSm),
             const SizedBox(height: 10),
             TextField(controller: _amountController, keyboardType: TextInputType.number, decoration: const InputDecoration(labelText: 'Refund amount')),
             const SizedBox(height: 10),

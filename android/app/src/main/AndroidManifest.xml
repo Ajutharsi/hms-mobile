@@ -3,7 +3,7 @@
          but a release build needs it declared here too. -->
     <uses-permission android:name="android.permission.INTERNET"/>
     <application
-        android:label="hms_mobile"
+        android:label="HMS India"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:networkSecurityConfig="@xml/network_security_config">

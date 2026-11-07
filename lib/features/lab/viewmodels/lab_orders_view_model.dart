@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:hms_mobile/core/services/api_service.dart';
 import 'package:hms_mobile/core/services/auth_storage.dart';
-import 'package:hms_mobile/core/services/lab_api_service.dart';
+import 'package:hms_mobile/features/lab/services/lab_api_service.dart';
 import 'package:hms_mobile/features/lab/models/lab_order.dart';
 
 class LabOrdersViewModel extends ChangeNotifier {

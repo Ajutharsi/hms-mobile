@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:hms_mobile/core/services/hospital_settings.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
@@ -123,8 +124,8 @@ class _InvoicesViewState extends State<_InvoicesView> {
             children: [
               _StatTile(label: 'Total Invoices', value: '${stats.totalInvoices}', color: kCareDark, bg: kCareSoft),
               _StatTile(label: 'Overdue', value: '${stats.overdue}', color: kDangerFg, bg: kDangerBg),
-              _StatTile(label: 'Paid', value: '₹${stats.paid.toStringAsFixed(0)}', color: kSuccessFg, bg: kSuccessBg),
-              _StatTile(label: 'Outstanding', value: '₹${stats.outstanding.toStringAsFixed(0)}', color: kWarningFg, bg: kWarningBg),
+              _StatTile(label: 'Paid', value: money(stats.paid), color: kSuccessFg, bg: kSuccessBg),
+              _StatTile(label: 'Outstanding', value: money(stats.outstanding), color: kWarningFg, bg: kWarningBg),
             ],
           ),
           const SizedBox(height: 16),
@@ -214,10 +215,10 @@ class _InvoiceCard extends StatelessWidget {
             const SizedBox(height: 8),
             Row(
               children: [
-                Text('Total ₹${invoice.total.toStringAsFixed(2)}', style: CareText.titleSmMedium),
+                Text('Total ${money(invoice.total, decimals: 2)}', style: CareText.titleSmMedium),
                 const Spacer(),
                 Text(
-                  'Balance ₹${invoice.balance.toStringAsFixed(2)}',
+                  'Balance ${money(invoice.balance, decimals: 2)}',
                   style: TextStyle(fontSize: CareText.sm, fontWeight: CareText.bold, color: invoice.balance > 0 ? kDangerText : kSuccessFg),
                 ),
               ],

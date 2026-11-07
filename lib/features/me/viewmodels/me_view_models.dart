@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:hms_mobile/core/services/api_service.dart';
 import 'package:hms_mobile/core/services/auth_storage.dart';
-import 'package:hms_mobile/core/services/me_api_service.dart';
+import 'package:hms_mobile/features/me/services/me_api_service.dart';
 import 'package:hms_mobile/features/me/models/me_models.dart';
 
 /// Shared plumbing for the three self-service screens.

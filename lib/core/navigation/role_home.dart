@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:hms_mobile/core/models/app_user.dart';
+import 'package:hms_mobile/core/services/current_user.dart';
+import 'package:hms_mobile/core/services/hospital_settings.dart';
 import 'package:hms_mobile/features/doctor/screens/doctor_home_screen.dart';
 import 'package:hms_mobile/features/lab/screens/lab_home_screen.dart';
 import 'package:hms_mobile/features/nurse/screens/nurse_home_screen.dart';
@@ -30,6 +32,16 @@ class _RoleHomeState extends State<RoleHome> {
   /// shown without having to re-fetch `/me` (which the server was
   /// refusing a moment ago anyway).
   bool _passwordChanged = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Both ways in -- a fresh sign-in and a restored session -- come
+    // through here, and signing in as someone else must not leave the
+    // last account's face in the header.
+    rememberMyPhoto(widget.user.profilePhotoUrl);
+    rememberHospital(name: widget.user.hospitalName, currency: widget.user.currency);
+  }
 
   @override
   Widget build(BuildContext context) {

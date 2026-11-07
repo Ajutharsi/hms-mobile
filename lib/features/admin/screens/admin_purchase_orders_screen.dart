@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:hms_mobile/core/services/hospital_settings.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/admin/models/admin_models.dart';
@@ -84,7 +85,7 @@ class _PurchaseOrdersView extends StatelessWidget {
           AdminStatRow(stats: [
             AdminStat(value: '${totals['draft']?.toInt() ?? 0}', label: 'Awaiting', color: kWarnText),
             AdminStat(value: '${totals['received']?.toInt() ?? 0}', label: 'Received', color: kSuccessFg),
-            AdminStat(value: '₹${(totals['value'] ?? 0).toStringAsFixed(0)}', label: 'Value'),
+            AdminStat(value: money((totals['value'] ?? 0)), label: 'Value'),
           ]),
           AdminFilterChips(
             value: viewModel.status,
@@ -103,7 +104,7 @@ class _PurchaseOrdersView extends StatelessWidget {
           title: po.poNo ?? 'Purchase order',
           subtitle: po.supplier,
           detail: [
-            '${po.itemCount} line${po.itemCount == 1 ? '' : 's'} · ₹${po.totalAmount.toStringAsFixed(0)}',
+            '${po.itemCount} line${po.itemCount == 1 ? '' : 's'} · ${money(po.totalAmount)}',
             if (po.isReceived) 'Received ${po.receivedDate}' else 'Expected ${po.expectedDate ?? '—'}',
           ].join('\n'),
           badge: po.status,

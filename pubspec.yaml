@@ -1,7 +1,10 @@
 name: hms_mobile
 description: "HMS India mobile app — starts with login, talks to the Laravel Sanctum API."
 publish_to: 'none'
-version: 0.1.0
+# <semver>+<build>. The build number becomes Android's versionCode,
+# and Play refuses an upload that reuses one -- so it goes up on every
+# release, whether or not the semver part moves.
+version: 0.2.0+2
 
 environment:
   sdk: '>=3.3.0 <4.0.0'
