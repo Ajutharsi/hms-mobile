@@ -11,6 +11,7 @@ import 'package:hms_mobile/core/theme/care_text.dart';
 import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/auth/screens/login_screen.dart';
 import 'package:hms_mobile/features/common/screens/about_screen.dart';
+import 'package:hms_mobile/features/me/screens/inbox_screen.dart';
 import 'package:hms_mobile/features/common/screens/help_screen.dart';
 import 'package:hms_mobile/features/settings/screens/appearance_screen.dart';
 
@@ -216,12 +217,18 @@ class _AppSettingsScreenState extends State<AppSettingsScreen> {
                     onChanged: _biometricAvailable ? (v) => _toggleBiometric(prefs, v) : null,
                   ),
                 ),
-                const _SettingsRow(
+                // The inbox exists now -- /me/notifications serves it and
+                // every role's drawer opens it. What is still missing is
+                // the push: no FCM in the app, nothing sending from the
+                // server. So the row says that and takes you to the list
+                // rather than sitting there greyed out and out of date.
+                _SettingsRow(
                   icon: Icons.notifications_none_rounded,
                   title: 'Alerts',
-                  subtitle: 'Arrives with the notifications inbox, which the server does not serve yet',
-                  enabled: false,
-                  trailing: Switch(value: false, onChanged: null),
+                  subtitle: 'Push alerts are not set up yet. Open your notifications to see what has come in.',
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const InboxScreen()),
+                  ),
                 ),
               ],
             ),

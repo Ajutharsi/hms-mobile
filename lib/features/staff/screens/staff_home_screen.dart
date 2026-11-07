@@ -45,7 +45,10 @@ Widget _screenFor(_Target target) => switch (target) {
       _Target.inbox => const InboxScreen(),
       _Target.myWork => const MyWorkScreen(),
       _Target.search => const GlobalSearchScreen(),
-      _Target.profile => const NurseProfileScreen(),
+      // Shares the nurse's screen, because the fields and the
+      // controller are the same -- but on its own path, so a staff
+      // member is not quietly calling /nurse to read their own name.
+      _Target.profile => const NurseProfileScreen(endpointPrefix: '/staff'),
       _Target.settings => const AppSettingsScreen(),
     };
 

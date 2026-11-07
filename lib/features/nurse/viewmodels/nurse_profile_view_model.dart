@@ -13,7 +13,12 @@ class NurseProfileViewModel extends ChangeNotifier {
   final NurseApiService _api;
   final AuthStorage _authStorage;
 
-  NurseProfileViewModel({NurseApiService? api, AuthStorage? authStorage})
+  /// Which endpoint this profile belongs to: '/nurse' or '/staff'. The
+  /// screen is shared, because the two profiles are the same fields
+  /// answered by the same controller.
+  final String endpointPrefix;
+
+  NurseProfileViewModel({NurseApiService? api, AuthStorage? authStorage, this.endpointPrefix = '/nurse'})
       : _api = api ?? NurseApiService(),
         _authStorage = authStorage ?? AuthStorage() {
     load();
@@ -45,7 +50,7 @@ class NurseProfileViewModel extends ChangeNotifier {
 
     try {
       final token = await _authStorage.readToken();
-      profile = await guardNetworkErrors(() => _api.profile(token!));
+      profile = await guardNetworkErrors(() => _api.profile(token!, prefix: endpointPrefix));
       nameController.text = profile!.name;
       emailController.text = profile!.email;
       phoneController.text = profile!.phone ?? '';
@@ -124,6 +129,7 @@ class NurseProfileViewModel extends ChangeNotifier {
             passwordConfirmation: confirmPasswordController.text,
             photoBytes: pendingPhotoBytes,
             photoFilename: _pendingPhotoName,
+            prefix: endpointPrefix,
           ));
       pendingPhotoBytes = null;
       _pendingPhotoName = null;

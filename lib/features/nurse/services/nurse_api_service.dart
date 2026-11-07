@@ -701,8 +701,13 @@ class NurseApiService {
   // Profile
   // ============================================================
 
-  Future<NurseProfile> profile(String token) async {
-    final json = await _get(token, '/nurse/profile');
+  /// The nurse's profile, or a staff member's.
+  ///
+  /// Both answer from the same controller -- its guard is
+  /// authNurseOrStaff -- so the only difference is the path the account
+  /// is entitled to call. The prefix says which.
+  Future<NurseProfile> profile(String token, {String prefix = '/nurse'}) async {
+    final json = await _get(token, '$prefix/profile');
     return NurseProfile.fromJson(json);
   }
 
@@ -716,8 +721,9 @@ class NurseApiService {
     String? passwordConfirmation,
     Uint8List? photoBytes,
     String? photoFilename,
+    String prefix = '/nurse',
   }) async {
-    final request = http.MultipartRequest('POST', Uri.parse('$baseUrl/nurse/profile'))
+    final request = http.MultipartRequest('POST', Uri.parse('$baseUrl$prefix/profile'))
       ..headers['Accept'] = 'application/json'
       ..headers['Authorization'] = 'Bearer $token'
       ..fields['name'] = name

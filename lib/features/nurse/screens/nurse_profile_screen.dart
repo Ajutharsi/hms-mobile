@@ -10,13 +10,18 @@ import 'package:hms_mobile/features/nurse/viewmodels/nurse_profile_view_model.da
 import 'package:hms_mobile/core/theme/care_radius.dart';
 
 class NurseProfileScreen extends StatelessWidget {
-  const NurseProfileScreen({super.key});
+  /// '/nurse' or '/staff'. Both roles answer from the same controller
+  /// and show the same fields, so they share this screen; only the path
+  /// the account may call differs.
+  final String endpointPrefix;
+
+  const NurseProfileScreen({super.key, this.endpointPrefix = '/nurse'});
 
   @override
   Widget build(BuildContext context) {
     watchCarePalette(context);
     return ChangeNotifierProvider(
-      create: (_) => NurseProfileViewModel(),
+      create: (_) => NurseProfileViewModel(endpointPrefix: endpointPrefix),
       child: const _NurseProfileView(),
     );
   }
