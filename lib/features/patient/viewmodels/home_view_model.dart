@@ -3,16 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:hms_mobile/core/models/app_user.dart';
 import 'package:hms_mobile/features/patient/models/appointment.dart';
 import 'package:hms_mobile/core/services/api_service.dart';
+import 'package:hms_mobile/features/patient/services/patient_api_service.dart';
 import 'package:hms_mobile/features/patient/models/time_slot.dart';
 import 'package:hms_mobile/core/services/auth_storage.dart';
 
 class HomeViewModel extends ChangeNotifier {
-  final ApiService _api;
+  final PatientApiService _api;
+
+  /// Signing out and the shared doctor-slot lookup are not the patient's
+  /// own records, so they stay on the base client.
+  final ApiService _auth;
   final AuthStorage _authStorage;
   final AppUser user;
 
-  HomeViewModel({required this.user, ApiService? api, AuthStorage? authStorage})
-      : _api = api ?? ApiService(),
+  HomeViewModel({required this.user, PatientApiService? api, ApiService? auth, AuthStorage? authStorage})
+      : _api = api ?? PatientApiService(),
+        _auth = auth ?? ApiService(),
         _authStorage = authStorage ?? AuthStorage() {
     loadAppointments();
   }
@@ -65,7 +71,7 @@ class HomeViewModel extends ChangeNotifier {
   /// The doctor's free slots for a day, used by the move sheet.
   Future<List<TimeSlot>> slotsFor({required int doctorId, required String date}) async {
     final token = await _authStorage.readToken();
-    return guardNetworkErrors(() => _api.getSlots(token!, doctorId: doctorId, date: date));
+    return guardNetworkErrors(() => _auth.getSlots(token!, doctorId: doctorId, date: date));
   }
 
   Future<void> logout() async {
@@ -75,7 +81,7 @@ class HomeViewModel extends ChangeNotifier {
     final token = await _authStorage.readToken();
     if (token != null) {
       try {
-        await _api.logout(token);
+        await _auth.logout(token);
       } catch (_) {
         // Even if the server call fails (e.g. offline), still clear the
         // local token so the user isn't stuck signed in on-device.

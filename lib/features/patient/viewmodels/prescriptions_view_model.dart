@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 
 import 'package:hms_mobile/features/patient/models/prescription.dart';
 import 'package:hms_mobile/core/services/api_service.dart';
+import 'package:hms_mobile/features/patient/services/patient_api_service.dart';
 import 'package:hms_mobile/core/services/auth_storage.dart';
 
 class PrescriptionsViewModel extends ChangeNotifier {
-  final ApiService _api;
+  final PatientApiService _api;
   final AuthStorage _authStorage;
 
-  PrescriptionsViewModel({ApiService? api, AuthStorage? authStorage})
-      : _api = api ?? ApiService(),
+  PrescriptionsViewModel({PatientApiService? api, AuthStorage? authStorage})
+      : _api = api ?? PatientApiService(),
         _authStorage = authStorage ?? AuthStorage() {
     loadPrescriptions();
   }

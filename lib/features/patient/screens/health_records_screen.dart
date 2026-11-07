@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:hms_mobile/core/services/api_service.dart';
+import 'package:hms_mobile/features/patient/services/patient_api_service.dart';
 import 'package:hms_mobile/core/services/auth_storage.dart';
 import 'package:hms_mobile/core/theme/app_style.dart';
 import 'package:hms_mobile/core/theme/care_radius.dart';
@@ -10,11 +11,11 @@ import 'package:hms_mobile/core/theme/care_ui.dart';
 import 'package:hms_mobile/features/patient/models/health_record.dart';
 
 class HealthRecordsViewModel extends ChangeNotifier {
-  final ApiService api;
+  final PatientApiService api;
   final AuthStorage authStorage;
 
-  HealthRecordsViewModel({ApiService? api, AuthStorage? authStorage})
-      : api = api ?? ApiService(),
+  HealthRecordsViewModel({PatientApiService? api, AuthStorage? authStorage})
+      : api = api ?? PatientApiService(),
         authStorage = authStorage ?? AuthStorage() {
     load();
   }

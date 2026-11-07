@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:hms_mobile/core/models/app_user.dart';
 import 'package:hms_mobile/core/services/api_service.dart';
+import 'package:hms_mobile/features/patient/services/patient_api_service.dart';
 
 import '../support/api_harness.dart';
 
@@ -9,7 +10,7 @@ void main() {
   group('patient', () {
     test('parses its own profile the way the server sends it', () async {
       final http = respondingWith(fixture('patient_profile'));
-      final profile = await ApiService(client: http.client).getProfile('tok');
+      final profile = await PatientApiService(client: http.client).getProfile('tok');
 
       final user = fixtureJson('patient_profile')['user'] as Map<String, dynamic>;
       expect(profile.name, user['name']);
@@ -20,21 +21,21 @@ void main() {
 
     test('an empty list of appointments is a list, not a crash', () async {
       final http = respondingWith(fixture('patient_appointments'));
-      final appointments = await ApiService(client: http.client).getAppointments('tok');
+      final appointments = await PatientApiService(client: http.client).getAppointments('tok');
 
       expect(appointments, isEmpty);
     });
 
     test('a rejected token is reported as an expired session', () async {
       await expectLater(
-        ApiService(client: failingWith(401).client).getAppointments('stale'),
+        PatientApiService(client: failingWith(401).client).getAppointments('stale'),
         throwsA(isA<ApiException>().having((e) => e.isUnauthenticated, 'isUnauthenticated', isTrue)),
       );
     });
 
     test('maintenance is told apart from an ordinary failure', () async {
       await expectLater(
-        ApiService(client: failingWith(503, message: 'Back at 6pm.').client).getAppointments('tok'),
+        PatientApiService(client: failingWith(503, message: 'Back at 6pm.').client).getAppointments('tok'),
         throwsA(isA<ApiException>()
             .having((e) => e.isMaintenance, 'isMaintenance', isTrue)
             .having((e) => e.message, 'message', 'Back at 6pm.')),
