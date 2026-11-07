@@ -117,43 +117,56 @@ class _HomeShellState extends State<_HomeShell> {
     watchCarePalette(context);
     final homeViewModel = context.watch<HomeViewModel>();
 
-    return Scaffold(
-      backgroundColor: kCareBg,
-      drawer: _PatientDrawer(
-        user: homeViewModel.user,
-        current: _tabs[_tabIndex],
-        photoUrl: context.watch<ProfileViewModel>().profile?.profilePhotoUrl,
-        isLoggingOut: homeViewModel.isLoggingOut,
-        onOpen: _open,
-        onLogout: _logout,
-      ),
-      body: Column(
-        children: [
-          if (_tabIndex != 0) CarePageHeader(title: _tabTitles[_tabIndex], showBack: false),
-          Expanded(
-            child: IndexedStack(
-              index: _tabIndex,
-              children: [
-                DashboardTabBody(onOpen: _open),
-                const _AppointmentsTab(),
-                const LabResultsTabBody(),
-                const ProfileTabBody(),
-              ],
+    // This is the one shell that switches tabs in place -- an
+    // IndexedStack and setState, no route pushed -- so the system back
+    // button had nothing of its own to pop and closed the app instead.
+    // Every other role pushes a route per destination and so behaves
+    // the way a phone expects. Back now returns to Home, and only
+    // leaves the app from Home, which is what the rest of Android does.
+    return PopScope(
+      canPop: _tabIndex == 0,
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) return;
+        setState(() => _tabIndex = 0);
+      },
+      child: Scaffold(
+        backgroundColor: kCareBg,
+        drawer: _PatientDrawer(
+          user: homeViewModel.user,
+          current: _tabs[_tabIndex],
+          photoUrl: context.watch<ProfileViewModel>().profile?.profilePhotoUrl,
+          isLoggingOut: homeViewModel.isLoggingOut,
+          onOpen: _open,
+          onLogout: _logout,
+        ),
+        body: Column(
+          children: [
+            if (_tabIndex != 0) CarePageHeader(title: _tabTitles[_tabIndex], showBack: false),
+            Expanded(
+              child: IndexedStack(
+                index: _tabIndex,
+                children: [
+                  DashboardTabBody(onOpen: _open),
+                  const _AppointmentsTab(),
+                  const LabResultsTabBody(),
+                  const ProfileTabBody(),
+                ],
+              ),
             ),
-          ),
-        ],
-      ),
-      bottomNavigationBar: CareBottomNav(
-        selectedIndex: _tabIndex,
-        onSelected: (i) => setState(() => _tabIndex = i),
-        centerIcon: Icons.add_rounded,
-        onCenterTap: _bookAppointment,
-        items: const [
-          CareNavItem(icon: Icons.home_outlined, activeIcon: Icons.home_rounded, label: 'Home'),
-          CareNavItem(icon: Icons.calendar_month_outlined, activeIcon: Icons.calendar_month_rounded, label: 'Visits'),
-          CareNavItem(icon: Icons.biotech_outlined, activeIcon: Icons.biotech_rounded, label: 'Lab'),
-          CareNavItem(icon: Icons.person_outline_rounded, activeIcon: Icons.person_rounded, label: 'Profile'),
-        ],
+          ],
+        ),
+        bottomNavigationBar: CareBottomNav(
+          selectedIndex: _tabIndex,
+          onSelected: (i) => setState(() => _tabIndex = i),
+          centerIcon: Icons.add_rounded,
+          onCenterTap: _bookAppointment,
+          items: const [
+            CareNavItem(icon: Icons.home_outlined, activeIcon: Icons.home_rounded, label: 'Home'),
+            CareNavItem(icon: Icons.calendar_month_outlined, activeIcon: Icons.calendar_month_rounded, label: 'Visits'),
+            CareNavItem(icon: Icons.biotech_outlined, activeIcon: Icons.biotech_rounded, label: 'Lab'),
+            CareNavItem(icon: Icons.person_outline_rounded, activeIcon: Icons.person_rounded, label: 'Profile'),
+          ],
+        ),
       ),
     );
   }
@@ -192,7 +205,8 @@ class _PatientDrawer extends StatelessWidget {
 
     return Drawer(
       backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.horizontal(right: Radius.circular(CareRadius.drawer))),
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.horizontal(right: Radius.circular(CareRadius.drawer))),
       child: Column(
         children: [
           CareHeaderBackground(
@@ -229,11 +243,29 @@ class _PatientDrawer extends StatelessWidget {
             child: ListView(
               padding: const EdgeInsets.fromLTRB(12, 14, 12, 12),
               children: [
-                _DrawerTile(icon: Icons.home_rounded, label: 'Home', selected: current == PatientSection.home, onTap: () => go(PatientSection.home)),
-                _DrawerTile(icon: Icons.calendar_month_rounded, label: 'My Appointments', selected: current == PatientSection.appointments, onTap: () => go(PatientSection.appointments)),
-                _DrawerTile(icon: Icons.event_available_rounded, label: 'Book Appointment', onTap: () => go(PatientSection.book)),
-                _DrawerTile(icon: Icons.medication_rounded, label: 'My Prescriptions', onTap: () => go(PatientSection.prescriptions)),
-                _DrawerTile(icon: Icons.biotech_rounded, label: 'My Lab Results', selected: current == PatientSection.lab, onTap: () => go(PatientSection.lab)),
+                _DrawerTile(
+                    icon: Icons.home_rounded,
+                    label: 'Home',
+                    selected: current == PatientSection.home,
+                    onTap: () => go(PatientSection.home)),
+                _DrawerTile(
+                    icon: Icons.calendar_month_rounded,
+                    label: 'My Appointments',
+                    selected: current == PatientSection.appointments,
+                    onTap: () => go(PatientSection.appointments)),
+                _DrawerTile(
+                    icon: Icons.event_available_rounded,
+                    label: 'Book Appointment',
+                    onTap: () => go(PatientSection.book)),
+                _DrawerTile(
+                    icon: Icons.medication_rounded,
+                    label: 'My Prescriptions',
+                    onTap: () => go(PatientSection.prescriptions)),
+                _DrawerTile(
+                    icon: Icons.biotech_rounded,
+                    label: 'My Lab Results',
+                    selected: current == PatientSection.lab,
+                    onTap: () => go(PatientSection.lab)),
                 _DrawerTile(icon: Icons.receipt_long_rounded, label: 'My Bills', onTap: () => go(PatientSection.bills)),
                 _DrawerTile(
                   icon: Icons.folder_shared_rounded,
@@ -251,7 +283,11 @@ class _PatientDrawer extends StatelessWidget {
                     Navigator.of(context).push(MaterialPageRoute(builder: (_) => const InboxScreen()));
                   },
                 ),
-                _DrawerTile(icon: Icons.person_rounded, label: 'My Profile', selected: current == PatientSection.profile, onTap: () => go(PatientSection.profile)),
+                _DrawerTile(
+                    icon: Icons.person_rounded,
+                    label: 'My Profile',
+                    selected: current == PatientSection.profile,
+                    onTap: () => go(PatientSection.profile)),
                 _DrawerTile(
                   icon: Icons.settings_rounded,
                   label: 'Settings',
@@ -289,8 +325,7 @@ class _DrawerTile extends StatelessWidget {
   const _DrawerTile({required this.icon, required this.label, required this.onTap, this.selected = false});
 
   @override
-  Widget build(BuildContext context) =>
-      CareDrawerTile(icon: icon, label: label, selected: selected, onTap: onTap);
+  Widget build(BuildContext context) => CareDrawerTile(icon: icon, label: label, selected: selected, onTap: onTap);
 }
 
 class _AppointmentsTab extends StatefulWidget {
@@ -392,11 +427,20 @@ class _AppointmentsTabState extends State<_AppointmentsTab> {
           padding: const EdgeInsets.fromLTRB(20, 16, 20, 4),
           child: Container(
             padding: const EdgeInsets.all(4),
-            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(CareRadius.field), border: Border.all(color: kCareBorder)),
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(CareRadius.field),
+                border: Border.all(color: kCareBorder)),
             child: Row(
               children: [
-                _SegmentButton(label: 'Upcoming (${upcoming.length})', selected: _showUpcoming, onTap: () => setState(() => _showUpcoming = true)),
-                _SegmentButton(label: 'History (${history.length})', selected: !_showUpcoming, onTap: () => setState(() => _showUpcoming = false)),
+                _SegmentButton(
+                    label: 'Upcoming (${upcoming.length})',
+                    selected: _showUpcoming,
+                    onTap: () => setState(() => _showUpcoming = true)),
+                _SegmentButton(
+                    label: 'History (${history.length})',
+                    selected: !_showUpcoming,
+                    onTap: () => setState(() => _showUpcoming = false)),
               ],
             ),
           ),
@@ -419,7 +463,9 @@ class _AppointmentsTabState extends State<_AppointmentsTab> {
       return CareStateView(
         icon: Icons.event_available_rounded,
         title: _showUpcoming ? 'No upcoming appointments' : 'No past appointments',
-        message: _showUpcoming ? 'Tap the + button below to book a visit.' : 'Completed and cancelled visits will show up here.',
+        message: _showUpcoming
+            ? 'Tap the + button below to book a visit.'
+            : 'Completed and cancelled visits will show up here.',
       );
     }
 
@@ -455,7 +501,8 @@ class _SegmentButton extends StatelessWidget {
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 180),
           padding: const EdgeInsets.symmetric(vertical: 10),
-          decoration: BoxDecoration(color: selected ? kCare : Colors.transparent, borderRadius: BorderRadius.circular(CareRadius.control)),
+          decoration: BoxDecoration(
+              color: selected ? kCare : Colors.transparent, borderRadius: BorderRadius.circular(CareRadius.control)),
           alignment: Alignment.center,
           child: Text(
             label,
@@ -512,7 +559,11 @@ class AppointmentCard extends StatelessWidget {
               if (appointment.time.isNotEmpty)
                 CareChip(label: appointment.time, bg: kCareSoft, fg: kCareDark, icon: Icons.access_time_rounded),
               if (appointment.tokenNumber != null)
-                CareChip(label: 'Token #${appointment.tokenNumber}', bg: kInfoBg, fg: kInfoFg, icon: Icons.confirmation_number_outlined),
+                CareChip(
+                    label: 'Token #${appointment.tokenNumber}',
+                    bg: kInfoBg,
+                    fg: kInfoFg,
+                    icon: Icons.confirmation_number_outlined),
             ],
           ),
           if (onCancel != null || onReschedule != null) ...[
